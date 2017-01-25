@@ -3,7 +3,7 @@
  *  \brief Iterative solvers for dBSRmat matrices
  *
  *  \note This file contains Level-5 (Sol) functions. It requires
- *        AuxMemory.c, AuxMessage.c, AuxSmallMat.c, AuxTiming.c, AuxVector.c, 
+ *        AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c, BlaSmallMatInv.c,  
  *        BlaILUSetupBSR.c, BlaSparseBSR.c, KryPbcgs.c, KryPcg.c, KryPgmres.c, 
  *        KryPvbcgs.c, KryPvfgmres.c, KryPvgmres.c, PreAMGSetupSA.c, 
  *        PreAMGSetupUA.c, PreBSR.c, and PreDataInit.c
@@ -248,7 +248,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat        *A,
 #pragma omp parallel for if(ROW>OPENMP_HOLDS)
 #endif
     for (i=0; i<ROW; ++i){
-        fasp_blas_smat_inv(&(diag.diag.val[i*nb2]), nb);
+        fasp_smat_inv(&(diag.diag.val[i*nb2]), nb);
     }
     
     precond *pc = (precond *)fasp_mem_calloc(1,sizeof(precond));

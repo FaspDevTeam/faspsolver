@@ -23,7 +23,7 @@ static void multicoloring (AMG_data *, REAL, INT *, INT *);
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_BinarySearch (INT *list, const INT value, const INT nlist)
+ * \fn INT fasp_BinarySearch (const INT *list, const INT value, const INT nlist)
  *
  * \brief Binary Search
  *
@@ -36,7 +36,7 @@ static void multicoloring (AMG_data *, REAL, INT *, INT *);
  * \author Chunsheng Feng
  * \date   03/01/2011
  */
-INT fasp_BinarySearch (INT       *list,
+INT fasp_BinarySearch (const INT *list,
                        const INT  value,
                        const INT  nlist)
 {
@@ -86,10 +86,10 @@ INT fasp_aux_unique (INT        numbers[],
 {
     INT i, newsize;
     
-    if (size==0) return(0);
+    if ( size == 0 ) return(0);
     
-    for (newsize=0, i=1; i<size; ++i) {
-        if (numbers[newsize] < numbers[i]) {
+    for ( newsize = 0, i = 1; i < size; ++i ) {
+        if ( numbers[newsize] < numbers[i] ) {
             newsize++;
             numbers[newsize] = numbers[i];
         }

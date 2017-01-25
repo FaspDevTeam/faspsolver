@@ -3,7 +3,7 @@
  *  \brief Smoothers for dSTRmat matrices
  *
  *  \note This file contains Level-2 (Itr) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxSmallMat.c, AuxVector.c, BlaSmallMat.c, 
+ *        AuxArray.c, AuxMemory.c, AuxVector.c, BlaSmallMat.c, BlaSmallMatInv.c, 
  *        BlaSmallMatLU.c, and BlaSpmvSTR.c
  */
 
@@ -59,7 +59,7 @@ void fasp_smoother_dstr_jacobi (dSTRmat *A,
     
         // generate diaginv
         for (block = 0; block < ngrid; block ++) {          
-            fasp_blas_smat_inv(diaginv+start, nc);
+            fasp_smat_inv(diaginv+start, nc);
             start += nc2;
         }
     }
@@ -234,7 +234,7 @@ void fasp_smoother_dstr_gs (dSTRmat    *A,
     
         // generate diaginv
         for (block = 0; block < ngrid; block ++) {    
-            fasp_blas_smat_inv(diaginv+start, nc);
+            fasp_smat_inv(diaginv+start, nc);
             start += nc2;
         }
     }
@@ -887,7 +887,7 @@ void fasp_smoother_dstr_sor (dSTRmat    *A,
     
         // generate diaginv
         for (block = 0; block < ngrid; block ++) {    
-            fasp_blas_smat_inv(diaginv+start, nc);
+            fasp_smat_inv(diaginv+start, nc);
             start += nc2;
         }
     }
@@ -1626,7 +1626,7 @@ void fasp_generate_diaginv_block (dSTRmat *A,
             } //end if
         } // end for (l=0; l<nneigh; ++l)
     
-        //fasp_blas_smat_inv(diaginv[i].val, block_size);
+        //fasp_smat_inv(diaginv[i].val, block_size);
         fasp_smat_lu_decomp(diaginv[i].val, pivot[i].val, block_size);
     
     } // end of main loop

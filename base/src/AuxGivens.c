@@ -14,7 +14,8 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_aux_givens (const REAL beta, dCSRmat *H, dvector *y, REAL *tmp)
+ * \fn void fasp_aux_givens (const REAL beta, const dCSRmat *H, dvector *y, 
+ *                           REAL *tmp)
  *
  * \brief Perform Givens rotations to compute y |beta*e_1- H*y|
  *
@@ -26,10 +27,10 @@
  * \author Xuehai Huang
  * \date   10/19/2008
  */
-void fasp_aux_givens (const REAL   beta,
-                      dCSRmat     *H,
-                      dvector     *y,
-                      REAL        *tmp)
+void fasp_aux_givens (const REAL      beta,
+                      const dCSRmat  *H,
+                      dvector        *y,
+                      REAL           *tmp)
 {
     const INT  Hsize=H->row;
     INT        i, j, istart, idiag, ip1start;

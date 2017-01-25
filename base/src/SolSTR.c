@@ -3,8 +3,8 @@
  *  \brief Iterative solvers for dSTRmat matrices
  *
  *  \note This file contains Level-5 (Sol) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxSmallMat.c, AuxTiming.c, 
- *        AuxVector.c, BlaILUSetupSTR.c, BlaSparseSTR.c, ItrSmootherSTR.c, 
+ *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c,
+ *        BlaSmallMatInv.c, BlaILUSetupSTR.c, BlaSparseSTR.c, ItrSmootherSTR.c,
  *        KryPbcgs.c, KryPcg.c, KryPgmres.c, KryPvbcgs.c, KryPvgmres.c, 
  *        and PreSTR.c
  */
@@ -198,7 +198,7 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat        *A,
     
     diag.nc = nc;
     
-    for (i=0;i<ngrid;++i) fasp_blas_smat_inv(&(diag.diag.val[i*nc2]),nc);
+    for (i=0;i<ngrid;++i) fasp_smat_inv(&(diag.diag.val[i*nc2]),nc);
     
     precond *pc = (precond *)fasp_mem_calloc(1,sizeof(precond));    
     

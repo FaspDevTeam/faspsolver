@@ -3,7 +3,7 @@
  *  \brief BLAS2 operations for dSTRmat matrices
  *
  *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxSmallMat.c, BlaSmallMat.c, 
+ *        AuxArray.c, AuxMemory.c, BlaSmallMatInv.c, BlaSmallMat.c, 
  *        and BlaSparseSTR.c
  */
 
@@ -23,8 +23,8 @@
 static inline void smat_amxv_nc3(REAL alpha, REAL *a, REAL *b, REAL *c);
 static inline void smat_amxv_nc5(REAL alpha, REAL *a, REAL *b, REAL *c);
 static inline void smat_amxv(REAL alpha, REAL *a, REAL *b,INT n, REAL *c);
-static inline void blkcontr_str(INT start_data, INT start_vecx, INT start_vecy, INT nc,
-                                REAL *data, REAL *x, REAL *y);
+static inline void blkcontr_str(INT start_data, INT start_vecx, INT start_vecy,
+                                INT nc, REAL *data, REAL *x, REAL *y);
 static inline void spaaxpy_str_2D_scalar(REAL alpha, dSTRmat *A, REAL *x, REAL *y);
 static inline void spaaxpy_str_2D_nc3(REAL alpha, dSTRmat *A, REAL *x, REAL *y);
 static inline void spaaxpy_str_2D_nc5(REAL alpha, dSTRmat *A, REAL *x, REAL *y);
@@ -194,7 +194,7 @@ INT fasp_dstr_diagscale (dSTRmat   *A,
     }
 #endif
     
-    for (i=0;i<ngrid;++i) fasp_blas_smat_inv(&(diag[i*nc2]),nc);
+    for (i=0;i<ngrid;++i) fasp_smat_inv(&(diag[i*nc2]),nc);
     
     for (i=0;i<nband;++i) {
         nb=A->offsets[i];

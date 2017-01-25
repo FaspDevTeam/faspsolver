@@ -18,7 +18,7 @@ int main(int argc, const char * argv[])
     REAL mat[4] = {2.0, 1.0, 0.0, 2.0};
     // REAL mat[4] = {0.0, 2.0, 2.0, 1.0};
 
-    fasp_blas_smat_invp_nc(mat,2);
+    fasp_smat_invp_nc(mat,2);
     
     printf("%e   %e\n", mat[0], mat[1]);
     printf("%e   %e\n", mat[2], mat[3]);

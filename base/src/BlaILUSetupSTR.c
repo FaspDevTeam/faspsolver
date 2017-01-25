@@ -3,7 +3,7 @@
  *  \brief Setup incomplete LU decomposition for dSTRmat matrices
  *
  *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxMemory.c, AuxSmallMat.c, BlaSmallMat.c, BlaSparseSTR.c,
+ *        AuxMemory.c, BlaSmallMatInv.c, BlaSmallMat.c, BlaSparseSTR.c, 
  *        and BlaArray.c
  */
 
@@ -153,7 +153,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat   *A,
     
     else if (nc == 3) {       
     
-        fasp_blas_smat_inv_nc3(LU->diag);
+        fasp_smat_inv_nc3(LU->diag);
     
         for (i=1;i<ngrid;++i) {
     
@@ -183,7 +183,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat   *A,
                 fasp_blas_array_axpy_nc3(-1,smat,&(LU->diag[ii]));
             } // end if (i>=nplane)
     
-            fasp_blas_smat_inv_nc3(&(LU->diag[ii]));
+            fasp_smat_inv_nc3(&(LU->diag[ii]));
     
         } // end for(i=1;i<A->ngrid;++i)
     
@@ -191,7 +191,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat   *A,
     
     else if (nc == 5) {       
     
-        fasp_blas_smat_inv_nc5(LU->diag);
+        fasp_smat_inv_nc5(LU->diag);
     
         for (i=1;i<ngrid;++i) {
     
@@ -221,7 +221,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat   *A,
                 fasp_blas_array_axpy_nc5(-1.0,smat,&(LU->diag[ii]));
             } // end if (i>=nplane)
     
-            fasp_blas_smat_inv_nc5(&(LU->diag[ii]));
+            fasp_smat_inv_nc5(&(LU->diag[ii]));
     
         } // end for(i=1;i<A->ngrid;++i)
     
@@ -229,7 +229,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat   *A,
     
     else if (nc == 7) {       
     
-        fasp_blas_smat_inv_nc7(LU->diag);
+        fasp_smat_inv_nc7(LU->diag);
     
         for (i=1;i<ngrid;++i) {
     
@@ -259,7 +259,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat   *A,
                 fasp_blas_array_axpy_nc7(-1.0,smat,&(LU->diag[ii]));
             } // end if (i>=nplane)
     
-            fasp_blas_smat_inv_nc7(&(LU->diag[ii]));
+            fasp_smat_inv_nc7(&(LU->diag[ii]));
     
         } // end for(i=1;i<A->ngrid;++i)
     
@@ -267,7 +267,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat   *A,
     
     else {
         
-        fasp_blas_smat_inv(LU->diag,nc);
+        fasp_smat_inv(LU->diag,nc);
     
         for (i=1;i<ngrid;++i) {
     
@@ -297,7 +297,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat   *A,
                 fasp_blas_array_axpy(nc2,-1,smat,&(LU->diag[ii]));
             } // end if (i>=nplane)
     
-            fasp_blas_smat_inv(&(LU->diag[ii]),nc);
+            fasp_smat_inv(&(LU->diag[ii]),nc);
     
         } // end for(i=1;i<A->ngrid;++i)
     
@@ -493,7 +493,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     else if (nc == 3) {
         
         // comput the first row
-        fasp_blas_smat_inv_nc3(LU->diag);
+        fasp_smat_inv_nc3(LU->diag);
         memcpy(LU->offdiag[1],A->offdiag[1],9*sizeof(REAL));
         memcpy(LU->offdiag[5],A->offdiag[3],9*sizeof(REAL));
     
@@ -678,7 +678,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
                 fasp_blas_array_axpy_nc3(-1,smat,&(LU->diag[ic]));
             }
     
-            fasp_blas_smat_inv_nc3(&(LU->diag[ic]));
+            fasp_smat_inv_nc3(&(LU->diag[ic]));
     
         } // end for(i=1;i<ngrid;++i)
     
@@ -686,8 +686,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
     else if (nc == 5) {
         // comput the first row
-        // fasp_blas_smat_inv_nc5(LU->diag);
-        fasp_blas_smat_inv(LU->diag,5);
+        // fasp_smat_inv_nc5(LU->diag);
+        fasp_smat_inv(LU->diag,5);
         memcpy(LU->offdiag[1],A->offdiag[1], 25*sizeof(REAL));
         memcpy(LU->offdiag[5],A->offdiag[3], 25*sizeof(REAL));
     
@@ -871,8 +871,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
                 fasp_blas_array_axpy_nc5(-1,smat,&(LU->diag[ic]));
             }
     
-            //fasp_blas_smat_inv_nc5(&(LU->diag[ic]));
-            fasp_blas_smat_inv(&(LU->diag[ic]), 5);
+            //fasp_smat_inv_nc5(&(LU->diag[ic]));
+            fasp_smat_inv(&(LU->diag[ic]), 5);
     
         } // end for(i=1;i<ngrid;++i)
     
@@ -880,8 +880,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
     else if (nc == 7) {
         // comput the first row
-        //fasp_blas_smat_inv_nc5(LU->diag);
-        fasp_blas_smat_inv(LU->diag,7);
+        //fasp_smat_inv_nc5(LU->diag);
+        fasp_smat_inv(LU->diag,7);
         memcpy(LU->offdiag[1],A->offdiag[1], 49*sizeof(REAL));
         memcpy(LU->offdiag[5],A->offdiag[3], 49*sizeof(REAL));
     
@@ -1065,8 +1065,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
                 fasp_blas_array_axpy_nc7(-1,smat,&(LU->diag[ic]));
             }
     
-            //fasp_blas_smat_inv_nc5(&(LU->diag[ic]));
-            fasp_blas_smat_inv(&(LU->diag[ic]), 7);
+            //fasp_smat_inv_nc5(&(LU->diag[ic]));
+            fasp_smat_inv(&(LU->diag[ic]), 7);
     
         } // end for(i=1;i<ngrid;++i)
     
@@ -1074,7 +1074,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
     else {
         // comput the first row
-        fasp_blas_smat_inv(LU->diag,nc);
+        fasp_smat_inv(LU->diag,nc);
         memcpy(LU->offdiag[1],A->offdiag[1],nc2*sizeof(REAL));
         memcpy(LU->offdiag[5],A->offdiag[3],nc2*sizeof(REAL));
     
@@ -1249,7 +1249,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
                 fasp_blas_array_axpy(nc2,-1,smat,&(LU->diag[ic]));
             }
     
-            fasp_blas_smat_inv(&(LU->diag[ic]),nc);
+            fasp_smat_inv(&(LU->diag[ic]),nc);
         
         }
     

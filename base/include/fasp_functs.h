@@ -24,59 +24,51 @@ void fasp_iarray_set (const INT   n,
                       INT        *x,
                       const INT   val);
 
-void fasp_array_cp (const INT   n,
-                    REAL       *x,
-                    REAL       *y);
+void fasp_array_cp (const INT    n,
+                    const REAL  *x,
+                    REAL        *y);
 
 void fasp_iarray_cp (const INT   n,
-                     INT        *x,
+                     const INT  *x,
                      INT        *y);
 
-void fasp_array_cp_nc3 (REAL  *x,
-                        REAL  *y);
+void fasp_array_cp_nc3 (const REAL  *x,
+                        REAL        *y);
 
-void fasp_array_cp_nc5 (REAL  *x,
-                        REAL  *y);
+void fasp_array_cp_nc5 (const REAL  *x,
+                        REAL        *y);
 
-void fasp_array_cp_nc7 (REAL  *x,
-                        REAL  *y);
+void fasp_array_cp_nc7 (const REAL  *x,
+                        REAL        *y);
 
-void fasp_array_permut_nb (INT    n,
-                           INT    nb,
-                           REAL  *x,
-                           INT   *p,
-                           REAL  *y);
+void fasp_array_permut_nb (const INT    n,
+                           const INT    nb,
+                           const REAL  *x,
+                           const INT   *p,
+                           REAL        *y);
 
-void fasp_array_invpermut_nb (INT    n,
-                              INT    nb,
-                              REAL  *x,
-                              INT   *p,
-                              REAL  *y);
+void fasp_array_invpermut_nb (const INT    n,
+                              const INT    nb,
+                              const REAL  *x,
+                              const INT   *p,
+                              REAL        *y);
 
 
 /*-------- In file: AuxConvert.c --------*/
 
-unsigned long fasp_aux_change_endian4 (unsigned long x);
+unsigned long fasp_aux_change_endian4 (const unsigned long x);
 
-double fasp_aux_change_endian8 (double x);
+double fasp_aux_change_endian8 (const double x);
 
-double fasp_aux_bbyteToldouble (unsigned char bytes[]);
-
-INT endian_convert_int (const INT   inum,
-                        const INT   ilength,
-                        const INT   endianflag);
-
-REAL endian_convert_real (const REAL  rnum,
-                          const INT   vlength,
-                          const INT   endianflag);
+double fasp_aux_bbyteToldouble (const unsigned char bytes[]);
 
 
 /*-------- In file: AuxGivens.c --------*/
 
-void fasp_aux_givens (const REAL   beta,
-                      dCSRmat     *H,
-                      dvector     *y,
-                      REAL        *tmp);
+void fasp_aux_givens (const REAL      beta,
+                      const dCSRmat  *H,
+                      dvector        *y,
+                      REAL           *tmp);
 
 
 /*-------- In file: AuxGraphics.c --------*/
@@ -109,17 +101,17 @@ void fasp_param_input (const char   *fname,
 
 /*-------- In file: AuxMemory.c --------*/
 
-void * fasp_mem_calloc (LONGLONG  size,
-                        INT       type);
+void * fasp_mem_calloc (const LONGLONG  size,
+                        const INT       type);
 
-void * fasp_mem_realloc (void     *oldmem,
-                         LONGLONG  tsize);
+void * fasp_mem_realloc (void           *oldmem,
+                         const LONGLONG  tsize);
 
 void fasp_mem_free (void *mem);
 
 void fasp_mem_usage ();
 
-SHORT fasp_mem_check (void        *ptr,
+SHORT fasp_mem_check (const void  *ptr,
                       const char  *message,
                       INT          ERR);
 
@@ -135,11 +127,11 @@ void print_itinfo (const INT   ptrlvl,
                    const REAL  absres,
                    const REAL  factor);
 
-void print_amgcomplexity (AMG_data    *mgl,
-                          const SHORT  prtlvl);
+void print_amgcomplexity (const AMG_data *mgl,
+                          const SHORT     prtlvl);
 
-void print_amgcomplexity_bsr (AMG_data_bsr  *mgl,
-                              const SHORT    prtlvl);
+void print_amgcomplexity_bsr (const AMG_data_bsr  *mgl,
+                              const SHORT          prtlvl);
 
 void print_cputime (const char  *message,
                     const REAL   cputime);
@@ -153,15 +145,15 @@ void fasp_chkerr (const SHORT  status,
 
 /*-------- In file: AuxParam.c --------*/
 
-void fasp_param_set (int          argc,
+void fasp_param_set (const int    argc,
                      const char  *argv[],
                      input_param *iniparam);
 
-void fasp_param_init (input_param    *iniparam,
-                      itsolver_param *itsparam,
-                      AMG_param      *amgparam,
-                      ILU_param      *iluparam,
-                      Schwarz_param  *schparam);
+void fasp_param_init (const input_param    *iniparam,
+                      itsolver_param       *itsparam,
+                      AMG_param            *amgparam,
+                      ILU_param            *iluparam,
+                      Schwarz_param        *swzparam);
 
 void fasp_param_input_init (input_param *iniparam);
 
@@ -171,83 +163,44 @@ void fasp_param_solver_init (itsolver_param *itsparam);
 
 void fasp_param_ilu_init (ILU_param *iluparam);
 
-void fasp_param_schwarz_init (Schwarz_param *schparam);
+void fasp_param_schwarz_init (Schwarz_param *swzparam);
 
-void fasp_param_amg_set (AMG_param   *param,
-                         input_param *iniparam);
+void fasp_param_amg_set (AMG_param          *param,
+                         const input_param  *iniparam);
 
-void fasp_param_ilu_set (ILU_param   *iluparam,
-                         input_param *iniparam);
+void fasp_param_ilu_set (ILU_param          *iluparam,
+                         const input_param  *iniparam);
 
-void fasp_param_schwarz_set (Schwarz_param *schparam,
-                             input_param   *iniparam);
+void fasp_param_schwarz_set (Schwarz_param      *swzparam,
+                             const input_param  *iniparam);
 
-void fasp_param_solver_set (itsolver_param *itsparam,
-                            input_param    *iniparam);
+void fasp_param_solver_set (itsolver_param     *itsparam,
+                            const input_param  *iniparam);
 
-void fasp_param_amg_to_prec (precond_data *pcdata,
-                             AMG_param    *amgparam);
+void fasp_param_amg_to_prec (precond_data     *pcdata,
+                             const AMG_param  *amgparam);
 
-void fasp_param_prec_to_amg (AMG_param    *amgparam,
-                             precond_data *pcdata);
+void fasp_param_prec_to_amg (AMG_param           *amgparam,
+                             const precond_data  *pcdata);
 
-void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata,
-                                 AMG_param        *amgparam);
+void fasp_param_amg_to_prec_bsr (precond_data_bsr  *pcdata,
+                                 const AMG_param   *amgparam);
 
-void fasp_param_prec_to_amg_bsr (AMG_param        *amgparam,
-                                 precond_data_bsr *pcdata);
+void fasp_param_prec_to_amg_bsr (AMG_param               *amgparam,
+                                 const precond_data_bsr  *pcdata);
 
-void fasp_param_amg_print (AMG_param *param);
+void fasp_param_amg_print (const AMG_param *param);
 
-void fasp_param_ilu_print (ILU_param *param);
+void fasp_param_ilu_print (const ILU_param *param);
 
-void fasp_param_schwarz_print (Schwarz_param *param);
+void fasp_param_schwarz_print (const Schwarz_param *param);
 
-void fasp_param_solver_print (itsolver_param *param);
-
-
-/*-------- In file: AuxSmallMat.c --------*/
-
-void fasp_blas_smat_inv_nc2 (REAL *a);
-
-void fasp_blas_smat_inv_nc3 (REAL *a);
-
-void fasp_blas_smat_inv_nc4 (REAL *a);
-
-void fasp_blas_smat_inv_nc5 (REAL *a);
-
-void fasp_blas_smat_inv_nc7 (REAL *a);
-
-void fasp_blas_smat_inv_nc (REAL      *a,
-                            const INT  n);
-
-void fasp_blas_smat_invp_nc (REAL      *a,
-                             const INT  n);
-
-INT fasp_blas_smat_inv (REAL      *a,
-                        const INT  n);
-
-REAL fasp_blas_smat_Linfinity (REAL      *A,
-                               const INT  n);
-
-void fasp_iden_free (idenmat *A);
-
-void fasp_smat_identity_nc2 (REAL *a);
-
-void fasp_smat_identity_nc3 (REAL *a);
-
-void fasp_smat_identity_nc5 (REAL *a);
-
-void fasp_smat_identity_nc7 (REAL *a);
-
-void fasp_smat_identity (REAL      *a,
-                         const INT  n,
-                         const INT  n2);
+void fasp_param_solver_print (const itsolver_param *param);
 
 
 /*-------- In file: AuxSort.c --------*/
 
-INT fasp_BinarySearch (INT       *list,
+INT fasp_BinarySearch (const INT *list,
                        const INT  value,
                        const INT  nlist);
 
@@ -302,16 +255,16 @@ void fasp_multicolors_independent_set (AMG_data *mgl,
 
 INT fasp_get_num_threads ();
 
-INT fasp_set_num_threads (INT nthreads);
+INT fasp_set_num_threads (const INT nthreads);
 
-void fasp_get_start_end (INT  procid,
-                         INT  nprocs,
-                         INT  n,
-                         INT *start,
-                         INT *end);
+void fasp_get_start_end (const INT  procid,
+                         const INT  nprocs,
+                         const INT  n,
+                         INT       *start,
+                         INT       *end);
 
-void fasp_set_GS_threads (INT mythreads,
-                          INT its);
+void fasp_set_GS_threads (const INT mythreads,
+                          const INT its);
 
 
 /*-------- In file: AuxTiming.c --------*/
@@ -321,7 +274,7 @@ void fasp_gettime (REAL *time);
 
 /*-------- In file: AuxVector.c --------*/
 
-INT fasp_dvec_isnan (dvector *u);
+SHORT fasp_dvec_isnan (dvector *u);
 
 dvector fasp_dvec_create (const INT m);
 
@@ -349,14 +302,14 @@ void fasp_dvec_set (INT      n,
 void fasp_ivec_set (const INT  m,
                     ivector   *u);
 
-void fasp_dvec_cp (dvector *x, 
-                   dvector *y);
+void fasp_dvec_cp (const dvector  *x,
+                   dvector        *y);
 
-REAL fasp_dvec_maxdiff (dvector *x, 
-                        dvector *y);
+REAL fasp_dvec_maxdiff (const dvector *x,
+                        const dvector *y);
 
-void fasp_dvec_symdiagscale (dvector *b, 
-                             dvector *diag);
+void fasp_dvec_symdiagscale (dvector        *b,
+                             const dvector  *diag);
 
 
 /*-------- In file: BlaArray.c --------*/
@@ -615,7 +568,7 @@ void fasp_matrix_read_bin (const char *filename,
                            void       *A);
 
 void fasp_matrix_write (const char *filename,
-					    void       *A,
+                        void       *A,
                         INT         flag);
 
 void fasp_vector_read (const char *filerhs,
@@ -785,6 +738,43 @@ void fasp_blas_smat_aAxpby (const REAL   alpha,
                             const REAL   beta,
                             REAL        *y,
                             const INT    n);
+
+
+/*-------- In file: AuxSmallMat.c --------*/
+
+void fasp_smat_inv_nc2 (REAL *a);
+
+void fasp_smat_inv_nc3 (REAL *a);
+
+void fasp_smat_inv_nc4 (REAL *a);
+
+void fasp_smat_inv_nc5 (REAL *a);
+
+void fasp_smat_inv_nc7 (REAL *a);
+
+void fasp_smat_inv_nc (REAL      *a,
+                       const INT  n);
+
+void fasp_smat_invp_nc (REAL      *a,
+                        const INT  n);
+
+INT fasp_smat_inv (REAL      *a,
+                   const INT  n);
+
+REAL fasp_smat_Linfinity (REAL      *A,
+                          const INT  n);
+
+void fasp_smat_identity_nc2 (REAL *a);
+
+void fasp_smat_identity_nc3 (REAL *a);
+
+void fasp_smat_identity_nc5 (REAL *a);
+
+void fasp_smat_identity_nc7 (REAL *a);
+
+void fasp_smat_identity (REAL      *a,
+                         const INT  n,
+                         const INT  n2);
 
 
 /*-------- In file: BlaSmallMatLU.c --------*/

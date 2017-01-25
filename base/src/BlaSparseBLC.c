@@ -3,7 +3,7 @@
  *  \brief Sparse matrix block operations
  *
  *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxMemory.c, AuxSmallMat.c, and BlaSparseCSR.c
+ *        AuxMemory.c, BlaSmallMatInv.c, and BlaSparseCSR.c
  */
 
 #include <time.h>
@@ -346,11 +346,10 @@ dCSRmat fasp_dbsr_Linfinity_dcsr (dBSRmat *A)
             j = A->JA[k];
             
             if ( i == j ) {
-                Aval[k] = fasp_blas_smat_Linfinity(val+k*nc2, nc);
+                Aval[k] = fasp_smat_Linfinity(val+k*nc2, nc);
             }
-            else
-            {
-                Aval[k] = (-1)*fasp_blas_smat_Linfinity(val+k*nc2, nc);
+            else {
+                Aval[k] = (-1)*fasp_smat_Linfinity(val+k*nc2, nc);
             }
             
         }
