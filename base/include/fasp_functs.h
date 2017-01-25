@@ -652,160 +652,139 @@ void fasp_blas_smat_axm (REAL       *a,
                          const INT   n,
                          const REAL  alpha);
 
-void fasp_blas_smat_add (REAL       *a,
-                         REAL       *b,
+void fasp_blas_smat_add (const REAL *a,
+                         const REAL *b,
                          const INT   n,
                          const REAL  alpha,
                          const REAL  beta,
                          REAL       *c);
 
-void fasp_blas_smat_mxv_nc2 (REAL  *a,
-                             REAL  *b,
-                             REAL  *c);
+void fasp_blas_smat_mxv_nc2 (const REAL  *a,
+                             const REAL  *b,
+                             REAL        *c);
 
-void fasp_blas_smat_mxv_nc3 (REAL  *a,
-                             REAL  *b,
-                             REAL  *c);
+void fasp_blas_smat_mxv_nc3 (const REAL  *a,
+                             const REAL  *b,
+                             REAL        *c);
 
-void fasp_blas_smat_mxv_nc5 (REAL  *a,
-                             REAL  *b,
-                             REAL  *c);
+void fasp_blas_smat_mxv_nc5 (const REAL  *a,
+                             const REAL  *b,
+                             REAL        *c);
 
-void fasp_blas_smat_mxv_nc7 (REAL  *a,
-                             REAL  *b,
-                             REAL  *c);
+void fasp_blas_smat_mxv_nc7 (const REAL  *a,
+                             const REAL  *b,
+                             REAL        *c);
 
-void fasp_blas_smat_mxv (REAL      *a,
-                         REAL      *b,
-                         REAL      *c,
-                         const INT  n);
+void fasp_blas_smat_mxv (const REAL      *a,
+                         const REAL      *b,
+                         REAL            *c,
+                         const INT        n);
 
-void fasp_blas_smat_mul_nc2 (REAL  *a,
-                             REAL  *b,
-                             REAL  *c);
+void fasp_blas_smat_mul_nc2 (const REAL  *a,
+                             const REAL  *b,
+                             REAL        *c);
 
-void fasp_blas_smat_mul_nc3 (REAL  *a,
-                             REAL  *b,
-                             REAL  *c);
+void fasp_blas_smat_mul_nc3 (const REAL  *a,
+                             const REAL  *b,
+                             REAL        *c);
 
-void fasp_blas_smat_mul_nc5 (REAL  *a,
-                             REAL  *b,
-                             REAL  *c);
+void fasp_blas_smat_mul_nc5 (const REAL  *a,
+                             const REAL  *b,
+                             REAL        *c);
 
-void fasp_blas_smat_mul_nc7 (REAL  *a,
-                             REAL  *b,
-                             REAL  *c);
+void fasp_blas_smat_mul_nc7 (const REAL  *a,
+                             const REAL  *b,
+                             REAL        *c);
 
-void fasp_blas_smat_mul (REAL      *a,
-                         REAL      *b,
-                         REAL      *c,
-                         const INT  n);
+void fasp_blas_smat_mul (const REAL  *a,
+                         const REAL  *b,
+                         REAL        *c,
+                         const INT    n);
 
 void fasp_blas_array_axpyz_nc2 (const REAL   a,
-                                REAL        *x,
-                                REAL        *y,
+                                const REAL  *x,
+                                const REAL  *y,
                                 REAL        *z);
 
 void fasp_blas_array_axpyz_nc3 (const REAL   a,
-                                REAL        *x,
-                                REAL        *y,
+                                const REAL  *x,
+                                const REAL  *y,
                                 REAL        *z);
 
 void fasp_blas_array_axpyz_nc5 (const REAL   a,
-                                REAL        *x,
-                                REAL        *y,
+                                const REAL  *x,
+                                const REAL  *y,
                                 REAL        *z);
 
 void fasp_blas_array_axpyz_nc7 (const REAL   a,
-                                REAL        *x,
-                                REAL        *y,
+                                const REAL  *x,
+                                const REAL  *y,
                                 REAL        *z);
 
 void fasp_blas_array_axpy_nc2 (const REAL   a,
-                               REAL        *x,
+                               const REAL  *x,
                                REAL        *y);
 
 void fasp_blas_array_axpy_nc3 (const REAL   a,
-                               REAL        *x,
+                               const REAL  *x,
                                REAL        *y);
 
 void fasp_blas_array_axpy_nc5 (const REAL   a,
-                               REAL        *x,
+                               const REAL  *x,
                                REAL        *y);
 
 void fasp_blas_array_axpy_nc7 (const REAL   a,
-                               REAL        *x,
+                               const REAL  *x,
                                REAL        *y);
 
-void fasp_blas_smat_ypAx_nc2 (REAL   *A,
-                              REAL   *x,
-                              REAL   *y );
+void fasp_blas_smat_ypAx_nc2 (const REAL  *A,
+                              const REAL  *x,
+                              REAL        *y);
 
-void fasp_blas_smat_ypAx_nc3 (REAL   *A,
-                              REAL   *x,
-                              REAL   *y );
+void fasp_blas_smat_ypAx_nc3 (const REAL  *A,
+                              const REAL  *x,
+                              REAL        *y);
 
-void fasp_blas_smat_ypAx_nc5 (REAL   *A,
-                              REAL   *x,
-                              REAL   *y );
+void fasp_blas_smat_ypAx_nc5 (const REAL  *A,
+                              const REAL  *x,
+                              REAL        *y);
 
-void fasp_blas_smat_ypAx_nc7 (REAL   *A,
-                              REAL   *x,
-                              REAL   *y);
+void fasp_blas_smat_ypAx_nc7 (const REAL  *A,
+                              const REAL  *x,
+                              REAL        *y);
 
-void fasp_blas_smat_ypAx (REAL      *A,
-                          REAL      *x,
-                          REAL      *y,
-                          const INT  n);
+void fasp_blas_smat_ypAx (const REAL  *A,
+                          const REAL  *x,
+                          REAL        *y,
+                          const INT    n);
 
-void fasp_blas_smat_ymAx_nc2 (REAL   *A,
-                              REAL   *x,
-                              REAL   *y);
+void fasp_blas_smat_ymAx_nc2 (const REAL  *A,
+                              const REAL  *x,
+                              REAL        *y);
 
-void fasp_blas_smat_ymAx_nc3 (REAL   *A,
-                              REAL   *x,
-                              REAL   *y);
+void fasp_blas_smat_ymAx_nc3 (const REAL  *A,
+                              const REAL  *x,
+                              REAL        *y);
 
-void fasp_blas_smat_ymAx_nc5 (REAL   *A,
-                              REAL   *x,
-                              REAL   *y);
+void fasp_blas_smat_ymAx_nc5 (const REAL  *A,
+                              const REAL  *x,
+                              REAL        *y);
 
-void fasp_blas_smat_ymAx_nc7 (REAL   *A,
-                              REAL   *x,
-                              REAL   *y);
+void fasp_blas_smat_ymAx_nc7 (const REAL  *A,
+                              const REAL  *x,
+                              REAL        *y);
 
-void fasp_blas_smat_ymAx (REAL       *A,
-                          REAL       *x,
-                          REAL       *y,
-                          const INT   n);
+void fasp_blas_smat_ymAx (const REAL  *A,
+                          const REAL  *x,
+                          REAL        *y,
+                          const INT    n);
 
 void fasp_blas_smat_aAxpby (const REAL   alpha,
-                            REAL        *A,
-                            REAL        *x,
+                            const REAL  *A,
+                            const REAL  *x,
                             const REAL   beta,
                             REAL        *y,
                             const INT    n);
-
-void fasp_blas_smat_ymAx_ns2 (REAL   *A,
-                              REAL   *x,
-                              REAL   *y);
-
-void fasp_blas_smat_ymAx_ns3 (REAL   *A,
-                              REAL   *x,
-                              REAL   *y);
-
-void fasp_blas_smat_ymAx_ns5 (REAL   *A,
-                              REAL   *x,
-                              REAL   *y);
-
-void fasp_blas_smat_ymAx_ns7 (REAL   *A,
-                              REAL   *x,
-                              REAL   *y);
-
-void fasp_blas_smat_ymAx_ns (REAL       *A,
-                             REAL       *x,
-                             REAL       *y,
-                             const INT   n);
 
 
 /*-------- In file: BlaSmallMatLU.c --------*/

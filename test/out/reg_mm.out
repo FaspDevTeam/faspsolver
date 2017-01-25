@@ -1,7 +1,7 @@
 
 
 ------------------------- Test starts at -------------------------
-Mon Jan 23 10:11:40 2017
+Wed Jan 25 11:54:34 2017
 ------------------------------------------------------------------
 
 ==================================================================
@@ -26,42 +26,42 @@ Krylov method totally costs 0.0007 seconds.
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 9.440476e-01.
-Krylov method totally costs 0.0013 seconds.
+Krylov method totally costs 0.0012 seconds.
 ### WARNING: Max diff 3.7674e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 7.911841e-01.
-Krylov method totally costs 0.0017 seconds.
+Krylov method totally costs 0.0016 seconds.
 ### WARNING: Max diff 1.0233e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.595211e-01.
-Krylov method totally costs 0.0010 seconds.
+Krylov method totally costs 0.0009 seconds.
 ### WARNING: Max diff 1.4145e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.600255e-01.
-Krylov method totally costs 0.0011 seconds.
+Krylov method totally costs 0.0010 seconds.
 ### WARNING: Max diff 1.4199e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.600255e-01.
-Krylov method totally costs 0.0012 seconds.
+Krylov method totally costs 0.0010 seconds.
 ### WARNING: Max diff 1.4199e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 9.489398e+00.
-Krylov method totally costs 0.0481 seconds.
+Krylov method totally costs 0.0451 seconds.
 ### WARNING: Max diff 1.1281e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 4.595211e-01.
-Krylov method totally costs 0.0012 seconds.
+Krylov method totally costs 0.0009 seconds.
 ### WARNING: Max diff 1.4145e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 41 with relative residual 9.073917e-01.
-Krylov method totally costs 0.0018 seconds.
+Krylov method totally costs 0.0011 seconds.
 ### WARNING: Max diff 3.7901e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -69,22 +69,22 @@ Diagonal preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.274437e+03.
-Diag_Krylov method totally costs 0.0011 seconds.
+Diag_Krylov method totally costs 0.0006 seconds.
 ### WARNING: Max diff 2.5638e+03 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 5.093954e+00.
-Diag_Krylov method totally costs 0.0015 seconds.
+Diag_Krylov method totally costs 0.0012 seconds.
 ### WARNING: Max diff 1.1946e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 9.811397e-01.
-Diag_Krylov method totally costs 0.0020 seconds.
+Diag_Krylov method totally costs 0.0016 seconds.
 ### WARNING: Max diff 1.0048e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 6.659294e-01.
-Diag_Krylov method totally costs 0.0010 seconds.
+Diag_Krylov method totally costs 0.0009 seconds.
 ### WARNING: Max diff 1.6231e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
@@ -99,7 +99,7 @@ Diag_Krylov method totally costs 0.0008 seconds.
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 7.904941e+00.
-Diag_Krylov method totally costs 0.0470 seconds.
+Diag_Krylov method totally costs 0.0448 seconds.
 ### WARNING: Max diff 1.5976e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
@@ -117,47 +117,47 @@ AMG preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.884706e+05.
-AMG_Krylov method totally costs 1.4751 seconds.
+AMG_Krylov method totally costs 1.4041 seconds.
 ### WARNING: Max diff 1.3483e+06 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.043570e+01.
-AMG_Krylov method totally costs 2.8901 seconds.
+AMG_Krylov method totally costs 2.7506 seconds.
 ### WARNING: Max diff 3.1100e+02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.141734e+02.
-AMG_Krylov method totally costs 1.4850 seconds.
+AMG_Krylov method totally costs 1.4257 seconds.
 ### WARNING: Max diff 2.2519e+03 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 2.409509e-04.
-AMG_Krylov method totally costs 1.4951 seconds.
+AMG_Krylov method totally costs 1.4427 seconds.
 ### WARNING: Max diff 1.5266e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 2.504090e-04.
-AMG_Krylov method totally costs 1.5571 seconds.
+AMG_Krylov method totally costs 1.4348 seconds.
 ### WARNING: Max diff 1.4946e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 2.504090e-04.
-AMG_Krylov method totally costs 1.4760 seconds.
+AMG_Krylov method totally costs 1.3661 seconds.
 ### WARNING: Max diff 4.0154e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 1.312387e+01.
-AMG_Krylov method totally costs 1.5140 seconds.
+AMG_Krylov method totally costs 1.4045 seconds.
 ### WARNING: Max diff 2.8356e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 3.015377e-03.
-AMG_Krylov method totally costs 1.4705 seconds.
+AMG_Krylov method totally costs 1.3691 seconds.
 ### WARNING: Max diff 4.0939e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 78 with relative residual 1.544343e-01.
-AMG_Krylov method totally costs 2.9413 seconds.
+AMG_Krylov method totally costs 2.7847 seconds.
 ### WARNING: Max diff 5.1215e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -166,8 +166,8 @@ AMG as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0000 seconds.
 ### WARNING: Max iter 20 reached with rel. resid. 1.281242e+16.
-AMG solve costs 0.2962 seconds.
-AMG totally costs 0.2963 seconds.
+AMG solve costs 0.2865 seconds.
+AMG totally costs 0.2865 seconds.
 ### WARNING: Max diff 1.2311e+17 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -175,48 +175,48 @@ ILUk preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 5.950139e+03.
-ILUk_Krylov method totally costs 0.0049 seconds.
+ILUk_Krylov method totally costs 0.0045 seconds.
 ### WARNING: Max diff 7.6916e+05 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Iteration restarted due to stagnation! fasp_solver_dcsr_pbcgs : 346
 Number of iterations = 16 with relative residual 3.357838e-16.
-ILUk_Krylov method totally costs 0.0031 seconds.
+ILUk_Krylov method totally costs 0.0030 seconds.
 Max diff 6.5503e-13 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.161027e+05.
-ILUk_Krylov method totally costs 0.0068 seconds.
+ILUk_Krylov method totally costs 0.0054 seconds.
 ### WARNING: Max diff 1.0321e+08 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 21 with relative residual 8.537366e-16.
-ILUk_Krylov method totally costs 0.0029 seconds.
+ILUk_Krylov method totally costs 0.0026 seconds.
 Max diff 1.0175e-12 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 21 with relative residual 8.537366e-16.
-ILUk_Krylov method totally costs 0.0030 seconds.
+ILUk_Krylov method totally costs 0.0025 seconds.
 Max diff 1.0175e-12 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 19 with relative residual 6.034050e-16.
-ILUk_Krylov method totally costs 0.0029 seconds.
+ILUk_Krylov method totally costs 0.0025 seconds.
 Max diff 9.3026e-13 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 2.430565e+00.
-ILUk_Krylov method totally costs 0.0496 seconds.
+ILUk_Krylov method totally costs 0.0458 seconds.
 ### WARNING: Max diff 2.8529e+03 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 19 with relative residual 5.048528e-16.
-ILUk_Krylov method totally costs 0.0025 seconds.
+ILUk_Krylov method totally costs 0.0026 seconds.
 Max diff 1.7117e-12 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 14 with relative residual 9.353805e-16.
-ILUk_Krylov method totally costs 0.0027 seconds.
+ILUk_Krylov method totally costs 0.0028 seconds.
 Max diff 1.1526e-12 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -224,12 +224,12 @@ ILUt preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.221896e+00.
-ILUt_Krylov method totally costs 0.0047 seconds.
+ILUt_Krylov method totally costs 0.0044 seconds.
 ### WARNING: Max diff 5.5362e+03 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 11 with relative residual 4.468784e-16.
-ILUt_Krylov method totally costs 0.0058 seconds.
+ILUt_Krylov method totally costs 0.0054 seconds.
 Max diff 8.7896e-13 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
@@ -239,7 +239,7 @@ ILUt_Krylov method totally costs 0.0058 seconds.
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 19 with relative residual 4.069072e-16.
-ILUt_Krylov method totally costs 0.0029 seconds.
+ILUt_Krylov method totally costs 0.0027 seconds.
 Max diff 1.3124e-12 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
@@ -249,17 +249,17 @@ Max diff 1.3124e-12 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 18 with relative residual 5.163717e-16.
-ILUt_Krylov method totally costs 0.0029 seconds.
+ILUt_Krylov method totally costs 0.0026 seconds.
 Max diff 2.4519e-12 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 6.895014e-03.
-ILUt_Krylov method totally costs 0.0504 seconds.
+ILUt_Krylov method totally costs 0.0542 seconds.
 ### WARNING: Max diff 2.8382e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 18 with relative residual 3.407405e-16.
-ILUt_Krylov method totally costs 0.0028 seconds.
+ILUt_Krylov method totally costs 0.0027 seconds.
 Max diff 2.2639e-12 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
@@ -272,7 +272,7 @@ ILUtp preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 4.141850e-02.
-ILUtp_Krylov method totally costs 0.0058 seconds.
+ILUtp_Krylov method totally costs 0.0054 seconds.
 ### WARNING: Max diff 7.3977e+02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
@@ -283,37 +283,37 @@ ILUtp_Krylov method totally costs 0.0038 seconds.
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 4.415278e-01.
-ILUtp_Krylov method totally costs 0.0074 seconds.
+ILUtp_Krylov method totally costs 0.0067 seconds.
 ### WARNING: Max diff 8.1667e+03 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 24 with relative residual 8.246335e-16.
-ILUtp_Krylov method totally costs 0.0037 seconds.
+ILUtp_Krylov method totally costs 0.0036 seconds.
 ### WARNING: Max diff 9.1949e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 24 with relative residual 8.246335e-16.
-ILUtp_Krylov method totally costs 0.0037 seconds.
+ILUtp_Krylov method totally costs 0.0036 seconds.
 ### WARNING: Max diff 9.1949e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 23 with relative residual 9.046181e-16.
-ILUtp_Krylov method totally costs 0.0037 seconds.
+ILUtp_Krylov method totally costs 0.0035 seconds.
 ### WARNING: Max diff 9.1949e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 8.658137e-02.
-ILUtp_Krylov method totally costs 0.0517 seconds.
+ILUtp_Krylov method totally costs 0.0477 seconds.
 ### WARNING: Max diff 1.3492e+03 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 21 with relative residual 8.320114e-16.
-ILUtp_Krylov method totally costs 0.0043 seconds.
+ILUtp_Krylov method totally costs 0.0035 seconds.
 ### WARNING: Max diff 9.1949e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 16 with relative residual 2.959531e-16.
-ILUtp_Krylov method totally costs 0.0046 seconds.
+ILUtp_Krylov method totally costs 0.0037 seconds.
 ### WARNING: Max diff 9.1949e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 ==================================================================
@@ -333,47 +333,47 @@ Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 6.988181e-04.
-Krylov method totally costs 0.0302 seconds.
+Krylov method totally costs 0.0264 seconds.
 ### WARNING: Max diff 1.0029e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 6.611995e-05.
-Krylov method totally costs 0.0589 seconds.
+Krylov method totally costs 0.0517 seconds.
 ### WARNING: Max diff 1.0047e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.533565e-04.
-Krylov method totally costs 0.0916 seconds.
+Krylov method totally costs 0.0837 seconds.
 ### WARNING: Max diff 1.0019e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 3.330775e-04.
-Krylov method totally costs 0.0401 seconds.
+Krylov method totally costs 0.0347 seconds.
 ### WARNING: Max diff 1.0011e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 3.522613e-04.
-Krylov method totally costs 0.0359 seconds.
+Krylov method totally costs 0.0361 seconds.
 ### WARNING: Max diff 1.0007e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 3.522613e-04.
-Krylov method totally costs 0.0415 seconds.
+Krylov method totally costs 0.0340 seconds.
 ### WARNING: Max diff 1.0007e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 6.988181e-04.
-Krylov method totally costs 2.5720 seconds.
+Krylov method totally costs 2.2081 seconds.
 ### WARNING: Max diff 1.0029e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 3.330775e-04.
-Krylov method totally costs 0.0395 seconds.
+Krylov method totally costs 0.0397 seconds.
 ### WARNING: Max diff 1.0011e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 100 with relative residual 6.779316e-05.
-Krylov method totally costs 0.0604 seconds.
+Krylov method totally costs 0.0701 seconds.
 ### WARNING: Max diff 1.0047e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -381,47 +381,47 @@ Diagonal preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.476425e-04.
-Diag_Krylov method totally costs 0.0349 seconds.
+Diag_Krylov method totally costs 0.0301 seconds.
 ### WARNING: Max diff 6.1042e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 3.930227e-05.
-Diag_Krylov method totally costs 0.0651 seconds.
+Diag_Krylov method totally costs 0.0545 seconds.
 ### WARNING: Max diff 5.3286e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 6.947891e-05.
-Diag_Krylov method totally costs 0.0937 seconds.
+Diag_Krylov method totally costs 0.0797 seconds.
 ### WARNING: Max diff 6.2820e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 3.105052e-04.
-Diag_Krylov method totally costs 0.0409 seconds.
+Diag_Krylov method totally costs 0.0354 seconds.
 ### WARNING: Max diff 6.8290e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.107650e-04.
-Diag_Krylov method totally costs 0.0380 seconds.
+Diag_Krylov method totally costs 0.0345 seconds.
 ### WARNING: Max diff 6.9228e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.107650e-04.
-Diag_Krylov method totally costs 0.0422 seconds.
+Diag_Krylov method totally costs 0.0385 seconds.
 ### WARNING: Max diff 6.9228e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 2.476425e-04.
-Diag_Krylov method totally costs 2.6318 seconds.
+Diag_Krylov method totally costs 2.1857 seconds.
 ### WARNING: Max diff 6.1042e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 3.105052e-04.
-Diag_Krylov method totally costs 0.0413 seconds.
+Diag_Krylov method totally costs 0.0369 seconds.
 ### WARNING: Max diff 6.8290e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 100 with relative residual 4.169470e-05.
-Diag_Krylov method totally costs 0.0720 seconds.
+Diag_Krylov method totally costs 0.0565 seconds.
 ### WARNING: Max diff 5.3649e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -429,57 +429,57 @@ AMG preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.715353e-03.
-AMG_Krylov method totally costs 0.7090 seconds.
+AMG_Krylov method totally costs 0.6393 seconds.
 ### WARNING: Max diff 4.6323e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 9.092445e-06.
-AMG_Krylov method totally costs 1.3567 seconds.
+AMG_Krylov method totally costs 1.2314 seconds.
 ### WARNING: Max diff 2.8652e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 3.218264e-03.
-AMG_Krylov method totally costs 0.7645 seconds.
+AMG_Krylov method totally costs 0.6982 seconds.
 ### WARNING: Max diff 3.7147e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.801130e-06.
-AMG_Krylov method totally costs 0.7443 seconds.
+AMG_Krylov method totally costs 0.6632 seconds.
 ### WARNING: Max diff 2.6129e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 5.217175e-06.
-AMG_Krylov method totally costs 0.7447 seconds.
+AMG_Krylov method totally costs 0.6819 seconds.
 ### WARNING: Max diff 2.7093e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 5.217175e-06.
-AMG_Krylov method totally costs 0.6796 seconds.
+AMG_Krylov method totally costs 0.6426 seconds.
 ### WARNING: Max diff 2.7093e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 2.403673e-05.
-AMG_Krylov method totally costs 3.1296 seconds.
+AMG_Krylov method totally costs 2.8244 seconds.
 ### WARNING: Max diff 2.5114e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 4.801130e-06.
-AMG_Krylov method totally costs 0.7009 seconds.
+AMG_Krylov method totally costs 0.6345 seconds.
 ### WARNING: Max diff 2.6129e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 99 with relative residual 4.612792e-06.
-AMG_Krylov method totally costs 1.2983 seconds.
+AMG_Krylov method totally costs 1.2195 seconds.
 ### WARNING: Max diff 2.4139e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
 AMG as iterative solver ...
 
 Calling classical AMG ...
-Classical AMG setup costs 0.0173 seconds.
+Classical AMG setup costs 0.0146 seconds.
 ### WARNING: Max iter 20 reached with rel. resid. 1.049844e-03.
-AMG solve costs 0.1606 seconds.
-AMG totally costs 0.1791 seconds.
+AMG solve costs 0.1479 seconds.
+AMG totally costs 0.1636 seconds.
 ### WARNING: Max diff 7.0561e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -487,7 +487,7 @@ ILUk preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 68 with relative residual 4.389229e-16.
-ILUk_Krylov method totally costs 0.1560 seconds.
+ILUk_Krylov method totally costs 0.1346 seconds.
 Max diff 4.9814e-11 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
@@ -495,42 +495,42 @@ Calling BiCGstab solver (CSR) ...
 ### WARNING: Iteration restarted due to stagnation! fasp_solver_dcsr_pbcgs : 346
 ### WARNING: Iteration restarted due to stagnation! fasp_solver_dcsr_pbcgs : 346
 Number of iterations = 75 with relative residual 8.734422e-16.
-ILUk_Krylov method totally costs 0.2606 seconds.
+ILUk_Krylov method totally costs 0.2371 seconds.
 Max diff 2.4485e-09 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.075202e-14.
-ILUk_Krylov method totally costs 0.2530 seconds.
+ILUk_Krylov method totally costs 0.2285 seconds.
 Max diff 1.6418e-11 smaller than tolerance................. [PASS]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 1.576809e-07.
-ILUk_Krylov method totally costs 0.2085 seconds.
+ILUk_Krylov method totally costs 0.1834 seconds.
 ### WARNING: Max diff 1.4521e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 2.161954e-07.
-ILUk_Krylov method totally costs 0.2324 seconds.
+ILUk_Krylov method totally costs 0.1816 seconds.
 ### WARNING: Max diff 2.0375e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 2.161954e-07.
-ILUk_Krylov method totally costs 0.2075 seconds.
+ILUk_Krylov method totally costs 0.1845 seconds.
 ### WARNING: Max diff 2.0375e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 62 with relative residual 9.001597e-16.
-ILUk_Krylov method totally costs 1.1135 seconds.
+ILUk_Krylov method totally costs 1.0254 seconds.
 Max diff 5.7759e-11 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 1.576809e-07.
-ILUk_Krylov method totally costs 0.2138 seconds.
+ILUk_Krylov method totally costs 0.1812 seconds.
 ### WARNING: Max diff 1.4521e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 60 with relative residual 6.776556e-16.
-ILUk_Krylov method totally costs 0.2143 seconds.
+ILUk_Krylov method totally costs 0.2158 seconds.
 Max diff 5.1488e-10 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -538,47 +538,47 @@ ILUt preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 9.821512e-03.
-ILUt_Krylov method totally costs 0.2802 seconds.
+ILUt_Krylov method totally costs 0.2629 seconds.
 ### WARNING: Max diff 1.3427e+02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.750894e-07.
-ILUt_Krylov method totally costs 0.5111 seconds.
+ILUt_Krylov method totally costs 0.4628 seconds.
 ### WARNING: Max diff 2.1933e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 8.686355e-02.
-ILUt_Krylov method totally costs 0.3788 seconds.
+ILUt_Krylov method totally costs 0.3381 seconds.
 ### WARNING: Max diff 2.6020e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 2.676425e-06.
-ILUt_Krylov method totally costs 0.3232 seconds.
+ILUt_Krylov method totally costs 0.2957 seconds.
 ### WARNING: Max diff 4.2739e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 3.051154e-06.
-ILUt_Krylov method totally costs 0.3320 seconds.
+ILUt_Krylov method totally costs 0.3066 seconds.
 ### WARNING: Max diff 4.6462e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 3.051154e-06.
-ILUt_Krylov method totally costs 0.3088 seconds.
+ILUt_Krylov method totally costs 0.2856 seconds.
 ### WARNING: Max diff 4.6462e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 8.065021e-07.
-ILUt_Krylov method totally costs 2.7610 seconds.
+ILUt_Krylov method totally costs 2.4822 seconds.
 ### WARNING: Max diff 2.7674e-02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 2.676425e-06.
-ILUt_Krylov method totally costs 0.3012 seconds.
+ILUt_Krylov method totally costs 0.2867 seconds.
 ### WARNING: Max diff 4.2739e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 97 with relative residual 2.512288e-07.
-ILUt_Krylov method totally costs 0.4848 seconds.
+ILUt_Krylov method totally costs 0.4394 seconds.
 ### WARNING: Max diff 2.0602e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -586,47 +586,47 @@ ILUtp preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 9.813145e-03.
-ILUtp_Krylov method totally costs 0.3159 seconds.
+ILUtp_Krylov method totally costs 0.3102 seconds.
 ### WARNING: Max diff 1.3482e+02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.097220e-07.
-ILUtp_Krylov method totally costs 0.4948 seconds.
+ILUtp_Krylov method totally costs 0.4478 seconds.
 ### WARNING: Max diff 2.4294e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 6.747564e-02.
-ILUtp_Krylov method totally costs 0.4052 seconds.
+ILUtp_Krylov method totally costs 0.3559 seconds.
 ### WARNING: Max diff 2.5994e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 2.687965e-06.
-ILUtp_Krylov method totally costs 0.3256 seconds.
+ILUtp_Krylov method totally costs 0.3054 seconds.
 ### WARNING: Max diff 4.2792e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 3.060381e-06.
-ILUtp_Krylov method totally costs 0.3376 seconds.
+ILUtp_Krylov method totally costs 0.3088 seconds.
 ### WARNING: Max diff 4.6517e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 3.060381e-06.
-ILUtp_Krylov method totally costs 0.3554 seconds.
+ILUtp_Krylov method totally costs 0.2984 seconds.
 ### WARNING: Max diff 4.6517e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 1.520031e-03.
-ILUtp_Krylov method totally costs 2.8687 seconds.
+ILUtp_Krylov method totally costs 2.4833 seconds.
 ### WARNING: Max diff 1.2603e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 2.687965e-06.
-ILUtp_Krylov method totally costs 0.3170 seconds.
+ILUtp_Krylov method totally costs 0.2995 seconds.
 ### WARNING: Max diff 4.2792e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 85 with relative residual 1.978073e-07.
-ILUtp_Krylov method totally costs 0.4600 seconds.
+ILUtp_Krylov method totally costs 0.4442 seconds.
 ### WARNING: Max diff 2.4334e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 ==================================================================
@@ -646,47 +646,47 @@ Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.873289e-04.
-Krylov method totally costs 0.0026 seconds.
+Krylov method totally costs 0.0025 seconds.
 ### WARNING: Max diff 5.6335e-02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.590776e-05.
-Krylov method totally costs 0.0051 seconds.
+Krylov method totally costs 0.0070 seconds.
 ### WARNING: Max diff 2.5820e-02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 5.957175e-03.
-Krylov method totally costs 0.0072 seconds.
+Krylov method totally costs 0.0073 seconds.
 ### WARNING: Max diff 6.3004e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 1.044771e-04.
-Krylov method totally costs 0.0061 seconds.
+Krylov method totally costs 0.0057 seconds.
 ### WARNING: Max diff 1.2157e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 1.158400e-04.
-Krylov method totally costs 0.0051 seconds.
+Krylov method totally costs 0.0048 seconds.
 ### WARNING: Max diff 1.3358e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 1.158400e-04.
-Krylov method totally costs 0.0050 seconds.
+Krylov method totally costs 0.0048 seconds.
 ### WARNING: Max diff 1.3358e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 5.924810e-03.
-Krylov method totally costs 0.1429 seconds.
+Krylov method totally costs 0.1317 seconds.
 ### WARNING: Max diff 7.5209e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 1.044771e-04.
-Krylov method totally costs 0.0074 seconds.
+Krylov method totally costs 0.0052 seconds.
 ### WARNING: Max diff 1.2157e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 98 with relative residual 1.086893e-05.
-Krylov method totally costs 0.0055 seconds.
+Krylov method totally costs 0.0051 seconds.
 ### WARNING: Max diff 1.9372e-02 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -694,42 +694,42 @@ Diagonal preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.915447e-04.
-Diag_Krylov method totally costs 0.0030 seconds.
+Diag_Krylov method totally costs 0.0028 seconds.
 ### WARNING: Max diff 4.4957e-02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.776192e-05.
-Diag_Krylov method totally costs 0.0063 seconds.
+Diag_Krylov method totally costs 0.0054 seconds.
 ### WARNING: Max diff 4.2612e-02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.205135e+30.
-Diag_Krylov method totally costs 0.0076 seconds.
+Diag_Krylov method totally costs 0.0074 seconds.
 ### WARNING: Max diff 7.9364e+29 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 1.013367e-04.
-Diag_Krylov method totally costs 0.0056 seconds.
+Diag_Krylov method totally costs 0.0057 seconds.
 ### WARNING: Max diff 1.0868e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 1.065134e-04.
-Diag_Krylov method totally costs 0.0058 seconds.
+Diag_Krylov method totally costs 0.0053 seconds.
 ### WARNING: Max diff 1.1445e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 1.065134e-04.
-Diag_Krylov method totally costs 0.0054 seconds.
+Diag_Krylov method totally costs 0.0053 seconds.
 ### WARNING: Max diff 1.1445e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 6.386925e-03.
-Diag_Krylov method totally costs 0.1394 seconds.
+Diag_Krylov method totally costs 0.1296 seconds.
 ### WARNING: Max diff 7.4390e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 1.013367e-04.
-Diag_Krylov method totally costs 0.0059 seconds.
+Diag_Krylov method totally costs 0.0055 seconds.
 ### WARNING: Max diff 1.0868e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
@@ -742,47 +742,47 @@ AMG preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 1 with relative residual 4.960386e-16.
-AMG_Krylov method totally costs 0.0760 seconds.
+AMG_Krylov method totally costs 0.0658 seconds.
 Max diff 5.8120e-14 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 1 with relative residual 2.067016e-16.
-AMG_Krylov method totally costs 0.2343 seconds.
+AMG_Krylov method totally costs 0.2127 seconds.
 Max diff 7.3719e-14 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.267651e+30.
-AMG_Krylov method totally costs 7.1057 seconds.
+AMG_Krylov method totally costs 6.7897 seconds.
 ### WARNING: Max diff 1.2677e+30 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 9 with relative residual 2.294467e-16.
-AMG_Krylov method totally costs 0.7294 seconds.
+AMG_Krylov method totally costs 0.6711 seconds.
 Max diff 1.1524e-13 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 9 with relative residual 2.294467e-16.
-AMG_Krylov method totally costs 0.7086 seconds.
+AMG_Krylov method totally costs 0.6784 seconds.
 Max diff 1.1524e-13 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 9 with relative residual 2.292297e-16.
-AMG_Krylov method totally costs 0.5903 seconds.
+AMG_Krylov method totally costs 0.5725 seconds.
 Max diff 8.8041e-14 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 1 with relative residual 4.246042e-16.
-AMG_Krylov method totally costs 0.1450 seconds.
+AMG_Krylov method totally costs 0.1320 seconds.
 Max diff 7.4940e-14 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 1 with relative residual 1.959232e-16.
-AMG_Krylov method totally costs 0.0699 seconds.
+AMG_Krylov method totally costs 0.0686 seconds.
 Max diff 5.8287e-14 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 1 with relative residual 1.959232e-16.
-AMG_Krylov method totally costs 0.0687 seconds.
+AMG_Krylov method totally costs 0.0657 seconds.
 Max diff 5.8287e-14 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -791,8 +791,8 @@ AMG as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0001 seconds.
 Number of iterations = 1 with relative residual 6.010062e-16.
-AMG solve costs 0.0683 seconds.
-AMG totally costs 0.0685 seconds.
+AMG solve costs 0.0655 seconds.
+AMG totally costs 0.0656 seconds.
 Max diff 1.1757e-13 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -800,7 +800,7 @@ ILUk preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 25 with relative residual 7.124992e-16.
-ILUk_Krylov method totally costs 0.0034 seconds.
+ILUk_Krylov method totally costs 0.0031 seconds.
 Max diff 1.1907e-13 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
@@ -810,27 +810,27 @@ Max diff 7.0610e-13 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.234820e+30.
-ILUk_Krylov method totally costs 0.0155 seconds.
+ILUk_Krylov method totally costs 0.0126 seconds.
 ### WARNING: Max diff 3.1424e+30 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 26 with relative residual 3.538660e-16.
-ILUk_Krylov method totally costs 0.0044 seconds.
+ILUk_Krylov method totally costs 0.0040 seconds.
 Max diff 9.9365e-14 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 26 with relative residual 3.538660e-16.
-ILUk_Krylov method totally costs 0.0043 seconds.
+ILUk_Krylov method totally costs 0.0040 seconds.
 Max diff 9.9365e-14 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 26 with relative residual 2.734543e-16.
-ILUk_Krylov method totally costs 0.0043 seconds.
+ILUk_Krylov method totally costs 0.0040 seconds.
 Max diff 7.0832e-14 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 1.568886e-06.
-ILUk_Krylov method totally costs 0.1395 seconds.
+ILUk_Krylov method totally costs 0.1372 seconds.
 ### WARNING: Max diff 2.1538e-04 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
@@ -840,7 +840,7 @@ Max diff 6.4282e-14 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 15 with relative residual 8.890201e-16.
-ILUk_Krylov method totally costs 0.0037 seconds.
+ILUk_Krylov method totally costs 0.0036 seconds.
 Max diff 3.9391e-13 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -848,27 +848,27 @@ ILUt preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 36 with relative residual 7.618939e-16.
-ILUt_Krylov method totally costs 0.0053 seconds.
+ILUt_Krylov method totally costs 0.0057 seconds.
 Max diff 4.1889e-13 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 15 with relative residual 4.202134e-16.
-ILUt_Krylov method totally costs 0.0051 seconds.
+ILUt_Krylov method totally costs 0.0054 seconds.
 Max diff 3.1042e-13 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 3.262741e+28.
-ILUt_Krylov method totally costs 0.0130 seconds.
+ILUt_Krylov method totally costs 0.0125 seconds.
 ### WARNING: Max diff 3.8727e+31 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 26 with relative residual 6.918441e-16.
-ILUt_Krylov method totally costs 0.0056 seconds.
+ILUt_Krylov method totally costs 0.0055 seconds.
 Max diff 1.3402e-12 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 26 with relative residual 6.918441e-16.
-ILUt_Krylov method totally costs 0.0057 seconds.
+ILUt_Krylov method totally costs 0.0054 seconds.
 Max diff 1.3402e-12 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
@@ -878,17 +878,17 @@ Max diff 1.3345e-12 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 2.483405e-07.
-ILUt_Krylov method totally costs 0.1440 seconds.
+ILUt_Krylov method totally costs 0.1426 seconds.
 Max diff 7.2139e-05 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 26 with relative residual 6.120551e-16.
-ILUt_Krylov method totally costs 0.0057 seconds.
+ILUt_Krylov method totally costs 0.0059 seconds.
 Max diff 1.3028e-12 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 15 with relative residual 6.670796e-16.
-ILUt_Krylov method totally costs 0.0051 seconds.
+ILUt_Krylov method totally costs 0.0050 seconds.
 Max diff 1.0052e-12 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -896,47 +896,47 @@ ILUtp preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 36 with relative residual 7.618939e-16.
-ILUtp_Krylov method totally costs 0.0052 seconds.
+ILUtp_Krylov method totally costs 0.0050 seconds.
 Max diff 4.1889e-13 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 15 with relative residual 4.202134e-16.
-ILUtp_Krylov method totally costs 0.0050 seconds.
+ILUtp_Krylov method totally costs 0.0048 seconds.
 Max diff 3.1042e-13 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 3.262741e+28.
-ILUtp_Krylov method totally costs 0.0126 seconds.
+ILUtp_Krylov method totally costs 0.0125 seconds.
 ### WARNING: Max diff 3.8727e+31 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 26 with relative residual 6.918441e-16.
-ILUtp_Krylov method totally costs 0.0054 seconds.
+ILUtp_Krylov method totally costs 0.0057 seconds.
 Max diff 1.3402e-12 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 26 with relative residual 6.918441e-16.
-ILUtp_Krylov method totally costs 0.0054 seconds.
+ILUtp_Krylov method totally costs 0.0056 seconds.
 Max diff 1.3402e-12 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 26 with relative residual 6.758750e-16.
-ILUtp_Krylov method totally costs 0.0054 seconds.
+ILUtp_Krylov method totally costs 0.0058 seconds.
 Max diff 1.3345e-12 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 2.483405e-07.
-ILUtp_Krylov method totally costs 0.1431 seconds.
+ILUtp_Krylov method totally costs 0.1390 seconds.
 Max diff 7.2139e-05 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 26 with relative residual 6.120551e-16.
-ILUtp_Krylov method totally costs 0.0055 seconds.
+ILUtp_Krylov method totally costs 0.0060 seconds.
 Max diff 1.3028e-12 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 15 with relative residual 6.670796e-16.
-ILUtp_Krylov method totally costs 0.0057 seconds.
+ILUtp_Krylov method totally costs 0.0052 seconds.
 Max diff 1.0052e-12 smaller than tolerance................. [PASS]
 
 ==================================================================
@@ -956,17 +956,17 @@ Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.967821e-02.
-Krylov method totally costs 0.0016 seconds.
+Krylov method totally costs 0.0014 seconds.
 ### WARNING: Max diff 1.9225e+02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 5.135353e-07.
-Krylov method totally costs 0.0027 seconds.
+Krylov method totally costs 0.0026 seconds.
 ### WARNING: Max diff 3.0048e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 5.465161e-05.
-Krylov method totally costs 0.0037 seconds.
+Krylov method totally costs 0.0038 seconds.
 ### WARNING: Max diff 6.1070e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
@@ -986,7 +986,7 @@ Krylov method totally costs 0.0020 seconds.
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 5.377234e-05.
-Krylov method totally costs 0.1089 seconds.
+Krylov method totally costs 0.1026 seconds.
 ### WARNING: Max diff 2.5173e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
@@ -1034,17 +1034,17 @@ Max diff 2.3617e-11 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 6.361103e-01.
-Diag_Krylov method totally costs 0.1032 seconds.
+Diag_Krylov method totally costs 0.1034 seconds.
 ### WARNING: Max diff 3.3123e+04 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 11 with relative residual 2.469255e-16.
-Diag_Krylov method totally costs 0.0002 seconds.
+Diag_Krylov method totally costs 0.0006 seconds.
 Max diff 2.4452e-11 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 20 with relative residual 3.244231e-16.
-Diag_Krylov method totally costs 0.0006 seconds.
+Diag_Krylov method totally costs 0.0012 seconds.
 Max diff 1.2240e-11 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -1052,47 +1052,47 @@ AMG preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 7.649430e+09.
-AMG_Krylov method totally costs 1.5966 seconds.
+AMG_Krylov method totally costs 1.5431 seconds.
 ### WARNING: Max diff 8.1213e+11 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 1 with relative residual 3.177933e-16.
-AMG_Krylov method totally costs 0.0407 seconds.
+AMG_Krylov method totally costs 0.0410 seconds.
 Max diff 1.4850e-10 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.267645e+30.
-AMG_Krylov method totally costs 3.0616 seconds.
+AMG_Krylov method totally costs 2.9334 seconds.
 ### WARNING: Max diff 3.3954e+30 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 7 with relative residual 3.602213e-16.
-AMG_Krylov method totally costs 0.2254 seconds.
+AMG_Krylov method totally costs 0.2244 seconds.
 Max diff 1.0613e-10 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 7 with relative residual 3.602213e-16.
-AMG_Krylov method totally costs 0.2291 seconds.
+AMG_Krylov method totally costs 0.2115 seconds.
 Max diff 1.0613e-10 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 2 with relative residual 4.392946e-16.
-AMG_Krylov method totally costs 0.0445 seconds.
+AMG_Krylov method totally costs 0.0413 seconds.
 Max diff 7.3504e-10 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 1.024615e-15.
-AMG_Krylov method totally costs 1.8148 seconds.
+AMG_Krylov method totally costs 1.7472 seconds.
 Max diff 1.6925e-12 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 2 with relative residual 9.646580e-16.
-AMG_Krylov method totally costs 0.0377 seconds.
+AMG_Krylov method totally costs 0.0378 seconds.
 Max diff 6.8591e-11 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 1 with relative residual 3.177933e-16.
-AMG_Krylov method totally costs 0.0407 seconds.
+AMG_Krylov method totally costs 0.0379 seconds.
 Max diff 1.4850e-10 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -1101,8 +1101,8 @@ AMG as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0001 seconds.
 Number of iterations = 2 with relative residual 3.373810e-16.
-AMG solve costs 0.0404 seconds.
-AMG totally costs 0.0405 seconds.
+AMG solve costs 0.0416 seconds.
+AMG totally costs 0.0417 seconds.
 Max diff 5.5446e-11 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -1115,7 +1115,7 @@ Max diff 9.5074e-13 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 1 with relative residual 5.705220e-17.
-ILUk_Krylov method totally costs 0.0010 seconds.
+ILUk_Krylov method totally costs 0.0009 seconds.
 Max diff 3.9613e-13 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
@@ -1125,7 +1125,7 @@ ILUk_Krylov method totally costs 0.0061 seconds.
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 1 with relative residual 6.788318e-16.
-ILUk_Krylov method totally costs 0.0010 seconds.
+ILUk_Krylov method totally costs 0.0009 seconds.
 Max diff 1.2125e-12 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
@@ -1150,7 +1150,7 @@ Max diff 9.5079e-13 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 1 with relative residual 2.806325e-16.
-ILUk_Krylov method totally costs 0.0017 seconds.
+ILUk_Krylov method totally costs 0.0010 seconds.
 Max diff 9.5079e-13 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -1158,47 +1158,47 @@ ILUt preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 5 with relative residual 2.224363e-16.
-ILUt_Krylov method totally costs 0.0035 seconds.
+ILUt_Krylov method totally costs 0.0040 seconds.
 Max diff 9.1921e-13 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 3 with relative residual 2.105472e-16.
-ILUt_Krylov method totally costs 0.0034 seconds.
+ILUt_Krylov method totally costs 0.0036 seconds.
 Max diff 7.1843e-13 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.267692e+30.
-ILUt_Krylov method totally costs 0.0072 seconds.
+ILUt_Krylov method totally costs 0.0075 seconds.
 ### WARNING: Max diff 1.5685e+31 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 5 with relative residual 2.880855e-16.
-ILUt_Krylov method totally costs 0.0031 seconds.
+ILUt_Krylov method totally costs 0.0033 seconds.
 Max diff 1.0579e-12 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 5 with relative residual 2.880855e-16.
-ILUt_Krylov method totally costs 0.0031 seconds.
+ILUt_Krylov method totally costs 0.0034 seconds.
 Max diff 1.0579e-12 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 5 with relative residual 2.693920e-16.
-ILUt_Krylov method totally costs 0.0035 seconds.
+ILUt_Krylov method totally costs 0.0034 seconds.
 Max diff 6.8834e-13 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 5.059175e-13.
-ILUt_Krylov method totally costs 0.1054 seconds.
+ILUt_Krylov method totally costs 0.1038 seconds.
 Max diff 3.6106e-09 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 5 with relative residual 9.828983e-17.
-ILUt_Krylov method totally costs 0.0036 seconds.
+ILUt_Krylov method totally costs 0.0039 seconds.
 Max diff 7.5462e-13 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 3 with relative residual 2.323047e-16.
-ILUt_Krylov method totally costs 0.0034 seconds.
+ILUt_Krylov method totally costs 0.0036 seconds.
 Max diff 7.3186e-13 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -1206,27 +1206,27 @@ ILUtp preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 5 with relative residual 2.224363e-16.
-ILUtp_Krylov method totally costs 0.0034 seconds.
+ILUtp_Krylov method totally costs 0.0033 seconds.
 Max diff 9.1921e-13 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 3 with relative residual 2.105472e-16.
-ILUtp_Krylov method totally costs 0.0033 seconds.
+ILUtp_Krylov method totally costs 0.0032 seconds.
 Max diff 7.1843e-13 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.267692e+30.
-ILUtp_Krylov method totally costs 0.0071 seconds.
+ILUtp_Krylov method totally costs 0.0075 seconds.
 ### WARNING: Max diff 1.5685e+31 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 5 with relative residual 2.880855e-16.
-ILUtp_Krylov method totally costs 0.0035 seconds.
+ILUtp_Krylov method totally costs 0.0036 seconds.
 Max diff 1.0579e-12 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 5 with relative residual 2.880855e-16.
-ILUtp_Krylov method totally costs 0.0033 seconds.
+ILUtp_Krylov method totally costs 0.0034 seconds.
 Max diff 1.0579e-12 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
@@ -1236,17 +1236,17 @@ Max diff 6.8834e-13 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 5.059175e-13.
-ILUtp_Krylov method totally costs 0.1126 seconds.
+ILUtp_Krylov method totally costs 0.1011 seconds.
 Max diff 3.6106e-09 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 5 with relative residual 9.828983e-17.
-ILUtp_Krylov method totally costs 0.0036 seconds.
+ILUtp_Krylov method totally costs 0.0034 seconds.
 Max diff 7.5462e-13 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 3 with relative residual 2.323047e-16.
-ILUtp_Krylov method totally costs 0.0035 seconds.
+ILUtp_Krylov method totally costs 0.0037 seconds.
 Max diff 7.3186e-13 smaller than tolerance................. [PASS]
 
 ==================================================================
@@ -1266,47 +1266,47 @@ Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 7.996686e-04.
-Krylov method totally costs 0.0345 seconds.
+Krylov method totally costs 0.0273 seconds.
 ### WARNING: Max diff 9.9119e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 5.929379e-05.
-Krylov method totally costs 0.0619 seconds.
+Krylov method totally costs 0.0528 seconds.
 ### WARNING: Max diff 9.9119e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.001538e-04.
-Krylov method totally costs 0.0911 seconds.
+Krylov method totally costs 0.0798 seconds.
 ### WARNING: Max diff 9.9119e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.323837e-04.
-Krylov method totally costs 0.0404 seconds.
+Krylov method totally costs 0.0343 seconds.
 ### WARNING: Max diff 9.9120e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.630312e-04.
-Krylov method totally costs 0.0369 seconds.
+Krylov method totally costs 0.0351 seconds.
 ### WARNING: Max diff 9.9120e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.630312e-04.
-Krylov method totally costs 0.0394 seconds.
+Krylov method totally costs 0.0406 seconds.
 ### WARNING: Max diff 9.9120e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 6.309055e-04.
-Krylov method totally costs 2.4712 seconds.
+Krylov method totally costs 2.3547 seconds.
 ### WARNING: Max diff 9.9119e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 4.323877e-04.
-Krylov method totally costs 0.0382 seconds.
+Krylov method totally costs 0.0352 seconds.
 ### WARNING: Max diff 9.9120e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 99 with relative residual 4.813353e-05.
-Krylov method totally costs 0.0572 seconds.
+Krylov method totally costs 0.0560 seconds.
 ### WARNING: Max diff 9.9119e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -1314,47 +1314,47 @@ Diagonal preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.561085e-05.
-Diag_Krylov method totally costs 0.0273 seconds.
+Diag_Krylov method totally costs 0.0277 seconds.
 ### WARNING: Max diff 4.3964e-03 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 4.275333e-07.
-Diag_Krylov method totally costs 0.0541 seconds.
+Diag_Krylov method totally costs 0.0580 seconds.
 ### WARNING: Max diff 2.6144e-04 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 9.150422e-06.
-Diag_Krylov method totally costs 0.0784 seconds.
+Diag_Krylov method totally costs 0.0804 seconds.
 ### WARNING: Max diff 4.8738e-03 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.712224e-05.
-Diag_Krylov method totally costs 0.0351 seconds.
+Diag_Krylov method totally costs 0.0355 seconds.
 ### WARNING: Max diff 3.3128e-02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 5.593801e-05.
-Diag_Krylov method totally costs 0.0371 seconds.
+Diag_Krylov method totally costs 0.0343 seconds.
 ### WARNING: Max diff 4.0265e-02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 5.593801e-05.
-Diag_Krylov method totally costs 0.0344 seconds.
+Diag_Krylov method totally costs 0.0349 seconds.
 ### WARNING: Max diff 4.0265e-02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 2.521475e-05.
-Diag_Krylov method totally costs 2.4544 seconds.
+Diag_Krylov method totally costs 2.3732 seconds.
 ### WARNING: Max diff 3.9738e-03 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 4.712224e-05.
-Diag_Krylov method totally costs 0.0393 seconds.
+Diag_Krylov method totally costs 0.0356 seconds.
 ### WARNING: Max diff 3.3128e-02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.745404e-07.
-Diag_Krylov method totally costs 0.0636 seconds.
+Diag_Krylov method totally costs 0.0564 seconds.
 Max diff 7.6087e-05 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -1362,57 +1362,57 @@ AMG preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 4.099081e-12.
-AMG_Krylov method totally costs 3.7589 seconds.
+AMG_Krylov method totally costs 3.7233 seconds.
 Max diff 1.5872e-10 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 22 with relative residual 9.958914e-16.
-AMG_Krylov method totally costs 1.6878 seconds.
+AMG_Krylov method totally costs 1.7214 seconds.
 Max diff 3.6904e-13 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.579056e-05.
-AMG_Krylov method totally costs 3.8805 seconds.
+AMG_Krylov method totally costs 3.8546 seconds.
 ### WARNING: Max diff 2.8859e-03 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 47 with relative residual 8.136056e-16.
-AMG_Krylov method totally costs 1.8911 seconds.
+AMG_Krylov method totally costs 1.9014 seconds.
 Max diff 3.3559e-13 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 47 with relative residual 8.136056e-16.
-AMG_Krylov method totally costs 1.9511 seconds.
+AMG_Krylov method totally costs 1.9033 seconds.
 Max diff 3.3559e-13 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 41 with relative residual 7.772712e-16.
-AMG_Krylov method totally costs 1.5890 seconds.
+AMG_Krylov method totally costs 1.5993 seconds.
 Max diff 2.0373e-13 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 35 with relative residual 6.641990e-16.
-AMG_Krylov method totally costs 1.6757 seconds.
+AMG_Krylov method totally costs 1.6917 seconds.
 Max diff 1.2323e-14 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 41 with relative residual 5.648671e-16.
-AMG_Krylov method totally costs 1.5591 seconds.
+AMG_Krylov method totally costs 1.5814 seconds.
 Max diff 2.0306e-13 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 23 with relative residual 7.228448e-16.
-AMG_Krylov method totally costs 1.7242 seconds.
+AMG_Krylov method totally costs 1.7587 seconds.
 Max diff 3.1020e-13 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
 AMG as iterative solver ...
 
 Calling classical AMG ...
-Classical AMG setup costs 0.1001 seconds.
+Classical AMG setup costs 0.1034 seconds.
 ### WARNING: Max iter 20 reached with rel. resid. 2.346373e-05.
-AMG solve costs 0.9063 seconds.
-AMG totally costs 1.0091 seconds.
+AMG solve costs 0.8889 seconds.
+AMG totally costs 0.9953 seconds.
 ### WARNING: Max diff 1.4206e-02 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -1420,47 +1420,47 @@ ILUk preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 21 with relative residual 8.791937e-16.
-ILUk_Krylov method totally costs 0.2041 seconds.
+ILUk_Krylov method totally costs 0.1895 seconds.
 Max diff 2.6867e-14 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 13 with relative residual 5.760877e-16.
-ILUk_Krylov method totally costs 0.2169 seconds.
+ILUk_Krylov method totally costs 0.2070 seconds.
 Max diff 1.0547e-14 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 3.549697e-15.
-ILUk_Krylov method totally costs 0.4073 seconds.
+ILUk_Krylov method totally costs 0.3872 seconds.
 Max diff 9.5202e-15 smaller than tolerance................. [PASS]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 27 with relative residual 4.138828e-16.
-ILUk_Krylov method totally costs 0.2269 seconds.
+ILUk_Krylov method totally costs 0.2068 seconds.
 Max diff 8.2157e-15 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 27 with relative residual 4.138828e-16.
-ILUk_Krylov method totally costs 0.2107 seconds.
+ILUk_Krylov method totally costs 0.2046 seconds.
 Max diff 8.2157e-15 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 26 with relative residual 5.626853e-16.
-ILUk_Krylov method totally costs 0.2018 seconds.
+ILUk_Krylov method totally costs 0.2026 seconds.
 Max diff 9.4369e-15 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 3.413987e-15.
-ILUk_Krylov method totally costs 2.8050 seconds.
+ILUk_Krylov method totally costs 2.6860 seconds.
 Max diff 7.7161e-15 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 26 with relative residual 1.489485e-17.
-ILUk_Krylov method totally costs 0.2002 seconds.
+ILUk_Krylov method totally costs 0.1973 seconds.
 Max diff 8.3267e-15 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 13 with relative residual 6.541392e-16.
-ILUk_Krylov method totally costs 0.2019 seconds.
+ILUk_Krylov method totally costs 0.2012 seconds.
 Max diff 1.0436e-14 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -1468,47 +1468,47 @@ ILUt preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 15 with relative residual 8.600107e-16.
-ILUt_Krylov method totally costs 0.1797 seconds.
+ILUt_Krylov method totally costs 0.1788 seconds.
 Max diff 2.5868e-14 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 7 with relative residual 9.026184e-16.
-ILUt_Krylov method totally costs 0.2176 seconds.
+ILUt_Krylov method totally costs 0.2268 seconds.
 Max diff 4.5297e-14 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 6.303334e-06.
-ILUt_Krylov method totally costs 0.4094 seconds.
+ILUt_Krylov method totally costs 0.4139 seconds.
 Max diff 6.4878e-05 smaller than tolerance................. [PASS]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 27 with relative residual 4.038049e-16.
-ILUt_Krylov method totally costs 0.2182 seconds.
+ILUt_Krylov method totally costs 0.2256 seconds.
 Max diff 5.1070e-15 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 27 with relative residual 4.038049e-16.
-ILUt_Krylov method totally costs 0.2287 seconds.
+ILUt_Krylov method totally costs 0.2234 seconds.
 Max diff 5.1070e-15 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 26 with relative residual 7.039834e-16.
-ILUt_Krylov method totally costs 0.2181 seconds.
+ILUt_Krylov method totally costs 0.2233 seconds.
 Max diff 5.0959e-14 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 13 with relative residual 8.678009e-16.
-ILUt_Krylov method totally costs 0.2474 seconds.
+ILUt_Krylov method totally costs 0.2390 seconds.
 Max diff 6.9944e-15 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 26 with relative residual 1.302593e-17.
-ILUt_Krylov method totally costs 0.2188 seconds.
+ILUt_Krylov method totally costs 0.2203 seconds.
 Max diff 6.5503e-15 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 7 with relative residual 9.275650e-16.
-ILUt_Krylov method totally costs 0.2004 seconds.
+ILUt_Krylov method totally costs 0.1968 seconds.
 Max diff 4.5075e-14 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -1516,47 +1516,47 @@ ILUtp preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 15 with relative residual 8.600107e-16.
-ILUtp_Krylov method totally costs 0.2175 seconds.
+ILUtp_Krylov method totally costs 0.2218 seconds.
 Max diff 2.5868e-14 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 7 with relative residual 9.026184e-16.
-ILUtp_Krylov method totally costs 0.2183 seconds.
+ILUtp_Krylov method totally costs 0.2217 seconds.
 Max diff 4.5297e-14 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 6.303334e-06.
-ILUtp_Krylov method totally costs 0.4332 seconds.
+ILUtp_Krylov method totally costs 0.4426 seconds.
 Max diff 6.4878e-05 smaller than tolerance................. [PASS]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 27 with relative residual 4.038049e-16.
-ILUtp_Krylov method totally costs 0.2456 seconds.
+ILUtp_Krylov method totally costs 0.2499 seconds.
 Max diff 5.1070e-15 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 27 with relative residual 4.038049e-16.
-ILUtp_Krylov method totally costs 0.2502 seconds.
+ILUtp_Krylov method totally costs 0.2515 seconds.
 Max diff 5.1070e-15 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 26 with relative residual 7.039834e-16.
-ILUtp_Krylov method totally costs 0.2443 seconds.
+ILUtp_Krylov method totally costs 0.2577 seconds.
 Max diff 5.0959e-14 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 13 with relative residual 8.678009e-16.
-ILUtp_Krylov method totally costs 0.2713 seconds.
+ILUtp_Krylov method totally costs 0.2670 seconds.
 Max diff 6.9944e-15 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 26 with relative residual 1.302593e-17.
-ILUtp_Krylov method totally costs 0.2416 seconds.
+ILUtp_Krylov method totally costs 0.2433 seconds.
 Max diff 6.5503e-15 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 7 with relative residual 9.275650e-16.
-ILUtp_Krylov method totally costs 0.2237 seconds.
+ILUtp_Krylov method totally costs 0.2234 seconds.
 Max diff 4.5075e-14 smaller than tolerance................. [PASS]
 
 ==================================================================
@@ -1581,17 +1581,17 @@ Krylov method totally costs 0.0012 seconds.
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 63 with relative residual 9.205431e-16.
-Krylov method totally costs 0.0013 seconds.
+Krylov method totally costs 0.0014 seconds.
 Max diff 7.2581e-15 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.996335e-02.
-Krylov method totally costs 0.0029 seconds.
+Krylov method totally costs 0.0031 seconds.
 ### WARNING: Max diff 5.4546e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 9.293812e-12.
-Krylov method totally costs 0.0023 seconds.
+Krylov method totally costs 0.0024 seconds.
 Max diff 8.7451e-11 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
@@ -1601,12 +1601,12 @@ Max diff 8.7451e-11 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 9.293812e-12.
-Krylov method totally costs 0.0023 seconds.
+Krylov method totally costs 0.0024 seconds.
 Max diff 8.7451e-11 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 3.506528e-02.
-Krylov method totally costs 0.0563 seconds.
+Krylov method totally costs 0.0551 seconds.
 ### WARNING: Max diff 1.8835e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
@@ -1629,37 +1629,37 @@ Diag_Krylov method totally costs 0.0013 seconds.
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 47 with relative residual 7.501025e-16.
-Diag_Krylov method totally costs 0.0024 seconds.
+Diag_Krylov method totally costs 0.0011 seconds.
 Max diff 3.1086e-15 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.146648e+30.
-Diag_Krylov method totally costs 0.0042 seconds.
+Diag_Krylov method totally costs 0.0031 seconds.
 ### WARNING: Max diff 1.1605e+30 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.040078e-15.
-Diag_Krylov method totally costs 0.0027 seconds.
+Diag_Krylov method totally costs 0.0024 seconds.
 Max diff 3.2641e-14 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.040078e-15.
-Diag_Krylov method totally costs 0.0027 seconds.
+Diag_Krylov method totally costs 0.0024 seconds.
 Max diff 3.2641e-14 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.040078e-15.
-Diag_Krylov method totally costs 0.0027 seconds.
+Diag_Krylov method totally costs 0.0025 seconds.
 Max diff 3.2641e-14 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 8.620564e-02.
-Diag_Krylov method totally costs 0.0545 seconds.
+Diag_Krylov method totally costs 0.0536 seconds.
 ### WARNING: Max diff 3.8242e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 4.040077e-15.
-Diag_Krylov method totally costs 0.0025 seconds.
+Diag_Krylov method totally costs 0.0024 seconds.
 Max diff 3.1530e-14 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
@@ -1672,47 +1672,47 @@ AMG preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 2 with relative residual 2.514979e-16.
-AMG_Krylov method totally costs 0.0158 seconds.
+AMG_Krylov method totally costs 0.0156 seconds.
 Max diff 4.4409e-16 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 1 with relative residual 2.810583e-16.
-AMG_Krylov method totally costs 0.0191 seconds.
+AMG_Krylov method totally costs 0.0161 seconds.
 Max diff 5.5511e-16 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.267651e+30.
-AMG_Krylov method totally costs 1.5587 seconds.
+AMG_Krylov method totally costs 1.5139 seconds.
 ### WARNING: Max diff 1.2677e+30 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 5 with relative residual 2.368260e-16.
-AMG_Krylov method totally costs 0.0538 seconds.
+AMG_Krylov method totally costs 0.0495 seconds.
 Max diff 5.5511e-16 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 5 with relative residual 2.368260e-16.
-AMG_Krylov method totally costs 0.0552 seconds.
+AMG_Krylov method totally costs 0.0491 seconds.
 Max diff 5.5511e-16 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 4 with relative residual 2.937561e-16.
-AMG_Krylov method totally costs 0.0323 seconds.
+AMG_Krylov method totally costs 0.0313 seconds.
 Max diff 6.6613e-16 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 1 with relative residual 5.979734e-16.
-AMG_Krylov method totally costs 0.0166 seconds.
+AMG_Krylov method totally costs 0.0158 seconds.
 Max diff 9.9920e-16 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 2 with relative residual 6.274186e-16.
-AMG_Krylov method totally costs 0.0176 seconds.
+AMG_Krylov method totally costs 0.0157 seconds.
 Max diff 9.9920e-16 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 1 with relative residual 2.810583e-16.
-AMG_Krylov method totally costs 0.0157 seconds.
+AMG_Krylov method totally costs 0.0156 seconds.
 Max diff 5.5511e-16 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -1730,22 +1730,22 @@ ILUk preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 22 with relative residual 6.690851e-16.
-ILUk_Krylov method totally costs 0.0026 seconds.
+ILUk_Krylov method totally costs 0.0027 seconds.
 Max diff 5.7732e-15 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 9 with relative residual 4.109019e-16.
-ILUk_Krylov method totally costs 0.0025 seconds.
+ILUk_Krylov method totally costs 0.0026 seconds.
 Max diff 4.1078e-15 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.186947e+30.
-ILUk_Krylov method totally costs 0.0076 seconds.
+ILUk_Krylov method totally costs 0.0089 seconds.
 ### WARNING: Max diff 2.0283e+30 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 16 with relative residual 9.287973e-16.
-ILUk_Krylov method totally costs 0.0025 seconds.
+ILUk_Krylov method totally costs 0.0026 seconds.
 Max diff 1.3739e-15 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
@@ -1755,12 +1755,12 @@ Max diff 1.3739e-15 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 16 with relative residual 8.907143e-16.
-ILUk_Krylov method totally costs 0.0026 seconds.
+ILUk_Krylov method totally costs 0.0027 seconds.
 Max diff 1.4017e-15 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 5.793818e-05.
-ILUk_Krylov method totally costs 0.0602 seconds.
+ILUk_Krylov method totally costs 0.0583 seconds.
 ### WARNING: Max diff 3.5794e-04 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
@@ -1778,22 +1778,22 @@ ILUt preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 16 with relative residual 5.456015e-16.
-ILUt_Krylov method totally costs 0.0113 seconds.
+ILUt_Krylov method totally costs 0.0092 seconds.
 Max diff 2.8727e-15 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 6 with relative residual 3.342845e-16.
-ILUt_Krylov method totally costs 0.0094 seconds.
+ILUt_Krylov method totally costs 0.0093 seconds.
 Max diff 7.7716e-16 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.309820e+30.
-ILUt_Krylov method totally costs 0.0180 seconds.
+ILUt_Krylov method totally costs 0.0176 seconds.
 ### WARNING: Max diff 1.3046e+30 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 10 with relative residual 6.329036e-16.
-ILUt_Krylov method totally costs 0.0089 seconds.
+ILUt_Krylov method totally costs 0.0091 seconds.
 Max diff 1.3323e-15 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
@@ -1803,22 +1803,22 @@ Max diff 1.3323e-15 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 10 with relative residual 3.775449e-16.
-ILUt_Krylov method totally costs 0.0088 seconds.
+ILUt_Krylov method totally costs 0.0089 seconds.
 Max diff 7.7716e-16 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 2.549287e-06.
-ILUt_Krylov method totally costs 0.0706 seconds.
+ILUt_Krylov method totally costs 0.0685 seconds.
 Max diff 2.3771e-05 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 10 with relative residual 2.724258e-16.
-ILUt_Krylov method totally costs 0.0089 seconds.
+ILUt_Krylov method totally costs 0.0092 seconds.
 Max diff 1.2212e-15 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 6 with relative residual 3.747995e-16.
-ILUt_Krylov method totally costs 0.0091 seconds.
+ILUt_Krylov method totally costs 0.0092 seconds.
 Max diff 7.7716e-16 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -1826,17 +1826,17 @@ ILUtp preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 16 with relative residual 5.456015e-16.
-ILUtp_Krylov method totally costs 0.0104 seconds.
+ILUtp_Krylov method totally costs 0.0105 seconds.
 Max diff 2.8727e-15 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 6 with relative residual 3.342845e-16.
-ILUtp_Krylov method totally costs 0.0102 seconds.
+ILUtp_Krylov method totally costs 0.0103 seconds.
 Max diff 7.7716e-16 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.309820e+30.
-ILUtp_Krylov method totally costs 0.0188 seconds.
+ILUtp_Krylov method totally costs 0.0193 seconds.
 ### WARNING: Max diff 1.3046e+30 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
@@ -1846,7 +1846,7 @@ Max diff 1.3323e-15 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 10 with relative residual 6.329036e-16.
-ILUtp_Krylov method totally costs 0.0100 seconds.
+ILUtp_Krylov method totally costs 0.0101 seconds.
 Max diff 1.3323e-15 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
@@ -1856,17 +1856,17 @@ Max diff 7.7716e-16 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 2.549287e-06.
-ILUtp_Krylov method totally costs 0.0701 seconds.
+ILUtp_Krylov method totally costs 0.0808 seconds.
 Max diff 2.3771e-05 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 10 with relative residual 2.724258e-16.
-ILUtp_Krylov method totally costs 0.0101 seconds.
+ILUtp_Krylov method totally costs 0.0102 seconds.
 Max diff 1.2212e-15 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 6 with relative residual 3.747995e-16.
-ILUtp_Krylov method totally costs 0.0102 seconds.
+ILUtp_Krylov method totally costs 0.0103 seconds.
 Max diff 7.7716e-16 smaller than tolerance................. [PASS]
 
 ==================================================================
@@ -1906,7 +1906,7 @@ Krylov method totally costs 0.0003 seconds.
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 8.295093e-04.
-Krylov method totally costs 0.0002 seconds.
+Krylov method totally costs 0.0003 seconds.
 ### WARNING: Max diff 6.6866e-02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
@@ -1964,7 +1964,7 @@ Diag_Krylov method totally costs 0.0002 seconds.
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 1.464211e+00.
-Diag_Krylov method totally costs 0.0045 seconds.
+Diag_Krylov method totally costs 0.0044 seconds.
 ### WARNING: Max diff 1.3036e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
@@ -1987,17 +1987,17 @@ Max diff 2.7756e-15 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 3 with relative residual 1.332574e-16.
-AMG_Krylov method totally costs 0.0201 seconds.
+AMG_Krylov method totally costs 0.0189 seconds.
 Max diff 6.6613e-16 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.307410e+19.
-AMG_Krylov method totally costs 0.3325 seconds.
+AMG_Krylov method totally costs 0.3167 seconds.
 ### WARNING: Max diff 9.8781e+20 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 7 with relative residual 1.341828e-16.
-AMG_Krylov method totally costs 0.0279 seconds.
+AMG_Krylov method totally costs 0.0281 seconds.
 Max diff 5.7732e-15 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
@@ -2022,7 +2022,7 @@ Max diff 2.2204e-15 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 3 with relative residual 1.671704e-16.
-AMG_Krylov method totally costs 0.0157 seconds.
+AMG_Krylov method totally costs 0.0156 seconds.
 Max diff 5.9674e-16 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -2031,7 +2031,7 @@ AMG as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0000 seconds.
 Number of iterations = 2 with relative residual 3.698894e-14.
-AMG solve costs 0.0061 seconds.
+AMG solve costs 0.0062 seconds.
 AMG totally costs 0.0062 seconds.
 Max diff 1.6576e-12 smaller than tolerance................. [PASS]
 
@@ -2070,12 +2070,12 @@ ILUk_Krylov method totally costs 0.0004 seconds.
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 1.481048e+00.
-ILUk_Krylov method totally costs 0.0050 seconds.
+ILUk_Krylov method totally costs 0.0046 seconds.
 ### WARNING: Max diff 1.3242e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 8.215086e-01.
-ILUk_Krylov method totally costs 0.0005 seconds.
+ILUk_Krylov method totally costs 0.0004 seconds.
 ### WARNING: Max diff 1.3394e+07 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
@@ -2118,7 +2118,7 @@ Max diff 8.3267e-16 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 1.226867e-04.
-ILUt_Krylov method totally costs 0.0060 seconds.
+ILUt_Krylov method totally costs 0.0049 seconds.
 ### WARNING: Max diff 1.9744e-03 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
@@ -2141,12 +2141,12 @@ ILUtp_Krylov method totally costs 0.0003 seconds.
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 3 with relative residual 1.523908e-16.
-ILUtp_Krylov method totally costs 0.0004 seconds.
+ILUtp_Krylov method totally costs 0.0003 seconds.
 ### WARNING: Max diff 9.3913e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.757273e-06.
-ILUtp_Krylov method totally costs 0.0009 seconds.
+ILUtp_Krylov method totally costs 0.0008 seconds.
 ### WARNING: Max diff 9.3912e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
@@ -2196,17 +2196,17 @@ Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 9.550744e-11.
-Krylov method totally costs 0.0056 seconds.
+Krylov method totally costs 0.0050 seconds.
 Max diff 4.9968e-09 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.131254e-14.
-Krylov method totally costs 0.0105 seconds.
+Krylov method totally costs 0.0103 seconds.
 Max diff 3.0991e-12 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 4.616727e-05.
-Krylov method totally costs 0.0151 seconds.
+Krylov method totally costs 0.0152 seconds.
 ### WARNING: Max diff 3.1353e-04 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
@@ -2226,7 +2226,7 @@ Max diff 4.3967e-08 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 1.754810e-07.
-Krylov method totally costs 0.2564 seconds.
+Krylov method totally costs 0.2556 seconds.
 Max diff 1.1749e-06 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
@@ -2255,7 +2255,7 @@ Max diff 1.4211e-13 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 4.577565e-05.
-Diag_Krylov method totally costs 0.0151 seconds.
+Diag_Krylov method totally costs 0.0150 seconds.
 ### WARNING: Max diff 6.5627e-04 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
@@ -2265,27 +2265,27 @@ Max diff 1.4685e-10 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 1.428099e-12.
-Diag_Krylov method totally costs 0.0125 seconds.
+Diag_Krylov method totally costs 0.0126 seconds.
 Max diff 1.4685e-10 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 1.428099e-12.
-Diag_Krylov method totally costs 0.0126 seconds.
+Diag_Krylov method totally costs 0.0127 seconds.
 Max diff 1.4685e-10 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 1.679403e-07.
-Diag_Krylov method totally costs 0.2502 seconds.
+Diag_Krylov method totally costs 0.2563 seconds.
 Max diff 2.7196e-06 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 1.428099e-12.
-Diag_Krylov method totally costs 0.0125 seconds.
+Diag_Krylov method totally costs 0.0130 seconds.
 Max diff 1.4684e-10 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 87 with relative residual 1.047532e-15.
-Diag_Krylov method totally costs 0.0130 seconds.
+Diag_Krylov method totally costs 0.0124 seconds.
 Max diff 1.8097e-14 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -2293,22 +2293,22 @@ AMG preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 9 with relative residual 2.884815e-16.
-AMG_Krylov method totally costs 0.0054 seconds.
+AMG_Krylov method totally costs 0.0056 seconds.
 Max diff 1.0797e-14 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 5 with relative residual 2.522981e-16.
-AMG_Krylov method totally costs 0.0060 seconds.
+AMG_Krylov method totally costs 0.0067 seconds.
 Max diff 9.9920e-15 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.721147e-06.
-AMG_Krylov method totally costs 0.0552 seconds.
+AMG_Krylov method totally costs 0.0585 seconds.
 Max diff 1.7020e-05 smaller than tolerance................. [PASS]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 21 with relative residual 2.116235e-16.
-AMG_Krylov method totally costs 0.0121 seconds.
+AMG_Krylov method totally costs 0.0123 seconds.
 Max diff 7.9936e-15 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
@@ -2323,17 +2323,17 @@ Max diff 9.4369e-15 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 1.633050e-11.
-AMG_Krylov method totally costs 0.3025 seconds.
+AMG_Krylov method totally costs 0.2998 seconds.
 Max diff 2.4479e-10 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 18 with relative residual 7.846959e-16.
-AMG_Krylov method totally costs 0.0096 seconds.
+AMG_Krylov method totally costs 0.0094 seconds.
 Max diff 1.9207e-14 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 5 with relative residual 5.154594e-16.
-AMG_Krylov method totally costs 0.0054 seconds.
+AMG_Krylov method totally costs 0.0053 seconds.
 Max diff 2.0650e-14 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -2356,12 +2356,12 @@ Max diff 5.6621e-15 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 6 with relative residual 2.610917e-16.
-ILUk_Krylov method totally costs 0.0039 seconds.
+ILUk_Krylov method totally costs 0.0034 seconds.
 Max diff 5.2180e-15 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 4.191814e-06.
-ILUk_Krylov method totally costs 0.0233 seconds.
+ILUk_Krylov method totally costs 0.0228 seconds.
 Max diff 7.3133e-05 smaller than tolerance................. [PASS]
 
 Calling GMRes solver (CSR) ...
@@ -2371,7 +2371,7 @@ Max diff 7.8548e-15 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 26 with relative residual 5.299826e-16.
-ILUk_Krylov method totally costs 0.0067 seconds.
+ILUk_Krylov method totally costs 0.0068 seconds.
 Max diff 7.8548e-15 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
@@ -2381,17 +2381,17 @@ Max diff 1.2240e-14 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 8.194605e-13.
-ILUk_Krylov method totally costs 0.2641 seconds.
+ILUk_Krylov method totally costs 0.2710 seconds.
 Max diff 1.9415e-11 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 22 with relative residual 1.768225e-16.
-ILUk_Krylov method totally costs 0.0061 seconds.
+ILUk_Krylov method totally costs 0.0064 seconds.
 Max diff 8.2157e-15 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 6 with relative residual 5.289660e-16.
-ILUk_Krylov method totally costs 0.0035 seconds.
+ILUk_Krylov method totally costs 0.0037 seconds.
 Max diff 2.3981e-14 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -2399,47 +2399,47 @@ ILUt preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 7 with relative residual 2.606171e-16.
-ILUt_Krylov method totally costs 0.0048 seconds.
+ILUt_Krylov method totally costs 0.0051 seconds.
 Max diff 1.0547e-14 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 4 with relative residual 2.423513e-16.
-ILUt_Krylov method totally costs 0.0124 seconds.
+ILUt_Krylov method totally costs 0.0140 seconds.
 Max diff 9.9920e-15 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.671562e-06.
-ILUt_Krylov method totally costs 0.0294 seconds.
+ILUt_Krylov method totally costs 0.0306 seconds.
 Max diff 9.7366e-06 smaller than tolerance................. [PASS]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 14 with relative residual 4.029618e-16.
-ILUt_Krylov method totally costs 0.0098 seconds.
+ILUt_Krylov method totally costs 0.0124 seconds.
 Max diff 1.2768e-14 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 14 with relative residual 4.029618e-16.
-ILUt_Krylov method totally costs 0.0097 seconds.
+ILUt_Krylov method totally costs 0.0105 seconds.
 Max diff 1.2768e-14 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 14 with relative residual 3.691829e-16.
-ILUt_Krylov method totally costs 0.0100 seconds.
+ILUt_Krylov method totally costs 0.0106 seconds.
 Max diff 1.4488e-14 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 2.712603e-13.
-ILUt_Krylov method totally costs 0.2689 seconds.
+ILUt_Krylov method totally costs 0.2741 seconds.
 Max diff 6.9636e-12 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 14 with relative residual 5.267619e-17.
-ILUt_Krylov method totally costs 0.0101 seconds.
+ILUt_Krylov method totally costs 0.0108 seconds.
 Max diff 1.0880e-14 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 4 with relative residual 2.609209e-16.
-ILUt_Krylov method totally costs 0.0083 seconds.
+ILUt_Krylov method totally costs 0.0089 seconds.
 Max diff 9.9920e-15 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -2447,47 +2447,47 @@ ILUtp preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 7 with relative residual 2.606171e-16.
-ILUtp_Krylov method totally costs 0.0085 seconds.
+ILUtp_Krylov method totally costs 0.0092 seconds.
 Max diff 1.0547e-14 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 4 with relative residual 2.423513e-16.
-ILUtp_Krylov method totally costs 0.0089 seconds.
+ILUtp_Krylov method totally costs 0.0092 seconds.
 Max diff 9.9920e-15 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.671562e-06.
-ILUtp_Krylov method totally costs 0.0305 seconds.
+ILUtp_Krylov method totally costs 0.0304 seconds.
 Max diff 9.7366e-06 smaller than tolerance................. [PASS]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 14 with relative residual 4.029618e-16.
-ILUtp_Krylov method totally costs 0.0101 seconds.
+ILUtp_Krylov method totally costs 0.0107 seconds.
 Max diff 1.2768e-14 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 14 with relative residual 4.029618e-16.
-ILUtp_Krylov method totally costs 0.0101 seconds.
+ILUtp_Krylov method totally costs 0.0106 seconds.
 Max diff 1.2768e-14 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 14 with relative residual 3.691829e-16.
-ILUtp_Krylov method totally costs 0.0101 seconds.
+ILUtp_Krylov method totally costs 0.0107 seconds.
 Max diff 1.4488e-14 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 2.712603e-13.
-ILUtp_Krylov method totally costs 0.2782 seconds.
+ILUtp_Krylov method totally costs 0.2749 seconds.
 Max diff 6.9636e-12 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 14 with relative residual 5.267619e-17.
-ILUtp_Krylov method totally costs 0.0103 seconds.
+ILUtp_Krylov method totally costs 0.0108 seconds.
 Max diff 1.0880e-14 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 4 with relative residual 2.609209e-16.
-ILUtp_Krylov method totally costs 0.0085 seconds.
+ILUtp_Krylov method totally costs 0.0088 seconds.
 Max diff 9.9920e-15 smaller than tolerance................. [PASS]
 
 ==================================================================
@@ -2512,7 +2512,7 @@ Krylov method totally costs 0.0011 seconds.
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.087840e-02.
-Krylov method totally costs 0.0022 seconds.
+Krylov method totally costs 0.0021 seconds.
 ### WARNING: Max diff 9.9666e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
@@ -2537,7 +2537,7 @@ Krylov method totally costs 0.0021 seconds.
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 2.747129e-02.
-Krylov method totally costs 0.0546 seconds.
+Krylov method totally costs 0.0525 seconds.
 ### WARNING: Max diff 9.7478e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
@@ -2547,7 +2547,7 @@ Krylov method totally costs 0.0023 seconds.
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 97 with relative residual 9.439130e-03.
-Krylov method totally costs 0.0023 seconds.
+Krylov method totally costs 0.0022 seconds.
 ### WARNING: Max diff 9.8649e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -2570,7 +2570,7 @@ Diag_Krylov method totally costs 0.0031 seconds.
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.481661e-04.
-Diag_Krylov method totally costs 0.0025 seconds.
+Diag_Krylov method totally costs 0.0024 seconds.
 ### WARNING: Max diff 6.3611e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
@@ -2585,17 +2585,17 @@ Diag_Krylov method totally costs 0.0023 seconds.
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 1.598372e-02.
-Diag_Krylov method totally costs 0.0519 seconds.
+Diag_Krylov method totally costs 0.0567 seconds.
 ### WARNING: Max diff 1.8818e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 4.481661e-04.
-Diag_Krylov method totally costs 0.0024 seconds.
+Diag_Krylov method totally costs 0.0025 seconds.
 ### WARNING: Max diff 6.3611e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 100 with relative residual 3.691966e-04.
-Diag_Krylov method totally costs 0.0025 seconds.
+Diag_Krylov method totally costs 0.0026 seconds.
 ### WARNING: Max diff 6.8037e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -2603,47 +2603,47 @@ AMG preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.696239e-02.
-AMG_Krylov method totally costs 3.3978 seconds.
+AMG_Krylov method totally costs 3.3964 seconds.
 ### WARNING: Max diff 1.0846e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.828695e-06.
-AMG_Krylov method totally costs 6.8473 seconds.
+AMG_Krylov method totally costs 6.8825 seconds.
 ### WARNING: Max diff 2.1429e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.688563e+25.
-AMG_Krylov method totally costs 3.4188 seconds.
+AMG_Krylov method totally costs 3.4290 seconds.
 ### WARNING: Max diff 2.3794e+27 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 4.659136e-07.
-AMG_Krylov method totally costs 3.5915 seconds.
+AMG_Krylov method totally costs 3.5618 seconds.
 ### WARNING: Max diff 2.8011e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 5.691706e-07.
-AMG_Krylov method totally costs 3.5958 seconds.
+AMG_Krylov method totally costs 3.5963 seconds.
 ### WARNING: Max diff 1.9406e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 5.691706e-07.
-AMG_Krylov method totally costs 3.4238 seconds.
+AMG_Krylov method totally costs 3.4473 seconds.
 ### WARNING: Max diff 4.4479e-02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 4.758554e-10.
-AMG_Krylov method totally costs 3.4488 seconds.
+AMG_Krylov method totally costs 3.4138 seconds.
 Max diff 5.6380e-08 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 7.951134e-07.
-AMG_Krylov method totally costs 3.4060 seconds.
+AMG_Krylov method totally costs 3.4102 seconds.
 ### WARNING: Max diff 5.4228e-02 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 99 with relative residual 1.857341e-06.
-AMG_Krylov method totally costs 6.8971 seconds.
+AMG_Krylov method totally costs 6.9346 seconds.
 ### WARNING: Max diff 1.7863e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -2652,8 +2652,8 @@ AMG as iterative solver ...
 Calling classical AMG ...
 Classical AMG setup costs 0.0001 seconds.
 ### WARNING: Max iter 20 reached with rel. resid. 9.631035e-06.
-AMG solve costs 0.6373 seconds.
-AMG totally costs 0.6374 seconds.
+AMG solve costs 0.6513 seconds.
+AMG totally costs 0.6514 seconds.
 ### WARNING: Max diff 3.2042e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -2661,47 +2661,47 @@ ILUk preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.477071e+00.
-ILUk_Krylov method totally costs 0.0030 seconds.
+ILUk_Krylov method totally costs 0.0032 seconds.
 ### WARNING: Max diff 4.2449e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 6.698987e+00.
-ILUk_Krylov method totally costs 0.0050 seconds.
+ILUk_Krylov method totally costs 0.0055 seconds.
 ### WARNING: Max diff 1.3334e+03 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.006436e+29.
-ILUk_Krylov method totally costs 0.0047 seconds.
+ILUk_Krylov method totally costs 0.0050 seconds.
 ### WARNING: Max diff 2.8093e+31 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 1.677271e-01.
-ILUk_Krylov method totally costs 0.0040 seconds.
+ILUk_Krylov method totally costs 0.0043 seconds.
 ### WARNING: Max diff 4.4025e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 2.064418e-01.
-ILUk_Krylov method totally costs 0.0037 seconds.
+ILUk_Krylov method totally costs 0.0040 seconds.
 ### WARNING: Max diff 4.5679e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 100 with relative residual 2.064418e-01.
-ILUk_Krylov method totally costs 0.0037 seconds.
+ILUk_Krylov method totally costs 0.0040 seconds.
 ### WARNING: Max diff 4.5679e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 4.717725e-02.
-ILUk_Krylov method totally costs 0.0540 seconds.
+ILUk_Krylov method totally costs 0.0565 seconds.
 ### WARNING: Max diff 6.6016e+00 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 1.677271e-01.
-ILUk_Krylov method totally costs 0.0039 seconds.
+ILUk_Krylov method totally costs 0.0062 seconds.
 ### WARNING: Max diff 4.4025e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 91 with relative residual 1.553757e-01.
-ILUk_Krylov method totally costs 0.0051 seconds.
+ILUk_Krylov method totally costs 0.0060 seconds.
 ### WARNING: Max diff 3.9298e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 ------------------------------------------------------------------
@@ -2709,42 +2709,42 @@ ILUt preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 8.594709e-01.
-ILUt_Krylov method totally costs 0.0076 seconds.
+ILUt_Krylov method totally costs 0.0073 seconds.
 ### WARNING: Max diff 1.4847e+01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 6 with relative residual 2.579411e-16.
-ILUt_Krylov method totally costs 0.0031 seconds.
+ILUt_Krylov method totally costs 0.0032 seconds.
 Max diff 7.4107e-14 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.734058e+27.
-ILUt_Krylov method totally costs 0.0084 seconds.
+ILUt_Krylov method totally costs 0.0102 seconds.
 ### WARNING: Max diff 3.9415e+30 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 21 with relative residual 7.140287e-16.
-ILUt_Krylov method totally costs 0.0036 seconds.
+ILUt_Krylov method totally costs 0.0040 seconds.
 Max diff 5.9841e-13 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 21 with relative residual 7.140287e-16.
-ILUt_Krylov method totally costs 0.0037 seconds.
+ILUt_Krylov method totally costs 0.0036 seconds.
 Max diff 5.9841e-13 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 21 with relative residual 3.009818e-16.
-ILUt_Krylov method totally costs 0.0035 seconds.
+ILUt_Krylov method totally costs 0.0037 seconds.
 Max diff 2.5039e-12 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 9 with relative residual 7.228109e-16.
-ILUt_Krylov method totally costs 0.0036 seconds.
+ILUt_Krylov method totally costs 0.0037 seconds.
 Max diff 3.9202e-13 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 18 with relative residual 7.322277e-16.
-ILUt_Krylov method totally costs 0.0041 seconds.
+ILUt_Krylov method totally costs 0.0043 seconds.
 Max diff 1.4471e-12 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
@@ -2829,12 +2829,12 @@ Krylov method totally costs 0.0039 seconds.
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 3.902982e-08.
-Krylov method totally costs 0.1072 seconds.
+Krylov method totally costs 0.1042 seconds.
 ### WARNING: Max diff 8.9250e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 100 with relative residual 5.542262e-10.
-Krylov method totally costs 0.0043 seconds.
+Krylov method totally costs 0.0042 seconds.
 ### WARNING: Max diff 4.9009e-01 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling VBiCGstab solver (CSR) ...
@@ -2857,7 +2857,7 @@ Max diff 1.3190e-07 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 2.104338e+23.
-Diag_Krylov method totally costs 0.0055 seconds.
+Diag_Krylov method totally costs 0.0056 seconds.
 ### WARNING: Max diff 2.8373e+29 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
@@ -2877,7 +2877,7 @@ Diag_Krylov method totally costs 0.0041 seconds.
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 6.007103e-13.
-Diag_Krylov method totally costs 0.1082 seconds.
+Diag_Krylov method totally costs 0.1059 seconds.
 Max diff 2.3914e-05 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
@@ -2887,7 +2887,7 @@ Diag_Krylov method totally costs 0.0044 seconds.
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 91 with relative residual 9.812816e-16.
-Diag_Krylov method totally costs 0.0042 seconds.
+Diag_Krylov method totally costs 0.0044 seconds.
 Max diff 1.3397e-07 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -2895,47 +2895,47 @@ AMG preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 3 with relative residual 7.973435e-17.
-AMG_Krylov method totally costs 0.0197 seconds.
+AMG_Krylov method totally costs 0.0207 seconds.
 Max diff 9.0351e-11 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 1 with relative residual 4.207122e-20.
-AMG_Krylov method totally costs 0.0507 seconds.
+AMG_Krylov method totally costs 0.0537 seconds.
 Max diff 3.7477e-11 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 5.141380e+19.
-AMG_Krylov method totally costs 4.6867 seconds.
+AMG_Krylov method totally costs 4.7365 seconds.
 ### WARNING: Max diff 5.5921e+27 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 5 with relative residual 2.715170e-20.
-AMG_Krylov method totally costs 0.2057 seconds.
+AMG_Krylov method totally costs 0.2020 seconds.
 Max diff 1.7654e-11 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 5 with relative residual 2.715170e-20.
-AMG_Krylov method totally costs 0.2050 seconds.
+AMG_Krylov method totally costs 0.2037 seconds.
 Max diff 1.7654e-11 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 4 with relative residual 1.299011e-16.
-AMG_Krylov method totally costs 0.1086 seconds.
+AMG_Krylov method totally costs 0.1035 seconds.
 Max diff 1.0481e-12 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 1 with relative residual 3.283091e-16.
-AMG_Krylov method totally costs 0.0217 seconds.
+AMG_Krylov method totally costs 0.0181 seconds.
 Max diff 3.7981e-09 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 2 with relative residual 2.420592e-16.
-AMG_Krylov method totally costs 0.0208 seconds.
+AMG_Krylov method totally costs 0.0198 seconds.
 Max diff 8.1532e-10 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 1 with relative residual 4.207122e-20.
-AMG_Krylov method totally costs 0.0515 seconds.
+AMG_Krylov method totally costs 0.0565 seconds.
 Max diff 3.7477e-11 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -2945,7 +2945,7 @@ Calling classical AMG ...
 Classical AMG setup costs 0.0001 seconds.
 Number of iterations = 1 with relative residual 9.622773e-15.
 AMG solve costs 0.0126 seconds.
-AMG totally costs 0.0127 seconds.
+AMG totally costs 0.0128 seconds.
 Max diff 1.4072e-06 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -2958,22 +2958,22 @@ Max diff 1.8401e-08 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 12 with relative residual 4.372649e-16.
-ILUk_Krylov method totally costs 0.0025 seconds.
+ILUk_Krylov method totally costs 0.0024 seconds.
 Max diff 3.2904e-07 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 4.667438e+21.
-ILUk_Krylov method totally costs 0.0101 seconds.
+ILUk_Krylov method totally costs 0.0099 seconds.
 ### WARNING: Max diff 1.4051e+29 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 26 with relative residual 1.022733e-16.
-ILUk_Krylov method totally costs 0.0031 seconds.
+ILUk_Krylov method totally costs 0.0032 seconds.
 Max diff 8.6154e-12 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 26 with relative residual 1.022733e-16.
-ILUk_Krylov method totally costs 0.0031 seconds.
+ILUk_Krylov method totally costs 0.0032 seconds.
 Max diff 8.6154e-12 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
@@ -2983,17 +2983,17 @@ Max diff 8.6153e-12 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 100 with relative residual 1.192515e-15.
-ILUk_Krylov method totally costs 0.1088 seconds.
+ILUk_Krylov method totally costs 0.1107 seconds.
 Max diff 1.0950e-10 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 19 with relative residual 4.559685e-16.
-ILUk_Krylov method totally costs 0.0026 seconds.
+ILUk_Krylov method totally costs 0.0025 seconds.
 Max diff 2.2736e-08 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 12 with relative residual 8.079715e-16.
-ILUk_Krylov method totally costs 0.0025 seconds.
+ILUk_Krylov method totally costs 0.0024 seconds.
 Max diff 3.8504e-07 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -3001,47 +3001,47 @@ ILUt preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 20 with relative residual 1.407753e-16.
-ILUt_Krylov method totally costs 0.0127 seconds.
+ILUt_Krylov method totally costs 0.0128 seconds.
 Max diff 1.2125e-09 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 7 with relative residual 7.548272e-17.
-ILUt_Krylov method totally costs 0.0116 seconds.
+ILUt_Krylov method totally costs 0.0120 seconds.
 Max diff 6.4249e-08 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.911949e+22.
-ILUt_Krylov method totally costs 0.0268 seconds.
+ILUt_Krylov method totally costs 0.0279 seconds.
 ### WARNING: Max diff 3.7245e+29 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 22 with relative residual 4.859581e-17.
-ILUt_Krylov method totally costs 0.0131 seconds.
+ILUt_Krylov method totally costs 0.0138 seconds.
 Max diff 2.1749e-08 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 22 with relative residual 4.859581e-17.
-ILUt_Krylov method totally costs 0.0131 seconds.
+ILUt_Krylov method totally costs 0.0137 seconds.
 Max diff 2.1749e-08 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 22 with relative residual 4.879520e-17.
-ILUt_Krylov method totally costs 0.0128 seconds.
+ILUt_Krylov method totally costs 0.0132 seconds.
 Max diff 2.1427e-08 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 10 with relative residual 9.632614e-16.
-ILUt_Krylov method totally costs 0.0125 seconds.
+ILUt_Krylov method totally costs 0.0127 seconds.
 Max diff 3.3251e-09 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 11 with relative residual 1.146311e-16.
-ILUt_Krylov method totally costs 0.0112 seconds.
+ILUt_Krylov method totally costs 0.0114 seconds.
 Max diff 2.8300e-09 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 7 with relative residual 4.863403e-16.
-ILUt_Krylov method totally costs 0.0113 seconds.
+ILUt_Krylov method totally costs 0.0119 seconds.
 Max diff 9.5475e-08 smaller than tolerance................. [PASS]
 
 ------------------------------------------------------------------
@@ -3049,51 +3049,51 @@ ILUtp preconditioned Krylov solver ...
 
 Calling CG solver (CSR) ...
 Number of iterations = 20 with relative residual 1.407753e-16.
-ILUtp_Krylov method totally costs 0.0131 seconds.
+ILUtp_Krylov method totally costs 0.0134 seconds.
 Max diff 1.2125e-09 smaller than tolerance................. [PASS]
 
 Calling BiCGstab solver (CSR) ...
 Number of iterations = 7 with relative residual 7.548272e-17.
-ILUtp_Krylov method totally costs 0.0126 seconds.
+ILUtp_Krylov method totally costs 0.0134 seconds.
 Max diff 6.4249e-08 smaller than tolerance................. [PASS]
 
 Calling MinRes solver (CSR) ...
 ### WARNING: Max iter 100 reached with rel. resid. 1.911949e+22.
-ILUtp_Krylov method totally costs 0.0284 seconds.
+ILUtp_Krylov method totally costs 0.0281 seconds.
 ### WARNING: Max diff 3.7245e+29 BIGGER than tolerance..... [ATTENTION!!!]
 
 Calling GMRes solver (CSR) ...
 Number of iterations = 22 with relative residual 4.859581e-17.
-ILUtp_Krylov method totally costs 0.0141 seconds.
+ILUtp_Krylov method totally costs 0.0144 seconds.
 Max diff 2.1749e-08 smaller than tolerance................. [PASS]
 
 Calling VGMRes solver (CSR) ...
 Number of iterations = 22 with relative residual 4.859581e-17.
-ILUtp_Krylov method totally costs 0.0140 seconds.
+ILUtp_Krylov method totally costs 0.0144 seconds.
 Max diff 2.1749e-08 smaller than tolerance................. [PASS]
 
 Calling VFGMRes solver (CSR) ...
 Number of iterations = 22 with relative residual 4.879520e-17.
-ILUtp_Krylov method totally costs 0.0138 seconds.
+ILUtp_Krylov method totally costs 0.0142 seconds.
 Max diff 2.1427e-08 smaller than tolerance................. [PASS]
 
 Calling GCG solver (CSR) ...
 Number of iterations = 10 with relative residual 9.632614e-16.
-ILUtp_Krylov method totally costs 0.0133 seconds.
+ILUtp_Krylov method totally costs 0.0138 seconds.
 Max diff 3.3251e-09 smaller than tolerance................. [PASS]
 
 Calling GCR solver (CSR) ...
 Number of iterations = 11 with relative residual 1.146311e-16.
-ILUtp_Krylov method totally costs 0.0120 seconds.
+ILUtp_Krylov method totally costs 0.0125 seconds.
 Max diff 2.8300e-09 smaller than tolerance................. [PASS]
 
 Calling VBiCGstab solver (CSR) ...
 Number of iterations = 7 with relative residual 4.863403e-16.
-ILUtp_Krylov method totally costs 0.0122 seconds.
+ILUtp_Krylov method totally costs 0.0127 seconds.
 Max diff 9.5475e-08 smaller than tolerance................. [PASS]
 
 ---------------------- All test finished at ----------------------
-Mon Jan 23 10:14:14 2017
+Wed Jan 25 11:57:02 2017
 ------------------------------------------------------------------
 
 ========================No preconditioner=========================
