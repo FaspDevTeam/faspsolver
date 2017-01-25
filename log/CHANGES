@@ -4,6 +4,8 @@ File Name: CHANGES
 - Fix a few memory leaks.
 - Update input parameters in test/ini/input.dat.
 - Remove fasp_dcsr_check().
+- Clean up BlaSmallMat.c: Add const, remove some functions.
+- Update regression results. 
 
 01/23/2017 FASP 1.9.3:
 - Clean up Level 4 (Pre) functions.
