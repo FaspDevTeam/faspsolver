@@ -18,7 +18,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_blas_array_ax (const INT n, const REAL a, REAL *x)
+ * \fn inline void fasp_blas_array_ax (const INT n, const REAL a, REAL *x)
  *
  * \brief x = a*x
  *
@@ -69,7 +69,8 @@ void fasp_blas_array_ax (const INT    n,
 }
 
 /**
- * \fn void fasp_blas_array_axpy (const INT n, const REAL a, REAL *x, REAL *y)
+ * \fn void fasp_blas_array_axpy (const INT n, const REAL a,
+ *                                const REAL *x, REAL *y)
  *
  * \brief y = a*x + y
  *
@@ -87,7 +88,7 @@ void fasp_blas_array_ax (const INT    n,
  */
 void fasp_blas_array_axpy (const INT   n,
                            const REAL  a,
-                           REAL       *x,
+                           const REAL *x,
                            REAL       *y)
 {
     INT i;
@@ -101,36 +102,38 @@ void fasp_blas_array_axpy (const INT   n,
     }
 #endif
     
-    if (a==1.0) {
+    if ( a == 1.0 ) {
         if (use_openmp) {
 #ifdef _OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-                for (i=mybegin; i<myend; ++i) y[i] += x[i];
+                for ( i = mybegin; i < myend; ++i ) y[i] += x[i];
             }
 #endif
         }
         else {
-            for (i=0; i<n; ++i) y[i] += x[i];
+            for ( i = 0; i < n; ++i ) y[i] += x[i];
         }
     }
-    else if (a==-1.0) {
+    
+    else if ( a == -1.0 ) {
         if (use_openmp) {
 #ifdef _OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-                for (i=mybegin; i<myend; ++i) y[i] -= x[i];
+                for ( i = mybegin; i < myend; ++i ) y[i] -= x[i];
             }
 #endif
         }
         else {
-            for (i=0; i<n; ++i) y[i] -= x[i];
+            for ( i = 0; i < n; ++i ) y[i] -= x[i];
         }
     }
+    
     else {
         if (use_openmp) {
 #ifdef _OPENMP
@@ -138,19 +141,19 @@ void fasp_blas_array_axpy (const INT   n,
             {
                 myid = omp_get_thread_num();
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-                for (i=mybegin; i<myend; ++i) y[i] += a*x[i];
+                for ( i = mybegin; i < myend; ++i ) y[i] += a*x[i];
             }
 #endif
         }
         else {
-            for (i=0; i<n; ++i) y[i] += a*x[i];
+            for ( i = 0; i < n; ++i ) y[i] += a*x[i];
         }
     }
 }
 
 /**
- * \fn void fasp_blas_array_axpyz (const INT n, const REAL a, REAL *x,
- *                                 REAL *y, REAL *z)
+ * \fn void fasp_blas_array_axpyz (const INT n, const REAL a, const REAL *x,
+ *                                 const REAL *y, REAL *z)
  *
  * \brief z = a*x + y
  *
@@ -167,8 +170,8 @@ void fasp_blas_array_axpy (const INT   n,
  */
 void fasp_blas_array_axpyz (const INT   n,
                             const REAL  a,
-                            REAL       *x,
-                            REAL       *y,
+                            const REAL *x,
+                            const REAL *y,
                             REAL       *z)
 {
     INT i;
@@ -188,17 +191,17 @@ void fasp_blas_array_axpyz (const INT   n,
         {
             myid = omp_get_thread_num();
             fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-            for (i=mybegin; i<myend; ++i) z[i] = a*x[i]+y[i];
+            for ( i = mybegin; i < myend; ++i ) z[i] = a*x[i] + y[i];
         }
 #endif
     }
     else {
-        for (i=0; i<n; ++i) z[i] = a*x[i]+y[i];
+        for ( i = 0; i < n; ++i ) z[i] = a*x[i] + y[i];
     }
 }
 
 /**
- * \fn void fasp_blas_array_axpby (const INT n, const REAL a, REAL *x,
+ * \fn void fasp_blas_array_axpby (const INT n, const REAL a, const REAL *x,
  *                                 const REAL b, REAL *y)
  *
  * \brief y = a*x + b*y
@@ -218,7 +221,7 @@ void fasp_blas_array_axpyz (const INT   n,
  */
 void fasp_blas_array_axpby (const INT   n,
                             const REAL  a,
-                            REAL       *x,
+                            const REAL *x,
                             const REAL  b,
                             REAL       *y)
 {
@@ -239,12 +242,12 @@ void fasp_blas_array_axpby (const INT   n,
         {
             myid = omp_get_thread_num();
             fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-            for (i=mybegin; i<myend; ++i) y[i] = a*x[i]+b*y[i];
+            for ( i = mybegin; i < myend; ++i ) y[i] = a*x[i] + b*y[i];
         }
 #endif
     }
     else {
-        for (i=0; i<n; ++i) y[i] = a*x[i]+b*y[i];
+        for ( i = 0; i < n; ++i ) y[i] = a*x[i] + b*y[i];
     }
     
 }
@@ -400,7 +403,7 @@ REAL fasp_blas_array_norminf (const INT    n,
         nthreads = fasp_get_num_threads();
     }
 #endif
-	
+    
     if (use_openmp) {
 #ifdef _OPENMP
         REAL infnorm_loc = 0.0;

@@ -20,7 +20,7 @@
 /**
  * \fn void fasp_blas_smat_axm (REAL *a, const INT n, const REAL alpha)
  *
- * \brief Compute alpha*a, store in a
+ * \brief Compute a = alpha*a (in place)
  *
  * \param a        Pointer to the REAL array which stands a n*n matrix
  * \param n        Dimension of the matrix

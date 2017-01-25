@@ -43,7 +43,7 @@ BEGIN {
     printf "\n/*-------- In file: %s --------*/\n\n",$3;  
 }
 
-/^static|^extern/ || !/^[a-zA-Z]/ || /[;]/ {
+/^inline|^static|^extern/ || !/^[a-zA-Z]/ || /[;]/ {
   next;
 }
 
