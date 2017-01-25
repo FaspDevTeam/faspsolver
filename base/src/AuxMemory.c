@@ -44,7 +44,7 @@ const    INT Million           = 1048576;  //! 1M = 1024*1024
 /*---------------------------------*/
 
 /**
- * \fn void * fasp_mem_calloc (LONGLONG size, INT type)
+ * \fn void * fasp_mem_calloc (const LONGLONG size, const INT type)
  *
  * \brief Allocate, initiate, and check memory
  *
@@ -61,8 +61,8 @@ const    INT Million           = 1048576;  //! 1M = 1024*1024
  * Modified by Chunsheng Feng on 07/30/2013
  * Modified by Chensong Zhang on 07/30/2013: print error if failed
  */
-void * fasp_mem_calloc (LONGLONG  size,
-                        INT       type)
+void * fasp_mem_calloc (const LONGLONG  size,
+                        const INT       type)
 {
     const LONGLONG tsize = size*type;
     
@@ -96,7 +96,7 @@ void * fasp_mem_calloc (LONGLONG  size,
 }
 
 /**
- * \fn void * fasp_mem_realloc (void * oldmem, LONGLONG type)
+ * \fn void * fasp_mem_realloc (void * oldmem, const LONGLONG type)
  *
  * \brief Reallocate, initiate, and check memory
  *
@@ -111,8 +111,8 @@ void * fasp_mem_calloc (LONGLONG  size,
  * Modified by Chunsheng Feng on 07/23/2013
  * Modified by Chensong Zhang on 07/30/2013: print error if failed
  */
-void * fasp_mem_realloc (void     *oldmem,
-                         LONGLONG  tsize)
+void * fasp_mem_realloc (void           *oldmem,
+                         const LONGLONG  tsize)
 {
     void * mem = NULL;
 
@@ -185,7 +185,7 @@ void fasp_mem_usage ()
 }
 
 /**
- * \fn SHORT fasp_mem_check (void * ptr, const char *message, const INT ERR)
+ * \fn SHORT fasp_mem_check (const void *ptr, const char *message, const INT ERR)
  *
  * \brief Check wether a point is null or not.
  *
@@ -198,7 +198,7 @@ void fasp_mem_usage ()
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-SHORT fasp_mem_check (void        *ptr,
+SHORT fasp_mem_check (const void  *ptr,
                       const char  *message,
                       INT          ERR)
 {

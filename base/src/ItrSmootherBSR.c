@@ -3,7 +3,7 @@
  *  \brief Smoothers for dBSRmat matrices
  *
  *  \note This file contains Level-2 (Itr) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxSmallMat.c, AuxTiming.c, 
+ *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxTiming.c, BlaSmallMatInv.c,
  *        BlaSmallMat.c, BlaArray.c, BlaSpmvBSR.c, and PreBSR.c
  */
 
@@ -99,13 +99,13 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
             for(myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
-                    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                    fasp_smat_inv(diaginv+i*nb2, nb);
                 }
             }
         }
         else {
             for (i = 0; i < ROW; ++i) {
-                fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                fasp_smat_inv(diaginv+i*nb2, nb);
             }
         }
     }
@@ -211,13 +211,13 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
             for(myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
-                    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                    fasp_smat_inv(diaginv+i*nb2, nb);
                 }
             }
         }
         else {
             for (i = 0; i < ROW; ++i) {
-                fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                fasp_smat_inv(diaginv+i*nb2, nb);
             }
         }
     }
@@ -479,13 +479,13 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
             for(myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
-                    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                    fasp_smat_inv(diaginv+i*nb2, nb);
                 }
             }
         }
         else {
             for (i = 0; i < ROW; ++i) {
-                fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                fasp_smat_inv(diaginv+i*nb2, nb);
             }
         }
     }
@@ -1082,13 +1082,13 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
             for(myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for(i=mybegin; i<myend; i++) {
-                    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                    fasp_smat_inv(diaginv+i*nb2, nb);
                 }
             }
         }
         else {
             for (i = 0; i < ROW; ++i) {
-                fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                fasp_smat_inv(diaginv+i*nb2, nb);
             }
         }
     }

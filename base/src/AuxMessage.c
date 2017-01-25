@@ -66,7 +66,7 @@ void print_itinfo (const INT   ptrlvl,
 }
 
 /**
- * \fn void void print_amgcomplexity (AMG_data *mgl, const SHORT prtlvl)
+ * \fn void void print_amgcomplexity (const AMG_data *mgl, const SHORT prtlvl)
  *
  * \brief Print complexities of AMG method
  *
@@ -76,8 +76,8 @@ void print_itinfo (const INT   ptrlvl,
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-void print_amgcomplexity (AMG_data    *mgl,
-                          const SHORT  prtlvl)
+void print_amgcomplexity (const AMG_data *mgl,
+                          const SHORT     prtlvl)
 {
     const SHORT   max_levels=mgl->num_levels;
     SHORT         level;
@@ -90,7 +90,7 @@ void print_amgcomplexity (AMG_data    *mgl,
         printf("-----------------------------------------------------------\n");
         
         for ( level = 0; level < max_levels; ++level) {
-            REAL AvgNNZ = (REAL) mgl[level].A.nnz/mgl[level].A.row;
+            const REAL AvgNNZ = (REAL) mgl[level].A.nnz/mgl[level].A.row;
             printf("%5d %13d %17d %14.2f\n",
                    level, mgl[level].A.row, mgl[level].A.nnz, AvgNNZ);
             gridcom += mgl[level].A.row;
@@ -109,7 +109,8 @@ void print_amgcomplexity (AMG_data    *mgl,
 }
 
 /**
- * \fn void void print_amgcomplexity_bsr (AMG_data_bsr *mgl, const SHORT prtlvl)
+ * \fn void void print_amgcomplexity_bsr (const AMG_data_bsr *mgl, 
+ *                                        const SHORT prtlvl)
  *
  * \brief Print complexities of AMG method for BSR matrices
  *
@@ -119,8 +120,8 @@ void print_amgcomplexity (AMG_data    *mgl,
  * \author Chensong Zhang
  * \date   05/10/2013
  */
-void print_amgcomplexity_bsr (AMG_data_bsr  *mgl,
-                              const SHORT    prtlvl)
+void print_amgcomplexity_bsr (const AMG_data_bsr  *mgl,
+                              const SHORT          prtlvl)
 {
     const SHORT  max_levels = mgl->num_levels;
     SHORT        level;
@@ -133,7 +134,7 @@ void print_amgcomplexity_bsr (AMG_data_bsr  *mgl,
         printf("-----------------------------------------------------------\n");
         
         for ( level = 0; level < max_levels; ++level ) {
-            REAL AvgNNZ = (REAL) mgl[level].A.NNZ/mgl[level].A.ROW;
+            const REAL AvgNNZ = (REAL) mgl[level].A.NNZ/mgl[level].A.ROW;
             printf("%5d  %13d  %17d  %14.2f\n",
                    level,mgl[level].A.ROW, mgl[level].A.NNZ, AvgNNZ);
             gridcom += mgl[level].A.ROW;

@@ -3,7 +3,7 @@
  *  \brief Sparse matrix operations for dBSRmat matrices
  *
  *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxSmallMat.c, and BlaSmallMat.c
+ *        AuxArray.c, AuxMemory.c, BlaSmallMatInv.c, and BlaSmallMat.c
  */
 
 #include <math.h>
@@ -454,7 +454,7 @@ dvector fasp_dbsr_getdiaginv (dBSRmat *A)
             fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
             if (nb > 1) {
                 for (i = mybegin; i < myend; ++i) {
-                    fasp_blas_smat_inv(diaginv.val+i*nb2, nb);
+                    fasp_smat_inv(diaginv.val+i*nb2, nb);
                 }
             }
             else {
@@ -468,7 +468,7 @@ dvector fasp_dbsr_getdiaginv (dBSRmat *A)
     else {
         if (nb > 1) {
             for (i = 0; i < ROW; ++i) {
-                fasp_blas_smat_inv(diaginv.val+i*nb2, nb);
+                fasp_smat_inv(diaginv.val+i*nb2, nb);
             }
         }
         else {
@@ -575,7 +575,7 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
             fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
             if (nb > 1) {
                 for (i = mybegin; i < myend; ++i) {
-                    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                    fasp_smat_inv(diaginv+i*nb2, nb);
                 }
             }
             else {
@@ -589,7 +589,7 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
     else {
         if (nb > 1) {
             for (i = 0; i < ROW; ++i) {
-                fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                fasp_smat_inv(diaginv+i*nb2, nb);
             }
         }
         else {
@@ -825,7 +825,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                         fasp_smat_identity_nc2(valb+m);
                         
                         // compute the inverses of the diagonal sub-blocks
-                        fasp_blas_smat_inv_nc2(diaginv+i*4);
+                        fasp_smat_inv_nc2(diaginv+i*4);
                         // compute D^{-1}*A
                         for (k = IA[i]+1; k < IA[i+1]; ++k)
                         {
@@ -847,7 +847,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     fasp_smat_identity_nc2(valb+m);
                     
                     // compute the inverses of the diagonal sub-blocks
-                    fasp_blas_smat_inv_nc2(diaginv+i*4);
+                    fasp_smat_inv_nc2(diaginv+i*4);
                     // compute D^{-1}*A
                     for (k = IA[i]+1; k < IA[i+1]; ++k) {
                         m = k*4;
@@ -880,7 +880,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                             }
                         }
                         // compute the inverses of the diagonal sub-blocks
-                        fasp_blas_smat_inv_nc3(diaginv+i*9);
+                        fasp_smat_inv_nc3(diaginv+i*9);
                         // compute D^{-1}*A
                         for (k = IA[i]; k < IA[i+1]; ++k) {
                             m = k*9;
@@ -904,7 +904,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     }
                     
                     // compute the inverses of the diagonal sub-blocks
-                    fasp_blas_smat_inv_nc3(diaginv+i*9);
+                    fasp_smat_inv_nc3(diaginv+i*9);
                     
                     // compute D^{-1}*A
                     for (k = IA[i]; k < IA[i+1]; ++k) {
@@ -939,7 +939,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                         }
                         
                         // compute the inverses of the diagonal sub-blocks
-                        fasp_blas_smat_inv_nc5(diaginv+i*25);
+                        fasp_smat_inv_nc5(diaginv+i*25);
                         
                         // compute D^{-1}*A
                         for (k = IA[i]; k < IA[i+1]; ++k) {
@@ -965,7 +965,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     }
                     
                     // compute the inverses of the diagonal sub-blocks
-                    fasp_blas_smat_inv_nc5(diaginv+i*25);
+                    fasp_smat_inv_nc5(diaginv+i*25);
                     
                     // compute D^{-1}*A
                     for (k = IA[i]; k < IA[i+1]; ++k) {
@@ -1000,7 +1000,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                         }
                         
                         // compute the inverses of the diagonal sub-blocks
-                        fasp_blas_smat_inv_nc7(diaginv+i*49);
+                        fasp_smat_inv_nc7(diaginv+i*49);
                         
                         // compute D^{-1}*A
                         for (k = IA[i]; k < IA[i+1]; ++k) {
@@ -1025,7 +1025,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     }
                     
                     // compute the inverses of the diagonal sub-blocks
-                    fasp_blas_smat_inv_nc7(diaginv+i*49);
+                    fasp_smat_inv_nc7(diaginv+i*49);
                     
                     // compute D^{-1}*A
                     for (k = IA[i]; k < IA[i+1]; ++k) {
@@ -1060,7 +1060,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                         }
                         
                         // compute the inverses of the diagonal sub-blocks
-                        fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                        fasp_smat_inv(diaginv+i*nb2, nb);
                         
                         // compute D^{-1}*A
                         for (k = IA[i]; k < IA[i+1]; ++k) {
@@ -1084,7 +1084,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
                     }
                     
                     // compute the inverses of the diagonal sub-blocks
-                    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                    fasp_smat_inv(diaginv+i*nb2, nb);
                     
                     // compute D^{-1}*A
                     for (k = IA[i]; k < IA[i+1]; ++k) {
@@ -1179,7 +1179,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
                         fasp_smat_identity_nc2(valb+m);
                         
                         // compute the inverses of the diagonal sub-blocks
-                        fasp_blas_smat_inv_nc2(diaginv+i*4); // fixed by Zheng Li
+                        fasp_smat_inv_nc2(diaginv+i*4); // fixed by Zheng Li
                         
                         // compute D^{-1}*A
                         for (k = ibegin+1; k < iend; ++k) {
@@ -1198,7 +1198,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
                     fasp_smat_identity_nc2(valb+m);
                     
                     // compute the inverses of the diagonal sub-blocks
-                    fasp_blas_smat_inv_nc2(diaginv+i*4); // fixed by Zheng Li
+                    fasp_smat_inv_nc2(diaginv+i*4); // fixed by Zheng Li
                     
                     // compute D^{-1}*A
                     for (k = ibegin+1; k < iend; ++k) {
@@ -1224,7 +1224,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
                         memcpy(diaginv+i*9, val+m, 9*sizeof(REAL));
                         fasp_smat_identity_nc3(valb+m);
                         // compute the inverses of the diagonal sub-blocks
-                        fasp_blas_smat_inv_nc3(diaginv+i*9);
+                        fasp_smat_inv_nc3(diaginv+i*9);
                         // compute D^{-1}*A
                         for (k = ibegin+1; k < iend; ++k) {
                             m = k*9;
@@ -1242,7 +1242,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
                     fasp_smat_identity_nc3(valb+m);
                     
                     // compute the inverses of the diagonal sub-blocks
-                    fasp_blas_smat_inv_nc3(diaginv+i*9);
+                    fasp_smat_inv_nc3(diaginv+i*9);
                     
                     // compute D^{-1}*A
                     for (k = ibegin+1; k < iend; ++k) {
@@ -1269,7 +1269,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
                         fasp_smat_identity_nc5(valb+m);
                         
                         // compute the inverses of the diagonal sub-blocks
-                        fasp_blas_smat_inv_nc5(diaginv+i*25);
+                        fasp_smat_inv_nc5(diaginv+i*25);
                         
                         // compute D^{-1}*A
                         for (k = ibegin+1; k < iend; ++k) {
@@ -1288,7 +1288,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
                     fasp_smat_identity_nc5(valb+m);
                     
                     // compute the inverses of the diagonal sub-blocks
-                    fasp_blas_smat_inv_nc5(diaginv+i*25);
+                    fasp_smat_inv_nc5(diaginv+i*25);
                     
                     // compute D^{-1}*A
                     for (k = ibegin+1; k < iend; ++k) {
@@ -1314,7 +1314,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
                         fasp_smat_identity_nc7(valb+m);
                         
                         // compute the inverses of the diagonal sub-blocks
-                        fasp_blas_smat_inv_nc7(diaginv+i*49);
+                        fasp_smat_inv_nc7(diaginv+i*49);
                         
                         // compute D^{-1}*A
                         for (k = ibegin+1; k < iend; ++k) {
@@ -1333,7 +1333,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
                     fasp_smat_identity_nc7(valb+m);
                     
                     // compute the inverses of the diagonal sub-blocks
-                    fasp_blas_smat_inv_nc7(diaginv+i*49);
+                    fasp_smat_inv_nc7(diaginv+i*49);
                     
                     // compute D^{-1}*A
                     for (k = ibegin+1; k < iend; ++k) {
@@ -1360,7 +1360,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
                         fasp_smat_identity(valb+m, nb, nb2);
                         
                         // compute the inverses of the diagonal sub-blocks
-                        fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                        fasp_smat_inv(diaginv+i*nb2, nb);
                         
                         // compute D^{-1}*A
                         for (k = ibegin+1; k < iend; ++k) {
@@ -1379,7 +1379,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
                     fasp_smat_identity(valb+m, nb, nb2);
                     
                     // compute the inverses of the diagonal sub-blocks
-                    fasp_blas_smat_inv(diaginv+i*nb2, nb);
+                    fasp_smat_inv(diaginv+i*nb2, nb);
                     
                     // compute D^{-1}*A
                     for (k = ibegin+1; k < iend; ++k) {

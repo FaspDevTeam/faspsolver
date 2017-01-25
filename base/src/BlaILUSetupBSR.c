@@ -3,7 +3,7 @@
  *  \brief Setup incomplete LU decomposition for dBSRmat matrices
  *
  *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxSmallMat.c, AuxSort.c, AuxTiming.c, 
+ *        AuxArray.c, AuxMemory.c, AuxSort.c, AuxTiming.c, BlaSmallMatInv.c, 
  *        BlaILU.c, BlaSmallMat.c, BlaSparseBSR.c, BlaSparseCSR.c, BlaSpmvCSR.c, 
  *        and PreDataInit.c
  */
@@ -271,7 +271,7 @@ static INT numfactor (dBSRmat   *A,
     
             colptrs[k] =  0;
     
-            fasp_blas_smat_inv_nc3(&(luval[k*nb2]));
+            fasp_smat_inv_nc3(&(luval[k*nb2]));
         }
 
         break;
@@ -317,7 +317,7 @@ static INT numfactor (dBSRmat   *A,
     
             colptrs[k] =  0;
     
-            fasp_blas_smat_inv_nc5(&(luval[k*nb2]));
+            fasp_smat_inv_nc5(&(luval[k*nb2]));
         }
 
         break;
@@ -363,7 +363,7 @@ static INT numfactor (dBSRmat   *A,
     
             colptrs[k] =  0;
     
-            fasp_blas_smat_inv(&(luval[k*nb2]),nb);
+            fasp_smat_inv(&(luval[k*nb2]),nb);
         }
 
         break;
@@ -410,7 +410,7 @@ static INT numfactor (dBSRmat   *A,
     
             colptrs[k] =  0;
     
-            fasp_blas_smat_inv(&(luval[k*nb2]),nb);
+            fasp_smat_inv(&(luval[k*nb2]),nb);
         }
     }
     
@@ -553,7 +553,7 @@ static INT numfactor_mc_omp (dBSRmat   *A,
             }
             for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
             colptrs[k] =  0;
-            fasp_blas_smat_inv_nc2(&(luval[k*nb2]));
+            fasp_smat_inv_nc2(&(luval[k*nb2]));
         }
        fasp_mem_free(colptrs);
        fasp_mem_free(mult);
@@ -601,7 +601,7 @@ static INT numfactor_mc_omp (dBSRmat   *A,
             }
             for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
             colptrs[k] =  0;
-            fasp_blas_smat_inv_nc3(&(luval[k*nb2]));
+            fasp_smat_inv_nc3(&(luval[k*nb2]));
         }
         fasp_mem_free(colptrs);
         fasp_mem_free(mult);
@@ -754,7 +754,7 @@ static INT numfactor_levsch_omp (dBSRmat *A,
             }
             for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
             colptrs[k] =  0;
-            fasp_blas_smat_inv_nc2(&(luval[k*nb2]));
+            fasp_smat_inv_nc2(&(luval[k*nb2]));
         }
         fasp_mem_free(colptrs);
         fasp_mem_free(mult);
@@ -803,7 +803,7 @@ static INT numfactor_levsch_omp (dBSRmat *A,
             }
             for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
             colptrs[k] =  0;
-            fasp_blas_smat_inv_nc3(&(luval[k*nb2]));
+            fasp_smat_inv_nc3(&(luval[k*nb2]));
         }
         fasp_mem_free(colptrs);
         fasp_mem_free(mult);

@@ -3,10 +3,9 @@
  *  \brief Unsmoothed aggregation AMG: SETUP phase (for BSR matrices)
  *
  *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxSmallMat.c, AuxTiming.c, 
- *        AuxVector.c, BlaFormat.c, BlaILUSetupBSR.c, BlaSparseBLC.c, 
- *        BlaSparseBSR.c, BlaSparseCSR.c, BlaSpmvBSR.c, BlaSpmvCSR.c, 
- *        and PreDataInit.c
+ *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c, 
+ *        BlaFormat.c, BlaILUSetupBSR.c, BlaSparseBLC.c, BlaSparseBSR.c, 
+ *        BlaSparseCSR.c, BlaSpmvBSR.c, BlaSpmvCSR.c, and PreDataInit.c
  *
  *  \note Setup A, P, PT and levels using the unsmoothed aggregation algorithm;
  *        Refer to P. Vanek, J. Madel and M. Brezina

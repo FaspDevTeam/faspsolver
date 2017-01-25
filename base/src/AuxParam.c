@@ -16,7 +16,8 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_param_set (int argc, const char *argv [], input_param *iniparam)
+ * \fn void fasp_param_set (const int argc, const char *argv [], 
+ *                          input_param *iniparam)
  *
  * \brief Read input from command-line arguments
  *
@@ -27,7 +28,7 @@
  * \author Chensong Zhang
  * \date   12/29/2013
  */
-void fasp_param_set (int          argc,
+void fasp_param_set (const int    argc,
                      const char  *argv[],
                      input_param *iniparam)
 {
@@ -249,11 +250,11 @@ void fasp_param_set (int          argc,
 }
 
 /**
- * \fn void fasp_param_init (input_param *iniparam,
+ * \fn void fasp_param_init (const input_param *iniparam,
  *                           itsolver_param *itsparam,
  *                           AMG_param *amgparam,
  *                           ILU_param *iluparam,
- *                           Schwarz_param *schparam)
+ *                           Schwarz_param *swzparam)
  *
  * \brief Initialize parameters, global variables, etc
  *
@@ -261,7 +262,7 @@ void fasp_param_set (int          argc,
  * \param itsparam      Iterative solver parameters
  * \param amgparam      AMG parameters
  * \param iluparam      ILU parameters
- * \param schparam      Schwarz parameters
+ * \param swzparam      Schwarz parameters
  *
  * \author Chensong Zhang
  * \date   2010/08/12
@@ -270,11 +271,11 @@ void fasp_param_set (int          argc,
  * Modified by Chensong Zhang (09/12/2012): find a bug during debugging in VS08
  * Modified by Chensong Zhang (12/29/2013): rewritten
  */
-void fasp_param_init (input_param    *iniparam,
-                      itsolver_param *itsparam,
-                      AMG_param      *amgparam,
-                      ILU_param      *iluparam,
-                      Schwarz_param  *schparam)
+void fasp_param_init (const input_param    *iniparam,
+                      itsolver_param       *itsparam,
+                      AMG_param            *amgparam,
+                      ILU_param            *iluparam,
+                      Schwarz_param        *swzparam)
 {
 #if CHMEM_MODE
     total_alloc_mem   = 0; // initialize total memeory amount
@@ -282,18 +283,15 @@ void fasp_param_init (input_param    *iniparam,
 #endif
 
     if (itsparam) fasp_param_solver_init(itsparam);
-
     if (amgparam) fasp_param_amg_init(amgparam);
-
     if (iluparam) fasp_param_ilu_init(iluparam);
-
-    if (schparam) fasp_param_schwarz_init(schparam);
+    if (swzparam) fasp_param_schwarz_init(swzparam);
 
     if (iniparam) {
         if (itsparam) fasp_param_solver_set(itsparam,iniparam);
         if (amgparam) fasp_param_amg_set(amgparam,iniparam);
         if (iluparam) fasp_param_ilu_set(iluparam,iniparam);
-        if (schparam) fasp_param_schwarz_set(schparam,iniparam);
+        if (swzparam) fasp_param_schwarz_set(swzparam,iniparam);
     }
     else {
         printf("### WARNING: No input specified. Use default values instead!\n");
@@ -487,28 +485,28 @@ void fasp_param_ilu_init (ILU_param *iluparam)
 }
 
 /**
- * \fn void fasp_param_schwarz_init (Schwarz_param *schparam)
+ * \fn void fasp_param_schwarz_init (Schwarz_param *swzparam)
  *
  * \brief Initialize Schwarz parameters
  *
- * \param schparam    Parameters for Schwarz method
+ * \param swzparam    Parameters for Schwarz method
  *
  * \author Xiaozhe Hu
  * \date   05/22/2012
  *
  * Modified by Chensong Zhang on 10/10/2014: Add block solver type
  */
-void fasp_param_schwarz_init (Schwarz_param *schparam)
+void fasp_param_schwarz_init (Schwarz_param *swzparam)
 {
-    schparam->print_level       = PRINT_NONE;
-    schparam->Schwarz_type      = 3;
-    schparam->Schwarz_maxlvl    = 2;
-    schparam->Schwarz_mmsize    = 200;
-    schparam->Schwarz_blksolver = 0;
+    swzparam->print_level       = PRINT_NONE;
+    swzparam->Schwarz_type      = 3;
+    swzparam->Schwarz_maxlvl    = 2;
+    swzparam->Schwarz_mmsize    = 200;
+    swzparam->Schwarz_blksolver = 0;
 }
 
 /**
- * \fn void fasp_param_amg_set (AMG_param *param, input_param *iniparam)
+ * \fn void fasp_param_amg_set (AMG_param *param, const input_param *iniparam)
  *
  * \brief Set AMG_param from INPUT
  *
@@ -518,8 +516,8 @@ void fasp_param_schwarz_init (Schwarz_param *schparam)
  * \author Chensong Zhang
  * \date   2010/03/23
  */
-void fasp_param_amg_set (AMG_param   *param,
-                         input_param *iniparam)
+void fasp_param_amg_set (AMG_param          *param,
+                         const input_param  *iniparam)
 {
     param->AMG_type    = iniparam->AMG_type;
     param->print_level = iniparam->print_level;
@@ -583,7 +581,7 @@ void fasp_param_amg_set (AMG_param   *param,
 }
 
 /**
- * \fn void fasp_param_ilu_set (ILU_param *iluparam, input_param *iniparam)
+ * \fn void fasp_param_ilu_set (ILU_param *iluparam, const input_param *iniparam)
  *
  * \brief Set ILU_param with INPUT
  *
@@ -593,8 +591,8 @@ void fasp_param_amg_set (AMG_param   *param,
  * \author Chensong Zhang
  * \date   2010/04/03
  */
-void fasp_param_ilu_set (ILU_param   *iluparam,
-                         input_param *iniparam)
+void fasp_param_ilu_set (ILU_param          *iluparam,
+                         const input_param  *iniparam)
 {
     iluparam->print_level = iniparam->print_level;
     iluparam->ILU_type    = iniparam->ILU_type;
@@ -605,28 +603,30 @@ void fasp_param_ilu_set (ILU_param   *iluparam,
 }
 
 /**
- * \fn void fasp_param_schwarz_set (Schwarz_param *schparam, input_param *iniparam)
+ * \fn void fasp_param_schwarz_set (Schwarz_param *swzparam, 
+ *                                  const input_param *iniparam)
  *
  * \brief Set Schwarz_param with INPUT
  *
- * \param schparam    Parameters for Schwarz method
+ * \param swzparam    Parameters for Schwarz method
  * \param iniparam     Input parameters
  *
  * \author Xiaozhe Hu
  * \date   05/22/2012
  */
-void fasp_param_schwarz_set (Schwarz_param *schparam,
-                             input_param   *iniparam)
+void fasp_param_schwarz_set (Schwarz_param      *swzparam,
+                             const input_param  *iniparam)
 {
-    schparam->print_level       = iniparam->print_level;
-    schparam->Schwarz_type      = iniparam->Schwarz_type;
-    schparam->Schwarz_maxlvl    = iniparam->Schwarz_maxlvl;
-    schparam->Schwarz_mmsize    = iniparam->Schwarz_mmsize;
-    schparam->Schwarz_blksolver = iniparam->Schwarz_blksolver;
+    swzparam->print_level       = iniparam->print_level;
+    swzparam->Schwarz_type      = iniparam->Schwarz_type;
+    swzparam->Schwarz_maxlvl    = iniparam->Schwarz_maxlvl;
+    swzparam->Schwarz_mmsize    = iniparam->Schwarz_mmsize;
+    swzparam->Schwarz_blksolver = iniparam->Schwarz_blksolver;
 }
 
 /**
- * \fn void fasp_param_solver_set (itsolver_param *itsparam, input_param *iniparam)
+ * \fn void fasp_param_solver_set (itsolver_param *itsparam, 
+ *                                 const input_param *iniparam)
  *
  * \brief Set itsolver_param with INPUT
  *
@@ -636,8 +636,8 @@ void fasp_param_schwarz_set (Schwarz_param *schparam,
  * \author Chensong Zhang
  * \date   2010/03/23
  */
-void fasp_param_solver_set (itsolver_param *itsparam,
-                            input_param    *iniparam)
+void fasp_param_solver_set (itsolver_param     *itsparam,
+                            const input_param  *iniparam)
 {
     itsparam->print_level    = iniparam->print_level;
     itsparam->itsolver_type  = iniparam->solver_type;
@@ -656,7 +656,7 @@ void fasp_param_solver_set (itsolver_param *itsparam,
 }
 
 /**
- * \fn void fasp_param_amg_to_prec (precond_data *pcdata, AMG_param *amgparam)
+ * \fn void fasp_param_amg_to_prec (precond_data *pcdata, const AMG_param *amgparam)
  *
  * \brief Set precond_data with AMG_param
  *
@@ -666,8 +666,8 @@ void fasp_param_solver_set (itsolver_param *itsparam,
  * \author Chensong Zhang
  * \date   2011/01/10
  */
-void fasp_param_amg_to_prec (precond_data *pcdata,
-                             AMG_param    *amgparam)
+void fasp_param_amg_to_prec (precond_data     *pcdata,
+                             const AMG_param  *amgparam)
 {
     pcdata->AMG_type            = amgparam->AMG_type;
     pcdata->print_level         = amgparam->print_level;
@@ -691,7 +691,7 @@ void fasp_param_amg_to_prec (precond_data *pcdata,
 }
 
 /**
- * \fn void fasp_param_prec_to_amg (AMG_param *amgparam, precond_data *pcdata)
+ * \fn void fasp_param_prec_to_amg (AMG_param *amgparam, const precond_data *pcdata)
  *
  * \brief Set AMG_param with precond_data
  *
@@ -701,8 +701,8 @@ void fasp_param_amg_to_prec (precond_data *pcdata,
  * \author Chensong Zhang
  * \date   2011/01/10
  */
-void fasp_param_prec_to_amg (AMG_param    *amgparam,
-                             precond_data *pcdata)
+void fasp_param_prec_to_amg (AMG_param           *amgparam,
+                             const precond_data  *pcdata)
 {
     amgparam->AMG_type            = pcdata->AMG_type;
     amgparam->print_level         = pcdata->print_level;
@@ -723,7 +723,8 @@ void fasp_param_prec_to_amg (AMG_param    *amgparam,
 }
 
 /**
- * \fn void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata, AMG_param *amgparam)
+ * \fn void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata, 
+ *                                      const AMG_param *amgparam)
  *
  * \brief Set precond_data_bsr with AMG_param
  *
@@ -733,8 +734,8 @@ void fasp_param_prec_to_amg (AMG_param    *amgparam,
  * \author Xiaozhe Hu
  * \date   02/06/2012
  */
-void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata,
-                                 AMG_param        *amgparam)
+void fasp_param_amg_to_prec_bsr (precond_data_bsr  *pcdata,
+                                 const AMG_param   *amgparam)
 {
     pcdata->AMG_type            = amgparam->AMG_type;
     pcdata->print_level         = amgparam->print_level;
@@ -757,7 +758,8 @@ void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata,
 }
 
 /**
- * \fn void fasp_param_prec_to_amg_bsr (AMG_param *amgparam, precond_data_bsr *pcdata)
+ * \fn void fasp_param_prec_to_amg_bsr (AMG_param *amgparam, 
+ *                                      const precond_data_bsr *pcdata)
  *
  * \brief Set AMG_param with precond_data
  *
@@ -767,8 +769,8 @@ void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata,
  * \author Xiaozhe Hu
  * \date   02/06/2012
  */
-void fasp_param_prec_to_amg_bsr (AMG_param        *amgparam,
-                                 precond_data_bsr *pcdata)
+void fasp_param_prec_to_amg_bsr (AMG_param               *amgparam,
+                                 const precond_data_bsr  *pcdata)
 {
     amgparam->AMG_type            = pcdata->AMG_type;
     amgparam->print_level         = pcdata->print_level;
@@ -788,7 +790,7 @@ void fasp_param_prec_to_amg_bsr (AMG_param        *amgparam,
 }
 
 /**
- * \fn void fasp_param_amg_print (AMG_param *param)
+ * \fn void fasp_param_amg_print (const AMG_param *param)
  *
  * \brief Print out AMG parameters
  *
@@ -797,7 +799,7 @@ void fasp_param_prec_to_amg_bsr (AMG_param        *amgparam,
  * \author Chensong Zhang
  * \date   2010/03/22
  */
-void fasp_param_amg_print (AMG_param *param)
+void fasp_param_amg_print (const AMG_param *param)
 {
 
     if ( param ) {
@@ -889,7 +891,7 @@ void fasp_param_amg_print (AMG_param *param)
 }
 
 /**
- * \fn void fasp_param_ilu_print (ILU_param *param)
+ * \fn void fasp_param_ilu_print (const ILU_param *param)
  *
  * \brief Print out ILU parameters
  *
@@ -898,7 +900,7 @@ void fasp_param_amg_print (AMG_param *param)
  * \author Chensong Zhang
  * \date   2011/12/20
  */
-void fasp_param_ilu_print (ILU_param *param)
+void fasp_param_ilu_print (const ILU_param *param)
 {
     if ( param ) {
 
@@ -919,7 +921,7 @@ void fasp_param_ilu_print (ILU_param *param)
 }
 
 /**
- * \fn void fasp_param_schwarz_print (Schwarz_param *param)
+ * \fn void fasp_param_schwarz_print (const Schwarz_param *param)
  *
  * \brief Print out Schwarz parameters
  *
@@ -928,7 +930,7 @@ void fasp_param_ilu_print (ILU_param *param)
  * \author Xiaozhe Hu
  * \date   05/22/2012
  */
-void fasp_param_schwarz_print (Schwarz_param *param)
+void fasp_param_schwarz_print (const Schwarz_param *param)
 {
     if ( param ) {
 
@@ -948,7 +950,7 @@ void fasp_param_schwarz_print (Schwarz_param *param)
 }
 
 /**
- * \fn void fasp_param_solver_print (itsolver_param *param)
+ * \fn void fasp_param_solver_print (const itsolver_param *param)
  *
  * \brief Print out itsolver parameters
  *
@@ -957,7 +959,7 @@ void fasp_param_schwarz_print (Schwarz_param *param)
  * \author Chensong Zhang
  * \date   2011/12/20
  */
-void fasp_param_solver_print (itsolver_param *param)
+void fasp_param_solver_print (const itsolver_param *param)
 {
     if ( param ) {
 

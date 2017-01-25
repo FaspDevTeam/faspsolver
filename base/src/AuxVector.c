@@ -19,7 +19,7 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_dvec_isnan (dvector *u)
+ * \fn SHORT fasp_dvec_isnan (const dvector *u)
  *
  * \brief Check a dvector whether there is NAN
  *
@@ -30,11 +30,11 @@
  * \author Chensong Zhang
  * \date   2013/03/31
  */
-INT fasp_dvec_isnan (dvector *u)
+SHORT fasp_dvec_isnan (dvector *u)
 {
     INT i;
     
-    for ( i=0; i<u->row; i++ ) {
+    for ( i = 0; i < u->row; i++ ) {
         if ( ISNAN(u->val[i]) ) return TRUE;
     }
 
@@ -203,16 +203,15 @@ void fasp_dvec_null (dvector *x)
 void fasp_dvec_rand (const INT  n,
                      dvector   *x)
 {
-    const INT va=(REAL) 0;
-    const INT vb=(REAL) n;
+    const INT va = (REAL) 0;
+    const INT vb = (REAL) n;
     
-    INT s=1; srand(s);
-    
-    INT i,j;
+    INT s=1, i,j;
     
     x->row = n;
     
-    for (i=0; i<n; ++i){
+    srand(s);
+    for ( i = 0; i < n; ++i ) {
         j = 1 + (INT) (((REAL)n)*rand()/(RAND_MAX+1.0));
         x->val[i] = (((REAL)j)-va)/(vb-va);
     }
@@ -332,7 +331,7 @@ void fasp_ivec_set (const INT  m,
 }
 
 /**
- * \fn void fasp_dvec_cp (dvector *x, dvector *y) 
+ * \fn void fasp_dvec_cp (const dvector *x, dvector *y)
  *
  * \brief Copy dvector x to dvector y
  *
@@ -342,15 +341,15 @@ void fasp_ivec_set (const INT  m,
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-void fasp_dvec_cp (dvector *x, 
-                   dvector *y)
+void fasp_dvec_cp (const dvector  *x,
+                   dvector        *y)
 {
     y->row=x->row;
     memcpy(y->val,x->val,x->row*sizeof(REAL));
 }
 
 /**
- * \fn REAL fasp_dvec_maxdiff (dvector *x, dvector *y) 
+ * \fn REAL fasp_dvec_maxdiff (const dvector *x, const dvector *y)
  *
  * \brief Maximal difference of two dvector x and y
  *
@@ -365,8 +364,8 @@ void fasp_dvec_cp (dvector *x,
  * Modified by chunsheng Feng, Zheng Li
  * \date   06/30/2012
  */
-REAL fasp_dvec_maxdiff (dvector *x, 
-                        dvector *y)
+REAL fasp_dvec_maxdiff (const dvector *x,
+                        const dvector *y)
 {
     const INT length=x->row;
     REAL Linf=0., diffi=0.;
@@ -408,7 +407,7 @@ REAL fasp_dvec_maxdiff (dvector *x,
 }
 
 /**
- * \fn void fasp_dvec_symdiagscale (dvector *b, dvector *diag)
+ * \fn void fasp_dvec_symdiagscale (dvector *b, const dvector *diag)
  *
  * \brief Symmetric diagonal scaling D^{-1/2}b
  *
@@ -418,8 +417,8 @@ REAL fasp_dvec_maxdiff (dvector *x,
  * \author Xiaozhe Hu
  * \date   01/31/2011
  */
-void fasp_dvec_symdiagscale (dvector *b, 
-                             dvector *diag)
+void fasp_dvec_symdiagscale (dvector        *b,
+                             const dvector  *diag)
 {
     // information about dvector
     const INT n = b->row;

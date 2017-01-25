@@ -1,8 +1,8 @@
 /*! \file AuxSmallMat.c
  *
- *  \brief Simple operations for *small* dense matrices in row-major format
+ *  \brief Find inversion of *small* dense matrices in row-major format
  *
- *  \note This file contains Level-0 (Aux) functions. It requires
+ *  \note This file contains Level-1 (Bla) functions. It requires
  *        AuxMemory.c
  */
 
@@ -16,7 +16,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_blas_smat_inv_nc2 (REAL *a)
+ * \fn void fasp_smat_inv_nc2 (REAL *a)
  *
  * \brief Compute the inverse matrix of a 2*2 full matrix A (in place)
  *
@@ -25,7 +25,7 @@
  * \author Xiaozhe Hu
  * \date   18/11/2011
  */
-void fasp_blas_smat_inv_nc2 (REAL *a)
+void fasp_smat_inv_nc2 (REAL *a)
 {
     const REAL a0 = a[0], a1 = a[1];
     const REAL a2 = a[2], a3 = a[3];
@@ -52,7 +52,7 @@ void fasp_blas_smat_inv_nc2 (REAL *a)
 }
 
 /**
- * \fn void fasp_blas_smat_inv_nc3 (REAL *a)
+ * \fn void fasp_smat_inv_nc3 (REAL *a)
  *
  * \brief Compute the inverse matrix of a 3*3 full matrix A (in place)
  *
@@ -61,7 +61,7 @@ void fasp_blas_smat_inv_nc2 (REAL *a)
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
  */
-void fasp_blas_smat_inv_nc3 (REAL *a)
+void fasp_smat_inv_nc3 (REAL *a)
 {
     const REAL a0 = a[0], a1 = a[1], a2 = a[2];
     const REAL a3 = a[3], a4 = a[4], a5 = a[5];
@@ -71,6 +71,7 @@ void fasp_blas_smat_inv_nc3 (REAL *a)
     const REAL M1 = a5*a6-a3*a8, M4 = a0*a8-a2*a6, M7 = a2*a3-a0*a5;
     const REAL M2 = a3*a7-a4*a6, M5 = a1*a6-a0*a7, M8 = a0*a4-a1*a3;
     const REAL det = a0*M0+a3*M3+a6*M6;
+    
     REAL det_inv;
     
     if ( ABS(det) < SMALLREAL ) {
@@ -104,7 +105,7 @@ void fasp_blas_smat_inv_nc3 (REAL *a)
 }
 
 /**
- * \fn void fasp_blas_smat_inv_nc4 (REAL *a)
+ * \fn void fasp_smat_inv_nc4 (REAL *a)
  *
  * \brief Compute the inverse matrix of a 4*4 full matrix A (in place)
  *
@@ -115,7 +116,7 @@ void fasp_blas_smat_inv_nc3 (REAL *a)
  *
  * Modified by Hongxuan Zhang on 06/13/2014: Fix a bug in M23.
  */
-void fasp_blas_smat_inv_nc4 (REAL *a)
+void fasp_smat_inv_nc4 (REAL *a)
 {
     const REAL a11 = a[0],  a12 = a[1],  a13 = a[2],  a14 = a[3];
     const REAL a21 = a[4],  a22 = a[5],  a23 = a[6],  a24 = a[7];
@@ -140,6 +141,7 @@ void fasp_blas_smat_inv_nc4 (REAL *a)
     const REAL M44 = a11*a22*a33 + a12*a23*a31 + a13*a21*a32 - a11*a23*a32 - a12*a21*a33 - a13*a22*a31;
     
     const REAL det = a11*M11 + a12*M21 + a13*M31 + a14*M41;
+    
     REAL det_inv;
     
     if ( ABS(det) < SMALLREAL ) {
@@ -164,7 +166,7 @@ void fasp_blas_smat_inv_nc4 (REAL *a)
 }
 
 /**
- * \fn void fasp_blas_smat_inv_nc5 (REAL *a)
+ * \fn void fasp_smat_inv_nc5 (REAL *a)
  *
  * \brief Compute the inverse matrix of a 5*5 full matrix A (in place)
  *
@@ -173,7 +175,7 @@ void fasp_blas_smat_inv_nc4 (REAL *a)
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
  */
-void fasp_blas_smat_inv_nc5 (REAL *a)
+void fasp_smat_inv_nc5 (REAL *a)
 {
     const REAL a0=a[0],   a1=a[1],   a2=a[2],   a3=a[3],   a4=a[4];
     const REAL a5=a[5],   a6=a[6],   a7=a[7],   a8=a[8],   a9=a[9];
@@ -378,7 +380,7 @@ void fasp_blas_smat_inv_nc5 (REAL *a)
 }
 
 /**
- * \fn void fasp_blas_smat_inv_nc7 (REAL *a)
+ * \fn void fasp_smat_inv_nc7 (REAL *a)
  *
  * \brief Compute the inverse matrix of a 7*7 matrix a
  *
@@ -389,13 +391,13 @@ void fasp_blas_smat_inv_nc5 (REAL *a)
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
  */
-void fasp_blas_smat_inv_nc7 (REAL *a)
+void fasp_smat_inv_nc7 (REAL *a)
 {
-    fasp_blas_smat_invp_nc(a,7);
+    fasp_smat_invp_nc(a,7);
 }
 
 /**
- * \fn void fasp_blas_smat_inv_nc (REAL *a, const INT n)
+ * \fn void fasp_smat_inv_nc (REAL *a, const INT n)
  *
  * \brief Compute the inverse of a matrix using Gauss Elimination
  *
@@ -405,8 +407,8 @@ void fasp_blas_smat_inv_nc7 (REAL *a)
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
  */
-void fasp_blas_smat_inv_nc (REAL      *a,
-                            const INT  n)
+void fasp_smat_inv_nc (REAL      *a,
+                       const INT  n)
 {
     INT i,j,k,l,u,kn,in;
     REAL alinv;
@@ -460,7 +462,7 @@ void fasp_blas_smat_inv_nc (REAL      *a,
 }
 
 /**
- * \fn void fasp_blas_smat_invp_nc (REAL *a, const INT n)
+ * \fn void fasp_smat_invp_nc (REAL *a, const INT n)
  *
  * \brief Compute the inverse of a matrix using Gauss Elimination with Pivoting
  *
@@ -472,8 +474,8 @@ void fasp_blas_smat_inv_nc (REAL      *a,
  *
  * \note   This routine is based on gaussj() from "Numerical Recipies in C"!
  */
-void fasp_blas_smat_invp_nc (REAL      *a,
-                             const INT  n)
+void fasp_smat_invp_nc (REAL      *a,
+                        const INT  n)
 {
     INT   i, j, k, l, ll, u;
     INT   icol, irow;
@@ -544,7 +546,7 @@ void fasp_blas_smat_invp_nc (REAL      *a,
 }
 
 /**
- * \fn INT fasp_blas_smat_inv (REAL *a, const INT n)
+ * \fn INT fasp_smat_inv (REAL *a, const INT n)
  *
  * \brief Compute the inverse matrix of a small full matrix a
  *
@@ -554,29 +556,29 @@ void fasp_blas_smat_invp_nc (REAL      *a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   04/21/2010
  */
-INT fasp_blas_smat_inv (REAL      *a,
-                        const INT  n)
+INT fasp_smat_inv (REAL      *a,
+                   const INT  n)
 {
     switch (n) {
             
         case 2:
-            fasp_blas_smat_inv_nc2(a);
+            fasp_smat_inv_nc2(a);
             break;
             
         case 3:
-            fasp_blas_smat_inv_nc3(a);
+            fasp_smat_inv_nc3(a);
             break;
             
         case 4:
-            fasp_blas_smat_inv_nc4(a);
+            fasp_smat_inv_nc4(a);
             break;
             
         case 5:
-            fasp_blas_smat_inv_nc5(a);
+            fasp_smat_inv_nc5(a);
             break;
             
         default:
-            fasp_blas_smat_invp_nc(a,n);
+            fasp_smat_invp_nc(a,n);
             break;
             
     }
@@ -585,7 +587,7 @@ INT fasp_blas_smat_inv (REAL      *a,
 }
 
 /**
- * \fn REAL fasp_blas_smat_Linfinity (REAL *A, const INT n )
+ * \fn REAL fasp_smat_Linfinity (REAL *A, const INT n )
  *
  * \brief Compute the L infinity norm of A
  *
@@ -595,8 +597,8 @@ INT fasp_blas_smat_inv (REAL      *a,
  * \author Xiaozhe Hu
  * \date   05/26/2014
  */
-REAL fasp_blas_smat_Linfinity (REAL      *A,
-                               const INT  n)
+REAL fasp_smat_Linfinity (REAL      *A,
+                          const INT  n)
 {
     
     REAL norm = 0.0;
@@ -616,26 +618,6 @@ REAL fasp_blas_smat_Linfinity (REAL      *A,
     }
     
     return norm;
-}
-
-/**
- * \fn void fasp_iden_free (idenmat *A)
- *
- * \brief Free idenmat sparse matrix data memeory space
- *
- * \param A      Pointer to the idenmat matrix
- *
- * \author Chensong Zhang
- * \date   2010/04/03
- */
-void fasp_iden_free (idenmat *A)
-{
-    INT i;
-    
-    if (A==NULL) return;
-    
-    for (i=0;i<A->row;++i) fasp_mem_free(A->val[i]);
-    fasp_mem_free(A->val); A->val = NULL; A->row = 0;
 }
 
 /**

@@ -48,7 +48,7 @@ INT fasp_get_num_threads ()
 }
 
 /**
- * \fn     INT fasp_set_num_threads (INT nthreads)
+ * \fn     INT fasp_set_num_threads (const INT nthreads)
  *
  * \brief  Set the number of threads for thread related functions.
  *
@@ -59,7 +59,7 @@ INT fasp_get_num_threads ()
  * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
  * \date   June/15/2012
  */
-INT fasp_set_num_threads (INT nthreads)
+INT fasp_set_num_threads (const INT nthreads)
 {
     omp_set_num_threads( nthreads );
     
@@ -69,7 +69,8 @@ INT fasp_set_num_threads (INT nthreads)
 #endif
 
 /**
- * \fn    void fasp_get_start_end (INT procid, INT nprocs, INT n, INT *start, INT *end)
+ * \fn    void fasp_get_start_end (const INT procid, const INT nprocs, const INT n, 
+ *                                 INT *start, INT *end)
  *
  * \brief Assign Load to each thread.
  *
@@ -82,11 +83,11 @@ INT fasp_set_num_threads (INT nthreads)
  * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
  * \date   June/25/2012
  */
-void fasp_get_start_end (INT  procid,
-                         INT  nprocs,
-                         INT  n,
-                         INT *start,
-                         INT *end)
+void fasp_get_start_end (const INT  procid,
+                         const INT  nprocs,
+                         const INT  n,
+                         INT       *start,
+                         INT       *end)
 {
     INT chunk_size = n / nprocs;
     INT mod =  n % nprocs;
@@ -111,7 +112,7 @@ INT THDs_CPR_lGS=0; /**< reservoir GS smoothing threads     */
 INT THDs_CPR_gGS=0; /**< global matrix GS smoothing threads */
 
 /**
- * \fn void fasp_set_GS_threads (INT threads,INT its)
+ * \fn void fasp_set_GS_threads (const INT threads, const INT its)
  *
  * \brief  Set threads for CPR. Please add it at the begin of Krylov OpenMP method 
  *         function and after iter++.
@@ -122,8 +123,8 @@ INT THDs_CPR_gGS=0; /**< global matrix GS smoothing threads */
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date   03/20/2011
  */
-void fasp_set_GS_threads (INT mythreads,
-                          INT its)
+void fasp_set_GS_threads (const INT mythreads,
+                          const INT its)
 {
 #ifdef _OPENMP
     

@@ -156,7 +156,7 @@ void fasp_iarray_set (const INT   n,
 }
 
 /**
- * \fn void fasp_array_cp (const INT n, REAL *x, REAL *y) 
+ * \fn void fasp_array_cp (const INT n, const REAL *x, REAL *y)
  *
  * \brief Copy an array to the other y=x
  *
@@ -167,16 +167,16 @@ void fasp_iarray_set (const INT   n,
  * \author Chensong Zhang
  * \date   2010/04/03  
  */
-void fasp_array_cp (const INT   n,
-                    REAL       *x,
-                    REAL       *y)
+void fasp_array_cp (const INT    n,
+                    const REAL  *x,
+                    REAL        *y)
 {
     memcpy(y, x, n*sizeof(REAL));
 }
 
 
 /**
- * \fn void fasp_iarray_cp (const INT n, INT *x, INT *y) 
+ * \fn void fasp_iarray_cp (const INT n, const INT *x, INT *y)
  *
  * \brief Copy an array to the other y=x
  *
@@ -188,14 +188,14 @@ void fasp_array_cp (const INT   n,
  * \date   05/23/2012  
  */
 void fasp_iarray_cp (const INT   n,
-                     INT        *x,
+                     const INT  *x,
                      INT        *y)
 {
     memcpy(y, x, n*sizeof(INT));
 }
 
 /**
- * \fn void fasp_array_cp_nc3 (REAL *x, REAL *y) 
+ * \fn void fasp_array_cp_nc3 (const REAL *x, REAL *y)
  *
  * \brief Copy an array to the other y=x, the length is 3
  *
@@ -207,8 +207,8 @@ void fasp_iarray_cp (const INT   n,
  *
  * \note Special unrolled routine designed for a specific application
  */
-void fasp_array_cp_nc3 (REAL  *x,
-                        REAL  *y)
+void fasp_array_cp_nc3 (const REAL  *x,
+                        REAL        *y)
 {
     y[0] = x[0];
     y[1] = x[1];
@@ -216,7 +216,7 @@ void fasp_array_cp_nc3 (REAL  *x,
 }
 
 /**
- * \fn void fasp_array_cp_nc5(REAL *x, REAL *y) 
+ * \fn void fasp_array_cp_nc5 (const REAL *x, REAL *y)
  *
  * \brief Copy an array to the other y=x, the length is 5
  *
@@ -228,8 +228,8 @@ void fasp_array_cp_nc3 (REAL  *x,
  *
  * \note Special unrolled routine designed for a specific application
  */
-void fasp_array_cp_nc5 (REAL  *x,
-                        REAL  *y)
+void fasp_array_cp_nc5 (const REAL  *x,
+                        REAL        *y)
 {
     y[0] = x[0];
     y[1] = x[1];
@@ -239,7 +239,7 @@ void fasp_array_cp_nc5 (REAL  *x,
 }
 
 /**
- * \fn void fasp_array_cp_nc7(REAL *x, REAL *y) 
+ * \fn void fasp_array_cp_nc7 (const REAL *x, REAL *y)
  *
  * \brief Copy an array to the other y=x, the length is 7
  *
@@ -251,8 +251,8 @@ void fasp_array_cp_nc5 (REAL  *x,
  *
  * \note Special unrolled routine designed for a specific application
  */
-void fasp_array_cp_nc7 (REAL  *x,
-                        REAL  *y)
+void fasp_array_cp_nc7 (const REAL  *x,
+                        REAL        *y)
 {
     y[0] = x[0];
     y[1] = x[1];
@@ -264,9 +264,10 @@ void fasp_array_cp_nc7 (REAL  *x,
 }
 
 /**
- * \fn void fasp_array_permut_nb (INT n, INT nb, REAL*x, INT *p, REAL*y)
+ * \fn void fasp_array_permut_nb (const INT n, const INT nb, const REAL*x, 
+ *                                const INT *p, REAL*y)
  *
- * \brief Array mapping 
+ * \brief Array permutation
  *
  * \param n    Size of array
  * \param nb   Step size  
@@ -276,13 +277,12 @@ void fasp_array_cp_nc7 (REAL  *x,
  * 
  * \author Zheng Li
  * \date   12/04/2016
- *
  */
-void fasp_array_permut_nb (INT    n,
-                           INT    nb,
-                           REAL  *x,
-                           INT   *p,
-                           REAL  *y)
+void fasp_array_permut_nb (const INT    n,
+                           const INT    nb,
+                           const REAL  *x,
+                           const INT   *p,
+                           REAL        *y)
 {
    INT i, j, indx, indy;
 
@@ -299,9 +299,10 @@ void fasp_array_permut_nb (INT    n,
 }
 
 /**
- * \fn void fasp_array_invpermut_nb (INT n, INT nb, REAL*x, INT *p, REAL*y)
+ * \fn void fasp_array_invpermut_nb (const INT n, const INT nb, const REAL*x, 
+ *                                   const INT *p, REAL*y)
  *
- * \brief Array mapping
+ * \brief Array inverse permutation
  *
  * \param n    Size of array
  * \param nb   Step size
@@ -311,13 +312,12 @@ void fasp_array_permut_nb (INT    n,
  *
  * \author Zheng Li
  * \date   12/04/2016
- *
  */
-void fasp_array_invpermut_nb (INT    n,
-                              INT    nb,
-                              REAL  *x,
-                              INT   *p,
-                              REAL  *y)
+void fasp_array_invpermut_nb (const INT    n,
+                              const INT    nb,
+                              const REAL  *x,
+                              const INT   *p,
+                              REAL        *y)
 {
    INT i, j, indx, indy;
 
