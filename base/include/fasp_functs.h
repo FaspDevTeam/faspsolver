@@ -794,23 +794,12 @@ SHORT fasp_smat_lu_solve (const REAL *A,
 
 void fasp_dblc_free (dBLCmat *A);
 
-SHORT fasp_dcsr_getblk (dCSRmat    *A,
-                        INT        *Is,
-                        INT        *Js,
-                        const INT   m,
-                        const INT   n,
-                        dCSRmat    *B);
-
-SHORT fasp_dbsr_getblk (dBSRmat    *A,
-                        INT        *Is,
-                        INT        *Js,
-                        const INT   m,
-                        const INT   n,
-                        dBSRmat    *B);
-
-dCSRmat fasp_dbsr_getblk_dcsr (dBSRmat *A);
-
-dCSRmat fasp_dbsr_Linfinity_dcsr (dBSRmat *A);
+SHORT fasp_dbsr_getblk (const dBSRmat  *A,
+                        const INT      *Is,
+                        const INT      *Js,
+                        const INT       m,
+                        const INT       n,
+                        dBSRmat        *B);
 
 
 /*-------- In file: BlaSparseBSR.c --------*/
@@ -832,41 +821,41 @@ void fasp_dbsr_free (dBSRmat *A);
 
 void fasp_dbsr_null (dBSRmat *A);
 
-void fasp_dbsr_cp (dBSRmat *A,
-                   dBSRmat *B);
+void fasp_dbsr_cp (const dBSRmat *A,
+                   dBSRmat       *B);
 
-INT fasp_dbsr_trans (dBSRmat *A,
-                     dBSRmat *AT);
+INT fasp_dbsr_trans (const dBSRmat *A,
+                     dBSRmat       *AT);
 
 SHORT fasp_dbsr_diagpref (dBSRmat *A);
 
-dvector fasp_dbsr_getdiaginv (dBSRmat *A);
+dvector fasp_dbsr_getdiaginv (const dBSRmat *A);
 
-dBSRmat fasp_dbsr_diaginv (dBSRmat *A);
+dBSRmat fasp_dbsr_diaginv (const dBSRmat *A);
 
-dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A,
-                            REAL    *diaginv);
+dBSRmat fasp_dbsr_diaginv2 (const dBSRmat *A,
+                            REAL          *diaginv);
 
-dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
-                            REAL    *diaginv);
+dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A,
+                            REAL          *diaginv);
 
-dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
-                            REAL    *diaginv);
+dBSRmat fasp_dbsr_diaginv4 (const dBSRmat *A,
+                            REAL          *diaginv);
 
-void fasp_dbsr_getdiag (INT      n,
-                        dBSRmat *A,
-                        REAL    *diag );
+void fasp_dbsr_getdiag (INT            n,
+                        const dBSRmat *A,
+                        REAL          *diag );
 
-dBSRmat fasp_dbsr_diagLU (dBSRmat *A,
-                          REAL    *DL,
-                          REAL    *DU);
+dBSRmat fasp_dbsr_diagLU (const dBSRmat *A,
+                          REAL          *DL,
+                          REAL          *DU);
 
 dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
                            REAL    *DL,
                            REAL    *DU);
 
-dBSRmat fasp_dbsr_perm (dBSRmat *A,
-                        INT     *P);
+dBSRmat fasp_dbsr_perm (const dBSRmat *A,
+                        const INT     *P);
 
 
 /*-------- In file: BlaSparseCOO.c --------*/
@@ -914,30 +903,37 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
 
 void fasp_dcsr_sort (dCSRmat *A);
 
-void fasp_dcsr_getdiag (INT      n,
-                        dCSRmat *A,
-                        dvector *diag);
+SHORT fasp_dcsr_getblk (const dCSRmat  *A,
+                        const INT      *Is,
+                        const INT      *Js,
+                        const INT       m,
+                        const INT       n,
+                        dCSRmat        *B);
 
-void fasp_dcsr_getcol (const INT  n,
-                       dCSRmat   *A,
-                       REAL      *col);
+void fasp_dcsr_getdiag (INT            n,
+                        const dCSRmat *A,
+                        dvector       *diag);
+
+void fasp_dcsr_getcol (const INT      n,
+                       const dCSRmat *A,
+                       REAL          *col);
 
 void fasp_dcsr_diagpref (dCSRmat *A);
 
-SHORT fasp_dcsr_regdiag (dCSRmat *A,
-                         REAL     value);
+SHORT fasp_dcsr_regdiag (dCSRmat    *A,
+                         const REAL  value);
 
-void fasp_icsr_cp (iCSRmat *A,
-                   iCSRmat *B);
+void fasp_icsr_cp (const iCSRmat *A,
+                   iCSRmat       *B);
 
-void fasp_dcsr_cp (dCSRmat *A,
-                   dCSRmat *B);
+void fasp_dcsr_cp (const dCSRmat *A,
+                   dCSRmat       *B);
 
-void fasp_icsr_trans (iCSRmat *A,
-                      iCSRmat *AT);
+void fasp_icsr_trans (const iCSRmat *A,
+                      iCSRmat       *AT);
 
-INT fasp_dcsr_trans (dCSRmat *A,
-                     dCSRmat *AT);
+INT fasp_dcsr_trans (const dCSRmat *A,
+                     dCSRmat       *AT);
 
 void fasp_dcsr_transpose (INT   *row[2],
                           INT   *col[2],
@@ -945,18 +941,18 @@ void fasp_dcsr_transpose (INT   *row[2],
                           INT   *nn,
                           INT   *tniz);
 
-void fasp_dcsr_compress (dCSRmat *A,
-                         dCSRmat *B,
-                         REAL     dtol);
+void fasp_dcsr_compress (const dCSRmat *A,
+                         dCSRmat       *B,
+                         const REAL     dtol);
 
-SHORT fasp_dcsr_compress_inplace (dCSRmat *A,
-                                  REAL     dtol);
+SHORT fasp_dcsr_compress_inplace (dCSRmat    *A,
+                                  const REAL  dtol);
 
-void fasp_dcsr_shift (dCSRmat *A,
-                      INT      offset);
+void fasp_dcsr_shift (dCSRmat   *A,
+                      const INT  offset);
 
-void fasp_dcsr_symdiagscale (dCSRmat *A,
-                             dvector *diag);
+void fasp_dcsr_symdiagscale (dCSRmat       *A,
+                             const dvector *diag);
 
 dCSRmat fasp_dcsr_sympart (dCSRmat *A);
 
@@ -986,17 +982,17 @@ void fasp_dcsrl_free (dCSRLmat *A);
 
 /*-------- In file: BlaSparseCheck.c --------*/
 
-INT fasp_check_diagpos (dCSRmat *A);
+INT fasp_check_diagpos (const dCSRmat *A);
 
-SHORT fasp_check_diagzero (dCSRmat *A);
+SHORT fasp_check_diagzero (const dCSRmat *A);
 
-INT fasp_check_diagdom (dCSRmat *A);
+INT fasp_check_diagdom (const dCSRmat *A);
 
-INT fasp_check_symm (dCSRmat *A);
+INT fasp_check_symm (const dCSRmat *A);
 
-void fasp_check_dCSRmat (dCSRmat *A);
+void fasp_check_dCSRmat (const dCSRmat *A);
 
-SHORT fasp_check_iCSRmat (iCSRmat *A);
+SHORT fasp_check_iCSRmat (const iCSRmat *A);
 
 
 /*-------- In file: BlaSparseSTR.c --------*/
@@ -1022,8 +1018,8 @@ void fasp_dstr_alloc (const INT  nx,
 
 void fasp_dstr_free (dSTRmat *A);
 
-void fasp_dstr_cp (dSTRmat *A, 
-                   dSTRmat *B);
+void fasp_dstr_cp (const dSTRmat *A,
+                   dSTRmat       *B);
 
 
 /*-------- In file: BlaSparseUtil.c --------*/

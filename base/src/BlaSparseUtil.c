@@ -18,9 +18,9 @@
  *
  *  \note This file contains Level-1 (Bla) functions. It requires
  *        AuxMemory.c
- *
- *  \todo Remove unwanted functions from this file. --Chensong
  */
+
+// TODO: Remove unwanted functions from this file. --Chensong
 
 #include <math.h>
 #include <time.h>

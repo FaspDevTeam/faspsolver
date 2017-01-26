@@ -16,7 +16,7 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_check_diagpos (dCSRmat *A)
+ * \fn INT fasp_check_diagpos (const dCSRmat *A)
  *
  * \brief Check positivity of diagonal entries of a CSR sparse matrix.
  *
@@ -27,7 +27,7 @@
  * \author Shuo Zhang
  * \date   03/29/2009
  */
-INT fasp_check_diagpos (dCSRmat *A)
+INT fasp_check_diagpos (const dCSRmat *A)
 {
     const INT      m = A->row;
     unsigned INT   i, num_neg;
@@ -53,7 +53,7 @@ INT fasp_check_diagpos (dCSRmat *A)
 }
 
 /**
- * \fn SHORT fasp_check_diagzero (dCSRmat *A)
+ * \fn SHORT fasp_check_diagzero (const dCSRmat *A)
  *
  * \brief Check wether a CSR sparse matrix has diagonal entries that are very close to zero.
  *
@@ -64,7 +64,7 @@ INT fasp_check_diagpos (dCSRmat *A)
  * \author Shuo Zhang
  * \date   03/29/2009
  */
-SHORT fasp_check_diagzero (dCSRmat *A)
+SHORT fasp_check_diagzero (const dCSRmat *A)
 {
     const INT    m  = A->row;
     const INT   *ia = A->IA, *ja = A->JA;
@@ -92,7 +92,7 @@ SHORT fasp_check_diagzero (dCSRmat *A)
 }
 
 /**
- * INT fasp_check_diagdom (dCSRmat *A)
+ * INT fasp_check_diagdom (const dCSRmat *A)
  *
  * \brief Check whether a matrix is diagonal dominant.
  *
@@ -108,7 +108,7 @@ SHORT fasp_check_diagzero (dCSRmat *A)
  * \author Shuo Zhang
  * \date   03/29/2009
  */
-INT fasp_check_diagdom (dCSRmat *A)
+INT fasp_check_diagdom (const dCSRmat *A)
 {
     const INT   nn  = A->row;
     const INT   nnz = A->IA[nn]-A->IA[0];
@@ -139,7 +139,7 @@ INT fasp_check_diagdom (dCSRmat *A)
 }
 
 /**
- * \fn INT fasp_check_symm (dCSRmat *A)
+ * \fn INT fasp_check_symm (const dCSRmat *A)
  *
  * \brief Check symmetry of a sparse matrix of CSR format.
  *
@@ -153,7 +153,7 @@ INT fasp_check_diagdom (dCSRmat *A)
  * \author Shuo Zhang
  * \date   03/29/2009
  */
-INT fasp_check_symm (dCSRmat *A)
+INT fasp_check_symm (const dCSRmat *A)
 {
     const REAL symmetry_tol = 1.0e-12;
     
@@ -266,7 +266,7 @@ INT fasp_check_symm (dCSRmat *A)
 }
 
 /**
- * \fn void fasp_check_dCSRmat (dCSRmat *A)
+ * \fn void fasp_check_dCSRmat (const dCSRmat *A)
  *
  * \brief Check whether an dCSRmat matrix is supported or not
  *
@@ -275,7 +275,7 @@ INT fasp_check_symm (dCSRmat *A)
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_check_dCSRmat (dCSRmat *A)
+void fasp_check_dCSRmat (const dCSRmat *A)
 {    
     INT i;    
     
@@ -284,7 +284,7 @@ void fasp_check_dCSRmat (dCSRmat *A)
         fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);
     }
 
-        if ( A->row != A->col ) {
+    if ( A->row != A->col ) {
         printf("### ERROR: Non-square CSR matrix!\n");
         fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);
     }
@@ -303,7 +303,7 @@ void fasp_check_dCSRmat (dCSRmat *A)
 }
 
 /**
- * \fn SHORT fasp_check_iCSRmat (iCSRmat *A)
+ * \fn SHORT fasp_check_iCSRmat (const iCSRmat *A)
  *
  * \brief Check whether an iCSRmat matrix is valid or not
  *
@@ -312,10 +312,15 @@ void fasp_check_dCSRmat (dCSRmat *A)
  * \author Shuo Zhang
  * \date   03/29/2009
  */
-SHORT fasp_check_iCSRmat (iCSRmat *A)
+SHORT fasp_check_iCSRmat (const iCSRmat *A)
 {    
     INT i;    
     
+    if ( (A->IA == NULL) || (A->JA == NULL) || (A->val == NULL) ) {
+        printf("### ERROR: Something is wrong with the matrix!\n");
+        fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);
+    }
+
     if (A->row != A->col) {
         printf("### ERROR: Non-square CSR matrix!\n");
         fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
