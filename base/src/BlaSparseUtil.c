@@ -527,8 +527,8 @@ void fasp_sparse_rapms_ (INT *ir,
                          INT *jac,
                          INT *maxrout)
 {
-    INT i,jk,jak,jpk,ic,jc,nc,icp1,ira,irb,ipa,ipb,maxri,maxr,    \
-    iaa,iab,iacp,if1,jf1,jacform=0;
+    INT i,jk,jak,jpk,ic,jc,nc,icp1,ira,irb,ipa,ipb;
+    INT maxri,maxr,iaa,iab,iacp,if1,jf1,jacform=0;
     INT *ix;
     
     nc = *ncin;
@@ -805,8 +805,7 @@ void fasp_sparse_rapcmp_ (INT  *ir,
                           REAL *ac,
                           INT  *idummy)
 {
-    INT i,j,k,n,nc,nv,nw,nptjc,iacst,iacen,ic,jc,    \
-    is,js,jkc,iastrt,iaend,ji,jia;
+    INT i,j,k,n,nc,nv,nw,nptjc,iacst,iacen,ic,jc,is,js,jkc,iastrt,iaend,ji,jia;
     REAL aij,v0;
     INT *icp=NULL, *jv=NULL,*jris=NULL, *jptjs=NULL;
     REAL *v=NULL, *ris=NULL, *ptjs=NULL;

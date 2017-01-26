@@ -1,6 +1,6 @@
 File Name: CHANGES
 
-01/25/2017 FASP 1.9.4:
+01/26/2017 FASP 1.9.4:
 - Fix a few memory leaks.
 - Update input parameters in test/ini/input.dat.
 - Remove fasp_dcsr_check().
@@ -8,7 +8,8 @@ File Name: CHANGES
 - Update regression results.
 - File name changed: AuxSmallMat.c ==> BlaSmallMatInv.c.
 - Update a few function names in BlaSmallMatInv.c.
-- Clean up Aux*.c and Bla*.c files.
+- Clean up Aux*.c and Bla*.c files, delete deprecated functions.
+- Move things around.
 
 01/23/2017 FASP 1.9.3:
 - Clean up Level 4 (Pre) functions.

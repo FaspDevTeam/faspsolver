@@ -364,7 +364,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
     dCSRmat  * ptrA = &mgl[level].A;
     REAL       quality_bound = param->quality_bound;
     
-    INT        i, j, k, num_agg = 0, aggindex, bndwith;
+    INT        i, j, k, num_agg = 0, aggindex;
     INT        lvl = level;
     REAL       isorate;
     
@@ -378,9 +378,9 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
 #endif
     
 #if SYMMETRIC_PAIRWISE == 1
-    fasp_blas_dcsr_bandwith(&mgl[level].A, &bndwith);
-    if (bndwith > 5.0)
-        param->quality_bound = quality_bound = 1.0*bndwith;
+    INT bandwidth = fasp_dcsr_bandwidth(&mgl[level].A);
+    if (bandwidth > 5.0)
+        param->quality_bound = quality_bound = 1.0*bandwidth;
 #endif
     
     for ( i = 1; i <= pair_number; ++i ) {

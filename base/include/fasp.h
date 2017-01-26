@@ -1058,7 +1058,7 @@ typedef struct {
     void *data;
 
     //! action for MxV, void function pointer
-    void (*fct)(void *, REAL *, REAL *);
+    void (*fct)(const void *, const REAL *, REAL *);
 
 } mxv_matfree; /**< Data for general matrix passed to iterative solvers */
 

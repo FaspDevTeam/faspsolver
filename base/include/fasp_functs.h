@@ -898,6 +898,8 @@ void fasp_dcsr_null (dCSRmat *A);
 
 void fasp_icsr_null (iCSRmat *A);
 
+INT fasp_dcsr_bandwidth (const dCSRmat  *A);
+
 dCSRmat fasp_dcsr_perm (dCSRmat *A,
                         INT     *P);
 
@@ -1152,14 +1154,14 @@ ivector fasp_sparse_MIS (dCSRmat *A);
 
 /*-------- In file: BlaSpmvBLC.c --------*/
 
-void fasp_blas_dblc_aAxpy (const REAL   alpha,
-                           dBLCmat     *A,
-                           REAL        *x,
-                           REAL        *y);
+void fasp_blas_dblc_aAxpy (const REAL      alpha,
+                           const dBLCmat  *A,
+                           const REAL     *x,
+                           REAL           *y);
 
-void fasp_blas_dblc_mxv (dBLCmat  *A,
-                         REAL     *x,
-                         REAL     *y);
+void fasp_blas_dblc_mxv (const dBLCmat  *A,
+                         const REAL     *x,
+                         REAL           *y);
 
 
 /*-------- In file: BlaSpmvBSR.c --------*/
@@ -1173,51 +1175,51 @@ void fasp_blas_dbsr_aAxpby (const REAL   alpha,
                             const REAL   beta,
                             REAL        *y );
 
-void fasp_blas_dbsr_aAxpy (const REAL   alpha,
-                           dBSRmat     *A,
-                           REAL        *x,
-                           REAL        *y);
+void fasp_blas_dbsr_aAxpy (const REAL      alpha,
+                           const dBSRmat  *A,
+                           const REAL     *x,
+                           REAL           *y);
 
-void fasp_blas_dbsr_aAxpy_agg (const REAL   alpha,
-                               dBSRmat     *A,
-                               REAL        *x,
-                               REAL        *y);
+void fasp_blas_dbsr_aAxpy_agg (const REAL      alpha,
+                               const dBSRmat  *A,
+                               const REAL     *x,
+                               REAL           *y);
 
-void fasp_blas_dbsr_mxv (dBSRmat   *A,
-                         REAL      *x,
-                         REAL      *y);
+void fasp_blas_dbsr_mxv (const dBSRmat  *A,
+                         const REAL     *x,
+                         REAL           *y);
 
-void fasp_blas_dbsr_mxv_agg (dBSRmat   *A,
-                             REAL      *x,
-                             REAL      *y);
+void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
+                             const REAL     *x,
+                             REAL           *y);
 
-void fasp_blas_dbsr_mxm (dBSRmat   *A,
-                         dBSRmat   *B,
-                         dBSRmat   *C);
+void fasp_blas_dbsr_mxm (const dBSRmat  *A,
+                         const dBSRmat  *B,
+                         dBSRmat        *C);
 
-void fasp_blas_dbsr_rap1 (dBSRmat   *R,
-                          dBSRmat   *A,
-                          dBSRmat   *P,
-                          dBSRmat   *B);
+void fasp_blas_dbsr_rap1 (const dBSRmat  *R,
+                          const dBSRmat  *A,
+                          const dBSRmat  *P,
+                          dBSRmat        *B);
 
-void fasp_blas_dbsr_rap (dBSRmat   *R,
-                         dBSRmat   *A,
-                         dBSRmat   *P,
-                         dBSRmat   *B);
+void fasp_blas_dbsr_rap (const dBSRmat  *R,
+                         const dBSRmat  *A,
+                         const dBSRmat  *P,
+                         dBSRmat        *B);
 
-void fasp_blas_dbsr_rap_agg (dBSRmat   *R,
-                             dBSRmat   *A,
-                             dBSRmat   *P,
-                             dBSRmat   *B);
+void fasp_blas_dbsr_rap_agg (const dBSRmat  *R,
+                             const dBSRmat  *A,
+                             const dBSRmat  *P,
+                             dBSRmat        *B);
 
 
 /*-------- In file: BlaSpmvCSR.c --------*/
 
-INT fasp_blas_dcsr_add (dCSRmat     *A,
-                        const REAL   alpha,
-                        dCSRmat     *B,
-                        const REAL   beta,
-                        dCSRmat     *C);
+SHORT fasp_blas_dcsr_add (const dCSRmat  *A,
+                        const REAL      alpha,
+                        const dCSRmat  *B,
+                        const REAL      beta,
+                        dCSRmat        *C);
 
 void fasp_blas_dcsr_axm (dCSRmat     *A,
                          const REAL   alpha);
@@ -1226,47 +1228,47 @@ void fasp_blas_dcsr_mxv (const dCSRmat  *A,
                          const REAL     *x,
                          REAL           *y);
 
-void fasp_blas_dcsr_mxv_agg (dCSRmat  *A,
-                             REAL     *x,
-                             REAL     *y);
+void fasp_blas_dcsr_mxv_agg (const dCSRmat  *A,
+                             const REAL     *x,
+                             REAL           *y);
 
-void fasp_blas_dcsr_aAxpy (const REAL   alpha,
-                           dCSRmat     *A,
-                           REAL        *x,
-                           REAL        *y);
+void fasp_blas_dcsr_aAxpy (const REAL      alpha,
+                           const dCSRmat  *A,
+                           const REAL     *x,
+                           REAL           *y);
 
-void fasp_blas_dcsr_aAxpy_agg (const REAL   alpha,
-                               dCSRmat     *A,
-                               REAL        *x,
-                               REAL        *y);
+void fasp_blas_dcsr_aAxpy_agg (const REAL      alpha,
+                               const dCSRmat  *A,
+                               const REAL     *x,
+                               REAL           *y);
 
 REAL fasp_blas_dcsr_vmv (const dCSRmat  *A,
                          const REAL     *x,
                          const REAL     *y);
 
-void fasp_blas_dcsr_mxm (dCSRmat   *A,
-                         dCSRmat   *B,
-                         dCSRmat   *C);
+void fasp_blas_dcsr_mxm (const dCSRmat  *A,
+                         const dCSRmat  *B,
+                         dCSRmat        *C);
 
-void fasp_blas_dcsr_rap (dCSRmat   *R,
-                         dCSRmat   *A,
-                         dCSRmat   *P,
-                         dCSRmat   *RAP);
+void fasp_blas_dcsr_rap (const dCSRmat   *R,
+                         const dCSRmat   *A,
+                         const dCSRmat   *P,
+                         dCSRmat         *RAP);
 
-void fasp_blas_dcsr_rap_agg (dCSRmat   *R,
-                             dCSRmat   *A,
-                             dCSRmat   *P,
-                             dCSRmat   *RAP);
+void fasp_blas_dcsr_rap_agg (const dCSRmat  *R,
+                             const dCSRmat  *A,
+                             const dCSRmat  *P,
+                             dCSRmat        *RAP);
 
-void fasp_blas_dcsr_rap_agg1 (dCSRmat   *R,
-                              dCSRmat   *A,
-                              dCSRmat   *P,
-                              dCSRmat   *B);
+void fasp_blas_dcsr_rap_agg1 (const dCSRmat  *R,
+                              const dCSRmat  *A,
+                              const dCSRmat  *P,
+                              dCSRmat        *B);
 
-void fasp_blas_dcsr_ptap (dCSRmat   *Pt,
-                          dCSRmat   *A,
-                          dCSRmat   *P,
-                          dCSRmat   *Ac);
+void fasp_blas_dcsr_ptap (const dCSRmat  *Pt,
+                          const dCSRmat  *A,
+                          const dCSRmat  *P,
+                          dCSRmat        *Ac);
 
 dCSRmat fasp_blas_dcsr_rap2 (INT    *ir,
                              INT    *jr,
@@ -1289,30 +1291,27 @@ void fasp_blas_dcsr_rap4 (dCSRmat   *R,
                           dCSRmat   *B,
                           INT       *icor_ysk);
 
-void fasp_blas_dcsr_bandwith (dCSRmat  *A,
-                              INT      *bndwith);
-
 
 /*-------- In file: BlaSpmvCSRL.c --------*/
 
-void fasp_blas_dcsrl_mxv (dCSRLmat   *A,
-                          REAL       *x,
-                          REAL       *y);
+void fasp_blas_dcsrl_mxv (const dCSRLmat  *A,
+                          const REAL      *x,
+                          REAL            *y);
 
 
 /*-------- In file: BlaSpmvSTR.c --------*/
 
-void fasp_blas_dstr_aAxpy (const REAL   alpha,
-                           dSTRmat     *A,
-                           REAL        *x,
-                           REAL        *y);
+void fasp_blas_dstr_aAxpy (const REAL      alpha,
+                           const dSTRmat  *A,
+                           const REAL     *x,
+                           REAL           *y);
 
-void fasp_blas_dstr_mxv (dSTRmat   *A,
-                         REAL      *x,
-                         REAL      *y);
+void fasp_blas_dstr_mxv (const dSTRmat  *A,
+                         const REAL     *x,
+                         REAL           *y);
 
-INT fasp_dstr_diagscale (dSTRmat   *A,
-                         dSTRmat   *B);
+INT fasp_dstr_diagscale (const dSTRmat   *A,
+                         dSTRmat         *B);
 
 
 /*-------- In file: BlaVector.c --------*/

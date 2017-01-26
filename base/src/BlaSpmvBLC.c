@@ -17,8 +17,8 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_blas_dblc_aAxpy (const REAL alpha, dBLCmat *A,
- *                                REAL *x, REAL *y)
+ * \fn void fasp_blas_dblc_aAxpy (const REAL alpha, const dBLCmat *A,
+ *                                const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y
  *
@@ -30,13 +30,13 @@
  * \author Xiaozhe Hu
  * \date   06/04/2010
  */
-void fasp_blas_dblc_aAxpy (const REAL   alpha,
-                           dBLCmat     *A,
-                           REAL        *x,
-                           REAL        *y)
+void fasp_blas_dblc_aAxpy (const REAL      alpha,
+                           const dBLCmat  *A,
+                           const REAL     *x,
+                           REAL           *y)
 {
     // information of A
-    INT brow = A->brow;
+    const INT brow = A->brow;
     
     // local variables
     register dCSRmat *A11, *A12, *A21, *A22;
@@ -45,12 +45,11 @@ void fasp_blas_dblc_aAxpy (const REAL   alpha,
     unsigned INT row1, col1;
     unsigned INT row2, col2;
     
-    register REAL *x1, *x2, *y1, *y2;
-    register REAL *x3, *y3;
+    const register REAL *x1, *x2, *x3;
+    register REAL       *y1, *y2, *y3;
     
     INT i,j;
-    INT start_row;
-    INT start_col;
+    INT start_row, start_col;
     
     switch (brow) {
             
@@ -144,7 +143,7 @@ void fasp_blas_dblc_aAxpy (const REAL   alpha,
 }
 
 /**
- * \fn void fasp_blas_dblc_mxv (dBLCmat *A, REAL *x, REAL *y)
+ * \fn void fasp_blas_dblc_mxv (const dBLCmat *A, const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = A*x
  *
@@ -155,12 +154,12 @@ void fasp_blas_dblc_aAxpy (const REAL   alpha,
  * \author Chensong Zhang
  * \date   04/27/2013
  */
-void fasp_blas_dblc_mxv (dBLCmat  *A,
-                         REAL     *x,
-                         REAL     *y)
+void fasp_blas_dblc_mxv (const dBLCmat  *A,
+                         const REAL     *x,
+                         REAL           *y)
 {
     // information of A
-    INT brow = A->brow;
+    const INT brow = A->brow;
     
     // local variables
     register dCSRmat *A11, *A12, *A21, *A22;
@@ -169,12 +168,11 @@ void fasp_blas_dblc_mxv (dBLCmat  *A,
     unsigned INT row1, col1;
     unsigned INT row2, col2;
     
-    register REAL *x1, *x2, *y1, *y2;
-    register REAL *x3, *y3;
+    const register REAL *x1, *x2, *x3;
+    register REAL       *y1, *y2, *y3;
     
     INT i,j;
-    INT start_row;
-    INT start_col;
+    INT start_row, start_col;
     
     switch (brow) {
             
