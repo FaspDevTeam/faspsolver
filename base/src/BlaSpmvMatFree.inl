@@ -11,7 +11,7 @@
 /*---------------------------------*/
 
 /**
- * \fn static void fasp_blas_mxv_csr (void *A, REAL *x, REAL *y)
+ * \fn static void fasp_blas_mxv_csr (const void *A, const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = A*x
  *
@@ -22,16 +22,16 @@
  * \author Feiteng Huang
  * \date   09/19/2012
  */
-static void fasp_blas_mxv_csr (void *A,
-                               REAL *x,
-                               REAL *y)
+static void fasp_blas_mxv_csr (const void *A,
+                               const REAL *x,
+                               REAL       *y)
 {
-    dCSRmat *a = (dCSRmat *)A;
+    const dCSRmat *a = (const dCSRmat *)A;
     fasp_blas_dcsr_mxv(a, x, y);
 }
 
 /**
- * \fn static void fasp_blas_mxv_bsr (void *A, REAL *x, REAL *y)
+ * \fn static void fasp_blas_mxv_bsr (const void *A, const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = A*x
  *
@@ -42,16 +42,16 @@ static void fasp_blas_mxv_csr (void *A,
  * \author Feiteng Huang
  * \date   09/19/2012
  */
-static void fasp_blas_mxv_bsr (void *A,
-                               REAL *x,
-                               REAL *y)
+static void fasp_blas_mxv_bsr (const void *A,
+                               const REAL *x,
+                               REAL       *y)
 {
-    dBSRmat *a = (dBSRmat *)A;
+    const dBSRmat *a = (const dBSRmat *)A;
     fasp_blas_dbsr_mxv(a, x, y);
 }
 
 /**
- * \fn static void fasp_blas_mxv_str (void *A, REAL *x, REAL *y)
+ * \fn static void fasp_blas_mxv_str (const void *A, const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = A*x
  *
@@ -62,16 +62,16 @@ static void fasp_blas_mxv_bsr (void *A,
  * \author Feiteng Huang
  * \date   09/19/2012
  */
-static void fasp_blas_mxv_str (void *A,
-                               REAL *x,
-                               REAL *y)
+static void fasp_blas_mxv_str (const void *A,
+                               const REAL *x,
+                               REAL       *y)
 {
-    dSTRmat *a = (dSTRmat *)A;
+    const dSTRmat *a = (const dSTRmat *)A;
     fasp_blas_dstr_mxv(a, x, y);
 }
 
 /**
- * \fn static void fasp_blas_mxv_blc (void *A, REAL *x, REAL *y)
+ * \fn static void fasp_blas_mxv_blc (const void *A, const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = A*x
  *
@@ -82,16 +82,16 @@ static void fasp_blas_mxv_str (void *A,
  * \author Feiteng Huang
  * \date   09/19/2012
  */
-static void fasp_blas_mxv_blc (void *A,
-                               REAL *x,
-                               REAL *y)
+static void fasp_blas_mxv_blc (const void *A,
+                               const REAL *x,
+                               REAL       *y)
 {
-    dBLCmat *a = (dBLCmat *)A;
+    const dBLCmat *a = (const dBLCmat *)A;
     fasp_blas_dblc_mxv(a, x, y);
 }
 
 /**
- * \fn static void fasp_blas_mxv_csrl (void *A, REAL *x, REAL *y)
+ * \fn static void fasp_blas_mxv_csrl (const void *A, const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = A*x
  *
@@ -102,11 +102,11 @@ static void fasp_blas_mxv_blc (void *A,
  * \author Feiteng Huang
  * \date   09/19/2012
  */
-static void fasp_blas_mxv_csrl (void *A,
-                                REAL *x,
-                                REAL *y)
+static void fasp_blas_mxv_csrl (const void *A,
+                                const REAL *x,
+                                REAL       *y)
 {
-    dCSRLmat *a = (dCSRLmat *)A;
+    const dCSRLmat *a = (const dCSRLmat *)A;
     fasp_blas_dcsrl_mxv(a, x, y);
 }
 

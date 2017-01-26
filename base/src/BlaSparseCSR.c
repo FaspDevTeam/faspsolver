@@ -230,6 +230,27 @@ void fasp_icsr_null (iCSRmat *A)
 }
 
 /**
+ * \fn INT fasp_dcsr_bandwidth (const dCSRmat *A)
+ *
+ * \brief Get bandwith of matrix
+ *
+ * \param A       pointer to the dCSRmat matrix
+ *
+ * \author Zheng Li
+ * \date   03/22/2015
+ */
+INT fasp_dcsr_bandwidth (const dCSRmat  *A)
+{
+    const INT row = A->row;
+    const INT *ia = A->IA;
+    INT i, max;
+    
+    for ( max = i = 0; i < row; ++i ) max = MAX(max, ia[i+1]-ia[i]);
+    
+    return(max);
+}
+
+/**
  * \fn dCSRmat fasp_dcsr_perm (dCSRmat *A, INT *P)
  *
  * \brief Apply permutation of A, i.e. Aperm=PAP' by the orders given in P

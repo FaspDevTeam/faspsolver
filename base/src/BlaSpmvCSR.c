@@ -31,8 +31,8 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_blas_dcsr_add (dCSRmat *A, const REAL alpha, dCSRmat *B,
- *                              const REAL beta, dCSRmat *C)
+ * \fn SHORT fasp_blas_dcsr_add (const dCSRmat *A, const REAL alpha,
+ *                               const dCSRmat *B, const REAL beta, dCSRmat *C)
  *
  * \brief compute C = alpha*A + beta*B in CSR format
  *
@@ -49,17 +49,16 @@
  *
  * Modified by Chunsheng Feng, Zheng Li on 06/29/2012
  */
-INT fasp_blas_dcsr_add (dCSRmat     *A,
-                        const REAL   alpha,
-                        dCSRmat     *B,
-                        const REAL   beta,
-                        dCSRmat     *C)
+SHORT fasp_blas_dcsr_add (const dCSRmat  *A,
+                        const REAL      alpha,
+                        const dCSRmat  *B,
+                        const REAL      beta,
+                        dCSRmat        *C)
 {
     INT i,j,k,l;
     INT count=0, added, countrow;
-    INT status = FASP_SUCCESS;
     
-    INT use_openmp = FALSE;
+    SHORT status = FASP_SUCCESS, use_openmp = FALSE;
     
 #ifdef _OPENMP
     INT mybegin, myend, myid, nthreads;
@@ -408,11 +407,10 @@ void fasp_blas_dcsr_mxv (const dCSRmat  *A,
     }
 }
 
-
 /**
- * \fn void fasp_blas_dcsr_mxv_agg (dCSRmat *A, REAL *x, REAL *y)
+ * \fn void fasp_blas_dcsr_mxv_agg (const dCSRmat *A, const REAL *x, REAL *y)
  *
- * \brief Matrix-vector multiplication y = A*x, where the entries of A are all ones.
+ * \brief Matrix-vector multiplication y = A*x (nonzeros of A = 1)
  *
  * \param A   Pointer to dCSRmat matrix A
  * \param x   Pointer to array x
@@ -423,10 +421,9 @@ void fasp_blas_dcsr_mxv (const dCSRmat  *A,
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/29/2012
  */
-
-void fasp_blas_dcsr_mxv_agg (dCSRmat  *A,
-                             REAL     *x,
-                             REAL     *y)
+void fasp_blas_dcsr_mxv_agg (const dCSRmat  *A,
+                             const REAL     *x,
+                             REAL           *y)
 {
     const INT  m  = A->row;
     const INT *ia = A->IA, *ja = A->JA;
@@ -466,7 +463,8 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat  *A,
 }
 
 /**
- * \fn void fasp_blas_dcsr_aAxpy (const REAL alpha, dCSRmat *A, REAL *x, REAL *y)
+ * \fn void fasp_blas_dcsr_aAxpy (const REAL alpha, const dCSRmat *A, 
+ *                                const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y
  *
@@ -480,10 +478,10 @@ void fasp_blas_dcsr_mxv_agg (dCSRmat  *A,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/26/2012
  */
-void fasp_blas_dcsr_aAxpy (const REAL   alpha,
-                           dCSRmat     *A,
-                           REAL        *x,
-                           REAL        *y)
+void fasp_blas_dcsr_aAxpy (const REAL      alpha,
+                           const dCSRmat  *A,
+                           const REAL     *x,
+                           REAL           *y)
 {
     const INT  m  = A->row;
     const INT *ia = A->IA, *ja = A->JA;
@@ -580,9 +578,10 @@ void fasp_blas_dcsr_aAxpy (const REAL   alpha,
 }
 
 /**
- * \fn void fasp_blas_dcsr_aAxpy_agg (const REAL alpha, dCSRmat *A, REAL *x, REAL *y)
+ * \fn void fasp_blas_dcsr_aAxpy_agg (const REAL alpha, const dCSRmat *A, 
+ *                                    const REAL *x, REAL *y)
  *
- * \brief Matrix-vector multiplication y = alpha*A*x + y (the entries of A are all ones)
+ * \brief Matrix-vector multiplication y = alpha*A*x + y (nonzeros of A = 1) 
  *
  * \param alpha  REAL factor alpha
  * \param A      Pointer to dCSRmat matrix A
@@ -594,10 +593,10 @@ void fasp_blas_dcsr_aAxpy (const REAL   alpha,
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/29/2012
  */
-void fasp_blas_dcsr_aAxpy_agg (const REAL   alpha,
-                               dCSRmat     *A,
-                               REAL        *x,
-                               REAL        *y)
+void fasp_blas_dcsr_aAxpy_agg (const REAL      alpha,
+                               const dCSRmat  *A,
+                               const REAL     *x,
+                               REAL           *y)
 {
     const INT  m  = A->row;
     const INT *ia = A->IA, *ja = A->JA;
@@ -747,7 +746,7 @@ REAL fasp_blas_dcsr_vmv (const dCSRmat  *A,
 }
 
 /**
- * \fn void fasp_blas_dcsr_mxm (dCSRmat *A, dCSRmat *B, dCSRmat *C)
+ * \fn void fasp_blas_dcsr_mxm (const dCSRmat *A, const dCSRmat *B, dCSRmat *C)
  *
  * \brief Sparse matrix multiplication C=A*B
  *
@@ -758,11 +757,11 @@ REAL fasp_blas_dcsr_vmv (const dCSRmat  *A,
  * \author Xiaozhe Hu
  * \date   11/07/2009
  *
- * \note This fct will be replaced! --Chensong
+ * \warning This fct will be replaced! --Chensong
  */
-void fasp_blas_dcsr_mxm (dCSRmat   *A,
-                         dCSRmat   *B,
-                         dCSRmat   *C)
+void fasp_blas_dcsr_mxm (const dCSRmat  *A,
+                         const dCSRmat  *B,
+                         dCSRmat        *C)
 {
     INT i,j,k,l,count;
     
@@ -777,7 +776,7 @@ void fasp_blas_dcsr_mxm (dCSRmat   *A,
     for (i=0;i<B->col;++i) JD[i]=-1;
     
     // step 1: Find first the structure IA of C
-    for(i=0;i<C->row;++i) {
+    for (i=0;i<C->row;++i) {
         count=0;
         
         for (k=A->IA[i];k<A->IA[i+1];++k) {
@@ -850,7 +849,8 @@ void fasp_blas_dcsr_mxm (dCSRmat   *A,
 }
 
 /**
- * \fn void fasp_blas_dcsr_rap (dCSRmat *R, dCSRmat *A, dCSRmat *P, dCSRmat *RAP)
+ * \fn void fasp_blas_dcsr_rap (const dCSRmat *R, const dCSRmat *A, 
+ *                              const dCSRmat *P, dCSRmat *RAP)
  *
  * \brief Triple sparse matrix multiplication B=R*A*P
  *
@@ -867,24 +867,24 @@ void fasp_blas_dcsr_mxm (dCSRmat   *A,
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dcsr_rap (dCSRmat   *R,
-                         dCSRmat   *A,
-                         dCSRmat   *P,
-                         dCSRmat   *RAP)
+void fasp_blas_dcsr_rap (const dCSRmat   *R,
+                         const dCSRmat   *A,
+                         const dCSRmat   *P,
+                         dCSRmat         *RAP)
 {
-    INT n_coarse = R->row;
-    INT *R_i = R->IA;
-    INT *R_j = R->JA;
-    REAL *R_data = R->val;
+    const INT n_coarse = R->row;
+    const INT *R_i = R->IA;
+    const INT *R_j = R->JA;
+    const REAL *R_data = R->val;
     
-    INT n_fine = A->row;
-    INT *A_i = A->IA;
-    INT *A_j = A->JA;
-    REAL *A_data = A->val;
+    const INT n_fine = A->row;
+    const INT *A_i = A->IA;
+    const INT *A_j = A->JA;
+    const REAL *A_data = A->val;
     
-    INT *P_i = P->IA;
-    INT *P_j = P->JA;
-    REAL *P_data = P->val;
+    const INT *P_i = P->IA;
+    const INT *P_j = P->JA;
+    const REAL *P_data = P->val;
     
     INT RAP_size;
     INT *RAP_i = NULL;
@@ -1132,9 +1132,10 @@ void fasp_blas_dcsr_rap (dCSRmat   *R,
 }
 
 /**
- * \fn void fasp_blas_dcsr_rap_agg (dCSRmat *R, dCSRmat *A, dCSRmat *P, dCSRmat *RAP)
+ * \fn void fasp_blas_dcsr_rap_agg (const dCSRmat *R, const dCSRmat *A, 
+ *                                  const dCSRmat *P, dCSRmat *RAP)
  *
- * \brief Triple sparse matrix multiplication B=R*A*P
+ * \brief Triple sparse matrix multiplication B=R*A*P  (nonzeros of R, P = 1)
  *
  * \param R   Pointer to the dCSRmat matrix R
  * \param A   Pointer to the dCSRmat matrix A
@@ -1145,26 +1146,23 @@ void fasp_blas_dcsr_rap (dCSRmat   *R,
  * \date   05/10/2010
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/26/2012
- *
- * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
- *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dcsr_rap_agg (dCSRmat   *R,
-                             dCSRmat   *A,
-                             dCSRmat   *P,
-                             dCSRmat   *RAP)
+void fasp_blas_dcsr_rap_agg (const dCSRmat  *R,
+                             const dCSRmat  *A,
+                             const dCSRmat  *P,
+                             dCSRmat        *RAP)
 {
-    INT n_coarse = R->row;
-    INT *R_i = R->IA;
-    INT *R_j = R->JA;
+    const INT n_coarse = R->row;
+    const INT *R_i = R->IA;
+    const INT *R_j = R->JA;
     
-    INT n_fine = A->row;
-    INT *A_i = A->IA;
-    INT *A_j = A->JA;
-    REAL *A_data = A->val;
+    const INT n_fine = A->row;
+    const INT *A_i = A->IA;
+    const INT *A_j = A->JA;
+    const REAL *A_data = A->val;
     
-    INT *P_i = P->IA;
-    INT *P_j = P->JA;
+    const INT *P_i = P->IA;
+    const INT *P_j = P->JA;
     
     INT RAP_size;
     INT *RAP_i = NULL;
@@ -1399,9 +1397,10 @@ void fasp_blas_dcsr_rap_agg (dCSRmat   *R,
 }
 
 /**
- * \fn void fasp_blas_dcsr_rap_agg1 (dCSRmat *R, dCSRmat *A, dCSRmat *P, dCSRmat *B)
+ * \fn void fasp_blas_dcsr_rap_agg1 (const dCSRmat *R, const dCSRmat *A, 
+ *                                   const dCSRmat *P, dCSRmat *B)
  *
- * \brief Triple sparse matrix multiplication B=R*A*P (nonzero entries of R and P are ones)
+ * \brief Triple sparse matrix multiplication B=R*A*P (nonzeros of R, P = 1)
  *
  * \param R   Pointer to the dCSRmat matrix R
  * \param A   Pointer to the dCSRmat matrix A
@@ -1414,24 +1413,26 @@ void fasp_blas_dcsr_rap_agg (dCSRmat   *R,
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dcsr_rap_agg1 (dCSRmat   *R,
-                              dCSRmat   *A,
-                              dCSRmat   *P,
-                              dCSRmat   *B)
+void fasp_blas_dcsr_rap_agg1 (const dCSRmat  *R,
+                              const dCSRmat  *A,
+                              const dCSRmat  *P,
+                              dCSRmat        *B)
 {
-    const INT row=R->row, col=P->col;
-    INT nB=A->nnz;
+    const INT  row = R->row, col = P->col;
+    const INT  *ir = R->IA, *ia = A->IA, *ip = P->IA;
+    const INT  *jr = R->JA, *ja = A->JA, *jp = P->JA;
+    const REAL *aj = A->val;
+
+    INT        *iac, *jac;
+    REAL       *acj;
+    
+    INT *index  = (INT *)fasp_mem_calloc(A->col,sizeof(INT));
+    INT *iindex = (INT *)fasp_mem_calloc(col,sizeof(INT));
+    
+    INT nB = A->nnz;
     INT i,i1,j,jj,k,length;
     INT begin_row,end_row,begin_rowA,end_rowA,begin_rowR,end_rowR;
     INT istart,iistart,count;
-    
-    REAL *aj=A->val, *acj;
-    INT *ir=R->IA, *ia=A->IA, *ip=P->IA, *iac;
-    INT *jr=R->JA, *ja=A->JA, *jp=P->JA, *jac;
-    
-    INT *index  = (INT *)fasp_mem_calloc(A->col,sizeof(INT));
-    
-    INT *iindex = (INT *)fasp_mem_calloc(col,sizeof(INT));
     
     //for (i=0; i<A->col; ++i) index[i] = -2;
     fasp_iarray_set(A->col, index, -2);
@@ -1491,7 +1492,7 @@ void fasp_blas_dcsr_rap_agg1 (dCSRmat   *R,
         // set B->IA
         iac[i1]=iac[i]+length;
         
-        if (iac[i1]>nB) {
+        if (iac[i1]>nB) { // Memory not enough!!!
             nB=nB*2;
             jac=(INT*)fasp_mem_realloc(jac, nB*sizeof(INT));
         }
@@ -1575,7 +1576,8 @@ void fasp_blas_dcsr_rap_agg1 (dCSRmat   *R,
 }
 
 /**
- * \fn void fasp_blas_dcsr_ptap (dCSRmat *Pt, dCSRmat *A, dCSRmat *P, dCSRmat *Ac)
+ * \fn void fasp_blas_dcsr_ptap (const dCSRmat *Pt, const dCSRmat *A, 
+ *                               const dCSRmat *P, dCSRmat *Ac)
  *
  * \brief Triple sparse matrix multiplication B=P'*A*P
  *
@@ -1597,10 +1599,10 @@ void fasp_blas_dcsr_rap_agg1 (dCSRmat   *R,
  *           ja_ltz[k] = ja_usual[k]+1,
  *            a_ltz[k] =  a_usual[k].
  */
-void fasp_blas_dcsr_ptap (dCSRmat   *Pt,
-                          dCSRmat   *A,
-                          dCSRmat   *P,
-                          dCSRmat   *Ac)
+void fasp_blas_dcsr_ptap (const dCSRmat  *Pt,
+                          const dCSRmat  *A,
+                          const dCSRmat  *P,
+                          dCSRmat        *Ac)
 {
     const INT nc=Pt->row, n=Pt->col, nnzP=P->nnz, nnzA=A->nnz;
     INT i, maxrpout;
@@ -1683,9 +1685,11 @@ void fasp_blas_dcsr_ptap (dCSRmat   *Pt,
 }
 
 /*!
- * \fn dCSRmat fasp_blas_dcsr_rap2 (INT *ir, INT *jr, REAL *r, INT *ia, INT *ja,
- *                                  REAL *a, INT *ipt, INT *jpt, REAL *pt, INT n,
- *                                  INT nc, INT *maxrpout, INT *ipin, INT *jpin)
+ * \fn dCSRmat fasp_blas_dcsr_rap2 (INT *ir, INT *jr, REAL *r, 
+ *                                  INT *ia, INT *ja, REAL *a, 
+ *                                  INT *ipt, INT *jpt, REAL *pt, 
+ *                                  INT n, INT nc,
+ *                                  INT *maxrpout, INT *ipin, INT *jpin)
  *
  * \brief Compute R*A*P
  *
@@ -2081,31 +2085,6 @@ void fasp_blas_dcsr_rap4 (dCSRmat   *R,
     else {
         fasp_blas_dcsr_rap (R, A, P, B);
     }
-}
-
-/**
- * \fn fasp_blas_dcsr_bandwith (dCSRmat *A, INT *bndwith)
- *
- * \brief Get bandwith of matrix
- *
- * \param A       pointer to the dCSRmat matrix
- * \param bndwith pointer to the bandwith
- *
- * \author Zheng Li
- * \date   03/22/2015
- */
-void fasp_blas_dcsr_bandwith (dCSRmat  *A,
-                              INT      *bndwith)
-{
-    INT row = A->row;
-    INT *ia = A->IA;
-
-    INT i, max;
-    max = 0;
-
-    for (i=0; i<row; ++i) max = MAX(max, ia[i+1]-ia[i]);
-
-    *bndwith = max;
 }
 
 /*---------------------------------*/

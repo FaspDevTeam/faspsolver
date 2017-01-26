@@ -16,7 +16,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_blas_dcsrl_mxv ( dCSRLmat *A, REAL *x, REAL *y )
+ * \fn void fasp_blas_dcsrl_mxv ( const dCSRLmat *A, const REAL *x, REAL *y )
  *
  * \brief Compute y = A*x for a sparse matrix in CSRL format
  *
@@ -24,18 +24,19 @@
  * \param x   Pointer to REAL array of vector x
  * \param y   Pointer to REAL array of vector y
  *
+ * \author Zhiyang Zhou, Chensong Zhang
  * \date   2011/01/07
  */
-void fasp_blas_dcsrl_mxv (dCSRLmat   *A,
-                          REAL       *x,
-                          REAL       *y)
+void fasp_blas_dcsrl_mxv (const dCSRLmat  *A,
+                          const REAL      *x,
+                          REAL            *y)
 {
-    INT     dif      = A -> dif;
-    INT    *nz_diff  = A -> nz_diff;
-    INT    *rowindex = A -> index;
-    INT    *rowstart = A -> start;
-    INT    *ja       = A -> ja;
-    REAL   *a        = A -> val;
+    const INT     dif      = A -> dif;
+    const INT    *nz_diff  = A -> nz_diff;
+    const INT    *rowindex = A -> index;
+    const INT    *rowstart = A -> start;
+    const INT    *ja       = A -> ja;
+    const REAL   *a        = A -> val;
     
     INT i;
     INT row, col=0;

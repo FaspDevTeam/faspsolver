@@ -323,7 +323,8 @@ void fasp_blas_dbsr_aAxpby (const REAL   alpha,
 }
 
 /*!
- * \fn void fasp_blas_dbsr_aAxpy (const REAL alpha, dBSRmat *A, REAL *x, REAL *y)
+ * \fn void fasp_blas_dbsr_aAxpy (const REAL alpha, const dBSRmat *A, 
+ *                                const REAL *x, REAL *y)
  *
  * \brief Compute y := alpha*A*x + y
  *
@@ -339,29 +340,30 @@ void fasp_blas_dbsr_aAxpby (const REAL   alpha,
  *
  * \note Works for general nb (Xiaozhe)
  */
-void fasp_blas_dbsr_aAxpy (const REAL   alpha,
-                           dBSRmat     *A,
-                           REAL        *x,
-                           REAL        *y)
+void fasp_blas_dbsr_aAxpy (const REAL      alpha,
+                           const dBSRmat  *A,
+                           const REAL     *x,
+                           REAL           *y)
 {
     /* members of A */
-    INT     ROW = A->ROW;
-    INT     nb  = A->nb;
-    INT    *IA  = A->IA;
-    INT    *JA  = A->JA;
-    REAL   *val = A->val;
+    const INT    ROW = A->ROW;
+    const INT    nb  = A->nb;
+    const INT   *IA  = A->IA;
+    const INT   *JA  = A->JA;
+    const REAL  *val = A->val;
     
     /* local variables */
-    INT     size = ROW*nb;
-    INT     jump = nb*nb;
-    INT     i,j,k, iend;
-    REAL  temp = 0.0;
-    REAL *pA   = NULL;
-    REAL *px0  = NULL;
-    REAL *py0  = NULL;
-    REAL *py   = NULL;
+    const REAL *pA   = NULL;
+    const REAL *px0  = NULL;
+    REAL *py0        = NULL;
+    REAL *py         = NULL;
     
-    INT nthreads = 1, use_openmp = FALSE;
+    REAL  temp = 0.0;
+    INT   size = ROW*nb;
+    INT   jump = nb*nb;
+    INT   i, j, k, iend;
+
+    SHORT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
@@ -599,7 +601,8 @@ void fasp_blas_dbsr_aAxpy (const REAL   alpha,
 }
 
 /*!
- * \fn void fasp_blas_dbsr_aAxpy_agg (const REAL alpha, dBSRmat *A, REAL *x, REAL *y)
+ * \fn void fasp_blas_dbsr_aAxpy_agg (const REAL alpha, const dBSRmat *A, 
+ *                                    const REAL *x, REAL *y)
  *
  * \brief Compute y := alpha*A*x + y where each small block matrix is an identity matrix
  *
@@ -613,24 +616,25 @@ void fasp_blas_dbsr_aAxpy (const REAL   alpha,
  *
  * \note Works for general nb (Xiaozhe)
  */
-void fasp_blas_dbsr_aAxpy_agg (const REAL   alpha,
-                               dBSRmat     *A,
-                               REAL        *x,
-                               REAL        *y)
+void fasp_blas_dbsr_aAxpy_agg (const REAL      alpha,
+                               const dBSRmat  *A,
+                               const REAL     *x,
+                               REAL           *y)
 {
     /* members of A */
-    INT     ROW = A->ROW;
-    INT     nb  = A->nb;
-    INT    *IA  = A->IA;
-    INT    *JA  = A->JA;
+    const INT   ROW = A->ROW;
+    const INT   nb  = A->nb;
+    const INT  *IA  = A->IA;
+    const INT  *JA  = A->JA;
     
     /* local variables */
-    INT     size = ROW*nb;
-    INT     i,j,k, iend;
-    REAL    temp = 0.0;
-    REAL   *px0 = NULL, *py0 = NULL, *py = NULL;
-    
-    INT     nthreads = 1, use_openmp = FALSE;
+    const REAL *px0 = NULL;
+    REAL       *py0 = NULL, *py = NULL;
+    SHORT       nthreads = 1, use_openmp = FALSE;
+
+    INT         size = ROW*nb;
+    INT         i, j, k, iend;
+    REAL        temp = 0.0;
     
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
@@ -883,7 +887,7 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL   alpha,
 }
 
 /*!
- * \fn void fasp_blas_dbsr_mxv (dBSRmat *A, REAL *x, REAL *y)
+ * \fn void fasp_blas_dbsr_mxv (const dBSRmat *A, const REAL *x, REAL *y)
  *
  * \brief Compute y := A*x
  *
@@ -898,27 +902,28 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL   alpha,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-void fasp_blas_dbsr_mxv (dBSRmat   *A,
-                         REAL      *x,
-                         REAL      *y)
+void fasp_blas_dbsr_mxv (const dBSRmat  *A,
+                         const REAL     *x,
+                         REAL           *y)
 {
     /* members of A */
-    INT     ROW = A->ROW;
-    INT     nb  = A->nb;
-    INT    *IA  = A->IA;
-    INT    *JA  = A->JA;
-    REAL *val = A->val;
+    const INT   ROW = A->ROW;
+    const INT   nb  = A->nb;
+    const INT  *IA  = A->IA;
+    const INT  *JA  = A->JA;
+    const REAL *val = A->val;
     
     /* local variables */
     INT     size = ROW*nb;
     INT     jump = nb*nb;
     INT     i,j,k, num_nnz_row;
-    REAL *pA  = NULL;
-    REAL *px0 = NULL;
-    REAL *py0 = NULL;
-    REAL *py  = NULL;
     
-    INT use_openmp = FALSE;
+    const REAL *pA  = NULL;
+    const REAL *px0 = NULL;
+    REAL       *py0 = NULL;
+    REAL        *py  = NULL;
+    
+    SHORT use_openmp = FALSE;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
@@ -2671,9 +2676,9 @@ void fasp_blas_dbsr_mxv (dBSRmat   *A,
 }
 
 /*!
- * \fn void fasp_blas_dbsr_mxv_agg (dBSRmat *A, REAL *x, REAL *y)
+ * \fn void fasp_blas_dbsr_mxv_agg (const dBSRmat *A, const REAL *x, REAL *y)
  *
- * \brief Compute y := A*x, where each small block matrices of A is an identity matrix
+ * \brief Compute y := A*x, where each small block matrices of A is an identity
  *
  * \param A      Pointer to the dBSRmat matrix
  * \param x      Pointer to the array x
@@ -2684,26 +2689,26 @@ void fasp_blas_dbsr_mxv (dBSRmat   *A,
  *
  * \note Works for general nb (Xiaozhe)
  */
-void fasp_blas_dbsr_mxv_agg (dBSRmat   *A,
-                             REAL      *x,
-                             REAL      *y)
+void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
+                             const REAL     *x,
+                             REAL           *y)
 {
     /* members of A */
     const INT  ROW  = A->ROW;
     const INT  nb   = A->nb;
     const INT  size = ROW*nb;
-
-    INT    *IA  = A->IA;
-    INT    *JA  = A->JA;
+    const INT *IA   = A->IA;
+    const INT *JA   = A->JA;
     
     /* local variables */
-    INT     i,j,k, num_nnz_row;
-    REAL   *px0 = NULL, *py0 = NULL, *py = NULL;
-    INT     use_openmp = FALSE;
+    const REAL  *px0 = NULL;
+    REAL        *py0 = NULL, *py = NULL;
+    INT          i,j,k, num_nnz_row;
+    SHORT        use_openmp = FALSE;
     
 #ifdef _OPENMP
-    REAL   *val = A->val;
-    REAL   *pA;
+    const REAL  *val = A->val;
+    const REAL  *pA;
     INT myid, mybegin, myend, nthreads;
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
@@ -4619,9 +4624,8 @@ void fasp_blas_dbsr_mxv_agg (dBSRmat   *A,
     }
 }
 
-
 /**
- * \fn void fasp_blas_dbsr_mxm (dBSRmat *A, dBSRmat *B, dBSRmat *C)
+ * \fn void fasp_blas_dbsr_mxm (const dBSRmat *A, const dBSRmat *B, dBSRmat *C)
  *
  * \brief Sparse matrix multiplication C=A*B
  *
@@ -4634,9 +4638,9 @@ void fasp_blas_dbsr_mxv_agg (dBSRmat   *A,
  *
  * \note This fct will be replaced! -- Xiaozhe
  */
-void fasp_blas_dbsr_mxm (dBSRmat   *A,
-                         dBSRmat   *B,
-                         dBSRmat   *C)
+void fasp_blas_dbsr_mxm (const dBSRmat  *A,
+                         const dBSRmat  *B,
+                         dBSRmat        *C)
 {
     
     INT i,j,k,l,count;
@@ -4739,7 +4743,8 @@ void fasp_blas_dbsr_mxm (dBSRmat   *A,
 }
 
 /**
- * \fn void fasp_blas_dbsr_rap1 (dBSRmat *R, dBSRmat *A, dBSRmat *P, dBSRmat *B)
+ * \fn void fasp_blas_dbsr_rap1 (const dBSRmat *R, const dBSRmat *A, 
+ *                               const dBSRmat *P, dBSRmat *B)
  *
  * \brief dBSRmat sparse matrix multiplication B=R*A*P
  *
@@ -4754,20 +4759,24 @@ void fasp_blas_dbsr_mxm (dBSRmat   *A,
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *            Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dbsr_rap1 (dBSRmat   *R,
-                          dBSRmat   *A,
-                          dBSRmat   *P,
-                          dBSRmat   *B)
+void fasp_blas_dbsr_rap1 (const dBSRmat  *R,
+                          const dBSRmat  *A,
+                          const dBSRmat  *P,
+                          dBSRmat        *B)
 {
-    const INT row=R->ROW, col=P->COL,nb=A->nb, nb2=A->nb*A->nb;
+    const INT   row=R->ROW, col=P->COL, nb=A->nb, nb2=A->nb*A->nb;
+
+    const REAL *rj=R->val, *aj=A->val, *pj=P->val;
+    const INT  *ir=R->IA,  *ia=A->IA,  *ip=P->IA;
+    const INT  *jr=R->JA,  *ja=A->JA,  *jp=P->JA;
+    
+    REAL      *acj;
+    INT       *iac, *jac;
+    
     INT nB=A->NNZ;
     INT i,i1,j,jj,k,length;
     INT begin_row,end_row,begin_rowA,end_rowA,begin_rowR,end_rowR;
     INT istart,iistart,count;
-    
-    REAL *rj=R->val, *aj=A->val, *pj=P->val, *acj;
-    INT *ir=R->IA, *ia=A->IA, *ip=P->IA, *iac;
-    INT *jr=R->JA, *ja=A->JA, *jp=P->JA, *jac;
     
     INT *index=(INT *)fasp_mem_calloc(A->COL,sizeof(INT));
     
@@ -4900,7 +4909,7 @@ void fasp_blas_dbsr_rap1 (dBSRmat   *R,
                 //acj[BTindex[jp[k]]]+=temp[jj]*pj[k];
                 fasp_blas_smat_mul(&temp[jj*nb2],&pj[k*nb2],smat_tmp,nb);
                 //fasp_array_xpy(nb2,&acj[BTindex[jp[k]]*nb2], smat_tmp );
-                fasp_blas_array_axpy (nb2, 1.0, smat_tmp, &acj[BTindex[jp[k]]*nb2]);
+                fasp_blas_array_axpy(nb2, 1.0, smat_tmp, &acj[BTindex[jp[k]]*nb2]);
                 
                 // change to   X = X+Y*Z
             }
@@ -4923,7 +4932,8 @@ void fasp_blas_dbsr_rap1 (dBSRmat   *R,
 }
 
 /**
- * \fn void fasp_blas_dbsr_rap (dBSRmat *R, dBSRmat *A, dBSRmat *P, dBSRmat *B)
+ * \fn void fasp_blas_dbsr_rap (const dBSRmat *R, const dBSRmat *A, 
+ *                              const dBSRmat *P, dBSRmat *B)
  *
  * \brief dBSRmat sparse matrix multiplication B=R*A*P
  *
@@ -4938,17 +4948,19 @@ void fasp_blas_dbsr_rap1 (dBSRmat   *R,
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *            Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dbsr_rap (dBSRmat   *R,
-                         dBSRmat   *A,
-                         dBSRmat   *P,
-                         dBSRmat   *B)
+void fasp_blas_dbsr_rap (const dBSRmat  *R,
+                         const dBSRmat  *A,
+                         const dBSRmat  *P,
+                         dBSRmat        *B)
 {
-    const INT row=R->ROW, col=P->COL,nb=A->nb, nb2=A->nb*A->nb;
-    //INT nB=A->NNZ;
+    const INT row=R->ROW, col=P->COL, nb=A->nb, nb2=A->nb*A->nb;
     
-    REAL *rj=R->val, *aj=A->val, *pj=P->val, *acj;
-    INT *ir=R->IA, *ia=A->IA, *ip=P->IA, *iac;
-    INT *jr=R->JA, *ja=A->JA, *jp=P->JA, *jac;
+    const REAL *rj=R->val, *aj=A->val, *pj=P->val;
+    const INT  *ir=R->IA,  *ia=A->IA,  *ip=P->IA;
+    const INT  *jr=R->JA,  *ja=A->JA,  *jp=P->JA;
+    
+    REAL       *acj;
+    INT        *iac, *jac;
     
     INT *Ps_marker = NULL;
     INT *As_marker = NULL;
@@ -5187,7 +5199,8 @@ jj3, i3, smat_tmp)
 }
 
 /**
- * \fn void fasp_blas_dbsr_rap_agg (dBSRmat *R, dBSRmat *A, dBSRmat *P, dBSRmat *B)
+ * \fn void fasp_blas_dbsr_rap_agg (const dBSRmat *R, const dBSRmat *A, 
+ *                                  const dBSRmat *P, dBSRmat *B)
  *
  * \brief dBSRmat sparse matrix multiplication B=R*A*P, where small block matrices in
  *        P and R are identity matrices!
@@ -5199,24 +5212,22 @@ jj3, i3, smat_tmp)
  *
  * \author Xiaozhe Hu
  * \date   10/24/2012
- *
- * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
- *            Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dbsr_rap_agg (dBSRmat   *R,
-                             dBSRmat   *A,
-                             dBSRmat   *P,
-                             dBSRmat   *B)
+void fasp_blas_dbsr_rap_agg (const dBSRmat  *R,
+                             const dBSRmat  *A,
+                             const dBSRmat  *P,
+                             dBSRmat        *B)
 {
     const INT row=R->ROW, col=P->COL, nb2=A->nb*A->nb;
-    //INT nB=A->NNZ;
     
-    REAL *aj=A->val, *acj;
-    INT *ir=R->IA, *ia=A->IA, *ip=P->IA, *iac;
-    INT *jr=R->JA, *ja=A->JA, *jp=P->JA, *jac;
+    const REAL *aj=A->val;
+    const INT *ir=R->IA, *ia=A->IA, *ip=P->IA;
+    const INT *jr=R->JA, *ja=A->JA, *jp=P->JA;
     
-    INT *Ps_marker = NULL;
-    INT *As_marker = NULL;
+    INT  *iac, *jac;
+    REAL *acj;
+    INT  *Ps_marker = NULL;
+    INT  *As_marker = NULL;
     
 #ifdef _OPENMP
     INT *P_marker = NULL;
