@@ -1,4 +1,4 @@
-/*! \file AuxSmallMat.c
+/*! \file BlaSmallMatInv.c
  *
  *  \brief Find inversion of *small* dense matrices in row-major format
  *

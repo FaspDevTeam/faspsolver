@@ -17,8 +17,8 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-static void Schwarz_levels (INT, dCSRmat *, INT *, INT *, INT *, INT *, INT);
-static void Schwarz_get_block (Schwarz_data *, INT, INT *, INT *, INT *);
+static void SWZ_level (const INT, dCSRmat *, INT *, INT *, INT *, INT *, const INT);
+static void SWZ_block (Schwarz_data *, const INT, const INT *, const INT *, INT *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -90,7 +90,7 @@ INT fasp_schwarz_setup (Schwarz_data   *Schwarz,
     // first pass: do a maxlev level sets out for each node
     for ( i = 0; i < MIS.row; i++ ) {
         inroot = MIS.val[i];
-        Schwarz_levels(inroot,&A,mask,&nlvl,maxa,jblock,maxlev);
+        SWZ_level(inroot,&A,mask,&nlvl,maxa,jblock,maxlev);
         nsizei=maxa[nlvl];
         nsizeall+=nsizei;
     }
@@ -109,7 +109,7 @@ INT fasp_schwarz_setup (Schwarz_data   *Schwarz,
     jb=jblock;
     for (i=0;i<MIS.row;i++) {
         inroot = MIS.val[i];
-        Schwarz_levels(inroot,&A,mask,&nlvl,maxa,jb,maxlev);
+        SWZ_level(inroot,&A,mask,&nlvl,maxa,jb,maxlev);
         nsizei=maxa[nlvl];
         iblock[i+1]=iblock[i]+nsizei;
         nsizeall+=nsizei;
@@ -129,7 +129,7 @@ INT fasp_schwarz_setup (Schwarz_data   *Schwarz,
     
     Schwarz->blk_data = (dCSRmat*)fasp_mem_calloc(nblk, sizeof(dCSRmat));
     
-    Schwarz_get_block(Schwarz, nblk, iblock, jblock, mask);
+    SWZ_block(Schwarz, nblk, iblock, jblock, mask);
     
     // Setup for each block solver
     switch (block_solver) {
@@ -418,8 +418,8 @@ void fasp_dcsr_schwarz_backward_smoother (Schwarz_data   *Schwarz,
 /*---------------------------------*/
 
 /**
- * \fn static void Schwarz_levels (INT inroot, dCSRmat *A, INT *mask, INT *nlvl,
- *                                 INT *iblock, INT *jblock, INT maxlev)
+ * \fn static void SWZ_level (const INT inroot, dCSRmat *A, INT *mask, INT *nlvl,
+ *                            INT *iblock, INT *jblock, const INT maxlev)
  *
  * \brief Form the level hierarchy of input root node
  *
@@ -434,13 +434,13 @@ void fasp_dcsr_schwarz_backward_smoother (Schwarz_data   *Schwarz,
  * \author Zheng Li
  * \date   2014/09/29
  */
-static void Schwarz_levels (INT       inroot,
-                            dCSRmat  *A,
-                            INT      *mask,
-                            INT      *nlvl,
-                            INT      *iblock,
-                            INT      *jblock,
-                            INT       maxlev)
+static void SWZ_level (const INT   inroot,
+                       dCSRmat    *A,
+                       INT        *mask,
+                       INT        *nlvl,
+                       INT        *iblock,
+                       INT        *jblock,
+                       const INT   maxlev)
 {
     INT *ia = A->IA;
     INT *ja = A->JA;
@@ -467,7 +467,7 @@ static void Schwarz_levels (INT       inroot,
         
         lvsize = nnz;
         
-        // start to form the level hierarchy for root node(level1, level2, ... maxlev)
+        // form the level hierarchy for root node(level1, level2, ... maxlev)
         while (lvsize > 0 && lvl < maxlev) {
             lbegin = lvlend;
             lvlend = nsize;
@@ -502,8 +502,8 @@ static void Schwarz_levels (INT       inroot,
 }
 
 /**
- * \fn static void Schwarz_get_block (Schwarz_data *Schwarz, INT nblk,
- *                                    INT *iblock, INT *jblock, INT *mask)
+ * \fn static void SWZ_block (Schwarz_data *Schwarz, const INT nblk,
+ *                            const INT *iblock, const INT *jblock, INT *mask)
  *
  * \brief Form Schwarz partition data
  *
@@ -516,11 +516,11 @@ static void Schwarz_levels (INT       inroot,
  * \author Zheng Li, Chensong Zhang
  * \date   2014/09/29
  */
-static void Schwarz_get_block (Schwarz_data *Schwarz,
-                               INT           nblk,
-                               INT          *iblock,
-                               INT          *jblock,
-                               INT          *mask)
+static void SWZ_block (Schwarz_data *Schwarz,
+                       const INT     nblk,
+                       const INT    *iblock,
+                       const INT    *jblock,
+                       INT          *mask)
 {
     INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     INT maxbs = 0, count, nnz;

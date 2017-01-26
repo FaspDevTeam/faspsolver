@@ -541,17 +541,17 @@ void fasp_dvecind_write (const char  *filename,
 void fasp_ivec_write (const char  *filename,
                       ivector     *vec);
 
-void fasp_dvec_print (INT       n,
-                      dvector  *u);
+void fasp_dvec_print (const INT  n,
+                      dvector   *u);
 
-void fasp_ivec_print (INT       n,
-                      ivector  *u);
+void fasp_ivec_print (const INT  n,
+                      ivector   *u);
 
-void fasp_dcsr_print (dCSRmat *A);
+void fasp_dcsr_print (const dCSRmat *A);
 
-void fasp_dcoo_print (dCOOmat *A);
+void fasp_dcoo_print (const dCOOmat *A);
 
-void fasp_dbsr_print (dBSRmat *A);
+void fasp_dbsr_print (const dBSRmat *A);
 
 void fasp_dbsr_write_coo (const char    *filename,
                           const dBSRmat *A);
@@ -559,7 +559,7 @@ void fasp_dbsr_write_coo (const char    *filename,
 void fasp_dcsr_write_coo (const char    *filename,
                           const dCSRmat *A);
 
-void fasp_dstr_print (dSTRmat *A);
+void fasp_dstr_print (const dSTRmat *A);
 
 void fasp_matrix_read (const char  *filename,
                        void        *A);
@@ -569,14 +569,14 @@ void fasp_matrix_read_bin (const char *filename,
 
 void fasp_matrix_write (const char *filename,
                         void       *A,
-                        INT         flag);
+                        const INT   flag);
 
 void fasp_vector_read (const char *filerhs,
                        void       *b);
 
 void fasp_vector_write (const char *filerhs,
                         void       *b,
-                        INT         flag);
+                        const INT   flag);
 
 void fasp_hb_read (const char *input_file,
                    dCSRmat    *A,
@@ -740,7 +740,7 @@ void fasp_blas_smat_aAxpby (const REAL   alpha,
                             const INT    n);
 
 
-/*-------- In file: AuxSmallMat.c --------*/
+/*-------- In file: BlaSmallMatInv.c --------*/
 
 void fasp_smat_inv_nc2 (REAL *a);
 

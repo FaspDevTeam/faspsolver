@@ -23,17 +23,17 @@ INT   dlength; /**< Length of REAL in byte */
 
 // Decoration of private functions
 static void fasp_dcsr_read_s(FILE *fp, dCSRmat *A);
-static void fasp_dcsr_read_b(FILE *fp, dCSRmat *A, INT endianflag);
+static void fasp_dcsr_read_b(FILE *fp, dCSRmat *A, const SHORT EndianFlag);
 static void fasp_dcoo_read_s(FILE *fp, dCSRmat *A);
-static void fasp_dcoo_read_b(FILE *fp, dCSRmat *A, INT endianflag);
+static void fasp_dcoo_read_b(FILE *fp, dCSRmat *A, const SHORT EndianFlag);
 static void fasp_dbsr_read_s(FILE *fp, dBSRmat *A);
-static void fasp_dbsr_read_b(FILE *fp, dBSRmat *A, INT endianflag);
+static void fasp_dbsr_read_b(FILE *fp, dBSRmat *A, const SHORT EndianFlag);
 static void fasp_dstr_read_s(FILE *fp, dSTRmat *A);
-static void fasp_dstr_read_b(FILE *fp, dSTRmat *A, INT endianflag);
+static void fasp_dstr_read_b(FILE *fp, dSTRmat *A, const SHORT EndianFlag);
 static void fasp_dmtx_read_s(FILE *fp, dCSRmat *A);
-static void fasp_dmtx_read_b(FILE *fp, dCSRmat *A, INT endianflag);
+static void fasp_dmtx_read_b(FILE *fp, dCSRmat *A, const SHORT EndianFlag);
 static void fasp_dmtxsym_read_s(FILE *fp, dCSRmat *A);
-static void fasp_dmtxsym_read_b(FILE *fp, dCSRmat *A, INT endianflag);
+static void fasp_dmtxsym_read_b(FILE *fp, dCSRmat *A, const SHORT EndianFlag);
 static void fasp_dcsr_write_s(FILE *fp, dCSRmat *A);
 static void fasp_dcsr_write_b(FILE *fp, dCSRmat *A);
 static void fasp_dbsr_write_s(FILE *fp, dBSRmat *A);
@@ -41,13 +41,13 @@ static void fasp_dbsr_write_b(FILE *fp, dBSRmat *A);
 static void fasp_dstr_write_s(FILE *fp, dSTRmat *A);
 static void fasp_dstr_write_b(FILE *fp, dSTRmat *A);
 static void fasp_dvec_read_s(FILE *fp, dvector *b);
-static void fasp_dvec_read_b(FILE *fp, dvector *b, INT endianflag);
+static void fasp_dvec_read_b(FILE *fp, dvector *b, const SHORT EndianFlag);
 static void fasp_ivec_read_s(FILE *fp, ivector *b);
-static void fasp_ivec_read_b(FILE *fp, ivector *b, INT endianflag);
+static void fasp_ivec_read_b(FILE *fp, ivector *b, const SHORT EndianFlag);
 static void fasp_dvecind_read_s(FILE *fp, dvector *b);
-static void fasp_dvecind_read_b(FILE *fp, dvector *b, INT endianflag);
+static void fasp_dvecind_read_b(FILE *fp, dvector *b, const SHORT EndianFlag);
 static void fasp_ivecind_read_s(FILE *fp, ivector *b);
-static void fasp_ivecind_read_b(FILE *fp, ivector *b, INT endianflag);
+static void fasp_ivecind_read_b(FILE *fp, ivector *b, const SHORT EndianFlag);
 static void fasp_dvec_write_s(FILE *fp, dvector *b);
 static void fasp_dvec_write_b(FILE *fp, dvector *b);
 static void fasp_ivec_write_s(FILE *fp, ivector *b);
@@ -1354,7 +1354,7 @@ void fasp_ivec_write (const char  *filename,
 }
 
 /**
- * \fn void fasp_dvec_print (INT n, dvector *u)
+ * \fn void fasp_dvec_print (const INT n, dvector *u)
  *
  * \brief Print first n entries of a vector of REAL type
  *
@@ -1364,17 +1364,19 @@ void fasp_ivec_write (const char  *filename,
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_dvec_print (INT       n,
-                      dvector  *u)
+void fasp_dvec_print (const INT  n,
+                      dvector   *u)
 {
     unsigned INT i;
+    unsigned INT NumPrint = n;
     
-    if ( n <= 0 ) n=u->row;
-    for ( i = 0; i < n; ++i ) printf("vec_%d = %15.10E\n",i,u->val[i]);
+    if ( n <= 0 ) NumPrint = u->row; // print all
+    
+    for ( i = 0; i < NumPrint; ++i ) printf("vec_%d = %15.10E\n",i,u->val[i]);
 }
 
 /**
- * \fn void fasp_ivec_print (INT n, ivector *u)
+ * \fn void fasp_ivec_print (const INT n, ivector *u)
  *
  * \brief Print first n entries of a vector of INT type
  *
@@ -1384,17 +1386,19 @@ void fasp_dvec_print (INT       n,
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_ivec_print (INT       n,
-                      ivector  *u)
+void fasp_ivec_print (const INT  n,
+                      ivector   *u)
 {
     unsigned INT i;
+    unsigned INT NumPrint = n;
     
-    if ( n <= 0 ) n = u->row;
-    for ( i = 0; i < n; ++i ) printf("vec_%d = %d\n",i,u->val[i]);
+    if ( n <= 0 ) NumPrint = u->row; // print all
+    
+    for ( i = 0; i < NumPrint; ++i ) printf("vec_%d = %d\n",i,u->val[i]);
 }
 
 /**
- * \fn void fasp_dcsr_print (dCSRmat *A)
+ * \fn void fasp_dcsr_print (const dCSRmat *A)
  *
  * \brief Print out a dCSRmat matrix in coordinate format
  *
@@ -1403,7 +1407,7 @@ void fasp_ivec_print (INT       n,
  * \author Xuehai Huang
  * \date   03/29/2009
  */
-void fasp_dcsr_print (dCSRmat *A)
+void fasp_dcsr_print (const dCSRmat *A)
 {
     const INT m=A->row, n=A->col;
     INT i, j;
@@ -1416,7 +1420,7 @@ void fasp_dcsr_print (dCSRmat *A)
 }
 
 /**
- * \fn void fasp_dcoo_print (dCOOmat *A)
+ * \fn void fasp_dcoo_print (const dCOOmat *A)
  *
  * \brief Print out a dCOOmat matrix in coordinate format
  *
@@ -1425,9 +1429,10 @@ void fasp_dcsr_print (dCSRmat *A)
  * \author Ziteng Wang
  * \date   12/24/2012
  */
-void fasp_dcoo_print (dCOOmat *A)
+void fasp_dcoo_print (const dCOOmat *A)
 {
     INT k;
+    
     printf("nrow = %d, ncol = %d, nnz = %d\n",A->row,A->col,A->nnz);
     for ( k = 0; k < A->nnz; k++ ) {
         printf("A_(%d,%d) = %+.10E\n",A->rowind[k],A->colind[k],A->val[k]);
@@ -1435,7 +1440,7 @@ void fasp_dcoo_print (dCOOmat *A)
 }
 
 /**
- * \fn void fasp_dbsr_print (dBSRmat *A)
+ * \fn void fasp_dbsr_print (const dBSRmat *A)
  *
  * \brief Print out a dBSRmat matrix in coordinate format
  *
@@ -1446,12 +1451,12 @@ void fasp_dcoo_print (dCOOmat *A)
  *
  * Modified by Chunsheng Feng on 11/16/2013
  */
-void fasp_dbsr_print (dBSRmat *A)
+void fasp_dbsr_print (const dBSRmat *A)
 {
     INT i, j, k, l;
     INT nb,nb2;
-    nb = A->nb;
-    nb2 =nb*nb;
+    nb  = A->nb;
+    nb2 = nb*nb;
     
     printf("nrow = %d, ncol = %d, nnz = %d, nb = %d, storage_manner = %d\n",
            A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
@@ -1470,7 +1475,7 @@ void fasp_dbsr_print (dBSRmat *A)
 }
 
 /**
- * \fn void fasp_dbsr_write_coo (const char *filename,const dBSRmat *A)
+ * \fn void fasp_dbsr_write_coo (const char *filename, const dBSRmat *A)
  *
  * \brief Print out a dBSRmat matrix in coordinate format for matlab spy
  *
@@ -1562,7 +1567,7 @@ void fasp_dcsr_write_coo (const char    *filename,
 }
 
 /**
- * \fn void fasp_dstr_print (dSTRmat *A)
+ * \fn void fasp_dstr_print (const dSTRmat *A)
  *
  * \brief Print out a dSTRmat matrix in coordinate format
  *
@@ -1571,7 +1576,7 @@ void fasp_dcsr_write_coo (const char    *filename,
  * \author Ziteng Wang
  * \date   12/24/2012
  */
-void fasp_dstr_print (dSTRmat *A)
+void fasp_dstr_print (const dSTRmat *A)
 {
     // To be added later! --Chensong
 }
@@ -1657,33 +1662,33 @@ void fasp_matrix_read (const char  *filename,
     
     // matrix stored in binary format
     
-    // judge endian's consistence of machine and file
-    INT endianflag = index;
+    // test Endian consistence of machine and file
+    SHORT EndianFlag = index;
     
     fread(&index, sizeof(INT), 1, fp);
-    index = endian_convert_int(index, sizeof(INT), endianflag);
+    index = endian_convert_int(index, sizeof(INT), EndianFlag);
     flag = (INT) index/100;
     ilength = (INT) (index - flag*100)/10;
     dlength = index%10;
     
     switch (flag) {
         case 1:
-            fasp_dcsr_read_b(fp, (dCSRmat *)A, endianflag);
+            fasp_dcsr_read_b(fp, (dCSRmat *)A, EndianFlag);
             break;
         case 2:
-            fasp_dbsr_read_b(fp, (dBSRmat *)A, endianflag);
+            fasp_dbsr_read_b(fp, (dBSRmat *)A, EndianFlag);
             break;
         case 3:
-            fasp_dstr_read_b(fp, (dSTRmat *)A, endianflag);
+            fasp_dstr_read_b(fp, (dSTRmat *)A, EndianFlag);
             break;
         case 4:
-            fasp_dcoo_read_b(fp, (dCSRmat *)A, endianflag);
+            fasp_dcoo_read_b(fp, (dCSRmat *)A, EndianFlag);
             break;
         case 5:
-            fasp_dmtx_read_b(fp, (dCSRmat *)A, endianflag);
+            fasp_dmtx_read_b(fp, (dCSRmat *)A, EndianFlag);
             break;
         case 6:
-            fasp_dmtxsym_read_b(fp, (dCSRmat *)A, endianflag);
+            fasp_dmtxsym_read_b(fp, (dCSRmat *)A, EndianFlag);
             break;
         default:
             printf("### ERROR: Unknown file flag %d", flag);
@@ -1721,9 +1726,9 @@ void fasp_matrix_read_bin (const char *filename,
     
     fread(&index, sizeof(INT), 1, fp);
     
-    INT endianflag = 1;
+    SHORT EndianFlag = 1;
     
-    index = endian_convert_int(index, sizeof(INT), endianflag);
+    index = endian_convert_int(index, sizeof(INT), EndianFlag);
     
     flag = (INT) index/100;
     ilength = (int) (index - flag*100)/10;
@@ -1731,22 +1736,22 @@ void fasp_matrix_read_bin (const char *filename,
     
     switch (flag) {
         case 1:
-            fasp_dcoo_read_b(fp, (dCSRmat *)A, endianflag);
+            fasp_dcoo_read_b(fp, (dCSRmat *)A, EndianFlag);
             break;
         case 2:
-            fasp_dbsr_read_b(fp, (dBSRmat *)A, endianflag);
+            fasp_dbsr_read_b(fp, (dBSRmat *)A, EndianFlag);
             break;
         case 3:
-            fasp_dstr_read_b(fp, (dSTRmat *)A, endianflag);
+            fasp_dstr_read_b(fp, (dSTRmat *)A, EndianFlag);
             break;
         case 4:
-            fasp_dcsr_read_b(fp, (dCSRmat *)A, endianflag);
+            fasp_dcsr_read_b(fp, (dCSRmat *)A, EndianFlag);
             break;
         case 5:
-            fasp_dmtx_read_b(fp, (dCSRmat *)A, endianflag);
+            fasp_dmtx_read_b(fp, (dCSRmat *)A, EndianFlag);
             break;
         case 6:
-            fasp_dmtxsym_read_b(fp, (dCSRmat *)A, endianflag);
+            fasp_dmtxsym_read_b(fp, (dCSRmat *)A, EndianFlag);
             break;
         default:
             printf("### ERROR: Unknown file flag %d", flag);
@@ -1757,7 +1762,7 @@ void fasp_matrix_read_bin (const char *filename,
 }
 
 /**
- * \fn fasp_matrix_write (const char *filemat, void *A, INT flag)
+ * \fn fasp_matrix_write (const char *filemat, void *A, const INT flag)
  *
  * \brief write matrix from different kinds of formats from both ASCII and binary files
  *
@@ -1782,7 +1787,7 @@ void fasp_matrix_read_bin (const char *filename,
  */
 void fasp_matrix_write (const char *filename,
                         void       *A,
-                        INT         flag)
+                        const INT   flag)
 {
     
     INT fileflag, matrixflag;
@@ -1918,25 +1923,25 @@ void fasp_vector_read (const char *filerhs,
     }
     
     // vector stored in binary
-    INT endianflag = index;
+    SHORT EndianFlag = index;
     fread(&index, sizeof(INT), 1, fp);
-    index = endian_convert_int(index, sizeof(INT), endianflag);
+    index = endian_convert_int(index, sizeof(INT), EndianFlag);
     flag = (int) index/100;
     ilength = (int) (index-100*flag)/10;
     dlength = index%10;
     
     switch (flag) {
         case 1:
-            fasp_dvec_read_b(fp, (dvector *)b, endianflag);
+            fasp_dvec_read_b(fp, (dvector *)b, EndianFlag);
             break;
         case 2:
-            fasp_ivec_read_b(fp, (ivector *)b, endianflag);
+            fasp_ivec_read_b(fp, (ivector *)b, EndianFlag);
             break;
         case 3:
-            fasp_dvecind_read_b(fp, (dvector *)b, endianflag);
+            fasp_dvecind_read_b(fp, (dvector *)b, EndianFlag);
             break;
         case 4:
-            fasp_ivecind_read_b(fp, (ivector *)b, endianflag);
+            fasp_ivecind_read_b(fp, (ivector *)b, EndianFlag);
             break;
     }
     
@@ -1944,7 +1949,7 @@ void fasp_vector_read (const char *filerhs,
 }
 
 /**
- * \fn fasp_vector_write (const char *filerhs, void *b, INT flag)
+ * \fn fasp_vector_write (const char *filerhs, void *b, const INT flag)
  *
  * \brief write RHS vector from different kinds of formats in both ASCII and binary files
  *
@@ -1974,7 +1979,7 @@ void fasp_vector_read (const char *filerhs,
  */
 void fasp_vector_write (const char *filerhs,
                         void       *b,
-                        INT         flag)
+                        const INT   flag)
 {
     
     INT fileflag, vectorflag;
@@ -2264,42 +2269,15 @@ void fasp_hb_read (const char *input_file,
     // Cleanning
     //-------------------------
 FINISHED:
-    if ( colptr )
-    {
-        free ( colptr );
-    }
-    if ( exact )
-    {
-        free ( exact );
-    }
-    if ( guess )
-    {
-        free ( guess );
-    }
-    if ( rhsind )
-    {
-        free ( rhsind );
-    }
-    if ( rhsptr )
-    {
-        free ( rhsptr );
-    }
-    if ( rhsval )
-    {
-        free ( rhsval );
-    }
-    if ( rhsvec )
-    {
-        free ( rhsvec );
-    }
-    if ( rowind )
-    {
-        free ( rowind );
-    }
-    if ( values )
-    {
-        free ( values );
-    }
+    if ( colptr ) free ( colptr );
+    if ( exact )  free ( exact );
+    if ( guess )  free ( guess );
+    if ( rhsind ) free ( rhsind );
+    if ( rhsptr ) free ( rhsptr );
+    if ( rhsval ) free ( rhsval );
+    if ( rhsvec ) free ( rhsvec );
+    if ( rowind ) free ( rowind );
+    if ( values ) free ( values );
     
     return;
 }
@@ -2308,8 +2286,8 @@ FINISHED:
 /*--      Private Functions      --*/
 /*---------------------------------*/
 
-static void fasp_dcsr_read_s (FILE     *fp,
-                              dCSRmat  *A)
+static void fasp_dcsr_read_s (FILE        *fp,
+                              dCSRmat     *A)
 {
     INT  i,m,nnz,idata;
     REAL ddata;
@@ -2340,22 +2318,22 @@ static void fasp_dcsr_read_s (FILE     *fp,
     }
 }
 
-static void fasp_dcsr_read_b (FILE     *fp,
-                              dCSRmat  *A,
-                              INT       endianflag)
+static void fasp_dcsr_read_b (FILE        *fp,
+                              dCSRmat     *A,
+                              const SHORT  EndianFlag)
 {
     INT  i,m,nnz,idata;
     REAL ddata;
     
     // Read CSR matrix
     fread(&idata, ilength, 1, fp);
-    A->row = endian_convert_int(idata, ilength, endianflag);
+    A->row = endian_convert_int(idata, ilength, EndianFlag);
     m = A->row;
     
     A->IA=(INT *)fasp_mem_calloc(m+1, sizeof(INT));
     for ( i = 0; i <= m; ++i ) {
         fread(&idata, ilength, 1, fp);
-        A->IA[i] = endian_convert_int(idata, ilength, endianflag);
+        A->IA[i] = endian_convert_int(idata, ilength, EndianFlag);
     }
     
     nnz=A->IA[m]-A->IA[0]; A->nnz=nnz;
@@ -2365,17 +2343,17 @@ static void fasp_dcsr_read_b (FILE     *fp,
     
     for ( i = 0; i < nnz; ++i ) {
         fread(&idata, ilength, 1, fp);
-        A->JA[i] = endian_convert_int(idata, ilength, endianflag);
+        A->JA[i] = endian_convert_int(idata, ilength, EndianFlag);
     }
     
     for ( i = 0; i < nnz; ++i ) {
         fread(&ddata, dlength, 1, fp);
-        A->val[i] = endian_convert_real(ddata, dlength, endianflag);
+        A->val[i] = endian_convert_real(ddata, dlength, EndianFlag);
     }
 }
 
-static void fasp_dcoo_read_s (FILE     *fp,
-                              dCSRmat  *A)
+static void fasp_dcoo_read_s (FILE        *fp,
+                              dCSRmat     *A)
 {
     INT  i,j,k,m,n,nnz;
     REAL value;
@@ -2398,29 +2376,29 @@ static void fasp_dcoo_read_s (FILE     *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dcoo_read_b (FILE     *fp,
-                              dCSRmat  *A,
-                              INT       endianflag)
+static void fasp_dcoo_read_b (FILE        *fp,
+                              dCSRmat     *A,
+                              const SHORT  EndianFlag)
 {
     INT  k,m,n,nnz,index;
     REAL value;
     
     fread(&m, ilength, 1, fp);
-    m = endian_convert_int(m, ilength, endianflag);
+    m = endian_convert_int(m, ilength, EndianFlag);
     fread(&n, ilength, 1, fp);
-    n = endian_convert_int(n, ilength, endianflag);
+    n = endian_convert_int(n, ilength, EndianFlag);
     fread(&nnz, ilength, 1, fp);
-    nnz = endian_convert_int(nnz, ilength, endianflag);
+    nnz = endian_convert_int(nnz, ilength, EndianFlag);
     
     dCOOmat Atmp=fasp_dcoo_create(m,n,nnz);
     
     for (k = 0; k < nnz; k++) {
         if ( fread(&index, ilength, 1, fp) !=EOF ) {
-            Atmp.rowind[k] = endian_convert_int(index, ilength, endianflag);
+            Atmp.rowind[k] = endian_convert_int(index, ilength, EndianFlag);
             fread(&index, ilength, 1, fp);
-            Atmp.colind[k] = endian_convert_int(index, ilength, endianflag);
+            Atmp.colind[k] = endian_convert_int(index, ilength, EndianFlag);
             fread(&value, sizeof(REAL), 1, fp);
-            Atmp.val[k] = endian_convert_real(value, sizeof(REAL), endianflag);
+            Atmp.val[k] = endian_convert_real(value, sizeof(REAL), EndianFlag);
         }
         else {
             fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo_read");
@@ -2431,8 +2409,8 @@ static void fasp_dcoo_read_b (FILE     *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dbsr_read_s (FILE    *fp,
-                              dBSRmat *A)
+static void fasp_dbsr_read_s (FILE        *fp,
+                              dBSRmat     *A)
 {
     INT  ROW, COL, NNZ, nb, storage_manner;
     INT  i, n;
@@ -2474,9 +2452,9 @@ static void fasp_dbsr_read_s (FILE    *fp,
     
 }
 
-static void fasp_dbsr_read_b (FILE    *fp,
-                              dBSRmat *A,
-                              INT      endianflag)
+static void fasp_dbsr_read_b (FILE        *fp,
+                              dBSRmat     *A,
+                              const SHORT  EndianFlag)
 {
     INT    ROW, COL, NNZ, nb, storage_manner;
     INT    i, n, index;
@@ -2484,17 +2462,17 @@ static void fasp_dbsr_read_b (FILE    *fp,
     
     // read dimension of the problem
     fread(&ROW, ilength, 1, fp);
-    A->ROW = endian_convert_int(ROW, ilength, endianflag);
+    A->ROW = endian_convert_int(ROW, ilength, EndianFlag);
     fread(&COL, ilength, 1, fp);
-    A->COL = endian_convert_int(COL, ilength, endianflag);
+    A->COL = endian_convert_int(COL, ilength, EndianFlag);
     fread(&NNZ, ilength, 1, fp);
-    A->NNZ = endian_convert_int(NNZ, ilength, endianflag);
+    A->NNZ = endian_convert_int(NNZ, ilength, EndianFlag);
     
     fread(&nb, ilength, 1, fp); // read the size of each block
-    A->nb = endian_convert_int(nb, ilength, endianflag);
+    A->nb = endian_convert_int(nb, ilength, EndianFlag);
     
     fread(&storage_manner, 1, ilength, fp); // read the storage manner of each block
-    A->storage_manner = endian_convert_int(storage_manner, ilength, endianflag);
+    A->storage_manner = endian_convert_int(storage_manner, ilength, EndianFlag);
     
     // allocate memory space
     fasp_dbsr_alloc(ROW, COL, NNZ, nb, storage_manner, A);
@@ -2503,26 +2481,26 @@ static void fasp_dbsr_read_b (FILE    *fp,
     fread(&n, ilength, 1, fp);
     for ( i = 0; i < n; i++ ) {
         fread(&index, 1, ilength, fp);
-        A->IA[i] = endian_convert_int(index, ilength, endianflag);
+        A->IA[i] = endian_convert_int(index, ilength, EndianFlag);
     }
     
     // read JA
     fread(&n, ilength, 1, fp);
     for ( i = 0; i < n; i++ ) {
         fread(&index, ilength, 1, fp);
-        A->JA[i] = endian_convert_int(index, ilength, endianflag);
+        A->JA[i] = endian_convert_int(index, ilength, EndianFlag);
     }
     
     // read val
     fread(&n, ilength, 1, fp);
     for ( i = 0; i < n; i++ ) {
         fread(&value, sizeof(REAL), 1, fp);
-        A->val[i] = endian_convert_real(value, sizeof(REAL), endianflag);
+        A->val[i] = endian_convert_real(value, sizeof(REAL), EndianFlag);
     }
 }
 
-static void fasp_dstr_read_s (FILE    *fp,
-                              dSTRmat *A)
+static void fasp_dstr_read_s (FILE        *fp,
+                              dSTRmat     *A)
 {
     INT  nx, ny, nz, nxy, ngrid, nband, nc, offset;
     INT  i, k, n;
@@ -2566,9 +2544,9 @@ static void fasp_dstr_read_s (FILE    *fp,
     
 }
 
-static void fasp_dstr_read_b (FILE    *fp,
-                              dSTRmat *A,
-                              INT      endianflag)
+static void fasp_dstr_read_b (FILE        *fp,
+                              dSTRmat     *A,
+                              const SHORT  EndianFlag)
 {
     INT  nx, ny, nz, nxy, ngrid, nband, nc, offset;
     INT  i, k, n;
@@ -2576,11 +2554,11 @@ static void fasp_dstr_read_b (FILE    *fp,
     
     // read dimension of the problem
     fread(&nx, ilength, 1, fp);
-    A->nx = endian_convert_int(nx, ilength, endianflag);
+    A->nx = endian_convert_int(nx, ilength, EndianFlag);
     fread(&ny, ilength, 1, fp);
-    A->ny = endian_convert_int(ny, ilength, endianflag);
+    A->ny = endian_convert_int(ny, ilength, EndianFlag);
     fread(&nz, ilength, 1, fp);
-    A->nz = endian_convert_int(nz, ilength, endianflag);
+    A->nz = endian_convert_int(nz, ilength, EndianFlag);
     
     nxy = nx*ny; ngrid = nxy*nz;
     A->nxy = nxy; A->ngrid = ngrid;
@@ -2597,11 +2575,11 @@ static void fasp_dstr_read_b (FILE    *fp,
     
     // read diagonal
     fread(&n, ilength, 1, fp);
-    n = endian_convert_int(n, ilength, endianflag);
+    n = endian_convert_int(n, ilength, EndianFlag);
     A->diag=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
     for ( i = 0; i < n; i++ ) {
         fread(&value, sizeof(REAL), 1, fp);
-        A->diag[i]=endian_convert_real(value, sizeof(REAL), endianflag);
+        A->diag[i]=endian_convert_real(value, sizeof(REAL), EndianFlag);
     }
     
     // read offdiags
@@ -2609,20 +2587,20 @@ static void fasp_dstr_read_b (FILE    *fp,
     A->offdiag=(REAL **)fasp_mem_calloc(nband, sizeof(REAL *));
     while ( k-- ) {
         fread(&offset, ilength, 1, fp);
-        A->offsets[nband-k-1]=endian_convert_int(offset, ilength, endianflag);;
+        A->offsets[nband-k-1]=endian_convert_int(offset, ilength, EndianFlag);;
         
         fread(&n, ilength, 1, fp);
-        n = endian_convert_int(n, ilength, endianflag);
+        n = endian_convert_int(n, ilength, EndianFlag);
         A->offdiag[nband-k-1]=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
         for ( i = 0; i < n; i++ ) {
             fread(&value, sizeof(REAL), 1, fp);
-            A->offdiag[nband-k-1][i]=endian_convert_real(value, sizeof(REAL), endianflag);
+            A->offdiag[nband-k-1][i]=endian_convert_real(value, sizeof(REAL), EndianFlag);
         }
     }
 }
 
-static void fasp_dmtx_read_s (FILE    *fp,
-                              dCSRmat *A)
+static void fasp_dmtx_read_s (FILE        *fp,
+                              dCSRmat     *A)
 {
     INT  i,j,m,n,nnz;
     INT  innz; // index of nonzeros
@@ -2652,30 +2630,30 @@ static void fasp_dmtx_read_s (FILE    *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dmtx_read_b (FILE    *fp,
-                              dCSRmat *A,
-                              INT      endianflag)
+static void fasp_dmtx_read_b (FILE        *fp,
+                              dCSRmat     *A,
+                              const SHORT  EndianFlag)
 {
     INT   m,n,k,nnz;
     INT   index;
     REAL  value;
     
     fread(&m, ilength, 1, fp);
-    m = endian_convert_int(m, ilength, endianflag);
+    m = endian_convert_int(m, ilength, EndianFlag);
     fread(&n, ilength, 1, fp);
-    n = endian_convert_int(n, ilength, endianflag);
+    n = endian_convert_int(n, ilength, EndianFlag);
     fread(&nnz, ilength, 1, fp);
-    nnz = endian_convert_int(nnz, ilength, endianflag);
+    nnz = endian_convert_int(nnz, ilength, EndianFlag);
     
     dCOOmat Atmp=fasp_dcoo_create(m,n,nnz);
     
     for (k = 0; k < nnz; k++) {
         if ( fread(&index, ilength, 1, fp) !=EOF ) {
-            Atmp.rowind[k] = endian_convert_int(index, ilength, endianflag)-1;
+            Atmp.rowind[k] = endian_convert_int(index, ilength, EndianFlag)-1;
             fread(&index, ilength, 1, fp);
-            Atmp.colind[k] = endian_convert_int(index, ilength, endianflag)-1;
+            Atmp.colind[k] = endian_convert_int(index, ilength, EndianFlag)-1;
             fread(&value, sizeof(REAL), 1, fp);
-            Atmp.val[k] = endian_convert_real(value, sizeof(REAL), endianflag);
+            Atmp.val[k] = endian_convert_real(value, sizeof(REAL), EndianFlag);
         }
         else {
             fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
@@ -2686,8 +2664,8 @@ static void fasp_dmtx_read_b (FILE    *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dmtxsym_read_s (FILE    *fp,
-                                 dCSRmat *A)
+static void fasp_dmtxsym_read_s (FILE        *fp,
+                                 dCSRmat     *A)
 {
     INT  i,j,m,n,nnz;
     INT  innz; // index of nonzeros
@@ -2727,9 +2705,9 @@ static void fasp_dmtxsym_read_s (FILE    *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dmtxsym_read_b (FILE    *fp,
-                                 dCSRmat *A,
-                                 INT      endianflag)
+static void fasp_dmtxsym_read_b (FILE        *fp,
+                                 dCSRmat     *A,
+                                 const SHORT  EndianFlag)
 {
     INT  m,n,nnz;
     INT  innz;
@@ -2737,11 +2715,11 @@ static void fasp_dmtxsym_read_b (FILE    *fp,
     REAL value;
     
     fread(&m, ilength, 1, fp);
-    m = endian_convert_int(m, ilength, endianflag);
+    m = endian_convert_int(m, ilength, EndianFlag);
     fread(&n, ilength, 1, fp);
-    n = endian_convert_int(n, ilength, endianflag);
+    n = endian_convert_int(n, ilength, EndianFlag);
     fread(&nnz, ilength, 1, fp);
-    nnz = endian_convert_int(nnz, ilength, endianflag);
+    nnz = endian_convert_int(nnz, ilength, EndianFlag);
     
     nnz = 2*(nnz-m) + m; // adjust for sym problem
     
@@ -2754,22 +2732,22 @@ static void fasp_dmtxsym_read_b (FILE    *fp,
             
             if (index[0]==index[1]) {
                 INT indextemp = index[0];
-                Atmp.rowind[innz] = endian_convert_int(indextemp, ilength, endianflag)-1;
+                Atmp.rowind[innz] = endian_convert_int(indextemp, ilength, EndianFlag)-1;
                 indextemp = index[1];
-                Atmp.colind[innz] = endian_convert_int(indextemp, ilength, endianflag)-1;
+                Atmp.colind[innz] = endian_convert_int(indextemp, ilength, EndianFlag)-1;
                 fread(&value, sizeof(REAL), 1, fp);
-                Atmp.val[innz] = endian_convert_real(value, sizeof(REAL), endianflag);
+                Atmp.val[innz] = endian_convert_real(value, sizeof(REAL), EndianFlag);
                 innz = innz + 1;
             }
             else {
                 INT indextemp = index[0];
-                Atmp.rowind[innz] = endian_convert_int(indextemp, ilength, endianflag)-1;
+                Atmp.rowind[innz] = endian_convert_int(indextemp, ilength, EndianFlag)-1;
                 Atmp.rowind[innz+1] = Atmp.rowind[innz];
                 indextemp = index[1];
-                Atmp.colind[innz] = endian_convert_int(indextemp, ilength, endianflag)-1;
+                Atmp.colind[innz] = endian_convert_int(indextemp, ilength, EndianFlag)-1;
                 Atmp.colind[innz+1] = Atmp.colind[innz];
                 fread(&value, sizeof(REAL), 1, fp);
-                Atmp.val[innz] = endian_convert_real(value, sizeof(REAL), endianflag);
+                Atmp.val[innz] = endian_convert_real(value, sizeof(REAL), EndianFlag);
                 Atmp.val[innz+1] = Atmp.val[innz];
                 innz = innz + 2;
             }
@@ -2784,8 +2762,8 @@ static void fasp_dmtxsym_read_b (FILE    *fp,
     fasp_dcoo_free(&Atmp);
 }
 
-static void fasp_dcsr_write_s (FILE     *fp,
-                               dCSRmat  *A)
+static void fasp_dcsr_write_s (FILE        *fp,
+                               dCSRmat     *A)
 {
     const INT m=A->row, n=A->col;
     INT i;
@@ -2799,8 +2777,8 @@ static void fasp_dcsr_write_s (FILE     *fp,
     for ( i = 0; i < A->nnz; ++i ) fprintf(fp,"%le\n", A->val[i]);
 }
 
-static void fasp_dcsr_write_b (FILE     *fp,
-                               dCSRmat  *A)
+static void fasp_dcsr_write_b (FILE        *fp,
+                               dCSRmat     *A)
 {
     const INT m=A->row, n=A->col;
     INT i, j, nnz, index;
@@ -2823,8 +2801,8 @@ static void fasp_dcsr_write_b (FILE     *fp,
     fclose(fp);
 }
 
-static void fasp_dbsr_write_s (FILE     *fp,
-                               dBSRmat  *A)
+static void fasp_dbsr_write_s (FILE        *fp,
+                               dBSRmat     *A)
 {
     const INT ROW = A->ROW, COL = A->COL, NNZ = A->NNZ;
     const INT nb = A->nb, storage_manner = A->storage_manner;
@@ -2857,8 +2835,8 @@ static void fasp_dbsr_write_s (FILE     *fp,
     for ( i = 0; i < n; ++i ) fprintf(fp, "%le\n", val[i]);
 }
 
-static void fasp_dbsr_write_b (FILE     *fp,
-                               dBSRmat  *A)
+static void fasp_dbsr_write_b (FILE        *fp,
+                               dBSRmat     *A)
 {
     const INT ROW = A->ROW, COL = A->COL, NNZ = A->NNZ;
     const INT nb = A->nb, storage_manner = A->storage_manner;
@@ -2904,8 +2882,8 @@ static void fasp_dbsr_write_b (FILE     *fp,
     }
 }
 
-static void fasp_dstr_write_s (FILE     *fp,
-                               dSTRmat  *A)
+static void fasp_dstr_write_s (FILE        *fp,
+                               dSTRmat     *A)
 {
     const INT nx=A->nx, ny=A->ny, nz=A->nz;
     const INT ngrid=A->ngrid, nband=A->nband, nc=A->nc;
@@ -2938,8 +2916,8 @@ static void fasp_dstr_write_s (FILE     *fp,
     
 }
 
-static void fasp_dstr_write_b (FILE     *fp,
-                               dSTRmat  *A)
+static void fasp_dstr_write_b (FILE        *fp,
+                               dSTRmat     *A)
 {
     const INT nx=A->nx, ny=A->ny, nz=A->nz;
     const INT ngrid=A->ngrid, nband=A->nband, nc=A->nc;
@@ -2981,8 +2959,8 @@ static void fasp_dstr_write_b (FILE     *fp,
     
 }
 
-static void fasp_dvec_read_s (FILE     *fp,
-                              dvector  *b)
+static void fasp_dvec_read_s (FILE        *fp,
+                              dvector     *b)
 {
     
     INT  i, n;
@@ -2997,26 +2975,26 @@ static void fasp_dvec_read_s (FILE     *fp,
     }
 }
 
-static void fasp_dvec_read_b (FILE     *fp,
-                              dvector  *b,
-                              INT       endianflag)
+static void fasp_dvec_read_b (FILE        *fp,
+                              dvector     *b,
+                              const SHORT  EndianFlag)
 {
     
     INT  i, n;
     REAL value;
     
     fread(&n, ilength, 1, fp);
-    n = endian_convert_int(n, ilength, endianflag);
+    n = endian_convert_int(n, ilength, EndianFlag);
     fasp_dvec_alloc(n,b);
     
     for ( i = 0; i < n; i++ ) {
         fread(&value, dlength, 1, fp);
-        b->val[i]=endian_convert_real(value, dlength, endianflag);
+        b->val[i]=endian_convert_real(value, dlength, EndianFlag);
     }
 }
 
-static void fasp_ivec_read_s (FILE     *fp,
-                              ivector  *b)
+static void fasp_ivec_read_s (FILE        *fp,
+                              ivector     *b)
 {
     INT i, n, value;
     
@@ -3029,26 +3007,26 @@ static void fasp_ivec_read_s (FILE     *fp,
     }
 }
 
-static void fasp_ivec_read_b (FILE     *fp,
-                              ivector  *b,
-                              INT       endianflag)
+static void fasp_ivec_read_b (FILE        *fp,
+                              ivector     *b,
+                              const SHORT  EndianFlag)
 {
     INT i, n, value;
     
     fread(&n, ilength, 1, fp);
-    n = endian_convert_int(n, ilength, endianflag);
+    n = endian_convert_int(n, ilength, EndianFlag);
     fasp_ivec_alloc(n,b);
     
     for ( i = 0; i < n; i++ ) {
         fread(&value, dlength, 1, fp);
-        b->val[i]=endian_convert_real(value, dlength, endianflag);
+        b->val[i]=endian_convert_real(value, dlength, EndianFlag);
     }
     
     fclose(fp);
 }
 
-static void fasp_dvecind_read_s (FILE     *fp,
-                                 dvector  *b)
+static void fasp_dvecind_read_s (FILE        *fp,
+                                 dvector     *b)
 {
     INT  i, n, index;
     REAL value;
@@ -3062,28 +3040,28 @@ static void fasp_dvecind_read_s (FILE     *fp,
     }
 }
 
-static void fasp_dvecind_read_b (FILE     *fp,
-                                 dvector  *b,
-                                 INT       endianflag)
+static void fasp_dvecind_read_b (FILE        *fp,
+                                 dvector     *b,
+                                 const SHORT  EndianFlag)
 {
     INT  i, n, index;
     REAL value;
     
     fread(&n, ilength, 1, fp);
-    n = endian_convert_int(n, ilength, endianflag);
+    n = endian_convert_int(n, ilength, EndianFlag);
     fasp_dvec_alloc(n,b);
     
     for ( i = 0; i < n; i++ ) {
         fread(&index, ilength, 1, fp);
         fread(&value, dlength, 1, fp);
-        index = endian_convert_int(index, ilength, endianflag);
-        value = endian_convert_real(value, ilength, endianflag);
+        index = endian_convert_int(index, ilength, EndianFlag);
+        value = endian_convert_real(value, ilength, EndianFlag);
         b->val[index] = value;
     }
 }
 
-static void fasp_ivecind_read_s (FILE     *fp,
-                                 ivector  *b)
+static void fasp_ivecind_read_s (FILE        *fp,
+                                 ivector     *b)
 {
     INT i, n, index, value;
     
@@ -3096,27 +3074,27 @@ static void fasp_ivecind_read_s (FILE     *fp,
     }
 }
 
-static void fasp_ivecind_read_b (FILE     *fp,
-                                 ivector  *b,
-                                 INT       endianflag)
+static void fasp_ivecind_read_b (FILE        *fp,
+                                 ivector     *b,
+                                 const SHORT  EndianFlag)
 {
     INT i, n, index, value;
     
     fread(&n, ilength, 1, fp);
-    n = endian_convert_int(n, ilength, endianflag);
+    n = endian_convert_int(n, ilength, EndianFlag);
     fasp_ivec_alloc(n,b);
     
     for ( i = 0; i < n; i++ ) {
         fread(&index, ilength, 1, fp);
         fread(&value, dlength, 1, fp);
-        index = endian_convert_int(index, ilength, endianflag);
-        value = endian_convert_real(value, dlength, endianflag);
+        index = endian_convert_int(index, ilength, EndianFlag);
+        value = endian_convert_real(value, dlength, EndianFlag);
         b->val[index] = value;
     }
 }
 
-static void fasp_dvec_write_s (FILE     *fp,
-                               dvector  *vec)
+static void fasp_dvec_write_s (FILE        *fp,
+                               dvector     *vec)
 {
     INT m = vec->row, i;
     
@@ -3126,8 +3104,8 @@ static void fasp_dvec_write_s (FILE     *fp,
     
 }
 
-static void fasp_dvec_write_b (FILE     *fp,
-                               dvector  *vec)
+static void fasp_dvec_write_b (FILE        *fp,
+                               dvector     *vec)
 {
     INT m = vec->row, i;
     REAL value;
@@ -3140,8 +3118,8 @@ static void fasp_dvec_write_b (FILE     *fp,
     }
 }
 
-static void fasp_ivec_write_s (FILE     *fp,
-                               ivector  *vec)
+static void fasp_ivec_write_s (FILE        *fp,
+                               ivector     *vec)
 {
     INT m = vec->row, i;
     
@@ -3151,8 +3129,8 @@ static void fasp_ivec_write_s (FILE     *fp,
     
 }
 
-static void fasp_ivec_write_b (FILE     *fp,
-                               ivector  *vec)
+static void fasp_ivec_write_b (FILE        *fp,
+                               ivector     *vec)
 {
     INT m = vec->row, i, value;
     
@@ -3166,8 +3144,8 @@ static void fasp_ivec_write_b (FILE     *fp,
     
 }
 
-static void fasp_dvecind_write_s (FILE     *fp,
-                                  dvector  *vec)
+static void fasp_dvecind_write_s (FILE        *fp,
+                                  dvector     *vec)
 {
     INT m = vec->row, i;
     
@@ -3177,8 +3155,8 @@ static void fasp_dvecind_write_s (FILE     *fp,
     
 }
 
-static void fasp_dvecind_write_b (FILE     *fp,
-                                  dvector  *vec)
+static void fasp_dvecind_write_b (FILE        *fp,
+                                  dvector     *vec)
 {
     INT m = vec->row, i;
     REAL value;
@@ -3193,8 +3171,8 @@ static void fasp_dvecind_write_b (FILE     *fp,
     
 }
 
-static void fasp_ivecind_write_b (FILE     *fp,
-                                  ivector  *vec)
+static void fasp_ivecind_write_b (FILE        *fp,
+                                  ivector     *vec)
 {
     INT m = vec->row, i;
     INT value;
@@ -3209,8 +3187,8 @@ static void fasp_ivecind_write_b (FILE     *fp,
     
 }
 
-static void fasp_ivecind_write_s (FILE     *fp,
-                                  ivector  *vec)
+static void fasp_ivecind_write_s (FILE        *fp,
+                                  ivector     *vec)
 {
     INT m = vec->row, i;
     
@@ -3222,14 +3200,14 @@ static void fasp_ivecind_write_s (FILE     *fp,
 
 /**
  * \fn static INT endian_convert_int (const INT inum, const INT ilength,
- *                                    const INT endianflag)
+ *                                    const SHORT EndianFlag)
  *
  * \brief Swap order of an INT number
  *
  * \param inum        An INT value
  * \param ilength     Length of INT: 2 for short, 4 for int, 8 for long
- * \param endianflag  If endianflag = 1, it returns inum itself
- *                    If endianflag = 2, it returns the swapped inum
+ * \param EndianFlag  If EndianFlag = 1, it returns inum itself
+ *                    If EndianFlag = 2, it returns the swapped inum
  *
  * \return Value of inum or swapped inum
  *
@@ -3238,13 +3216,13 @@ static void fasp_ivecind_write_s (FILE     *fp,
  */
 static INT endian_convert_int (const INT   inum,
                                const INT   ilength,
-                               const INT   endianflag)
+                               const INT   EndianFlag)
 {
     INT iretVal,i;
     char *intToConvert = ( char* ) & inum;
     char *returnInt = ( char* ) & iretVal;
     
-    if (endianflag==1) return inum;
+    if (EndianFlag==1) return inum;
     else {
         for (i = 0; i < ilength; i++) {
             returnInt[i] = intToConvert[ilength-i-1];
@@ -3255,14 +3233,14 @@ static INT endian_convert_int (const INT   inum,
 
 /**
  * \fn static REAL endian_convert_real (const REAL rnum, const INT ilength,
- *                                      const INT endianflag)
+ *                                      const SHORT EndianFlag)
  *
  * \brief Swap order of a REAL number
  *
  * \param rnum        An REAL value
  * \param ilength     Length of INT: 2 for short, 4 for int, 8 for long
- * \param endianflag  If endianflag = 1, it returns rnum itself
- *                    If endianflag = 2, it returns the swapped rnum
+ * \param EndianFlag  If EndianFlag = 1, it returns rnum itself
+ *                    If EndianFlag = 2, it returns the swapped rnum
  *
  * \return Value of rnum or swapped rnum
  *
@@ -3271,14 +3249,14 @@ static INT endian_convert_int (const INT   inum,
  */
 static REAL endian_convert_real (const REAL  rnum,
                                  const INT   vlength,
-                                 const INT   endianflag)
+                                 const INT   EndianFlag)
 {
     REAL dretVal;
     char *realToConvert = (char *) & rnum;
     char *returnReal    = (char *) & dretVal;
     INT  i;
     
-    if (endianflag==1) return rnum;
+    if (EndianFlag==1) return rnum;
     else {
         for (i = 0; i < vlength; i++) {
             returnReal[i] = realToConvert[vlength-i-1];
