@@ -176,8 +176,8 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         mgl[lvl].diaginv = fasp_dbsr_getdiaginv(&mgl[lvl].A);
 
         /*-- Aggregation --*/
-        //mgl[lvl].PP =  fasp_dbsr_getblk_dcsr(&mgl[lvl].A);
-        mgl[lvl].PP = fasp_dbsr_Linfinity_dcsr(&mgl[lvl].A);
+        //mgl[lvl].PP =  condenseBSR(&mgl[lvl].A);
+        mgl[lvl].PP = condenseBSRLinf(&mgl[lvl].A);
 
         switch ( param->aggregation_type ) {
 

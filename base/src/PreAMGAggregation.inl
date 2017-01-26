@@ -19,6 +19,125 @@
 /*---------------------------------*/
 
 /**
+ * \fn static dCSRmat condenseBSR (const dBSRmat *A)
+ *
+ * \brief get dCSRmat block from a dBSRmat matrix
+ *
+ * \param *A   Pointer to the BSR format matrix
+ *
+ * \return     dCSRmat matrix if succeed, NULL if fail
+ *
+ * \author Xiaozhe Hu
+ * \date   03/16/2012
+ */
+static dCSRmat condenseBSR (const dBSRmat *A)
+{
+    // information about A
+    const INT ROW = A->ROW;
+    const INT COL = A->COL;
+    const INT NNZ = A->NNZ;
+    const SHORT nc = A->nb;
+    const INT nc2 = nc*nc;
+    const REAL TOL = 1e-8;
+    
+    REAL *val = A->val;
+    INT *IA = A->IA;
+    INT *JA = A->JA;
+    
+    // Pressure block
+    dCSRmat P_csr = fasp_dcsr_create(ROW, COL, NNZ);
+    REAL *Pval=P_csr.val;
+    
+    // get pressure block
+    memcpy(P_csr.JA, JA, NNZ*sizeof(INT));
+    memcpy(P_csr.IA, IA, (ROW+1)*sizeof(INT));
+    
+#ifdef _OPENMP
+    INT i;
+    
+#pragma omp parallel for if(NNZ>OPENMP_HOLDS)
+    for (i=NNZ-1; i>=0; i--) {
+        Pval[i] = val[i*nc2];
+    }
+#else
+    INT i, j;
+    
+    for (i=NNZ, j=NNZ*nc2-nc2 + (0*nc+0); i--; j-=nc2) {
+        Pval[i] = val[j];
+    }
+#endif
+    
+    // compress CSR format
+    fasp_dcsr_compress_inplace(&P_csr,TOL);
+    
+    // return P
+    return P_csr;
+}
+
+/**
+ * \fn static dCSRmat condenseBSRLinf (const dBSRmat *A)
+ *
+ * \brief get dCSRmat from a dBSRmat matrix using L_infinity norm of each small block
+ *
+ * \param *A   Pointer to the BSR format matrix
+ *
+ * \return     dCSRmat matrix if succeed, NULL if fail
+ *
+ * \author Xiaozhe Hu
+ * \date   05/25/2014
+ */
+static dCSRmat condenseBSRLinf (const dBSRmat *A)
+{
+    // information about A
+    const INT ROW = A->ROW;
+    const INT COL = A->COL;
+    const INT NNZ = A->NNZ;
+    const SHORT nc = A->nb;
+    const INT nc2 = nc*nc;
+    const REAL TOL = 1e-8;
+    
+    REAL *val = A->val;
+    INT *IA = A->IA;
+    INT *JA = A->JA;
+    
+    // CSR matrix
+    dCSRmat Acsr = fasp_dcsr_create(ROW, COL, NNZ);
+    REAL *Aval=Acsr.val;
+    
+    // get structure
+    memcpy(Acsr.JA, JA, NNZ*sizeof(INT));
+    memcpy(Acsr.IA, IA, (ROW+1)*sizeof(INT));
+    
+    INT i, j, k;
+    INT row_start, row_end;
+    
+    for (i=0; i<ROW; i++){
+        
+        row_start = A->IA[i]; row_end = A->IA[i+1];
+        
+        for (k = row_start; k<row_end; k++) {
+            
+            j = A->JA[k];
+            
+            if ( i == j ) {
+                Aval[k] = fasp_smat_Linfinity(val+k*nc2, nc);
+            }
+            else {
+                Aval[k] = (-1)*fasp_smat_Linfinity(val+k*nc2, nc);
+            }
+            
+        }
+        
+    }
+    
+    // compress CSR format
+    fasp_dcsr_compress_inplace(&Acsr,TOL);
+    
+    // return CSR matrix
+    return Acsr;
+}
+
+/**
  * \fn static void form_boolean_p (ivector *vertices, dCSRmat *tentp, INT levelNum,
  *                                 INT num_aggregations)
  *

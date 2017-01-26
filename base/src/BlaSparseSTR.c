@@ -171,7 +171,7 @@ void fasp_dstr_free (dSTRmat *A)
 }
 
 /**
- * \fn void fasp_dstr_cp (dSTRmat *A, dSTRmat *B)
+ * \fn void fasp_dstr_cp (const dSTRmat *A, dSTRmat *B)
  *
  * \brief Copy a dSTRmat to a new one B=A
  *
@@ -181,8 +181,8 @@ void fasp_dstr_free (dSTRmat *A)
  * \author Zhiyang Zhou
  * \date   04/21/2010  
  */
-void fasp_dstr_cp (dSTRmat *A, 
-                   dSTRmat *B)
+void fasp_dstr_cp (const dSTRmat *A,
+                   dSTRmat       *B)
 {    
     const INT nc2 = (A->nc)*(A->nc);
 

@@ -171,7 +171,7 @@ void fasp_dbsr_null (dBSRmat *A)
 }
 
 /**
- * \fn void fasp_dbsr_cp (dBSRmat *A, dBSRmat *B)
+ * \fn void fasp_dbsr_cp (const dBSRmat *A, dBSRmat *B)
  *
  * \brief copy a dCSRmat to a new one B=A
  *
@@ -181,13 +181,13 @@ void fasp_dbsr_null (dBSRmat *A)
  * \author Xiaozhe Hu
  * \date   08/07/2011
  */
-void fasp_dbsr_cp (dBSRmat *A,
-                   dBSRmat *B)
+void fasp_dbsr_cp (const dBSRmat *A,
+                   dBSRmat       *B)
 {
-    B->ROW=A->ROW;
-    B->COL=A->COL;
-    B->NNZ=A->NNZ;
-    B->nb = A->nb;
+    B->ROW = A->ROW;
+    B->COL = A->COL;
+    B->NNZ = A->NNZ;
+    B->nb  = A->nb;
     B->storage_manner = A->storage_manner;
     
     memcpy(B->IA,A->IA,(A->ROW+1)*sizeof(INT));
@@ -196,7 +196,7 @@ void fasp_dbsr_cp (dBSRmat *A,
 }
 
 /**
- * \fn INT fasp_dbsr_trans (dBSRmat *A, dBSRmat *AT)
+ * \fn INT fasp_dbsr_trans (const dBSRmat *A, dBSRmat *AT)
  *
  * \brief Find A^T from given dBSRmat matrix A
  *
@@ -208,17 +208,17 @@ void fasp_dbsr_cp (dBSRmat *A,
  *
  * Modified by Xiaozhe Hu (08/06/2011)
  */
-INT fasp_dbsr_trans (dBSRmat *A,
-                     dBSRmat *AT)
+INT fasp_dbsr_trans (const dBSRmat *A,
+                     dBSRmat       *AT)
 {
     const INT n=A->ROW, m=A->COL, nnz=A->NNZ, nb=A->nb;
     INT i,j,k,p,inb,jnb,nb2;
     INT status = FASP_SUCCESS;
     
-    AT->ROW=m;
-    AT->COL=n;
-    AT->NNZ=nnz;
-    AT->nb = nb;
+    AT->ROW = m;
+    AT->COL = n;
+    AT->NNZ = nnz;
+    AT->nb  = nb;
     AT->storage_manner = A->storage_manner;
     
     AT->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
@@ -381,7 +381,7 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
 }
 
 /**
- * \fn dvector fasp_dbsr_getdiaginv ( dBSRmat *A )
+ * \fn dvector fasp_dbsr_getdiaginv (const dBSRmat *A)
  *
  * \brief Get D^{-1} of matrix A
  *
@@ -392,7 +392,7 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
  *
  * \note Works for general nb (Xiaozhe)
  */
-dvector fasp_dbsr_getdiaginv (dBSRmat *A)
+dvector fasp_dbsr_getdiaginv (const dBSRmat *A)
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -482,8 +482,10 @@ dvector fasp_dbsr_getdiaginv (dBSRmat *A)
     return (diaginv);
 }
 
+// TODO: Need to clean up fasp_dbsr_diaginv* functions
+
 /**
- * \fn dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
+ * \fn dBSRmat fasp_dbsr_diaginv (const dBSRmat *A)
  *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
  *
@@ -496,7 +498,7 @@ dvector fasp_dbsr_getdiaginv (dBSRmat *A)
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
  */
-dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
+dBSRmat fasp_dbsr_diaginv (const dBSRmat *A)
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -646,7 +648,7 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
 }
 
 /**
- * \fn dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A, REAL *diaginv)
+ * \fn dBSRmat fasp_dbsr_diaginv2 (const dBSRmat *A, REAL *diaginv)
  *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
  *
@@ -660,8 +662,8 @@ dBSRmat fasp_dbsr_diaginv (dBSRmat *A)
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
  */
-dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A,
-                            REAL    *diaginv)
+dBSRmat fasp_dbsr_diaginv2 (const dBSRmat *A,
+                            REAL          *diaginv)
 {
     // members of A
     const INT ROW = A->ROW;
@@ -746,7 +748,7 @@ dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A,
 }
 
 /**
- * \fn dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A, REAL *diaginv)
+ * \fn dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A, REAL *diaginv)
  *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
  *
@@ -762,8 +764,8 @@ dBSRmat fasp_dbsr_diaginv2 (dBSRmat *A,
  *
  * Modified by Xiaozhe Hu on 05/26/2012
  */
-dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
-                            REAL    *diaginv)
+dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A,
+                            REAL          *diaginv)
 {
     dBSRmat B;
     // members of A
@@ -1102,7 +1104,7 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
 }
 
 /**
- * \fn dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A, REAL *diaginv)
+ * \fn dBSRmat fasp_dbsr_diaginv4 (const dBSRmat *A, REAL *diaginv)
  *
  * \brief Compute B := D^{-1}*A, where 'D' is the block diagonal part of A.
  *
@@ -1120,8 +1122,8 @@ dBSRmat fasp_dbsr_diaginv3 (dBSRmat *A,
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/26/2012
  */
-dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
-                            REAL    *diaginv)
+dBSRmat fasp_dbsr_diaginv4 (const dBSRmat *A,
+                            REAL          *diaginv)
 {
     // members of A
     const INT     ROW = A->ROW;
@@ -1396,7 +1398,7 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
 }
 
 /*!
- * \fn fasp_dbsr_getdiag (INT n, dBSRmat *A, REAL *diag)
+ * \fn void fasp_dbsr_getdiag (INT n, const dBSRmat *A, REAL *diag)
  *
  * \brief Abstract the diagonal blocks of a BSR matrix.
  *
@@ -1411,9 +1413,9 @@ dBSRmat fasp_dbsr_diaginv4 (dBSRmat *A,
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
  */
-void fasp_dbsr_getdiag (INT      n,
-                        dBSRmat *A,
-                        REAL    *diag )
+void fasp_dbsr_getdiag (INT            n,
+                        const dBSRmat *A,
+                        REAL          *diag )
 {
     const INT nb2 = A->nb*A->nb;
     
@@ -1435,7 +1437,7 @@ void fasp_dbsr_getdiag (INT      n,
 }
 
 /**
- * \fn dBSRmat fasp_dbsr_diagLU (dBSRmat *A, REAL *DL, REAL *DU)
+ * \fn dBSRmat fasp_dbsr_diagLU (const dBSRmat *A, REAL *DL, REAL *DU)
  *
  * \brief Compute B := DL*A*DU. We decompose each diagonal block of A into LDU form
  *        and DL = diag(L^{-1}) and DU = diag(U^{-1}).
@@ -1449,20 +1451,21 @@ void fasp_dbsr_getdiag (INT      n,
  * \author Xiaozhe Hu
  * \date   04/02/2014
  */
-dBSRmat fasp_dbsr_diagLU (dBSRmat *A,
-                          REAL    *DL,
-                          REAL    *DU)
+dBSRmat fasp_dbsr_diagLU (const dBSRmat *A,
+                          REAL          *DL,
+                          REAL          *DU)
 {
     
     // members of A
-    INT  ROW = A->ROW;
-    INT  ROW_plus_one = ROW+1;
-    INT  COL = A->COL;
-    INT  NNZ = A->NNZ;
-    INT  nb  = A->nb;
-    INT  *IA  = A->IA;
-    INT  *JA  = A->JA;
-    REAL *val = A->val;
+    const INT  ROW = A->ROW;
+    const INT  ROW_plus_one = ROW+1;
+    const INT  COL = A->COL;
+    const INT  NNZ = A->NNZ;
+    const INT  nb  = A->nb;
+    
+    const INT  *IA  = A->IA;
+    const INT  *JA  = A->JA;
+    const REAL *val = A->val;
     
     INT  *IAb  = NULL;
     INT  *JAb  = NULL;
@@ -1864,7 +1867,7 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
 }
 
 /**
- * \fn dBSRmat fasp_dbsr_perm (dBSRmat *A, INT *P)
+ * \fn dBSRmat fasp_dbsr_perm (const dBSRmat *A, const INT *P)
  *
  * \brief Apply permutation of A, i.e. Aperm=PAP' by the orders given in P
  *
@@ -1878,17 +1881,17 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
  *
  * \note   P[i] = k means k-th row and column become i-th row and column!
  */
-dBSRmat fasp_dbsr_perm (dBSRmat *A,
-                        INT     *P)
+dBSRmat fasp_dbsr_perm (const dBSRmat *A,
+                        const INT     *P)
 {
-    const INT n=A->ROW,nnz=A->NNZ;
-    const INT *ia=A->IA, *ja=A->JA;
-    const REAL *Aval=A->val;
-    const INT nb=A->nb;
-    const INT manner = A->storage_manner; 
+    const INT   n = A->ROW, nnz = A->NNZ;
+    const INT  *ia= A->IA, *ja = A->JA;
+    const REAL *Aval = A->val;
+    const INT   nb = A->nb, nb2 = nb*nb;
+    const INT   manner = A->storage_manner;
+    SHORT       nthreads = 1, use_openmp = FALSE;
+
     INT i,j,k,jaj,i1,i2,start,jj;
-    INT nthreads = 1, use_openmp = FALSE;
-    const INT nb2 = nb*nb;
 
 #ifdef _OPENMP
     if ( MIN(n, nnz) > OPENMP_HOLDS ) {
