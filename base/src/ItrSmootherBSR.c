@@ -16,6 +16,13 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
+/*---------------------------------*/
+/*--  Declare Private Functions  --*/
+/*---------------------------------*/
+
+static inline void permut_nb (const INT, const INT, const REAL *, const INT *, REAL *);
+static inline void invpermut_nb (const INT, const INT, const REAL *, const INT *, REAL *);
+
 REAL ilu_solve_omp = 0.0; /**< ILU time for the SOLVE phase */
 
 /*---------------------------------*/
@@ -1568,7 +1575,7 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
  * \author Zhiyang Zhou, Zheng Li
  * \date   2010/10/25
  *
- * NOTE: Add multi-threads parallel ILU block by Zheng Li 12/04/2016. 
+ * NOTE: Add multi-threads parallel ILU block by Zheng Li 12/04/2016.
  */
 void fasp_smoother_dbsr_ilu (dBSRmat *A,
                              dvector *b,
@@ -1581,27 +1588,27 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     REAL *xval = x->val, *bval = b->val;
     REAL *zr = iludata->work + 3*m;
     REAL *z  = zr + m;
-
+    
     double start, end;
     
     if (iludata->nwork<memneed) goto MEMERR;
     
     /** form residual zr = b - A x */
     fasp_array_cp(m,bval,zr); fasp_blas_dbsr_aAxpy(-1.0,A,xval,zr);
-
+    
     /** solve LU z=zr */
 #ifdef _OPENMP
     
 #if ILU_MC_OMP
     REAL *tz = (REAL*)fasp_mem_calloc(A->ROW*A->nb, sizeof(REAL));
     REAL *tzr = (REAL*)fasp_mem_calloc(A->ROW*A->nb, sizeof(REAL));
-    fasp_array_permut_nb(A->ROW, A->nb, zr, iludata->jlevL, tzr);
+    permut_nb(A->ROW, A->nb, zr, iludata->jlevL, tzr);
     
     fasp_gettime(&start);
     fasp_precond_dbsr_ilu_mc_omp(tzr,tz,iludata);
     fasp_gettime(&end);
-
-    fasp_array_invpermut_nb(A->ROW, A->nb, tz, iludata->jlevL, z);
+    
+    invpermut_nb(A->ROW, A->nb, tz, iludata->jlevL, z);
     fasp_mem_free(tzr);
     fasp_mem_free(tz);
 #else
@@ -1609,18 +1616,18 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     fasp_precond_dbsr_ilu_levsch_omp(zr,z,iludata);
     fasp_gettime(&end);
 #endif
-
+    
     ilu_solve_omp += end-start;
-
+    
 #else
     
     fasp_gettime(&start);
     fasp_precond_dbsr_ilu(zr,z,iludata);
     fasp_gettime(&end);
     ilu_solve_omp += end-start;
-
+    
 #endif
-
+    
     /** x=x+z */
     fasp_blas_array_axpy(m,1,z,xval);
     
@@ -1629,7 +1636,81 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
 MEMERR:
     printf("### ERROR: ILU needs %d memory, only %d available! %s : %d\n",
            memneed, iludata->nwork, __FILE__, __LINE__);
-    fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);    
+    fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
+}
+
+/*---------------------------------*/
+/*--      Private Functions      --*/
+/*---------------------------------*/
+
+/**
+ * \fn static inline void permut_nb (const INT n, const INT nb, const REAL*x,
+ *                                   const INT *p, REAL*y)
+ *
+ * \brief Array permutation
+ *
+ * \param n    Size of array
+ * \param nb   Step size
+ * \param x    Pointer to the original vector
+ * \param p    Pointer to index mapping
+ * \param y    Pointer to the destination vector
+ *
+ * \author Zheng Li
+ * \date   12/04/2016
+ */
+static inline void permut_nb (const INT    n,
+                              const INT    nb,
+                              const REAL  *x,
+                              const INT   *p,
+                              REAL        *y)
+{
+    INT i, j, indx, indy;
+    
+#ifdef _OPENMP
+#pragma omp parallel for private(i, j, indx, indy)
+#endif
+    for (i=0; i<n; ++i) {
+        indx = p[i]*nb;
+        indy = i*nb;
+        for (j=0; j<nb; ++j) {
+            y[indy+j] = x[indx+j];
+        }
+    }
+}
+
+/**
+ * \fn static inline void invpermut_nb (const INT n, const INT nb,
+ *                                      const REAL*x, const INT *p, REAL*y)
+ *
+ * \brief Array inverse permutation
+ *
+ * \param n    Size of array
+ * \param nb   Step size
+ * \param x    Pointer to the original vector
+ * \param p    Pointer to index mapping
+ * \param y    Pointer to the destination vector
+ *
+ * \author Zheng Li
+ * \date   12/04/2016
+ */
+static inline void invpermut_nb (const INT    n,
+                                 const INT    nb,
+                                 const REAL  *x,
+                                 const INT   *p,
+                                 REAL        *y)
+{
+    INT i, j, indx, indy;
+    
+#ifdef _OPENMP
+#pragma omp parallel for private(i, j, indx, indy)
+#endif
+    for (i=0; i<n; ++i) {
+        indx = i*nb;
+        indy = p[i]*nb;
+        for (j=0; j<nb; ++j) {
+            y[indy+j] = x[indx+j];
+        }
+    }
 }
 
 /*---------------------------------*/

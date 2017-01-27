@@ -41,18 +41,6 @@ void fasp_array_cp_nc5 (const REAL  *x,
 void fasp_array_cp_nc7 (const REAL  *x,
                         REAL        *y);
 
-void fasp_array_permut_nb (const INT    n,
-                           const INT    nb,
-                           const REAL  *x,
-                           const INT   *p,
-                           REAL        *y);
-
-void fasp_array_invpermut_nb (const INT    n,
-                              const INT    nb,
-                              const REAL  *x,
-                              const INT   *p,
-                              REAL        *y);
-
 
 /*-------- In file: AuxConvert.c --------*/
 
@@ -77,18 +65,18 @@ void fasp_dcsr_subplot (const dCSRmat  *A,
                         const char     *filename,
                         INT             size);
 
+INT fasp_dcsr_plot (const dCSRmat   *A,
+                    const char      *fname);
+
 void fasp_dbsr_subplot (const dBSRmat  *A,
                         const char     *filename,
                         INT             size);
 
-void fasp_grid2d_plot (pgrid2d   pg,
-                       INT       level);
-
 INT fasp_dbsr_plot (const dBSRmat   *A,
                     const char      *fname);
 
-INT fasp_dcsr_plot (const dCSRmat   *A,
-                    const char      *fname);
+void fasp_grid2d_plot (pgrid2d   pg,
+                       INT       level);
 
 
 /*-------- In file: AuxInput.c --------*/
@@ -235,15 +223,6 @@ void fasp_aux_dQuickSortIndex (REAL *a,
                                INT   left,
                                INT   right,
                                INT  *index);
-
-void fasp_dcsr_CMK_order (const dCSRmat *A,
-                          INT           *order,
-                          INT           *oindex);
-
-void fasp_dcsr_RCMK_order (const dCSRmat *A,
-                           INT           *order,
-                           INT           *oindex,
-                           INT           *rorder);
 
 void fasp_topological_sorting_ilu (ILU_data *iludata);
 
@@ -581,6 +560,18 @@ void fasp_vector_write (const char *filerhs,
 void fasp_hb_read (const char *input_file,
                    dCSRmat    *A,
                    dvector    *b);
+
+
+/*-------- In file: BlaOrderingCSR.c --------*/
+
+void fasp_dcsr_CMK_order (const dCSRmat *A,
+                          INT           *order,
+                          INT           *oindex);
+
+void fasp_dcsr_RCMK_order (const dCSRmat *A,
+                           INT           *order,
+                           INT           *oindex,
+                           INT           *rorder);
 
 
 /*-------- In file: BlaSchwarzSetup.c --------*/

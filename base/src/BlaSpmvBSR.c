@@ -5230,9 +5230,8 @@ void fasp_blas_dbsr_rap_agg (const dBSRmat  *R,
     INT  *As_marker = NULL;
     
 #ifdef _OPENMP
-    INT *P_marker = NULL;
-    INT *A_marker = NULL;
-    REAL *smat_tmp = NULL;
+    INT  *P_marker = NULL;
+    INT  *A_marker = NULL;
 #endif
     
     INT i, i1, i2, i3, jj1, jj2, jj3;
@@ -5262,8 +5261,6 @@ void fasp_blas_dbsr_rap_agg (const dBSRmat  *R,
     iac = (INT *)fasp_mem_calloc(n_coarse+1, sizeof(INT));
     
     fasp_iarray_set(minus_one_length, Ps_marker, -1);
-    
-    REAL *tmp=(REAL *)fasp_mem_calloc(2*nthreads*nb2, sizeof(REAL));
     
 #ifdef _OPENMP
     INT * RAP_temp = As_marker + fine_mul_nthreads;
@@ -5357,13 +5354,11 @@ counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
 #ifdef _OPENMP
     if (n_coarse > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker, \
-counter, i, jj_row_begining, jj1, i1, jj2, i2,   \
-jj3, i3, smat_tmp)
+counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
         for (myid = 0; myid < nthreads; myid++) {
             fasp_get_start_end(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker = Ps_marker + myid * n_coarse;
             A_marker = As_marker + myid * n_fine;
-            smat_tmp = tmp + myid*2*nb2;
             counter = iac[mybegin];
             for (i = mybegin; i < myend; ++i) {
                 P_marker[i] = counter;
@@ -5458,7 +5453,6 @@ jj3, i3, smat_tmp)
     B->nb=A->nb;
     B->storage_manner = A->storage_manner;
     if(Ps_marker) fasp_mem_free(Ps_marker);
-    if(tmp) fasp_mem_free(tmp);
 }
 
 /*---------------------------------*/

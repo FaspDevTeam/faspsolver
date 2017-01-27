@@ -1431,12 +1431,6 @@ static INT cfsplitting_agg (dCSRmat   *A,
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
     
-#ifdef _OPENMP
-    // variables for OpenMP
-    INT myid, mybegin, myend;
-    INT nthreads = fasp_get_num_threads();
-#endif
-    
     /************************************************************/
     /* Coarsening Phase ONE: find temporary coarse level points */
     /************************************************************/
@@ -1799,7 +1793,7 @@ static void form_P_pattern_dir (dCSRmat   *P,
     // step 1: Find the structure IA of P first: using P as a counter
     if ( use_openmp ) {
         
-        INT mybegin,myend,myid;
+        INT mybegin, myend, myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin,myend,i,j,k)
 #endif
