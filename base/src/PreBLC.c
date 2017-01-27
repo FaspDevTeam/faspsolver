@@ -281,10 +281,12 @@ void fasp_precond_block_lower_3 (REAL *r,
     precond_block_data *precdata=(precond_block_data *)data;
     dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
-    void **LU_diag = precdata->LU_diag;
-    
     dvector *tempr = &(precdata->r);
     
+#if  WITH_UMFPACK
+    const void **LU_diag = precdata->LU_diag;
+#endif
+
     const INT N0 = A_diag[0].row;
     const INT N1 = A_diag[1].row;
     const INT N2 = A_diag[2].row;
@@ -437,9 +439,11 @@ void fasp_precond_block_lower_4 (REAL *r,
     precond_block_data *precdata=(precond_block_data *)data;
     dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
-    void **LU_diag = precdata->LU_diag;
-    
     dvector *tempr = &(precdata->r);
+
+#if  WITH_UMFPACK
+    const void **LU_diag = precdata->LU_diag;
+#endif
     
     const INT N0 = A_diag[0].row;
     const INT N1 = A_diag[1].row;
@@ -535,9 +539,11 @@ void fasp_precond_block_upper_3 (REAL *r,
     precond_block_data *precdata=(precond_block_data *)data;
     dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
-    void **LU_diag = precdata->LU_diag;
-    
     dvector *tempr = &(precdata->r);
+
+#if  WITH_UMFPACK
+    const void **LU_diag = precdata->LU_diag;
+#endif
     
     const INT N0 = A_diag[0].row;
     const INT N1 = A_diag[1].row;
@@ -617,7 +623,6 @@ void fasp_precond_block_upper_3_amg (REAL *r,
     precond_block_data *precdata=(precond_block_data *)data;
     dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
-    //void **LU_diag = precdata->LU_diag;
     
     AMG_param *amgparam = precdata->amgparam;
     AMG_data **mgl = precdata->mgl;
@@ -698,9 +703,11 @@ void fasp_precond_block_SGS_3 (REAL *r,
     precond_block_data *precdata=(precond_block_data *)data;
     dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
-    void **LU_diag = precdata->LU_diag;
-    
     dvector *tempr = &(precdata->r);
+
+#if  WITH_UMFPACK
+    const void **LU_diag = precdata->LU_diag;
+#endif
     
     const INT N0 = A_diag[0].row;
     const INT N1 = A_diag[1].row;
@@ -755,15 +762,6 @@ void fasp_precond_block_SGS_3 (REAL *r,
     fasp_solver_superlu(&A_diag[2], &r2, &z2, 0);
 #endif
     
-    // Preconditioning A22 block
-    //#if  WITH_UMFPACK
-    //    /* use UMFPACK direct solver */
-    //    fasp_umfpack_solve(&A_diag[2], &r2, &z2, LU_diag[2], 0);
-    //#elif WITH_SuperLU
-    //    /* use SuperLU direct solver on the coarsest level */
-    //    fasp_solver_superlu(&A_diag[2], &r2, &z2, 0);
-    //#endif
-    
     // r1 = r1 - A5*z2
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[5], z2.val, r1.val);
     
@@ -814,7 +812,6 @@ void fasp_precond_block_SGS_3_amg (REAL *r,
     precond_block_data *precdata=(precond_block_data *)data;
     dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
-    //void **LU_diag = precdata->LU_diag;
     
     AMG_param *amgparam = precdata->amgparam;
     AMG_data **mgl = precdata->mgl;
@@ -928,7 +925,10 @@ void fasp_precond_sweeping (REAL *r,
     dBLCmat *Ai = precdata->Ai;
     dCSRmat *local_A = precdata->local_A;
     ivector *local_index = precdata->local_index;
-    void **local_LU = precdata->local_LU;
+
+#if  WITH_UMFPACK
+    const void **local_LU = precdata->local_LU;
+#endif
     
     dvector *r_backup = &(precdata->r);
     REAL *w = precdata->w;

@@ -12,6 +12,7 @@
 #endif
 
 #include "fasp.h"
+#include "fasp_functs.h"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -50,8 +51,7 @@ void fasp_array_set (const INT    n,
                      REAL        *x,
                      const REAL   val)
 {
-    INT i;
-    const SHORT use_openmp = FALSE;
+    SHORT use_openmp = FALSE;
     
 #ifdef _OPENMP 
     INT nthreads = 1;
@@ -77,6 +77,8 @@ void fasp_array_set (const INT    n,
             memset(x, 0x0, sizeof(REAL)*n);
     }
     else {
+        INT i;
+
         if (use_openmp) {
 #ifdef _OPENMP
             INT mybegin,myend,myid;
@@ -111,8 +113,7 @@ void fasp_iarray_set (const INT   n,
                       INT        *x,
                       const INT   val)
 {
-    INT i;
-    const SHORT use_openmp = FALSE;
+    SHORT use_openmp = FALSE;
     
 #ifdef _OPENMP 
     INT nthreads = 1;
@@ -139,6 +140,8 @@ void fasp_iarray_set (const INT   n,
         }
     }
     else {
+        INT i;
+
         if (use_openmp) {
 #ifdef _OPENMP
             INT mybegin,myend,myid;
@@ -261,76 +264,6 @@ void fasp_array_cp_nc7 (const REAL  *x,
     y[4] = x[4];
     y[5] = x[5];
     y[6] = x[6];
-}
-
-/**
- * \fn void fasp_array_permut_nb (const INT n, const INT nb, const REAL*x, 
- *                                const INT *p, REAL*y)
- *
- * \brief Array permutation
- *
- * \param n    Size of array
- * \param nb   Step size  
- * \param x    Pointer to the original vector 
- * \param p    Pointer to index mapping 
- * \param y    Pointer to the destination vector
- * 
- * \author Zheng Li
- * \date   12/04/2016
- */
-void fasp_array_permut_nb (const INT    n,
-                           const INT    nb,
-                           const REAL  *x,
-                           const INT   *p,
-                           REAL        *y)
-{
-   INT i, j, indx, indy;
-
-#ifdef _OPENMP
-#pragma omp parallel for private(i, j, indx, indy)
-#endif
-   for (i=0; i<n; ++i) {
-       indx = p[i]*nb;
-       indy = i*nb;
-       for (j=0; j<nb; ++j) {
-           y[indy+j] = x[indx+j];
-       }
-   }
-}
-
-/**
- * \fn void fasp_array_invpermut_nb (const INT n, const INT nb, const REAL*x, 
- *                                   const INT *p, REAL*y)
- *
- * \brief Array inverse permutation
- *
- * \param n    Size of array
- * \param nb   Step size
- * \param x    Pointer to the original vector
- * \param p    Pointer to index mapping
- * \param y    Pointer to the destination vector
- *
- * \author Zheng Li
- * \date   12/04/2016
- */
-void fasp_array_invpermut_nb (const INT    n,
-                              const INT    nb,
-                              const REAL  *x,
-                              const INT   *p,
-                              REAL        *y)
-{
-   INT i, j, indx, indy;
-
-#ifdef _OPENMP
-#pragma omp parallel for private(i, j, indx, indy)
-#endif
-   for (i=0; i<n; ++i) {
-       indx = i*nb;
-       indy = p[i]*nb;
-       for (j=0; j<nb; ++j) {
-           y[indy+j] = x[indx+j];
-       }
-   }
 }
 
 /*---------------------------------*/

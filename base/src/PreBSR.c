@@ -572,7 +572,7 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
 {
 #ifdef _OPENMP
     const ILU_data  *iludata=(ILU_data *)data;
-    const INT        m=iludata->row, mm1=m-1, mm2=m-2, memneed=2*m;
+    const INT        m=iludata->row, memneed=2*m;
     const INT        nb=iludata->nb, nb2=nb*nb, size=m*nb;
    
     INT        *ijlu=iludata->ijlu;
@@ -581,7 +581,7 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
     INT        *ic = iludata->ilevL;
     
     INT         ib, ibstart,ibstart1;
-    INT         i, ii, j, jj, k, begin_row, end_row;
+    INT         i, j, jj, k, begin_row, end_row;
     REAL        *zz, *zr, *mult;       
     
     if (iludata->nwork<memneed) {
@@ -770,7 +770,7 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
 {
 #ifdef _OPENMP
     const ILU_data  *iludata=(ILU_data *)data;
-    const INT        m=iludata->row, mm1=m-1, mm2=m-2, memneed=2*m;
+    const INT        m=iludata->row, memneed=2*m;
     const INT        nb=iludata->nb, nb2=nb*nb, size=m*nb;
    
     INT        *ijlu=iludata->ijlu;
