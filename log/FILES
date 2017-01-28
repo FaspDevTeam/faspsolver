@@ -7,8 +7,8 @@
      234 ./base/src/ItrAuxiliary.inl
       98 ./base/src/KryUtil.inl
      667 ./base/src/PreAMGAggregation.inl
-     404 ./base/src/PreAMGAggregationBSR.inl
-    1131 ./base/src/PreAMGAggregationCSR.inl
+     336 ./base/src/PreAMGAggregationBSR.inl
+    1119 ./base/src/PreAMGAggregationCSR.inl
      287 ./base/src/PreAMGUtil.inl
     1654 ./base/src/PreGMG.inl
      219 ./base/src/PreMGRecurAMLI.inl
@@ -53,8 +53,8 @@
      127 ./base/src/BlaSpmvCSRL.c
     1855 ./base/src/BlaSpmvSTR.c
      317 ./base/src/BlaVector.c
-    1718 ./base/src/ItrSmootherBSR.c
-    2320 ./base/src/ItrSmootherCSR.c
+    1697 ./base/src/ItrSmootherBSR.c
+    2316 ./base/src/ItrSmootherCSR.c
       86 ./base/src/ItrSmootherCSRcr.c
      606 ./base/src/ItrSmootherCSRpoly.c
     1898 ./base/src/ItrSmootherSTR.c
@@ -75,13 +75,13 @@
      444 ./base/src/PreAMGCoarsenCR.c
     2085 ./base/src/PreAMGCoarsenRS.c
      871 ./base/src/PreAMGInterp.c
-     835 ./base/src/PreAMGInterpEmin.c
+     835 ./base/src/PreAMGInterpEM.c
      127 ./base/src/PreAMGSetupCR.c
      317 ./base/src/PreAMGSetupRS.c
      626 ./base/src/PreAMGSetupSA.c
      360 ./base/src/PreAMGSetupSABSR.c
      389 ./base/src/PreAMGSetupUA.c
-     366 ./base/src/PreAMGSetupUABSR.c
+     364 ./base/src/PreAMGSetupUABSR.c
     1062 ./base/src/PreBLC.c
     1136 ./base/src/PreBSR.c
      668 ./base/src/PreCSR.c
@@ -101,4 +101,4 @@
      243 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      315 ./base/src/SolWrapper.c
-   86518 total
+   86411 total

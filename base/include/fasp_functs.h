@@ -101,9 +101,9 @@ void fasp_mem_usage ();
 
 SHORT fasp_mem_check (const void  *ptr,
                       const char  *message,
-                      INT          ERR);
+                      const SHORT  ERR);
 
-SHORT fasp_mem_iludata_check (ILU_data *iludata);
+SHORT fasp_mem_iludata_check (const ILU_data *iludata);
 
 
 /*-------- In file: AuxMessage.c --------*/
@@ -1207,10 +1207,10 @@ void fasp_blas_dbsr_rap_agg (const dBSRmat  *R,
 /*-------- In file: BlaSpmvCSR.c --------*/
 
 SHORT fasp_blas_dcsr_add (const dCSRmat  *A,
-                        const REAL      alpha,
-                        const dCSRmat  *B,
-                        const REAL      beta,
-                        dCSRmat        *C);
+                          const REAL      alpha,
+                          const dCSRmat  *B,
+                          const REAL      beta,
+                          dCSRmat        *C);
 
 void fasp_blas_dcsr_axm (dCSRmat     *A,
                          const REAL   alpha);
@@ -2223,7 +2223,7 @@ void fasp_amg_interp_trunc (dCSRmat     *P,
                             AMG_param   *param);
 
 
-/*-------- In file: PreAMGInterpEmin.c --------*/
+/*-------- In file: PreAMGInterpEM.c --------*/
 
 void fasp_amg_interp_em (dCSRmat    *A,
                          ivector    *vertices,

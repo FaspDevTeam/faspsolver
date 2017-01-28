@@ -77,7 +77,7 @@ static dCSRmat condenseBSR (const dBSRmat *A)
 /**
  * \fn static dCSRmat condenseBSRLinf (const dBSRmat *A)
  *
- * \brief get dCSRmat from a dBSRmat matrix using L_infinity norm of each small block
+ * \brief get dCSRmat from a dBSRmat matrix using L_inf norm of each small block
  *
  * \param *A   Pointer to the BSR format matrix
  *
@@ -138,8 +138,8 @@ static dCSRmat condenseBSRLinf (const dBSRmat *A)
 }
 
 /**
- * \fn static void form_boolean_p (ivector *vertices, dCSRmat *tentp, INT levelNum,
- *                                 INT num_aggregations)
+ * \fn static void form_boolean_p (const ivector *vertices, dCSRmat *tentp, 
+ *                                 const INT levelNum, const INT num_aggregations)
  *
  * \brief Form aggregation based on strong coupled neighbors
  *
@@ -153,10 +153,10 @@ static dCSRmat condenseBSRLinf (const dBSRmat *A)
  *
  * Modified by Xiaozhe Hu on 05/25/2014
  */
-static void form_boolean_p (ivector *vertices,
+static void form_boolean_p (const ivector *vertices,
                             dCSRmat *tentp,
-                            INT levelNum,
-                            INT num_aggregations)
+                            const INT levelNum,
+                            const INT num_aggregations)
 {
     INT i, j;
     
@@ -199,9 +199,8 @@ static void form_boolean_p (ivector *vertices,
 }
 
 /**
- * \fn static void form_pairwise (dCSRmat *A,
- *                                INT pair,
- *                                ivector *vertices,
+ * \fn static void form_pairwise (const dCSRmat *A, const INT pair,
+ *                                const REAL k_tg, ivector *vertices,
  *                                INT *num_aggregations)
  *
  * \brief Form aggregation based on pairwise matching
@@ -460,7 +459,8 @@ END:
 
 /**
  * \fn static SHORT aggregation_vmb (dCSRmat *A, ivector *vertices, AMG_param *param,
- *                                   INT levelNum, dCSRmat *Neigh, INT *num_aggregations)
+ *                                   const INT levelNum, dCSRmat *Neigh, 
+ *                                   INT *num_aggregations)
  *
  * \brief Form aggregation based on strong coupled neighbors
  *
@@ -484,7 +484,7 @@ END:
 static SHORT aggregation_vmb (dCSRmat *A,
                               ivector *vertices,
                               AMG_param *param,
-                              INT levelNum,
+                              const INT levelNum,
                               dCSRmat *Neigh,
                               INT *num_aggregations)
 {

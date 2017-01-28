@@ -22,7 +22,7 @@
 #include "PreMGUtil.inl"
 #include "PreMGSmoother.inl"
 
-#if FASP_GSRB
+#if FASP_GSRB // TODO: Need to check this path! --Chensong
 INT  nx_rb   = 1 ;   /**< Red Black GS Smoother Nx */
 INT  ny_rb   = 1 ;   /**< Red Black GS Smoother Ny */
 INT  nz_rb   = 1 ;   /**< Red Black GS Smoother Nz */

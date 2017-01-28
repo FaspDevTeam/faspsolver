@@ -19,8 +19,6 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-//#include "ItrAuxiliary.inl"
-
 static void swep2db (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx,
                      INT nbegy, INT *mark, INT nx, INT ny);
 static void swep3db (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx,
@@ -1451,12 +1449,11 @@ void fasp_smoother_dcsr_gs_rb3d (dvector    *u,
     if (order == 1) {
         while (L--) {
             rb0f3d( ia, ja, aa, uval, bval, mark, nx,  ny,  nz, 1);
-#if 1
-            //   for (ii =0;ii <10;ii++)
-            for (i = maximap; i < nrow; i ++) {
+#if 1 // TODO: Check! Why? --Chensong
+            for ( i = maximap; i < nrow; i++ ) {
                 t = bval[i];
                 begin_row = ia[i], end_row = ia[i+1];
-                for (k = begin_row; k < end_row; k ++) {
+                for ( k = begin_row; k < end_row; k++ ) {
                     j = ja[k];
                     if (i!=j) t -= aa[k]*uval[j];
                     else d = aa[k];
@@ -1470,12 +1467,11 @@ void fasp_smoother_dcsr_gs_rb3d (dvector    *u,
     // backward
     else {
         while (L--) {
-#if 1
-            //  for (ii =0;ii <10;ii++)
-            for (i = nrow-1; i >= maximap; i --) {
+#if 1 // TODO: Check! Why? --Chensong
+            for ( i = nrow-1; i >= maximap; i-- ) {
                 t = bval[i];
                 begin_row = ia[i],end_row = ia[i+1];
-                for (k = begin_row; k < end_row; k ++) {
+                for ( k = begin_row; k < end_row; k ++ ) {
                     j = ja[k];
                     if (i!=j) t -= aa[k]*uval[j];
                     else d = aa[k];

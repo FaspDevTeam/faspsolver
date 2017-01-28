@@ -3,7 +3,7 @@
  *  \brief Direct and standard interpolations for classical AMG
  *
  *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, and PreAMGInterpEmin.c
+ *        AuxArray.c, AuxMemory.c, AuxMessage.c, and PreAMGInterpEM.c
  *
  *  \note Refer to U. Trottenberg, C. W. Oosterlee, and A. Schuller
  *        Multigrid (Appendix A: An Intro to Algebraic Multigrid)

@@ -4,10 +4,8 @@
  *
  *  \note This file contains Level-4 (Pre) functions, which are used in
  *        PreAMGSetupSABSR.c and PreAMGSetupUABSR.c
- * 
- *  \warning This file is also used in FASP4BLKOIL!!!
  *
- *  // TODO: Unused functions! --Chensong
+ *  // TODO: Get rid of unused functions! --Chensong
  */
 
 /*---------------------------------*/
@@ -15,76 +13,9 @@
 /*---------------------------------*/
 
 /**
- * \fn static void form_tentative_p_bsr (ivector *vertices, dBSRmat *tentp,
- *                                       AMG_data_bsr *mgl, INT levelNum,
- *                                       INT num_agg)
- *
- * \brief Form tentative prolongation for BSR format matrix
- *
- * \param vertices    Pointer to the aggregation of vertices
- * \param tentp       Pointer to the prolongation operators
- * \param mgl         Pointer to AMG levels
- * \param levelNum    Level number
- * \param num_agg     Number of aggregations
- *
- * \author Xiaozhe Hu
- * \date   11/25/2011
- */
-static void form_tentative_p_bsr (ivector *vertices,
-                                  dBSRmat *tentp,
-                                  AMG_data_bsr *mgl,
-                                  INT levelNum,
-                                  INT num_agg)
-{
-    INT i, j;
-    
-    /* Form tentative prolongation */
-    tentp->ROW = vertices->row;
-    tentp->COL = num_agg;
-    tentp->nb  = mgl->A.nb;
-    INT nb2    = tentp->nb * tentp->nb;
-    
-    tentp->IA  = (INT*)fasp_mem_calloc(tentp->ROW+1, sizeof(INT));
-    
-    // local variables
-    INT *IA = tentp->IA;
-    INT *JA;
-    REAL *val;
-    INT *vval = vertices->val;
-    
-    const INT row = tentp->ROW;
-    
-    // first run
-    for (i = 0, j = 0; i < row; i ++) {
-        IA[i] = j;
-        if (vval[i] > -1) {
-            j ++;
-        }
-    }
-    IA[row] = j;
-    
-    // allocate
-    tentp->NNZ = j;
-    tentp->JA = (INT*)fasp_mem_calloc(tentp->NNZ, sizeof(INT));
-    tentp->val = (REAL*)fasp_mem_calloc(tentp->NNZ*nb2, sizeof(REAL));
-    
-    JA = tentp->JA;
-    val = tentp->val;
-    
-    // second run
-    for (i = 0, j = 0; i < row; i ++) {
-        IA[i] = j;
-        if (vval[i] > -1) {
-            JA[j] = vval[i];
-            fasp_smat_identity (&(val[j*nb2]), tentp->nb, nb2);
-            j ++;
-        }
-    }
-}
-
-/**
- * \fn static void form_boolean_p_bsr (ivector *vertices, dBSRmat *tentp, AMG_data_bsr *mgl,
- *                                     INT levelNum, INT num_agg)
+ * \fn static void form_boolean_p_bsr (const ivector *vertices, dBSRmat *tentp,
+ *                                     const AMG_data_bsr *mgl,
+ *                                     const INT levelNum, const INT num_agg)
  *
  * \brief Form boolean prolongations in dBSRmat (only assume constant vector is in the null space)
  *
@@ -97,11 +28,11 @@ static void form_tentative_p_bsr (ivector *vertices,
  * \author Xiaozhe Hu
  * \date   05/27/2014
  */
-static void form_boolean_p_bsr (ivector *vertices,
+static void form_boolean_p_bsr (const ivector *vertices,
                                 dBSRmat *tentp,
-                                AMG_data_bsr *mgl,
-                                INT levelNum,
-                                INT num_agg)
+                                const AMG_data_bsr *mgl,
+                                const INT levelNum,
+                                const INT num_agg)
 {
     INT i, j;
     
@@ -137,7 +68,6 @@ static void form_boolean_p_bsr (ivector *vertices,
     
     tentp->val = (REAL*)fasp_mem_calloc(tentp->NNZ*nb2, sizeof(REAL));
     
-    
     JA = tentp->JA;
     val = tentp->val;
     
@@ -153,9 +83,10 @@ static void form_boolean_p_bsr (ivector *vertices,
 }
 
 /**
- * \fn static void form_tentative_p_bsr1 (ivector *vertices, dBSRmat *tentp,
- *                                        AMG_data_bsr *mgl, INT levelNum,
- *                                        INT num_agg, const INT dim, REAL **basis)
+ * \fn static void form_tentative_p_bsr1 (const ivector *vertices, dBSRmat *tentp,
+ *                                        const AMG_data_bsr *mgl, const INT levelNum,
+ *                                        const INT num_agg, const const INT dim, 
+ *                                        REAL **basis)
  *
  * \brief Form tentative prolongation for BSR format matrix (use general basis for null space)
  *
@@ -170,11 +101,11 @@ static void form_boolean_p_bsr (ivector *vertices,
  * \author Xiaozhe Hu
  * \date   05/27/2014
  */
-static void form_tentative_p_bsr1 (ivector *vertices,
+static void form_tentative_p_bsr1 (const ivector *vertices,
                                    dBSRmat *tentp,
-                                   AMG_data_bsr *mgl,
-                                   INT levelNum,
-                                   INT num_agg,
+                                   const AMG_data_bsr *mgl,
+                                   const INT levelNum,
+                                   const INT num_agg,
                                    const INT dim,
                                    REAL **basis)
 {
@@ -194,12 +125,12 @@ static void form_tentative_p_bsr1 (ivector *vertices,
     tentp->IA  = (INT*)fasp_mem_calloc(tentp->ROW+1, sizeof(INT));
     
     // local variables
-    INT *IA = tentp->IA;
-    INT *JA;
+    INT  *IA = tentp->IA;
+    INT  *JA;
     REAL *val;
-    INT *vval = vertices->val;
-    
-    const INT row = tentp->ROW;
+
+    const INT *vval = vertices->val;
+    const INT  row = tentp->ROW;
     
     // first run
     for (i = 0, j = 0; i < row; i ++) {
@@ -215,7 +146,7 @@ static void form_tentative_p_bsr1 (ivector *vertices,
     tentp->JA = (INT*)fasp_mem_calloc(tentp->NNZ, sizeof(INT));
     tentp->val = (REAL*)fasp_mem_calloc(tentp->NNZ*nb2, sizeof(REAL));
     
-    JA = tentp->JA;
+    JA  = tentp->JA;
     val = tentp->val;
     
     // second run
@@ -223,13 +154,13 @@ static void form_tentative_p_bsr1 (ivector *vertices,
         IA[i] = j;
         if (vval[i] > -1) {
             
-            for (k=0; k<nnz_row; k++){
+            for (k=0; k<nnz_row; k++) {
                 
                 JA[j] = vval[i]*nnz_row + k;
                 
-                for (p=0; p<nb; p++){
+                for (p=0; p<nb; p++) {
                     
-                    for (q=0; q<nb; q++){
+                    for (q=0; q<nb; q++) {
                         
                         val[j*nb2 + p*nb + q] = basis[k*nb+p][i*nb+q];
                         
@@ -245,8 +176,9 @@ static void form_tentative_p_bsr1 (ivector *vertices,
 }
 
 /**
- * \fn static void smooth_agg_bsr (dBSRmat *A, dBSRmat *tentp, dBSRmat *P,
- *                                 AMG_param *param, INT levelNum, dCSRmat *N)
+ * \fn static void smooth_agg_bsr (const dBSRmat *A, dBSRmat *tentp, dBSRmat *P,
+ *                                 const AMG_param *param, const INT levelNum, 
+ *                                 const dCSRmat *N)
  *
  * \brief Smooth the tentative prolongation
  *
@@ -260,17 +192,16 @@ static void form_tentative_p_bsr1 (ivector *vertices,
  * \author Xiaozhe Hu
  * \date   05/26/2014
  */
-static void smooth_agg_bsr (dBSRmat *A,
+static void smooth_agg_bsr (const dBSRmat *A,
                             dBSRmat *tentp,
                             dBSRmat *P,
-                            AMG_param *param,
-                            INT levelNum,
-                            dCSRmat *N)
+                            const AMG_param *param,
+                            const INT levelNum,
+                            const dCSRmat *N)
 {
     const SHORT filter = param->smooth_filter;
     const INT   row = A->ROW, col= A->COL, nnz = A->NNZ;
-    const INT   nb = A->nb;
-    const INT nb2 = nb*nb;
+    const INT   nb = A->nb, nb2 = nb*nb;
     const REAL  smooth_factor = param->tentative_smooth;
     
     // local variables
@@ -333,8 +264,9 @@ static void smooth_agg_bsr (dBSRmat *A,
 }
 
 /**
- * \fn static void smooth_agg_bsr1 (dBSRmat *A, dBSRmat *tentp, dBSRmat *P,
- *                                  AMG_param *param, INT levelNum, dCSRmat *N)
+ * \fn static void smooth_agg_bsr1 (const dBSRmat *A, dBSRmat *tentp, dBSRmat *P,
+ *                                  const AMG_param *param, const INT levelNum, 
+ *                                  const dCSRmat *N)
  *
  * \brief Smooth the tentative prolongation (without filter)
  *
@@ -348,12 +280,12 @@ static void smooth_agg_bsr (dBSRmat *A,
  * \author Xiaozhe Hu
  * \date   05/26/2014
  */
-static void smooth_agg_bsr1 (dBSRmat *A,
+static void smooth_agg_bsr1 (const dBSRmat *A,
                              dBSRmat *tentp,
                              dBSRmat *P,
-                             AMG_param *param,
-                             INT levelNum,
-                             dCSRmat *N)
+                             const AMG_param *param,
+                             const INT levelNum,
+                             const dCSRmat *N)
 {
     const INT   row = A->ROW;
     const INT   nb = A->nb;
