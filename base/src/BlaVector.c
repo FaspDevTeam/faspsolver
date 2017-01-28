@@ -38,7 +38,7 @@ void fasp_blas_dvec_axpy (const REAL      a,
                           dvector        *y)
 {
     INT i, m=x->row;
-    INT use_openmp = FALSE;
+    SHORT use_openmp = FALSE;
     REAL *xpt=x->val, *ypt=y->val;
     
 #ifdef _OPENMP
@@ -126,8 +126,9 @@ REAL fasp_blas_dvec_dotprod (const dvector  *x,
     const INT   length = x->row;
     const REAL *xpt = x->val, *ypt = y->val;
     
+    INT   i;
+    SHORT use_openmp = FALSE;
     register REAL value = 0.0;
-    INT  i, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( length > OPENMP_HOLDS ) use_openmp = TRUE;
@@ -168,7 +169,8 @@ REAL fasp_blas_dvec_relerr (const dvector  *x,
     const REAL *xpt = x->val, *ypt = y->val;
     
     REAL diff = 0.0, temp = 0.0;
-    INT  i, use_openmp = FALSE;
+    INT   i;
+    SHORT use_openmp = FALSE;
     
     if ( length != y->row ) {
         printf("### ERROR: Two vectors have different dimensions!\n");
@@ -221,7 +223,8 @@ REAL fasp_blas_dvec_norm1 (const dvector *x)
     const REAL *xpt = x->val;
     
     register REAL onenorm = 0.0;
-    INT  i, use_openmp = FALSE;
+    INT   i;
+    SHORT use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( length > OPENMP_HOLDS ) {
@@ -261,8 +264,9 @@ REAL fasp_blas_dvec_norm2 (const dvector *x)
     const INT   length=x->row;
     const REAL *xpt=x->val;
     
+    INT   i;
+    SHORT use_openmp = FALSE;
     register REAL twonorm = 0.0;
-    INT  i, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( length > OPENMP_HOLDS ) {

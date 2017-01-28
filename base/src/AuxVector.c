@@ -30,7 +30,7 @@
  * \author Chensong Zhang
  * \date   2013/03/31
  */
-SHORT fasp_dvec_isnan (dvector *u)
+SHORT fasp_dvec_isnan (const dvector *u)
 {
     INT i;
     
@@ -208,13 +208,12 @@ void fasp_dvec_rand (const INT  n,
     
     INT s=1, i,j;
     
-    x->row = n;
-    
     srand(s);
     for ( i = 0; i < n; ++i ) {
         j = 1 + (INT) (((REAL)n)*rand()/(RAND_MAX+1.0));
         x->val[i] = (((REAL)j)-va)/(vb-va);
     }
+    x->row = n;
 }
 
 /**
@@ -231,15 +230,15 @@ void fasp_dvec_rand (const INT  n,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012    
  */
-void fasp_dvec_set (INT      n,
-                    dvector *x, 
-                    REAL     val)
+void fasp_dvec_set (INT       n,
+                    dvector  *x,
+                    REAL      val)
 {
-    INT i;
-    REAL *xpt=x->val;
+    INT   i;
+    REAL *xpt = x->val;
     
-    if (n>0) x->row=n; 
-    else n=x->row; 
+    if ( n > 0 ) x->row = n;
+    else n = x->row;
 	
 #ifdef _OPENMP 
     // variables for OpenMP 
@@ -303,9 +302,10 @@ void fasp_dvec_set (INT      n,
 void fasp_ivec_set (const INT  m,
                     ivector   *u)
 {    
-        INT i;
-        INT n = u->row;
-        INT nthreads = 1, use_openmp = FALSE;
+    const INT n = u->row;
+
+    SHORT nthreads = 1, use_openmp = FALSE;
+    INT   i;
     
 #ifdef _OPENMP  
 	if ( n > OPENMP_HOLDS ) {
@@ -344,7 +344,7 @@ void fasp_ivec_set (const INT  m,
 void fasp_dvec_cp (const dvector  *x,
                    dvector        *y)
 {
-    y->row=x->row;
+    y->row = x->row;
     memcpy(y->val,x->val,x->row*sizeof(REAL));
 }
 
@@ -367,12 +367,12 @@ void fasp_dvec_cp (const dvector  *x,
 REAL fasp_dvec_maxdiff (const dvector *x,
                         const dvector *y)
 {
-    const INT length=x->row;
-    REAL Linf=0., diffi=0.;
-    REAL *xpt=x->val, *ypt=y->val;
+    const INT length = x->row;
+    const REAL *xpt = x->val, *ypt = y->val;
     
-    INT use_openmp = FALSE;
-    INT i;
+    SHORT use_openmp = FALSE;
+    INT   i;
+    REAL  Linf = 0.0, diffi = 0.0;
 
 #ifdef _OPENMP 
     INT myid, mybegin, myend, nthreads;
@@ -421,18 +421,17 @@ void fasp_dvec_symdiagscale (dvector        *b,
                              const dvector  *diag)
 {
     // information about dvector
-    const INT n = b->row;
-    REAL *val = b->val;
+    const INT    n = b->row;
+    REAL      *val = b->val;
     
     // local variables
-    INT i;
+    SHORT use_openmp = FALSE;
+    INT   i;
     
-    if (diag->row != n) {
+    if ( diag->row != n ) {
         printf("### ERROR: Sizes of diag = %d != dvector = %d!", diag->row, n);
         fasp_chkerr(ERROR_MISC, __FUNCTION__);
     }
-    
-    INT use_openmp = FALSE;
     
 #ifdef _OPENMP 
     INT mybegin, myend, myid, nthreads;

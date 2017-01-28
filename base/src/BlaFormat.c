@@ -32,32 +32,30 @@ SHORT fasp_format_dcoo_dcsr (const dCOOmat  *A,
                              dCSRmat        *B)
 {
     const INT m=A->row, n=A->col, nnz=A->nnz;
+    INT  iind, jind, i;
     
     fasp_dcsr_alloc(m,n,nnz,B);
-    
-    INT * ia = B->IA, i;
-    INT   iind, jind;
-    INT * ind = (INT *) fasp_mem_calloc(m+1,sizeof(INT));
-    
+    INT *ia = B->IA;
+
+    INT *ind = (INT *) fasp_mem_calloc(m+1,sizeof(INT));
     memset(ind, 0, sizeof(INT)*(m+1)); // initialize ind
-    
-    for (i=0; i<nnz; ++i) ind[A->rowind[i]+1]++; // count nnz in each row
+    for ( i=0; i<nnz; ++i ) ind[A->rowind[i]+1]++; // count nnz in each row
     
     ia[0] = 0; // first index starting from zero
-    for (i=1; i<=m; ++i) {
-        ia[i] = ia[i-1]+ind[i]; // set row_idx
+    for ( i=1; i<=m; ++i ) {
+        ia[i]  = ia[i-1]+ind[i]; // set row_idx
         ind[i] = ia[i];
     }
     
     // loop over nnz and set col_idx and val
-    for (i=0; i<nnz; ++i) {
+    for ( i=0; i<nnz; ++i ) {
         iind = A->rowind[i]; jind = ind[iind];
         B->JA [jind] = A->colind[i];
         B->val[jind] = A->val[i];
-        ind[iind] = ++jind;
+        ind[iind]    = ++jind;
     }
     
-    if (ind) fasp_mem_free(ind);
+    fasp_mem_free(ind);
     
     return FASP_SUCCESS;
 }
@@ -525,7 +523,7 @@ dCSRmat fasp_format_dbsr_dcsr (const dBSRmat *B)
     REAL  *ap = NULL;
     INT  *jap = NULL;
     
-    INT use_openmp = FALSE;
+    SHORT use_openmp = FALSE;
     
 #ifdef _OPENMP
     INT stride_i,mybegin,myend,myid,nthreads;

@@ -1,6 +1,6 @@
 /*! \file BlaSpmvBSR.c
  *
- *  \brief BLAS2 operations for dBSRmat matrices
+ *  \brief BLAS operations for dBSRmat matrices
  *
  *  \note This file contains Level-1 (Bla) functions. It requires
  *        AuxArray.c, AuxMemory.c, BlaSmallMat.c, and BlaArray.c
@@ -82,7 +82,7 @@ void fasp_blas_dbsr_aAxpby (const REAL   alpha,
     REAL   *py0 = NULL;
     REAL   *py  = NULL;
     
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {

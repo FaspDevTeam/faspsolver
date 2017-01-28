@@ -100,41 +100,33 @@ SHORT fasp_amg_coarsening_rs (dCSRmat   *A,
 	
 	switch ( coarse_type ) {
 		
-        case COARSE_RS: // Classical coarsening
-            col = cfsplitting_cls(A, S, vertices);
-            //printf("### DEBUG: col = %d\n", col);
-            break;
-            
         case COARSE_RSP: // Classical coarsening with positive connections
-            col = cfsplitting_clsp(A, S, vertices);
-            //printf("### DEBUG: col = %d\n", col);
-            break;
+            col = cfsplitting_clsp(A, S, vertices); break;
 		
         case COARSE_AC: // Aggressive coarsening
-            col = cfsplitting_agg(A, S, vertices, agg_path);
-            //printf("### DEBUG: col = %d\n", col);
-            break;
+            col = cfsplitting_agg(A, S, vertices, agg_path); break;
 		
-        case COARSE_CR: // Compatible relaxation (Need to be fixed --Chensong)
-            col = fasp_amg_coarsening_cr(0, row-1, A, vertices, param);
-            //printf("### DEBUG: col = %d\n", col);
-            break;
+        case COARSE_CR: // Compatible relaxation // TODO: fix! --Chensong
+            col = fasp_amg_coarsening_cr(0, row-1, A, vertices, param); break;
 
-#if 0
-        case COARSE_MIS:
+        case COARSE_MIS: // Maximal independent set // TODO: fix! --Chensong
+        {
             ivector order = fasp_ivec_create(row);
             compress_S(S);
             ordering1(S, &order);
             col = cfsplitting_mis(S, vertices, &order);
             fasp_ivec_free(&order);
             break;
-#endif
-		
-        default:
-            fasp_chkerr(ERROR_AMG_COARSE_TYPE, __FUNCTION__);
+        }
+            
+        default: // Classical coarsening
+            col = cfsplitting_cls(A, S, vertices);
 		
 	}
 	
+#if DEBUG_MODE > 1
+    printf("### DEBUG: col = %d\n", col);
+#endif
 	if ( col <= 0 ) return ERROR_UNKNOWN;
 	
 #if DEBUG_MODE > 1
@@ -150,6 +142,7 @@ SHORT fasp_amg_coarsening_rs (dCSRmat   *A,
             break;
 		
         case INTERP_STD: // Standard interpolation
+        case INTERP_EXT: // Extended interpolation
             form_P_pattern_std(P, S, vertices, row, col); break;
 		
         default:
@@ -203,7 +196,7 @@ static void strong_couplings (dCSRmat   *A,
 	INT   i, j, begin_row, end_row;
 	REAL  row_scl, row_sum;
 	
-	INT nthreads = 1, use_openmp = FALSE;
+	SHORT nthreads = 1, use_openmp = FALSE;
 	
 #ifdef _OPENMP
 	if ( row > OPENMP_HOLDS ) {
@@ -480,7 +473,7 @@ static INT cfsplitting_cls (dCSRmat   *A,
     
     LinkList LoL_head = NULL, LoL_tail = NULL, list_ptr = NULL;
     
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -785,7 +778,7 @@ static INT cfsplitting_clsp (dCSRmat   *A,
 	
 	LinkList LoL_head = NULL, LoL_tail = NULL, list_ptr = NULL;
 	
-	INT nthreads = 1, use_openmp = FALSE;
+	SHORT nthreads = 1, use_openmp = FALSE;
 	
 #if DEBUG_MODE > 0
 	printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -1777,7 +1770,7 @@ static void form_P_pattern_dir (dCSRmat   *P,
     INT i, j, k, index;
     INT *vec = vertices->val;
     
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( row > OPENMP_HOLDS ) {

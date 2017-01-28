@@ -6,6 +6,8 @@
  *        PreAMGSetupSABSR.c and PreAMGSetupUABSR.c
  * 
  *  \warning This file is also used in FASP4BLKOIL!!!
+ *
+ *  // TODO: Unused functions! --Chensong
  */
 
 /*---------------------------------*/

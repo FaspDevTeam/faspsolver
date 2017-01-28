@@ -253,7 +253,7 @@ void fasp_gettime (REAL *time);
 
 /*-------- In file: AuxVector.c --------*/
 
-SHORT fasp_dvec_isnan (dvector *u);
+SHORT fasp_dvec_isnan (const dvector *u);
 
 dvector fasp_dvec_create (const INT m);
 
@@ -274,9 +274,9 @@ void fasp_dvec_null (dvector *x) ;
 void fasp_dvec_rand (const INT  n,
                      dvector   *x);
 
-void fasp_dvec_set (INT      n,
-                    dvector *x, 
-                    REAL     val);
+void fasp_dvec_set (INT       n,
+                    dvector  *x,
+                    REAL      val);
 
 void fasp_ivec_set (const INT  m,
                     ivector   *u);

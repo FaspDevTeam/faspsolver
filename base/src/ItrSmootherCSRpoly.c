@@ -490,7 +490,7 @@ static void Diagx (REAL *Dinv,
     unsigned INT i;
     
     // Variables for OpenMP
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     INT myid, mybegin, myend;
 
 #ifdef _OPENMP

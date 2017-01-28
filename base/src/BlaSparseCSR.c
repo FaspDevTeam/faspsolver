@@ -276,7 +276,7 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
     const INT *ia=A->IA, *ja=A->JA;
     const REAL *Aval=A->val;
     INT i,j,k,jaj,i1,i2,start;
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( MIN(n, nnz) > OPENMP_HOLDS ) {
@@ -419,8 +419,8 @@ void fasp_dcsr_sort (dCSRmat *A)
 }
 
 /**
- * \fn SHORT fasp_dcsr_getblk (dCSRmat *A, INT *Is, INT *Js, const INT m,
- *                             const INT n, dCSRmat *B)
+ * \fn SHORT fasp_dcsr_getblk (const dCSRmat *A, const INT *Is, const INT *Js,
+ *                             const INT m, const INT n, dCSRmat *B)
  *
  * \brief Get a sub CSR matrix of A with specified rows and columns
  *
@@ -532,7 +532,7 @@ void fasp_dcsr_getdiag (INT            n,
     
     if ( n==0 || n>A->row || n>A->col ) n = MIN(A->row,A->col);
     
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( n > OPENMP_HOLDS ) {
@@ -596,7 +596,7 @@ void fasp_dcsr_getcol (const INT      n,
     INT nrow = A->row, ncol = A->col;
     INT status = FASP_SUCCESS;
     
-    INT nthreads=1, use_openmp=FALSE;
+    SHORT nthreads=1, use_openmp=FALSE;
     
 #ifdef _OPENMP
     if ( nrow > OPENMP_HOLDS ) {
@@ -1078,7 +1078,7 @@ void fasp_dcsr_compress (const dCSRmat *A,
     INT i, j, k;
     INT ibegin,iend1;
     
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( B->nnz > OPENMP_HOLDS) {
@@ -1205,7 +1205,7 @@ void fasp_dcsr_shift (dCSRmat   *A,
     const INT nnz=A->nnz;
     const INT n=A->row+1;
     INT i, *ai=A->IA, *aj=A->JA;
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( MIN(n, nnz) > OPENMP_HOLDS ) {

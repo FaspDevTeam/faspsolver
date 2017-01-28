@@ -1,14 +1,14 @@
     1195 ./base/include/fasp.h
      409 ./base/include/fasp_block.h
-     268 ./base/include/fasp_const.h
+     269 ./base/include/fasp_const.h
     2946 ./base/include/fasp_functs.h
       49 ./base/include/fasp_grid.h
      115 ./base/src/BlaSpmvMatFree.inl
      234 ./base/src/ItrAuxiliary.inl
       98 ./base/src/KryUtil.inl
      667 ./base/src/PreAMGAggregation.inl
-     402 ./base/src/PreAMGAggregationBSR.inl
-    1129 ./base/src/PreAMGAggregationCSR.inl
+     404 ./base/src/PreAMGAggregationBSR.inl
+    1131 ./base/src/PreAMGAggregationCSR.inl
      287 ./base/src/PreAMGUtil.inl
     1654 ./base/src/PreGMG.inl
      219 ./base/src/PreMGRecurAMLI.inl
@@ -25,10 +25,10 @@
      739 ./base/src/AuxSort.c
      172 ./base/src/AuxThreads.c
       43 ./base/src/AuxTiming.c
-     463 ./base/src/AuxVector.c
-     431 ./base/src/BlaArray.c
+     462 ./base/src/AuxVector.c
+     410 ./base/src/BlaArray.c
       72 ./base/src/BlaEigen.c
-    1004 ./base/src/BlaFormat.c
+    1002 ./base/src/BlaFormat.c
     2142 ./base/src/BlaILU.c
     1127 ./base/src/BlaILUSetupBSR.c
      167 ./base/src/BlaILUSetupCSR.c
@@ -49,10 +49,10 @@
      968 ./base/src/BlaSparseUtil.c
      277 ./base/src/BlaSpmvBLC.c
     5460 ./base/src/BlaSpmvBSR.c
-    2092 ./base/src/BlaSpmvCSR.c
+    2093 ./base/src/BlaSpmvCSR.c
      127 ./base/src/BlaSpmvCSRL.c
     1855 ./base/src/BlaSpmvSTR.c
-     313 ./base/src/BlaVector.c
+     317 ./base/src/BlaVector.c
     1718 ./base/src/ItrSmootherBSR.c
     2320 ./base/src/ItrSmootherCSR.c
       86 ./base/src/ItrSmootherCSRcr.c
@@ -73,8 +73,8 @@
     1376 ./base/src/KrySPminres.c
     1547 ./base/src/KrySPvgmres.c
      444 ./base/src/PreAMGCoarsenCR.c
-    2092 ./base/src/PreAMGCoarsenRS.c
-     867 ./base/src/PreAMGInterp.c
+    2085 ./base/src/PreAMGCoarsenRS.c
+     871 ./base/src/PreAMGInterp.c
      835 ./base/src/PreAMGInterpEmin.c
      127 ./base/src/PreAMGSetupCR.c
      317 ./base/src/PreAMGSetupRS.c
@@ -82,7 +82,7 @@
      360 ./base/src/PreAMGSetupSABSR.c
      389 ./base/src/PreAMGSetupUA.c
      366 ./base/src/PreAMGSetupUABSR.c
-    1056 ./base/src/PreBLC.c
+    1062 ./base/src/PreBLC.c
     1136 ./base/src/PreBSR.c
      668 ./base/src/PreCSR.c
      353 ./base/src/PreDataInit.c
@@ -101,4 +101,4 @@
      243 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      315 ./base/src/SolWrapper.c
-   86529 total
+   86518 total

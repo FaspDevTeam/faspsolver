@@ -123,7 +123,7 @@ void fasp_dcoo_shift (dCOOmat   *A,
     INT       i, *ai = A->rowind, *aj = A->colind;
     
     // Variables for OpenMP
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     INT myid, mybegin, myend;
     
 #ifdef _OPENMP

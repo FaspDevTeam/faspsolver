@@ -47,7 +47,7 @@ void fasp_precond_block_diag_3 (REAL *r,
     fasp_array_set(N, z, 0.0);
     
     // prepare
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     void **LU_diag = precdata->LU_diag;
     dvector r0, r1, r2, z0, z1, z2;
     
@@ -69,7 +69,7 @@ void fasp_precond_block_diag_3 (REAL *r,
 #endif
     
     // Preconditioning A00 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[0], &r0, &z0, LU_diag[0], 0);
 #elif WITH_SuperLU
@@ -78,7 +78,7 @@ void fasp_precond_block_diag_3 (REAL *r,
 #endif
     
     // Preconditioning A11 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[1], &r1, &z1, LU_diag[1], 0);
 #elif WITH_SuperLU
@@ -87,7 +87,7 @@ void fasp_precond_block_diag_3 (REAL *r,
 #endif
     
     // Preconditioning A22 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[2], &r2, &z2, LU_diag[2], 0);
 #elif WITH_SuperLU
@@ -197,7 +197,7 @@ void fasp_precond_block_diag_4 (REAL *r,
     fasp_array_set(N, z, 0.0);
     
     // prepare
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     void **LU_diag = precdata->LU_diag;
     dvector r0, r1, r2, r3, z0, z1, z2, z3;
     
@@ -221,7 +221,7 @@ void fasp_precond_block_diag_4 (REAL *r,
 #endif
     
     // Preconditioning A00 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[0], &r0, &z0, LU_diag[0], 0);
 #elif WITH_SuperLU
@@ -230,7 +230,7 @@ void fasp_precond_block_diag_4 (REAL *r,
 #endif
     
     // Preconditioning A11 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[1], &r1, &z1, LU_diag[1], 0);
 #elif WITH_SuperLU
@@ -239,7 +239,7 @@ void fasp_precond_block_diag_4 (REAL *r,
 #endif
     
     // Preconditioning A22 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[2], &r2, &z2, LU_diag[2], 0);
 #elif WITH_SuperLU
@@ -248,7 +248,7 @@ void fasp_precond_block_diag_4 (REAL *r,
 #endif
     
     // Preconditioning A33 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[3], &r3, &z3, LU_diag[3], 0);
 #elif WITH_SuperLU
@@ -277,13 +277,14 @@ void fasp_precond_block_lower_3 (REAL *r,
                                  REAL *z,
                                  void *data)
 {
-    
+#if WITH_UMFPACK || WITH_SuperLU // Must use direct solvers for this method!
+
     precond_block_data *precdata=(precond_block_data *)data;
     dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
     dvector *tempr = &(precdata->r);
     
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     const void **LU_diag = precdata->LU_diag;
 #endif
 
@@ -307,7 +308,7 @@ void fasp_precond_block_lower_3 (REAL *r,
     z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]);
     
     // Preconditioning A00 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[0], &r0, &z0, LU_diag[0], 0);
 #elif WITH_SuperLU
@@ -319,7 +320,7 @@ void fasp_precond_block_lower_3 (REAL *r,
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[3], z0.val, r1.val);
     
     // Preconditioning A11 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[1], &r1, &z1, LU_diag[1], 0);
 #elif WITH_SuperLU
@@ -332,7 +333,7 @@ void fasp_precond_block_lower_3 (REAL *r,
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[7], z1.val, r2.val);
     
     // Preconditioning A22 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[2], &r2, &z2, LU_diag[2], 0);
 #elif WITH_SuperLU
@@ -343,6 +344,7 @@ void fasp_precond_block_lower_3 (REAL *r,
     // restore r
     fasp_array_cp(N, tempr->val, r);
     
+#endif
 }
 
 /**
@@ -435,13 +437,14 @@ void fasp_precond_block_lower_4 (REAL *r,
                                  REAL *z,
                                  void *data)
 {
+#if WITH_UMFPACK || WITH_SuperLU // Must use direct solvers for this method!
     
     precond_block_data *precdata=(precond_block_data *)data;
     dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
     dvector *tempr = &(precdata->r);
 
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     const void **LU_diag = precdata->LU_diag;
 #endif
     
@@ -467,7 +470,7 @@ void fasp_precond_block_lower_4 (REAL *r,
     z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]); z3.val = &(z[N0+N1+N2]);
     
     // Preconditioning A00 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[0], &r0, &z0, LU_diag[0], 0);
 #elif WITH_SuperLU
@@ -479,7 +482,7 @@ void fasp_precond_block_lower_4 (REAL *r,
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[4], z0.val, r1.val);
     
     // Preconditioning A11 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[1], &r1, &z1, LU_diag[1], 0);
 #elif WITH_SuperLU
@@ -492,7 +495,7 @@ void fasp_precond_block_lower_4 (REAL *r,
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[9], z1.val, r2.val);
     
     // Preconditioning A22 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[2], &r2, &z2, LU_diag[2], 0);
 #elif WITH_SuperLU
@@ -506,7 +509,7 @@ void fasp_precond_block_lower_4 (REAL *r,
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[14], z2.val, r3.val);
     
     // Preconditioning A33 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[3], &r3, &z3, LU_diag[3], 0);
 #elif WITH_SuperLU
@@ -516,7 +519,8 @@ void fasp_precond_block_lower_4 (REAL *r,
     
     // restore r
     fasp_array_cp(N, tempr->val, r);
-    
+
+#endif
 }
 
 /**
@@ -535,13 +539,14 @@ void fasp_precond_block_upper_3 (REAL *r,
                                  REAL *z,
                                  void *data)
 {
+#if WITH_UMFPACK || WITH_SuperLU // Must use direct solvers for this method!
     
     precond_block_data *precdata=(precond_block_data *)data;
     dBLCmat *A = precdata->Ablc;
     dCSRmat *A_diag = precdata->A_diag;
     dvector *tempr = &(precdata->r);
 
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     const void **LU_diag = precdata->LU_diag;
 #endif
     
@@ -565,7 +570,7 @@ void fasp_precond_block_upper_3 (REAL *r,
     z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]);
     
     // Preconditioning A22 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[2], &r2, &z2, LU_diag[2], 0);
 #elif WITH_SuperLU
@@ -577,7 +582,7 @@ void fasp_precond_block_upper_3 (REAL *r,
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[5], z2.val, r1.val);
     
     // Preconditioning A11 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[1], &r1, &z1, LU_diag[1], 0);
 #elif WITH_SuperLU
@@ -590,7 +595,7 @@ void fasp_precond_block_upper_3 (REAL *r,
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[2], z2.val, r0.val);
     
     // Preconditioning A00 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[0], &r0, &z0, LU_diag[0], 0);
 #elif WITH_SuperLU
@@ -600,7 +605,8 @@ void fasp_precond_block_upper_3 (REAL *r,
     
     // restore r
     fasp_array_cp(N, tempr->val, r);
-    
+
+#endif
 }
 
 /**
@@ -705,7 +711,7 @@ void fasp_precond_block_SGS_3 (REAL *r,
     dCSRmat *A_diag = precdata->A_diag;
     dvector *tempr = &(precdata->r);
 
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     const void **LU_diag = precdata->LU_diag;
 #endif
     
@@ -729,7 +735,7 @@ void fasp_precond_block_SGS_3 (REAL *r,
     z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]);
     
     // Preconditioning A00 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[0], &r0, &z0, LU_diag[0], 0);
 #elif WITH_SuperLU
@@ -741,7 +747,7 @@ void fasp_precond_block_SGS_3 (REAL *r,
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[3], z0.val, r1.val);
     
     // Preconditioning A11 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[1], &r1, &z1, LU_diag[1], 0);
 #elif WITH_SuperLU
@@ -754,7 +760,7 @@ void fasp_precond_block_SGS_3 (REAL *r,
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[7], z1.val, r2.val);
     
     // Preconditioning A22 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[2], &r2, &z2, LU_diag[2], 0);
 #elif WITH_SuperLU
@@ -766,7 +772,7 @@ void fasp_precond_block_SGS_3 (REAL *r,
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[5], z2.val, r1.val);
     
     // Preconditioning A11 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[1], &r1, &z1, LU_diag[1], 0);
 #elif WITH_SuperLU
@@ -779,7 +785,7 @@ void fasp_precond_block_SGS_3 (REAL *r,
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[2], z2.val, r0.val);
     
     // Preconditioning A00 block
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     /* use UMFPACK direct solver */
     fasp_umfpack_solve(&A_diag[0], &r0, &z0, LU_diag[0], 0);
 #elif WITH_SuperLU
@@ -926,7 +932,7 @@ void fasp_precond_sweeping (REAL *r,
     dCSRmat *local_A = precdata->local_A;
     ivector *local_index = precdata->local_index;
 
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
     const void **local_LU = precdata->local_LU;
 #endif
     
@@ -975,7 +981,7 @@ void fasp_precond_sweeping (REAL *r,
             temp_r.val[local_index[l].val[i]] = local_e[l].val[i];
         }
         
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
         /* use UMFPACK direct solver */
         fasp_umfpack_solve(&local_A[l], &temp_r, &temp_e, local_LU[l], 0);
 #elif WITH_SuperLU
@@ -1004,7 +1010,7 @@ void fasp_precond_sweeping (REAL *r,
             temp_r.val[local_index[l].val[i]] = local_e[l].val[i];
         }
         
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
         /* use UMFPACK direct solver */
         fasp_umfpack_solve(&local_A[l], &temp_r, &temp_e, local_LU[l], 0);
 #elif WITH_SuperLU
@@ -1032,7 +1038,7 @@ void fasp_precond_sweeping (REAL *r,
             temp_r.val[local_index[l].val[i]] = local_r[l].val[i];
         }
         
-#if  WITH_UMFPACK
+#if WITH_UMFPACK
         /* use UMFPACK direct solver */
         fasp_umfpack_solve(&local_A[l], &temp_r, &temp_e, local_LU[l], 0);
 #elif WITH_SuperLU

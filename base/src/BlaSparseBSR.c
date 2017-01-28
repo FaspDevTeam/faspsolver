@@ -408,7 +408,7 @@ dvector fasp_dbsr_getdiaginv (const dBSRmat *A)
     INT i,k;
     
     // Variables for OpenMP
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     INT myid, mybegin, myend;
     
 #ifdef _OPENMP
@@ -524,7 +524,7 @@ dBSRmat fasp_dbsr_diaginv (const dBSRmat *A)
     INT i,j,k,m,l;
     
     // Variables for OpenMP
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     INT myid, mybegin, myend;
     
 #ifdef _OPENMP
@@ -684,7 +684,7 @@ dBSRmat fasp_dbsr_diaginv2 (const dBSRmat *A,
     INT i,k,m,l,ibegin,iend;
     
     // Variables for OpenMP
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     INT myid, mybegin, myend;
     
 #ifdef _OPENMP
@@ -785,7 +785,7 @@ dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A,
     INT nb2  = nb*nb;
     INT i,j,k,m;
     
-    INT use_openmp = FALSE;
+    SHORT use_openmp = FALSE;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, stride_i, nthreads;
@@ -1144,7 +1144,7 @@ dBSRmat fasp_dbsr_diaginv4 (const dBSRmat *A,
     INT ibegin, iend;
     
     // Variables for OpenMP
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     INT myid, mybegin, myend;
     
 #ifdef _OPENMP

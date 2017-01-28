@@ -47,8 +47,8 @@ void fasp_dblc_free (dBLCmat *A)
 }
 
 /**
- * \fn SHORT fasp_dbsr_getblk (dBSRmat *A, INT *Is, INT *Js, const INT m, 
- *                             const INT n, dBSRmat *B)
+ * \fn SHORT fasp_dbsr_getblk (const dBSRmat *A, const INT *Is, const INT *Js,
+ *                             const INT m, const INT n, dBSRmat *B)
  *
  * \brief Get a sub BSR matrix of A with specified rows and columns.
  *
@@ -73,10 +73,10 @@ SHORT fasp_dbsr_getblk (const dBSRmat  *A,
                         const INT       n,
                         dBSRmat        *B)
 {
-    INT status = FASP_SUCCESS;
-    INT i,j,k,nnz=0;
-    INT *col_flag;
-    INT use_openmp = FALSE;
+    INT   status = FASP_SUCCESS;
+    INT   i,j,k,nnz=0;
+    INT  *col_flag;
+    SHORT use_openmp = FALSE;
     
     const INT nb = A->nb;
     const INT nb2=nb*nb;

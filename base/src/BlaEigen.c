@@ -42,7 +42,7 @@ REAL fasp_dcsr_eig (const dCSRmat  *A,
     fasp_blas_array_ax(A->row, 1.0/fasp_blas_dvec_norm2(&x), x.val);
     fasp_dvec_alloc(A->row, &y);
     
-    for ( i=maxit; i--; ) {
+    for ( i = maxit; i--; ) {
         // y = Ax;
         fasp_blas_dcsr_mxv(A, x.val, y.val);
     
