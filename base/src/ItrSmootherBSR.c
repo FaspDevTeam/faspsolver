@@ -20,8 +20,8 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-static inline void permut_nb (const INT, const INT, const REAL *, const INT *, REAL *);
-static inline void invpermut_nb (const INT, const INT, const REAL *, const INT *, REAL *);
+static inline void perm(const INT, const INT, const REAL *, const INT *, REAL *);
+static inline void invperm(const INT, const INT, const REAL *, const INT *, REAL *);
 
 REAL ilu_solve_omp = 0.0; /**< ILU time for the SOLVE phase */
 
@@ -78,11 +78,11 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
-        for(myid=0; myid<nthreads; myid++) {
+        for (myid=0; myid<nthreads; myid++) {
             fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
-            for(i=mybegin; i<myend; i++) {
-                for(k=IA[i]; k<IA[i+1]; ++k)
-                    if(JA[k] == i)
+            for (i=mybegin; i<myend; i++) {
+                for (k=IA[i]; k<IA[i+1]; ++k)
+                    if (JA[k] == i)
                         memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
             }
         }
@@ -103,9 +103,9 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
-            for(myid=0; myid<nthreads; myid++) {
+            for (myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
-                for(i=mybegin; i<myend; i++) {
+                for (i=mybegin; i<myend; i++) {
                     fasp_smat_inv(diaginv+i*nb2, nb);
                 }
             }
@@ -122,9 +122,9 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
-            for(myid=0; myid<nthreads; myid++) {
+            for (myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
-                for(i=mybegin; i<myend; i++) {
+                for (i=mybegin; i<myend; i++) {
                     diaginv[i] = 1.0 / diaginv[i];
                 }
             }
@@ -167,7 +167,6 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
     const INT     ROW = A->ROW;
     const INT     nb  = A->nb;
     const INT     nb2 = nb*nb;
-    //    const INT    size = ROW*nb2;
     const INT    *IA  = A->IA;
     const INT    *JA  = A->JA;
     const REAL   *val = A->val;
@@ -190,11 +189,11 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
-        for(myid=0; myid<nthreads; myid++) {
+        for (myid=0; myid<nthreads; myid++) {
             fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
-            for(i=mybegin; i<myend; i++) {
-                for(k=IA[i]; k<IA[i+1]; ++k)
-                    if(JA[k] == i)
+            for (i=mybegin; i<myend; i++) {
+                for (k=IA[i]; k<IA[i+1]; ++k)
+                    if (JA[k] == i)
                         memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
             }
         }
@@ -215,9 +214,9 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
-            for(myid=0; myid<nthreads; myid++) {
+            for (myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
-                for(i=mybegin; i<myend; i++) {
+                for (i=mybegin; i<myend; i++) {
                     fasp_smat_inv(diaginv+i*nb2, nb);
                 }
             }
@@ -234,9 +233,9 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
-            for(myid=0; myid<nthreads; myid++) {
+            for (myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
-                for(i=mybegin; i<myend; i++) {
+                for (i=mybegin; i<myend; i++) {
                     diaginv[i] = 1.0 / diaginv[i];
                 }
             }
@@ -305,7 +304,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     b_tmp = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     memcpy(b_tmp, b_val, size*sizeof(REAL));
     
-    // It's not necessary to assign the smoothing order since the result doesn't depend on it
+    // No need to assign the smoothing order since the result doesn't depend on it
     if (nb == 1) {
         if (use_openmp) {
             INT mybegin, myend, myid;
@@ -325,9 +324,9 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
-            for(myid=0; myid<nthreads; myid++) {
+            for (myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
-                for(i=mybegin; i<myend; i++) {
+                for (i=mybegin; i<myend; i++) {
                     u_val[i] = b_tmp[i]*diaginv[i];
                 }
             }
@@ -353,7 +352,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,pb,k,j)
 #endif
-            for(myid=0; myid<nthreads; myid++) {
+            for (myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for (i=mybegin; i<myend; i++) {
                     pb = i*nb;
@@ -367,7 +366,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,pb)
 #endif
-            for(myid=0; myid<nthreads; myid++) {
+            for (myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for (i=mybegin; i<myend; i++) {
                     pb = i*nb;
@@ -437,10 +436,9 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
     const REAL   *val = A->val;
     
     // local variables
-    INT i,k;
-    REAL *diaginv = NULL;
-    
-    SHORT nthreads = 1, use_openmp = FALSE;
+    REAL  *diaginv = NULL;
+    INT    i,k;
+    SHORT  nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
@@ -458,11 +456,11 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
-        for(myid=0; myid<nthreads; myid++) {
+        for (myid=0; myid<nthreads; myid++) {
             fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
-            for(i=mybegin; i<myend; i++) {
-                for(k=IA[i]; k<IA[i+1]; ++k)
-                    if(JA[k] == i)
+            for (i=mybegin; i<myend; i++) {
+                for (k=IA[i]; k<IA[i+1]; ++k)
+                    if (JA[k] == i)
                         memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
             }
         }
@@ -483,9 +481,9 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
-            for(myid=0; myid<nthreads; myid++) {
+            for (myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
-                for(i=mybegin; i<myend; i++) {
+                for (i=mybegin; i<myend; i++) {
                     fasp_smat_inv(diaginv+i*nb2, nb);
                 }
             }
@@ -502,9 +500,9 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
-            for(myid=0; myid<nthreads; myid++) {
+            for (myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
-                for(i=mybegin; i<myend; i++) {
+                for (i=mybegin; i<myend; i++) {
                     diaginv[i] = 1.0 / diaginv[i];
                 }
             }
@@ -680,7 +678,6 @@ void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A,
                 if (j != i)
                     rhs -= val[k]*u_val[j];
             }
-            //u_val[i] = rhs*diaginv[i];
             u_val[i] = rhs;
         }
     }
@@ -695,7 +692,6 @@ void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A,
                 if (j != i)
                     fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
             }
-            //fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
             memcpy(u_val+pb, b_tmp, nb*sizeof(REAL));
         }
         
@@ -825,7 +821,6 @@ void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
                 if (j != i)
                     rhs -= val[k]*u_val[j];
             }
-            //u_val[i] = rhs*diaginv[i];
             u_val[i] = rhs;
         }
     }
@@ -840,7 +835,6 @@ void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
                 if (j != i)
                     fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
             }
-            //fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
             memcpy(u_val+pb, b_tmp, nb*sizeof(REAL));
         }
         
@@ -1061,11 +1055,11 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
 #endif
-        for(myid=0; myid<nthreads; myid++) {
+        for (myid=0; myid<nthreads; myid++) {
             fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
-            for(i=mybegin; i<myend; i++) {
-                for(k=IA[i]; k<IA[i+1]; ++k)
-                    if(JA[k] == i)
+            for (i=mybegin; i<myend; i++) {
+                for (k=IA[i]; k<IA[i+1]; ++k)
+                    if (JA[k] == i)
                         memcpy(diaginv+i*nb2, val+k*nb2, nb2*sizeof(REAL));
             }
         }
@@ -1086,9 +1080,9 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
-            for(myid=0; myid<nthreads; myid++) {
+            for (myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
-                for(i=mybegin; i<myend; i++) {
+                for (i=mybegin; i<myend; i++) {
                     fasp_smat_inv(diaginv+i*nb2, nb);
                 }
             }
@@ -1105,9 +1099,9 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
 #endif
-            for(myid=0; myid<nthreads; myid++) {
+            for (myid=0; myid<nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
-                for(i=mybegin; i<myend; i++) {
+                for (i=mybegin; i<myend; i++) {
                     diaginv[i] = 1.0 / diaginv[i];
                 }
             }
@@ -1250,25 +1244,20 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
 #endif
     }
     else if (nb > 1) {
-        //REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
 #ifdef _OPENMP
         if (ROW > OPENMP_HOLDS) {
             REAL *b_tmp = (REAL *)fasp_mem_calloc(nb*nthreads, sizeof(REAL));
-            //#pragma omp parallel for private(myid, mybegin, myend, i, pb, b_tmp, k, j)
 #pragma omp parallel for private(myid, mybegin, myend, i, pb, k, j)
             for (myid = 0; myid < nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for (i = mybegin; i < myend; i++) {
                     pb = i*nb;
-                    //memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
                     memcpy(b_tmp+myid*nb, b_val+pb, nb*sizeof(REAL));
                     for (k = IA[i]; k < IA[i+1]; ++k) {
                         j = JA[k];
                         if (j != i)
-                            //fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+myid*nb, nb);
                             fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
                     }
-                    //fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
                     fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb, one_minus_weight, u_val+pb, nb);
                 }
             }
@@ -1379,26 +1368,21 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
 #endif
     }
     else if (nb > 1) {
-        //REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
 #ifdef _OPENMP
         if (ROW > OPENMP_HOLDS) {
             REAL *b_tmp = (REAL *)fasp_mem_calloc(nb*nthreads, sizeof(REAL));
-            //#pragma omp parallel for private(myid, mybegin, myend, i, pb, b_tmp, k, j)
 #pragma omp parallel for private(myid, mybegin, myend, i, pb, k, j)
             for (myid = 0; myid < nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 mybegin = ROW-1-mybegin; myend = ROW-1-myend;
                 for (i = mybegin; i > myend; i--) {
                     pb = i*nb;
-                    //memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
                     memcpy(b_tmp+myid*nb, b_val+pb, nb*sizeof(REAL));
                     for (k = IA[i]; k < IA[i+1]; ++k) {
                         j = JA[k];
                         if (j != i)
-                            //fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
                             fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+myid*nb, nb);
                     }
-                    //fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
                     fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb, one_minus_weight, u_val+pb, nb);
                 }
             }
@@ -1512,26 +1496,21 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
 #endif
     }
     else if (nb > 1) {
-        //REAL *b_tmp = (REAL *)fasp_mem_calloc(nb, sizeof(REAL));
 #ifdef _OPENMP
         if (ROW > OPENMP_HOLDS) {
             REAL *b_tmp = (REAL *)fasp_mem_calloc(nb*nthreads, sizeof(REAL));
-            //#pragma omp parallel for private(myid, mybegin, myend, I, i, pb, b_tmp, k, j)
 #pragma omp parallel for private(myid, mybegin, myend, I, i, pb, k, j)
             for (myid = 0; myid < nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, ROW, &mybegin, &myend);
                 for (I = mybegin; I < myend; ++I) {
                     i = mark[I];
                     pb = i*nb;
-                    //memcpy(b_tmp, b_val+pb, nb*sizeof(REAL));
                     memcpy(b_tmp+myid*nb, b_val+pb, nb*sizeof(REAL));
                     for (k = IA[i]; k < IA[i+1]; ++k) {
                         j = JA[k];
                         if (j != i)
-                            //fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
                             fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+myid*nb, nb);
                     }
-                    //fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
                     fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb, one_minus_weight, u_val+pb, nb);
                 }
             }
@@ -1602,13 +1581,13 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
 #if ILU_MC_OMP
     REAL *tz = (REAL*)fasp_mem_calloc(A->ROW*A->nb, sizeof(REAL));
     REAL *tzr = (REAL*)fasp_mem_calloc(A->ROW*A->nb, sizeof(REAL));
-    permut_nb(A->ROW, A->nb, zr, iludata->jlevL, tzr);
+    perm(A->ROW, A->nb, zr, iludata->jlevL, tzr);
     
     fasp_gettime(&start);
     fasp_precond_dbsr_ilu_mc_omp(tzr,tz,iludata);
     fasp_gettime(&end);
     
-    invpermut_nb(A->ROW, A->nb, tz, iludata->jlevL, z);
+    invperm(A->ROW, A->nb, tz, iludata->jlevL, z);
     fasp_mem_free(tzr);
     fasp_mem_free(tz);
 #else
@@ -1644,8 +1623,8 @@ MEMERR:
 /*---------------------------------*/
 
 /**
- * \fn static inline void permut_nb (const INT n, const INT nb, const REAL*x,
- *                                   const INT *p, REAL*y)
+ * \fn static inline void perm (const INT n, const INT nb, const REAL*x,
+ *                              const INT *p, REAL*y)
  *
  * \brief Array permutation
  *
@@ -1658,11 +1637,11 @@ MEMERR:
  * \author Zheng Li
  * \date   12/04/2016
  */
-static inline void permut_nb (const INT    n,
-                              const INT    nb,
-                              const REAL  *x,
-                              const INT   *p,
-                              REAL        *y)
+static inline void perm (const INT    n,
+                         const INT    nb,
+                         const REAL  *x,
+                         const INT   *p,
+                         REAL        *y)
 {
     INT i, j, indx, indy;
     
@@ -1679,8 +1658,8 @@ static inline void permut_nb (const INT    n,
 }
 
 /**
- * \fn static inline void invpermut_nb (const INT n, const INT nb,
- *                                      const REAL*x, const INT *p, REAL*y)
+ * \fn static inline void invperm (const INT n, const INT nb,
+ *                                 const REAL*x, const INT *p, REAL*y)
  *
  * \brief Array inverse permutation
  *
@@ -1693,11 +1672,11 @@ static inline void permut_nb (const INT    n,
  * \author Zheng Li
  * \date   12/04/2016
  */
-static inline void invpermut_nb (const INT    n,
-                                 const INT    nb,
-                                 const REAL  *x,
-                                 const INT   *p,
-                                 REAL        *y)
+static inline void invperm (const INT    n,
+                            const INT    nb,
+                            const REAL  *x,
+                            const INT   *p,
+                            REAL        *y)
 {
     INT i, j, indx, indy;
     

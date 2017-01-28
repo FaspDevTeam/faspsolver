@@ -178,14 +178,14 @@ void fasp_mem_free (void *mem)
  */
 void fasp_mem_usage ()
 {
-#if CHMEM_MODE
+#if DEBUG_MODE > 2
     printf("### DEBUG: Number of alloc = %d, allocating memory = %.3fMB.\n",
            total_alloc_count, (REAL)total_alloc_mem/Million);
 #endif
 }
 
 /**
- * \fn SHORT fasp_mem_check (const void *ptr, const char *message, const INT ERR)
+ * \fn SHORT fasp_mem_check (const void *ptr, const char *message, const SHORT ERR)
  *
  * \brief Check wether a point is null or not.
  *
@@ -200,7 +200,7 @@ void fasp_mem_usage ()
  */
 SHORT fasp_mem_check (const void  *ptr,
                       const char  *message,
-                      INT          ERR)
+                      const SHORT  ERR)
 {
     if ( ptr == NULL ) {
         printf("### ERROR: %s", message);
@@ -212,7 +212,7 @@ SHORT fasp_mem_check (const void  *ptr,
 }
 
 /**
- * \fn SHORT fasp_mem_iludata_check (ILU_data *iludata)
+ * \fn SHORT fasp_mem_iludata_check (const ILU_data *iludata)
  *
  * \brief Check wether a ILU_data has enough work space
  *
@@ -223,7 +223,7 @@ SHORT fasp_mem_check (const void  *ptr,
  * \author Xiaozhe Hu, Chensong Zhang
  * \date   11/27/09
  */
-SHORT fasp_mem_iludata_check (ILU_data *iludata)
+SHORT fasp_mem_iludata_check (const ILU_data *iludata)
 {
     const INT memneed = 2*iludata->row; // estimated memory usage
     

@@ -1,4 +1,4 @@
-/*! \file PreAMGInterpEmin.c
+/*! \file PreAMGInterpEM.c
  *
  *  \brief Interpolation operators for AMG based on energy-min
  *
