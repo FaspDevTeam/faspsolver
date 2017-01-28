@@ -60,7 +60,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     INT i,k;
     REAL *diaginv = NULL;
     
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
@@ -73,7 +73,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
     // get all the diagonal sub-blocks
-    if(use_openmp) {
+    if (use_openmp) {
         INT mybegin,myend,myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
@@ -98,7 +98,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     
     // compute the inverses of all the diagonal sub-blocks
     if (nb > 1) {
-        if(use_openmp) {
+        if (use_openmp) {
             INT mybegin,myend,myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
@@ -117,7 +117,7 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
         }
     }
     else {
-        if(use_openmp) {
+        if (use_openmp) {
             INT mybegin, myend, myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
@@ -175,7 +175,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
     // local variables
     INT i,k;
     
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
@@ -185,7 +185,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
 #endif
     
     // get all the diagonal sub-blocks
-    if(use_openmp) {
+    if (use_openmp) {
         INT mybegin,myend,myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
@@ -210,7 +210,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
     
     // compute the inverses of all the diagonal sub-blocks
     if (nb > 1) {
-        if(use_openmp) {
+        if (use_openmp) {
             INT mybegin,myend,myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
@@ -229,7 +229,7 @@ void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
         }
     }
     else {
-        if(use_openmp) {
+        if (use_openmp) {
             INT mybegin, myend, myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
@@ -281,7 +281,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     const INT    *JA  = A->JA;
     REAL         *val = A->val;
     
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
@@ -307,7 +307,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
     
     // It's not necessary to assign the smoothing order since the result doesn't depend on it
     if (nb == 1) {
-        if(use_openmp) {
+        if (use_openmp) {
             INT mybegin, myend, myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,j,k)
@@ -348,7 +348,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
         fasp_mem_free(b_tmp);
     }
     else if (nb > 1) {
-        if(use_openmp) {
+        if (use_openmp) {
             INT mybegin, myend, myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,pb,k,j)
@@ -440,7 +440,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
     INT i,k;
     REAL *diaginv = NULL;
     
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
@@ -453,7 +453,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
     diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
     // get all the diagonal sub-blocks
-    if(use_openmp) {
+    if (use_openmp) {
         INT mybegin,myend,myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
@@ -478,7 +478,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
     
     // compute the inverses of all the diagonal sub-blocks
     if (nb > 1) {
-        if(use_openmp) {
+        if (use_openmp) {
             INT mybegin,myend,myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
@@ -497,7 +497,7 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
         }
     }
     else {
-        if(use_openmp) {
+        if (use_openmp) {
             INT mybegin, myend, myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
@@ -1043,7 +1043,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
     INT i,k;
     REAL *diaginv = NULL;
     
-    INT nthreads = 1, use_openmp = FALSE;
+    SHORT nthreads = 1, use_openmp = FALSE;
     
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
@@ -1056,7 +1056,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
     diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
     // get all the diagonal sub-blocks
-    if(use_openmp) {
+    if (use_openmp) {
         INT mybegin,myend,myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,k)
@@ -1081,7 +1081,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
     
     // compute the inverses of all the diagonal sub-blocks
     if (nb > 1) {
-        if(use_openmp) {
+        if (use_openmp) {
             INT mybegin,myend,myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)
@@ -1100,7 +1100,7 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
         }
     }
     else {
-        if(use_openmp) {
+        if (use_openmp) {
             INT mybegin, myend, myid;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i)

@@ -1,6 +1,6 @@
 /*! \file BlaSpmvBLC.c
  *
- *  \brief BLAS2 operations for dBLCmat matrices
+ *  \brief BLAS operations for dBLCmat matrices
  *
  *  \note This file contains Level-1 (Bla) functions. It requires
  *        BlaSpmvCSR.c

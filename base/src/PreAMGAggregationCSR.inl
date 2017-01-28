@@ -8,6 +8,8 @@
  *  \warning This file is also used in FASP4BLKOIL!!!
  *
  *  \warning Do NOT use auto-indentation in this file!!!
+ *
+ *  // TODO: Unused functions! --Chensong
  */
 
 #ifdef _OPENMP

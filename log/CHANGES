@@ -1,6 +1,15 @@
 File Name: CHANGES
 
-01/26/2017 FASP 1.9.4:
+01/28/2017 FASP 1.9.5:
+- Happy Chinese New Year!
+- Test GCC 5.4.0.
+- Fix most warnings and mark unresolved warnings.
+- Fix Doxygen problems.
+- Further clean up on Aux*.c and Bla*.c files.
+- Update documentation.
+- Update VS10 solution.
+
+01/27/2017 FASP 1.9.4:
 - Fix a few memory leaks.
 - Update input parameters in test/ini/input.dat.
 - Remove fasp_dcsr_check().

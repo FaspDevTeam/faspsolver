@@ -27,6 +27,7 @@
 
 static void interp_DIR (dCSRmat *, ivector *, dCSRmat *, AMG_param *);
 static void interp_STD (dCSRmat *, ivector *, dCSRmat *, iCSRmat *, AMG_param *);
+static void interp_EXT (dCSRmat *, ivector *, dCSRmat *, iCSRmat *, AMG_param *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -78,6 +79,9 @@ void fasp_amg_interp (dCSRmat    *A,
         case INTERP_ENG: // Energy-min interpolation
             fasp_amg_interp_em(A, vertices, P, param); break;
         
+        case INTERP_EXT: // Extended interpolation
+            interp_EXT(A, vertices, P, S, param); break;
+            
         default:
             fasp_chkerr(ERROR_AMG_INTERP_TYPE, __FUNCTION__);
 
@@ -254,7 +258,7 @@ static void interp_DIR (dCSRmat    *A,
     // indices of C-nodes
     INT    *cindex = (INT *)fasp_mem_calloc(row, sizeof(INT));
 
-    INT     use_openmp = FALSE;
+    SHORT   use_openmp = FALSE;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, stride_i, nthreads;

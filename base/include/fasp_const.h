@@ -218,7 +218,8 @@
  */
 #define INTERP_DIR              1  /**< Direct interpolation */
 #define INTERP_STD              2  /**< Standard interpolation */
-#define INTERP_ENG              3  /**< energy minimization interpolation */
+#define INTERP_ENG              3  /**< Energy minimization interpolation */
+#define INTERP_EXT              6  /**< Extended interpolation */
 
 /**
  * \brief Type of vertices (DOFs) for coarsening

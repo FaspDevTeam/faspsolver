@@ -40,7 +40,6 @@
     <ClCompile Include="..\..\base\src\AuxMemory.c" />
     <ClCompile Include="..\..\base\src\AuxMessage.c" />
     <ClCompile Include="..\..\base\src\AuxParam.c" />
-    <ClCompile Include="..\..\base\src\AuxSmallMat.c" />
     <ClCompile Include="..\..\base\src\AuxSort.c" />
     <ClCompile Include="..\..\base\src\AuxThreads.c" />
     <ClCompile Include="..\..\base\src\AuxTiming.c" />
@@ -53,8 +52,10 @@
     <ClCompile Include="..\..\base\src\BlaILUSetupCSR.c" />
     <ClCompile Include="..\..\base\src\BlaILUSetupSTR.c" />
     <ClCompile Include="..\..\base\src\BlaIO.c" />
+    <ClCompile Include="..\..\base\src\BlaOrderingCSR.c" />
     <ClCompile Include="..\..\base\src\BlaSchwarzSetup.c" />
     <ClCompile Include="..\..\base\src\BlaSmallMat.c" />
+    <ClCompile Include="..\..\base\src\BlaSmallMatInv.c" />
     <ClCompile Include="..\..\base\src\BlaSmallMatLU.c" />
     <ClCompile Include="..\..\base\src\BlaSparseBLC.c" />
     <ClCompile Include="..\..\base\src\BlaSparseBSR.c" />

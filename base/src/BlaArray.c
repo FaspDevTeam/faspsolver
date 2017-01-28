@@ -37,8 +37,8 @@ void fasp_blas_array_ax (const INT    n,
                          const REAL   a,
                          REAL        *x)
 {
-    INT i;
-    INT use_openmp = FALSE;
+    SHORT use_openmp = FALSE;
+    INT   i;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
@@ -48,7 +48,7 @@ void fasp_blas_array_ax (const INT    n,
     }
 #endif
     
-    if (a == 1.0) {
+    if ( a == 1.0 ) {
         // do nothing
     }
     else {
@@ -58,12 +58,12 @@ void fasp_blas_array_ax (const INT    n,
             {
                 myid = omp_get_thread_num();
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-                for (i=mybegin; i<myend; ++i) x[i] *= a;
+                for ( i = mybegin; i < myend; ++i ) x[i] *= a;
             }
 #endif
         }
         else {
-            for (i=0; i<n; ++i) x[i] *= a;
+            for ( i = 0; i < n; ++i ) x[i] *= a;
         }
     }
 }
@@ -91,8 +91,8 @@ void fasp_blas_array_axpy (const INT   n,
                            const REAL *x,
                            REAL       *y)
 {
-    INT i;
-    INT use_openmp = FALSE;
+    SHORT use_openmp = FALSE;
+    INT   i;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
@@ -174,8 +174,8 @@ void fasp_blas_array_axpyz (const INT   n,
                             const REAL *y,
                             REAL       *z)
 {
-    INT i;
-    INT use_openmp = FALSE;
+    SHORT use_openmp = FALSE;
+    INT   i;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
@@ -225,8 +225,8 @@ void fasp_blas_array_axpby (const INT   n,
                             const REAL  b,
                             REAL       *y)
 {
-    INT i;
-    INT use_openmp = FALSE;
+    SHORT use_openmp = FALSE;
+    INT   i;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
@@ -272,9 +272,10 @@ REAL fasp_blas_array_dotprod (const INT    n,
                               const REAL  *x,
                               const REAL  *y)
 {
-    INT i;
-    INT use_openmp = FALSE;
-    REAL value = 0.0;
+    SHORT use_openmp = FALSE;
+    INT   i;
+    
+    register REAL value = 0.0;
     
 #ifdef _OPENMP
     if ( n > OPENMP_HOLDS ) use_openmp = TRUE;
@@ -284,10 +285,10 @@ REAL fasp_blas_array_dotprod (const INT    n,
 #ifdef _OPENMP
 #pragma omp parallel for reduction(+:value) private(i)
 #endif
-        for ( i=0; i<n; ++i ) value += x[i]*y[i];
+        for ( i = 0; i < n; ++i ) value += x[i]*y[i];
     }
     else {
-        for ( i=0; i<n; ++i ) value += x[i]*y[i];
+        for ( i = 0; i < n; ++i ) value += x[i]*y[i];
     }
     
     return value;
@@ -311,25 +312,15 @@ REAL fasp_blas_array_dotprod (const INT    n,
 REAL fasp_blas_array_norm1 (const INT    n,
                             const REAL  *x)
 {
-    INT i;
-    INT use_openmp = FALSE;
-    REAL onenorm = 0.;
+    INT   i;
+
+    register REAL onenorm = 0.0;
     
-#ifdef _OPENMP
-    if ( n > OPENMP_HOLDS ) {
-        use_openmp = TRUE;
-    }
-#endif
-    
-    if (use_openmp) {
 #ifdef _OPENMP
 #pragma omp parallel for reduction(+:onenorm) private(i)
 #endif
-        for (i=0;i<n;++i) onenorm+=ABS(x[i]);
-    }
-    else {
-        for (i=0;i<n;++i) onenorm+=ABS(x[i]);
-    }
+    for ( i = 0; i < n; ++i ) onenorm+=ABS(x[i]);
+
     return onenorm;
 }
 
@@ -351,25 +342,13 @@ REAL fasp_blas_array_norm1 (const INT    n,
 REAL fasp_blas_array_norm2 (const INT    n,
                             const REAL  *x)
 {
-    INT i;
-    INT use_openmp = FALSE;
-    REAL twonorm = 0.;
+    INT  i;
+    register REAL twonorm = 0.;
     
-#ifdef _OPENMP
-    if ( n > OPENMP_HOLDS ) {
-        use_openmp = TRUE;
-    }
-#endif
-    
-    if (use_openmp) {
 #ifdef _OPENMP
 #pragma omp parallel for reduction(+:twonorm) private(i)
 #endif
-        for (i=0;i<n;++i) twonorm+=x[i]*x[i];
-    }
-    else {
-        for (i=0;i<n;++i) twonorm+=x[i]*x[i];
-    }
+    for ( i = 0; i < n; ++i ) twonorm+=x[i]*x[i];
     
     return sqrt(twonorm);
 }
@@ -392,9 +371,9 @@ REAL fasp_blas_array_norm2 (const INT    n,
 REAL fasp_blas_array_norminf (const INT    n,
                               const REAL  *x)
 {
-    INT i;
-    INT use_openmp = FALSE;
-    REAL infnorm = 0.0;
+    SHORT use_openmp = FALSE;
+    INT   i;
+    REAL  infnorm = 0.0;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
