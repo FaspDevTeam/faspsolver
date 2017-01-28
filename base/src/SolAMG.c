@@ -18,7 +18,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_solver_amg (dCSRmat *A, dvector *b, dvector *x,
+ * \fn void fasp_solver_amg (const dCSRmat *A, const dvector *b, dvector *x,
  *                           AMG_param *param)
  *
  * \brief Solve Ax = b by algebraic multigrid methods
@@ -39,10 +39,10 @@
  * Modified by Chensong Zhang on 01/10/2012
  * Modified by Chensong Zhang on 07/26/2014: Add error handling for AMG setup
  */
-void fasp_solver_amg (dCSRmat      *A,
-                      dvector      *b,
-                      dvector      *x,
-                      AMG_param    *param)
+void fasp_solver_amg (const dCSRmat  *A,
+                      const dvector  *b,
+                      dvector        *x,
+                      AMG_param      *param)
 {
     const SHORT   max_levels  = param->max_levels;
     const SHORT   prtlvl      = param->print_level;

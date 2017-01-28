@@ -93,7 +93,7 @@
     <ClCompile Include="..\..\base\src\PreAMGCoarsenCR.c" />
     <ClCompile Include="..\..\base\src\PreAMGCoarsenRS.c" />
     <ClCompile Include="..\..\base\src\PreAMGInterp.c" />
-    <ClCompile Include="..\..\base\src\PreAMGInterpEmin.c" />
+    <ClCompile Include="..\..\base\src\PreAMGInterpEM.c" />
     <ClCompile Include="..\..\base\src\PreAMGSetupCR.c" />
     <ClCompile Include="..\..\base\src\PreAMGSetupRS.c" />
     <ClCompile Include="..\..\base\src\PreAMGSetupSA.c" />

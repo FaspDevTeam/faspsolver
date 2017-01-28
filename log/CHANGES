@@ -8,6 +8,7 @@ File Name: CHANGES
 - Further clean up on Aux*.c and Bla*.c files.
 - Update documentation.
 - Update VS10 solution.
+- Add more todo's to the list.
 - Move things around.
 - Move function form_tentative_p_bsr to fasp4blkoil.
 
