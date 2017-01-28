@@ -26,7 +26,7 @@
      172 ./base/src/AuxThreads.c
       43 ./base/src/AuxTiming.c
      462 ./base/src/AuxVector.c
-     410 ./base/src/BlaArray.c
+     411 ./base/src/BlaArray.c
       72 ./base/src/BlaEigen.c
     1002 ./base/src/BlaFormat.c
     2142 ./base/src/BlaILU.c
@@ -69,9 +69,9 @@
     1723 ./base/src/KryPvgmres.c
     1584 ./base/src/KrySPbcgs.c
     1022 ./base/src/KrySPcg.c
-    1395 ./base/src/KrySPgmres.c
+    1399 ./base/src/KrySPgmres.c
     1376 ./base/src/KrySPminres.c
-    1547 ./base/src/KrySPvgmres.c
+    1551 ./base/src/KrySPvgmres.c
      444 ./base/src/PreAMGCoarsenCR.c
     2085 ./base/src/PreAMGCoarsenRS.c
      871 ./base/src/PreAMGInterp.c
@@ -96,9 +96,9 @@
      607 ./base/src/SolBLC.c
      801 ./base/src/SolBSR.c
      732 ./base/src/SolCSR.c
-     113 ./base/src/SolFAMG.c
+     114 ./base/src/SolFAMG.c
     1061 ./base/src/SolGMGPoisson.c
      243 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      315 ./base/src/SolWrapper.c
-   86411 total
+   86421 total

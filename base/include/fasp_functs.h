@@ -2010,187 +2010,187 @@ INT fasp_solver_pvgmres (mxv_matfree  *mf,
 
 /*-------- In file: KrySPbcgs.c --------*/
 
-INT fasp_solver_dcsr_spbcgs (dCSRmat      *A,
-                             dvector      *b,
-                             dvector      *u,
-                             precond      *pc,
-                             const REAL    tol,
-                             const INT     MaxIt,
-                             const SHORT   stop_type,
-                             const SHORT   prtlvl);
+INT fasp_solver_dcsr_spbcgs (const dCSRmat  *A,
+                             const dvector  *b,
+                             dvector        *u,
+                             precond        *pc,
+                             const REAL      tol,
+                             const INT       MaxIt,
+                             const SHORT     StopType,
+                             const SHORT     PrtLvl);
 
-INT fasp_solver_dbsr_spbcgs (dBSRmat      *A,
-                             dvector      *b,
-                             dvector      *u,
-                             precond      *pc,
-                             const REAL    tol,
-                             const INT     MaxIt,
-                             const SHORT   stop_type,
-                             const SHORT   prtlvl);
+INT fasp_solver_dbsr_spbcgs (const dBSRmat  *A,
+                             const dvector  *b,
+                             dvector        *u,
+                             precond        *pc,
+                             const REAL      tol,
+                             const INT       MaxIt,
+                             const SHORT     StopType,
+                             const SHORT     PrtLvl);
 
-INT fasp_solver_dblc_spbcgs (dBLCmat     *A,
-                             dvector     *b,
-                             dvector     *u,
-                             precond     *pc,
-                             const REAL   tol,
-                             const INT    MaxIt,
-                             const SHORT  stop_type,
-                             const SHORT  prtlvl);
+INT fasp_solver_dblc_spbcgs (const dBLCmat  *A,
+                             const dvector  *b,
+                             dvector        *u,
+                             precond        *pc,
+                             const REAL      tol,
+                             const INT       MaxIt,
+                             const SHORT     StopType,
+                             const SHORT     PrtLvl);
 
-INT fasp_solver_dstr_spbcgs (dSTRmat      *A,
-                             dvector      *b,
-                             dvector      *u,
-                             precond      *pc,
-                             const REAL    tol,
-                             const INT     MaxIt,
-                             const SHORT   stop_type,
-                             const SHORT   prtlvl);
+INT fasp_solver_dstr_spbcgs (const dSTRmat  *A,
+                             const dvector  *b,
+                             dvector        *u,
+                             precond        *pc,
+                             const REAL      tol,
+                             const INT       MaxIt,
+                             const SHORT     StopType,
+                             const SHORT     PrtLvl);
 
 
 /*-------- In file: KrySPcg.c --------*/
 
-INT fasp_solver_dcsr_spcg (dCSRmat      *A,
-                           dvector      *b,
+INT fasp_solver_dcsr_spcg (const dCSRmat      *A,
+                           const dvector      *b,
                            dvector      *u,
                            precond      *pc,
                            const REAL    tol,
                            const INT     MaxIt,
-                           const SHORT   stop_type,
-                           const SHORT   prtlvl);
+                           const SHORT   StopType,
+                           const SHORT   PrtLvl);
 
-INT fasp_solver_dblc_spcg (dBLCmat     *A,
-                           dvector     *b,
+INT fasp_solver_dblc_spcg (const dBLCmat     *A,
+                           const dvector     *b,
                            dvector     *u,
                            precond     *pc,
                            const REAL   tol,
                            const INT    MaxIt,
-                           const SHORT  stop_type,
-                           const SHORT  prtlvl);
+                           const SHORT  StopType,
+                           const SHORT  PrtLvl);
 
-INT fasp_solver_dstr_spcg (dSTRmat      *A,
-                           dvector      *b,
+INT fasp_solver_dstr_spcg (const dSTRmat      *A,
+                           const dvector      *b,
                            dvector      *u,
                            precond      *pc,
                            const REAL    tol,
                            const INT     MaxIt,
-                           const SHORT   stop_type,
-                           const SHORT   prtlvl);
+                           const SHORT   StopType,
+                           const SHORT   PrtLvl);
 
 
 /*-------- In file: KrySPgmres.c --------*/
 
-INT fasp_solver_dcsr_spgmres (dCSRmat      *A,
-                              dvector      *b,
-                              dvector      *x,
-                              precond      *pc,
-                              const REAL    tol,
-                              const INT     MaxIt,
-                              SHORT         restart,
-                              const SHORT   stop_type,
-                              const SHORT   prtlvl);
+INT fasp_solver_dcsr_spgmres (const dCSRmat  *A,
+                              const dvector  *b,
+                              dvector        *x,
+                              precond        *pc,
+                              const REAL      tol,
+                              const INT       MaxIt,
+                              SHORT           restart,
+                              const SHORT     StopType,
+                              const SHORT     PrtLvl);
 
-INT fasp_solver_dblc_spgmres (dBLCmat     *A,
-                              dvector     *b,
-                              dvector     *x,
-                              precond     *pc,
-                              const REAL   tol,
-                              const INT    MaxIt,
-                              SHORT        restart,
-                              const SHORT  stop_type,
-                              const SHORT  prtlvl);
+INT fasp_solver_dblc_spgmres (const dBLCmat  *A,
+                              const dvector  *b,
+                              dvector        *x,
+                              precond        *pc,
+                              const REAL      tol,
+                              const INT       MaxIt,
+                              SHORT           restart,
+                              const SHORT     StopType,
+                              const SHORT     PrtLvl);
 
-INT fasp_solver_dbsr_spgmres (dBSRmat      *A,
-                              dvector      *b,
-                              dvector      *x,
-                              precond      *pc,
-                              const REAL    tol,
-                              const INT     MaxIt,
-                              SHORT         restart,
-                              const SHORT   stop_type,
-                              const SHORT   prtlvl);
+INT fasp_solver_dbsr_spgmres (const dBSRmat  *A,
+                              const dvector  *b,
+                              dvector        *x,
+                              precond        *pc,
+                              const REAL      tol,
+                              const INT       MaxIt,
+                              SHORT           restart,
+                              const SHORT     StopType,
+                              const SHORT     PrtLvl);
 
-INT fasp_solver_dstr_spgmres (dSTRmat      *A,
-                              dvector      *b,
-                              dvector      *x,
-                              precond      *pc,
-                              const REAL    tol,
-                              const INT     MaxIt,
-                              SHORT         restart,
-                              const SHORT   stop_type,
-                              const SHORT   prtlvl);
+INT fasp_solver_dstr_spgmres (const dSTRmat  *A,
+                              const dvector  *b,
+                              dvector        *x,
+                              precond        *pc,
+                              const REAL      tol,
+                              const INT       MaxIt,
+                              SHORT           restart,
+                              const SHORT     StopType,
+                              const SHORT     PrtLvl);
 
 
 /*-------- In file: KrySPminres.c --------*/
 
-INT fasp_solver_dcsr_spminres (dCSRmat      *A,
-                               dvector      *b,
-                               dvector      *u,
-                               precond      *pc,
-                               const REAL    tol,
-                               const INT     MaxIt,
-                               const SHORT   stop_type,
-                               const SHORT   prtlvl);
+INT fasp_solver_dcsr_spminres (const dCSRmat  *A,
+                               const dvector  *b,
+                               dvector        *u,
+                               precond        *pc,
+                               const REAL      tol,
+                               const INT       MaxIt,
+                               const SHORT     StopType,
+                               const SHORT     PrtLvl);
 
-INT fasp_solver_dblc_spminres (dBLCmat     *A,
-                               dvector     *b,
-                               dvector     *u,
-                               precond     *pc,
-                               const REAL   tol,
-                               const INT    MaxIt,
-                               const SHORT  stop_type,
-                               const SHORT  prtlvl);
+INT fasp_solver_dblc_spminres (const dBLCmat  *A,
+                               const dvector  *b,
+                               dvector        *u,
+                               precond        *pc,
+                               const REAL      tol,
+                               const INT       MaxIt,
+                               const SHORT     StopType,
+                               const SHORT     PrtLvl);
 
-INT fasp_solver_dstr_spminres (dSTRmat      *A,
-                               dvector      *b,
-                               dvector      *u,
-                               precond      *pc,
-                               const REAL    tol,
-                               const INT     MaxIt,
-                               const SHORT   stop_type,
-                               const SHORT   prtlvl);
+INT fasp_solver_dstr_spminres (const dSTRmat  *A,
+                               const dvector  *b,
+                               dvector        *u,
+                               precond        *pc,
+                               const REAL      tol,
+                               const INT       MaxIt,
+                               const SHORT     StopType,
+                               const SHORT     PrtLvl);
 
 
 /*-------- In file: KrySPvgmres.c --------*/
 
-INT fasp_solver_dcsr_spvgmres (dCSRmat      *A,
-                               dvector      *b,
-                               dvector      *x,
-                               precond      *pc,
-                               const REAL    tol,
-                               const INT     MaxIt,
-                               SHORT         restart,
-                               const SHORT   stop_type,
-                               const SHORT   prtlvl);
+INT fasp_solver_dcsr_spvgmres (const dCSRmat  *A,
+                               const dvector  *b,
+                               dvector        *x,
+                               precond        *pc,
+                               const REAL      tol,
+                               const INT       MaxIt,
+                               SHORT           restart,
+                               const SHORT     StopType,
+                               const SHORT     PrtLvl);
 
-INT fasp_solver_dblc_spvgmres (dBLCmat     *A,
-                               dvector     *b,
-                               dvector     *x,
-                               precond     *pc,
-                               const REAL   tol,
-                               const INT    MaxIt,
-                               SHORT        restart,
-                               const SHORT  stop_type,
-                               const SHORT  prtlvl);
+INT fasp_solver_dblc_spvgmres (const dBLCmat  *A,
+                               const dvector  *b,
+                               dvector        *x,
+                               precond        *pc,
+                               const REAL      tol,
+                               const INT       MaxIt,
+                               SHORT           restart,
+                               const SHORT     StopType,
+                               const SHORT     PrtLvl);
 
-INT fasp_solver_dbsr_spvgmres (dBSRmat      *A,
-                               dvector      *b,
-                               dvector      *x,
-                               precond      *pc,
-                               const REAL    tol,
-                               const INT     MaxIt,
-                               SHORT         restart,
-                               const SHORT   stop_type,
-                               const SHORT   prtlvl);
+INT fasp_solver_dbsr_spvgmres (const dBSRmat  *A,
+                               const dvector  *b,
+                               dvector        *x,
+                               precond        *pc,
+                               const REAL      tol,
+                               const INT       MaxIt,
+                               SHORT           restart,
+                               const SHORT     StopType,
+                               const SHORT     PrtLvl);
 
-INT fasp_solver_dstr_spvgmres (dSTRmat      *A,
-                               dvector      *b,
-                               dvector      *x,
-                               precond      *pc,
-                               const REAL    tol,
-                               const INT     MaxIt,
-                               SHORT         restart,
-                               const SHORT   stop_type,
-                               const SHORT   prtlvl);
+INT fasp_solver_dstr_spvgmres (const dSTRmat  *A,
+                               const dvector  *b,
+                               dvector        *x,
+                               precond        *pc,
+                               const REAL      tol,
+                               const INT       MaxIt,
+                               SHORT           restart,
+                               const SHORT     StopType,
+                               const SHORT     PrtLvl);
 
 
 /*-------- In file: PreAMGCoarsenCR.c --------*/
@@ -2534,10 +2534,10 @@ void fasp_precond_dstr_blockgs (REAL *r,
 
 /*-------- In file: SolAMG.c --------*/
 
-void fasp_solver_amg (dCSRmat      *A,
-                      dvector      *b,
-                      dvector      *x,
-                      AMG_param    *param);
+void fasp_solver_amg (const dCSRmat  *A,
+                      const dvector  *b,
+                      dvector        *x,
+                      AMG_param      *param);
 
 
 /*-------- In file: SolBLC.c --------*/
@@ -2680,10 +2680,10 @@ INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat        *A,
 
 /*-------- In file: SolFAMG.c --------*/
 
-void fasp_solver_famg (dCSRmat    *A,
-                       dvector    *b,
-                       dvector    *x,
-                       AMG_param  *param);
+void fasp_solver_famg (const dCSRmat  *A,
+                       const dvector  *b,
+                       dvector        *x,
+                       AMG_param      *param);
 
 
 /*-------- In file: SolGMGPoisson.c --------*/
