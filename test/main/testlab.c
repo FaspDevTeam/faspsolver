@@ -22,11 +22,11 @@ int main (int argc, const char * argv[])
     //------------------------//
     // Step 0. Set parameters //
     //------------------------//
-    input_param     inpar;  // parameters from input files
-    itsolver_param  itpar;  // parameters for itsolver
-    AMG_param       amgpar; // parameters for AMG
-    ILU_param       ilupar; // parameters for ILU
-    Schwarz_param   swzpar; // parameters for Schwarz method
+    input_param  inpar;  // parameters from input files
+    ITS_param    itpar;  // parameters for itsolver
+    AMG_param    amgpar; // parameters for AMG
+    ILU_param    ilupar; // parameters for ILU
+    SWZ_param    swzpar; // parameters for Schwarz method
     
     // Set solver parameters
     fasp_param_set(argc, argv, &inpar);

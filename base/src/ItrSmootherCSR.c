@@ -71,7 +71,8 @@ void fasp_smoother_dcsr_jacobi (dvector    *u,
     const INT   *ia=A->IA, *ja=A->JA;
     const REAL  *aj=A->val,*bval=b->val;
     REAL        *uval=u->val;
-    REAL        w = 0.8;  //0.8
+    REAL         w = 0.8;
+    
     // local variables
     INT i,j,k,begin_row,end_row;
     
@@ -163,7 +164,6 @@ void fasp_smoother_dcsr_jacobi (dvector    *u,
 #pragma omp parallel for private(i)
 #endif
             for (i=i_1;i>=i_n;i+=s) {
-                //if (ABS(d[i])>SMALLREAL) uval[i]=t[i]/d[i];
                 if (ABS(d[i])>SMALLREAL) uval[i]=(1-w)*uval[i]+ w*t[i]/d[i];
             }
         }
@@ -1088,7 +1088,7 @@ void fasp_smoother_dcsr_ilu (dCSRmat *A,
         REAL *xval = x->val, *bval = b->val;
         
         /** form residual zr = b - A x */
-        fasp_array_cp(m,bval,zr); fasp_blas_dcsr_aAxpy(-1.0,A,xval,zr);
+        fasp_darray_cp(m,bval,zr); fasp_blas_dcsr_aAxpy(-1.0,A,xval,zr);
         
         // forward sweep: solve unit lower matrix equation L*zz=zr
         zz[0]=zr[0];
@@ -1114,7 +1114,7 @@ void fasp_smoother_dcsr_ilu (dCSRmat *A,
             z[i]=zz[i]*lu[i];
         }
         
-        fasp_blas_array_axpy(m,1,z,xval);
+        fasp_blas_darray_axpy(m,1,z,xval);
     }
     
     return;

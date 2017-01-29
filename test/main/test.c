@@ -23,16 +23,16 @@ int main (int argc, const char * argv[])
 {
     dCSRmat A;
     dvector b, x;
-    int status=FASP_SUCCESS;
+    int status = FASP_SUCCESS;
     
     //------------------------//
     // Step 0. Set parameters //
     //------------------------//
-    input_param     inipar; // parameters from input files
-    itsolver_param  itspar; // parameters for itsolver
-    AMG_param       amgpar; // parameters for AMG
-    ILU_param       ilupar; // parameters for ILU
-    Schwarz_param   swzpar; // parameters for Schwarz method
+    input_param  inipar; // parameters from input files
+    ITS_param    itspar; // parameters for itsolver
+    AMG_param    amgpar; // parameters for AMG
+    ILU_param    ilupar; // parameters for ILU
+    SWZ_param    swzpar; // parameters for Schwarz method
     
     // Set solver parameters
     fasp_param_set(argc, argv, &inipar);

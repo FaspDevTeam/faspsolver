@@ -230,7 +230,7 @@ int main (int argc, const char *argv[])
         case 1: // 1 dimension
             
             u = (REAL *)malloc((nx+1)*sizeof(REAL));
-            fasp_array_set(nx+1, u, 0.0);
+            fasp_darray_set(nx+1, u, 0.0);
             
             b = (REAL *)malloc((nx+1)*sizeof(REAL));
             for (i = 0; i <= nx; i++) b[i] = h*h*f1d(i, nx);
@@ -256,7 +256,7 @@ int main (int argc, const char *argv[])
         case 2: // 2 dimension
             
             u = (REAL *)malloc((nx+1)*(ny+1)*sizeof(REAL));
-            fasp_array_set((nx+1)*(ny+1), u, 0.0);
+            fasp_darray_set((nx+1)*(ny+1), u, 0.0);
             
             b = (REAL *)malloc((nx+1)*(ny+1)*sizeof(REAL));
             for (i = 0; i <= nx; i++) {
@@ -286,7 +286,7 @@ int main (int argc, const char *argv[])
         default: // 3 dimension
             
             u = (REAL *)malloc((nx+1)*(ny+1)*(nz+1)*sizeof(REAL));
-            fasp_array_set((nx+1)*(ny+1)*(nz+1), u, 0.0);
+            fasp_darray_set((nx+1)*(ny+1)*(nz+1), u, 0.0);
             
             b = (REAL *)malloc((nx+1)*(ny+1)*(nz+1)*sizeof(REAL));
             for (i = 0; i <= nx; i++) {

@@ -30,7 +30,7 @@
 
 /**
  * \fn INT fasp_solver_dbsr_itsolver (dBSRmat *A, dvector *b, dvector *x,
- *                                    precond *pc, itsolver_param *itparam)
+ *                                    precond *pc, ITS_param *itparam)
  *
  * \brief Solve Ax=b by preconditioned Krylov methods for BSR matrices
  *
@@ -46,11 +46,11 @@
  * \date   10/26/2010
  * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
-INT fasp_solver_dbsr_itsolver (dBSRmat        *A,
-                               dvector        *b,
-                               dvector        *x,
-                               precond        *pc,
-                               itsolver_param *itparam)
+INT fasp_solver_dbsr_itsolver (dBSRmat    *A,
+                               dvector    *b,
+                               dvector    *x,
+                               precond    *pc,
+                               ITS_param  *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
     const SHORT itsolver_type = itparam->itsolver_type;
@@ -125,7 +125,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat        *A,
 
 /**
  * \fn INT fasp_solver_dbsr_krylov (dBSRmat *A, dvector *b, dvector *x,
- *                                  itsolver_param *itparam)
+ *                                  ITS_param *itparam)
  *
  * \brief Solve Ax=b by standard Krylov methods for BSR matrices
  *
@@ -139,10 +139,10 @@ INT fasp_solver_dbsr_itsolver (dBSRmat        *A,
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date   10/26/2010
  */
-INT fasp_solver_dbsr_krylov (dBSRmat        *A,
-                             dvector        *b,
-                             dvector        *x,
-                             itsolver_param *itparam)
+INT fasp_solver_dbsr_krylov (dBSRmat    *A,
+                             dvector    *b,
+                             dvector    *x,
+                             ITS_param  *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
     INT status = FASP_SUCCESS;
@@ -173,7 +173,7 @@ INT fasp_solver_dbsr_krylov (dBSRmat        *A,
 
 /**
  * \fn INT fasp_solver_dbsr_krylov_diag (dBSRmat *A, dvector *b, dvector *x,
- *                                       itsolver_param *itparam)
+ *                                       ITS_param *itparam)
  *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods
  *
@@ -190,10 +190,10 @@ INT fasp_solver_dbsr_krylov (dBSRmat        *A,
  * Modified by Chunsheng Feng, Zheng Li on 10/15/2012
  */
 
-INT fasp_solver_dbsr_krylov_diag (dBSRmat        *A,
-                                  dvector        *b,
-                                  dvector        *x,
-                                  itsolver_param *itparam)
+INT fasp_solver_dbsr_krylov_diag (dBSRmat    *A,
+                                  dvector    *b,
+                                  dvector    *x,
+                                  ITS_param  *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
     INT status = FASP_SUCCESS;
@@ -279,7 +279,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat        *A,
 
 /**
  * \fn INT fasp_solver_dbsr_krylov_ilu (dBSRmat *A, dvector *b, dvector *x,
- *                                      itsolver_param *itparam, ILU_param *iluparam)
+ *                                      ITS_param *itparam, ILU_param *iluparam)
  *
  * \brief Solve Ax=b by ILUs preconditioned Krylov methods
  *
@@ -294,11 +294,11 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat        *A,
  * \author Shiquang Zhang, Xiaozhe Hu
  * \date   10/26/2010
  */
-INT fasp_solver_dbsr_krylov_ilu (dBSRmat        *A,
-                                 dvector        *b,
-                                 dvector        *x,
-                                 itsolver_param *itparam,
-                                 ILU_param      *iluparam)
+INT fasp_solver_dbsr_krylov_ilu (dBSRmat    *A,
+                                 dvector    *b,
+                                 dvector    *x,
+                                 ITS_param  *itparam,
+                                 ILU_param  *iluparam)
 {
     const SHORT prtlvl = itparam->print_level;
     REAL solver_start, solver_end;
@@ -346,7 +346,7 @@ FINISHED:
 
 /**
  * \fn INT fasp_solver_dbsr_krylov_amg (dBSRmat *A, dvector *b, dvector *x,
- *                                      itsolver_param *itparam, AMG_param *amgparam)
+ *                                      ITS_param *itparam, AMG_param *amgparam)
  *
  * \brief Solve Ax=b by AMG preconditioned Krylov methods
  *
@@ -361,11 +361,11 @@ FINISHED:
  * \author Xiaozhe Hu
  * \date   03/16/2012
  */
-INT fasp_solver_dbsr_krylov_amg (dBSRmat        *A,
-                                 dvector        *b,
-                                 dvector        *x,
-                                 itsolver_param *itparam,
-                                 AMG_param      *amgparam)
+INT fasp_solver_dbsr_krylov_amg (dBSRmat    *A,
+                                 dvector    *b,
+                                 dvector    *x,
+                                 ITS_param  *itparam,
+                                 AMG_param  *amgparam)
 {
     //--------------------------------------------------------------
     // Part 1: prepare
@@ -441,7 +441,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat        *A,
     prec.data = &precdata;
     switch (amgparam->cycle_type) {
         case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
-            prec.fct = fasp_precond_dbsr_nl_amli;
+            prec.fct = fasp_precond_dbsr_namli;
             break;
         default: // V,W-Cycle AMG
             prec.fct = fasp_precond_dbsr_amg;
@@ -484,7 +484,7 @@ MEMORY_ERROR:
 
 /**
  * \fn INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat *A, dvector *b, dvector *x,
- *                                         itsolver_param *itparam, AMG_param *amgparam,
+ *                                         ITS_param *itparam, AMG_param *amgparam,
  *                                         dCSRmat *A_nk, dCSRmat *P_nk, dCSRmat *R_nk)
  *
  * \brief Solve Ax=b by AMG with extra near kernel solve preconditioned Krylov methods
@@ -506,7 +506,7 @@ MEMORY_ERROR:
 INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat        *A,
                                     dvector        *b,
                                     dvector        *x,
-                                    itsolver_param *itparam,
+                                    ITS_param *itparam,
                                     AMG_param      *amgparam,
                                     dCSRmat        *A_nk,
                                     dCSRmat        *P_nk,
@@ -644,7 +644,7 @@ MEMORY_ERROR:
 
 /**
  * \fn INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat *A, dvector *b, dvector *x,
- *                                         itsolver_param *itparam, AMG_param *amgparam,
+ *                                         ITS_param *itparam, AMG_param *amgparam,
  *                                         const INT nk_dim, dvector *nk)
  *
  * \brief Solve Ax=b by AMG preconditioned Krylov methods with extra kernal space
@@ -665,7 +665,7 @@ MEMORY_ERROR:
 INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat        *A,
                                     dvector        *b,
                                     dvector        *x,
-                                    itsolver_param *itparam,
+                                    ITS_param *itparam,
                                     AMG_param      *amgparam,
                                     const INT       nk_dim,
                                     dvector        *nk)
@@ -755,7 +755,7 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat        *A,
     prec.data = &precdata;
     switch (amgparam->cycle_type) {
         case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
-            prec.fct = fasp_precond_dbsr_nl_amli;
+            prec.fct = fasp_precond_dbsr_namli;
             break;
         default: // V,W-Cycle AMG
             prec.fct = fasp_precond_dbsr_amg;

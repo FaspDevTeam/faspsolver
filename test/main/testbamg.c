@@ -21,13 +21,13 @@ int main (int argc, const char * argv[])
     dBSRmat Absr;
     dvector b, uh;
     
-    int status=FASP_SUCCESS;
+    int status = FASP_SUCCESS;
     
     // Step 0. Set parameters
-    input_param     inpar;  // parameters from input files
-    itsolver_param  itpar;  // parameters for itsolver
-    AMG_param       amgpar; // parameters for AMG
-    ILU_param       ilupar; // parameters for ILU
+    input_param   inpar;  // parameters from input files
+    ITS_param     itpar;  // parameters for itsolver
+    AMG_param     amgpar; // parameters for AMG
+    ILU_param     ilupar; // parameters for ILU
     
     // Set solver parameters: use ./ini/bamg.dat
     fasp_param_set(argc, argv, &inpar);

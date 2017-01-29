@@ -28,7 +28,7 @@
 
 /**
  * \fn INT fasp_solver_dblc_itsolver (dBLCmat *A, dvector *b, dvector *x,
- *                                    precond *pc, itsolver_param *itparam)
+ *                                    precond *pc, ITS_param *itparam)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
@@ -46,11 +46,11 @@
  *
  * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
-INT fasp_solver_dblc_itsolver (dBLCmat        *A,
-                               dvector        *b,
-                               dvector        *x,
-                               precond        *pc,
-                               itsolver_param *itparam)
+INT fasp_solver_dblc_itsolver (dBLCmat    *A,
+                               dvector    *b,
+                               dvector    *x,
+                               precond    *pc,
+                               ITS_param  *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
     const SHORT itsolver_type = itparam->itsolver_type;
@@ -124,7 +124,7 @@ INT fasp_solver_dblc_itsolver (dBLCmat        *A,
 
 /**
  * \fn INT fasp_solver_dblc_krylov (dBLCmat *A, dvector *b, dvector *x,
- *                                  itsolver_param *itparam)
+ *                                  ITS_param *itparam)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
@@ -138,10 +138,10 @@ INT fasp_solver_dblc_itsolver (dBLCmat        *A,
  * \author Xiaozhe Hu
  * \date   07/18/2010
  */
-INT fasp_solver_dblc_krylov (dBLCmat        *A,
-                             dvector        *b,
-                             dvector        *x,
-                             itsolver_param *itparam)
+INT fasp_solver_dblc_krylov (dBLCmat    *A,
+                             dvector    *b,
+                             dvector    *x,
+                             ITS_param  *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
     
@@ -173,7 +173,7 @@ INT fasp_solver_dblc_krylov (dBLCmat        *A,
 
 /**
  * \fn INT fasp_solver_dblc_krylov_block_3 (dBLCmat *A, dvector *b, dvector *x,
- *                                          itsolver_param *itparam,
+ *                                          ITS_param *itparam,
  *                                          AMG_param *amgparam, dCSRmat *A_diag)
  *
  * \brief Solve Ax = b by standard Krylov methods
@@ -192,12 +192,12 @@ INT fasp_solver_dblc_krylov (dBLCmat        *A,
  *
  * \warning Only works for 3by3 block dCSRmat problems!! -- Xiaozhe Hu
  */
-INT fasp_solver_dblc_krylov_block_3 (dBLCmat        *A,
-                                     dvector        *b,
-                                     dvector        *x,
-                                     itsolver_param *itparam,
-                                     AMG_param      *amgparam,
-                                     dCSRmat        *A_diag)
+INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
+                                     dvector    *b,
+                                     dvector    *x,
+                                     ITS_param  *itparam,
+                                     AMG_param  *amgparam,
+                                     dCSRmat    *A_diag)
 {
     const SHORT prtlvl = itparam->print_level;
     const SHORT precond_type = itparam->precond_type;
@@ -370,7 +370,7 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat        *A,
 
 /**
  * \fn INT fasp_solver_dblc_krylov_block_4 (dBLCmat *A, dvector *b, dvector *x,
- *                                          itsolver_param *itparam,
+ *                                          ITS_param *itparam,
  *                                          AMG_param *amgparam, dCSRmat *A_diag)
  *
  * \brief Solve Ax = b by standard Krylov methods
@@ -389,12 +389,12 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat        *A,
  *
  * \warning Only works for 4 by 4 block dCSRmat problems!! -- Xiaozhe Hu
  */
-INT fasp_solver_dblc_krylov_block_4 (dBLCmat        *A,
-                                     dvector        *b,
-                                     dvector        *x,
-                                     itsolver_param *itparam,
-                                     AMG_param      *amgparam,
-                                     dCSRmat        *A_diag)
+INT fasp_solver_dblc_krylov_block_4 (dBLCmat    *A,
+                                     dvector    *b,
+                                     dvector    *x,
+                                     ITS_param  *itparam,
+                                     AMG_param  *amgparam,
+                                     dCSRmat    *A_diag)
 {
     const SHORT prtlvl = itparam->print_level;
     const SHORT precond_type = itparam->precond_type;
@@ -494,10 +494,10 @@ INT fasp_solver_dblc_krylov_block_4 (dBLCmat        *A,
 }
 
 /**
- * \fn INT fasp_solver_dblc_krylov_sweeping (dBLCmat *A, dvector *b,
- *                                           dvector *x, itsolver_param *itparam,
- *                                           INT NumLayers, dBLCmat *Ai,
- *                                           dCSRmat *local_A, ivector *local_index)
+ * \fn INT fasp_solver_dblc_krylov_sweeping (dBLCmat *A, dvector *b, dvector *x,
+ *                                           ITS_param *itparam, INT NumLayers,
+ *                                           dBLCmat *Ai, dCSRmat *local_A,
+ *                                           ivector *local_index)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
@@ -515,14 +515,14 @@ INT fasp_solver_dblc_krylov_block_4 (dBLCmat        *A,
  * \author Xiaozhe Hu
  * \date   05/01/2014
  */
-INT fasp_solver_dblc_krylov_sweeping (dBLCmat        *A,
-                                      dvector        *b,
-                                      dvector        *x,
-                                      itsolver_param *itparam,
-                                      INT             NumLayers,
-                                      dBLCmat        *Ai,
-                                      dCSRmat        *local_A,
-                                      ivector        *local_index)
+INT fasp_solver_dblc_krylov_sweeping (dBLCmat    *A,
+                                      dvector    *b,
+                                      dvector    *x,
+                                      ITS_param  *itparam,
+                                      INT         NumLayers,
+                                      dBLCmat    *Ai,
+                                      dCSRmat    *local_A,
+                                      ivector    *local_index)
 {
     const SHORT prtlvl = itparam->print_level;
     

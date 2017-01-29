@@ -1573,7 +1573,7 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     if (iludata->nwork<memneed) goto MEMERR;
     
     /** form residual zr = b - A x */
-    fasp_array_cp(m,bval,zr); fasp_blas_dbsr_aAxpy(-1.0,A,xval,zr);
+    fasp_darray_cp(m,bval,zr); fasp_blas_dbsr_aAxpy(-1.0,A,xval,zr);
     
     /** solve LU z=zr */
 #ifdef _OPENMP
@@ -1608,7 +1608,7 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
 #endif
     
     /** x=x+z */
-    fasp_blas_array_axpy(m,1,z,xval);
+    fasp_blas_darray_axpy(m,1,z,xval);
     
     return;
     

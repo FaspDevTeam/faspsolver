@@ -316,15 +316,15 @@ void fasp_ilu_data_null (ILU_data *ILUdata)
 }
 
 /**
- * \fn void fasp_schwarz_data_free (Schwarz_data *Schwarz)
- * \brief Free Schwarz_data data memeory space
+ * \fn void fasp_schwarz_data_free (SWZ_data *Schwarz)
+ * \brief Free SWZ_data data memeory space
  *
  * \param *Schwarz  pointer to the AMG_data data
  *
  * \author Xiaozhe Hu
  * \date   2010/04/06
  */
-void fasp_schwarz_data_free (Schwarz_data *Schwarz)
+void fasp_schwarz_data_free (SWZ_data *Schwarz)
 {
     INT i;
     fasp_dcsr_free(&Schwarz->A);

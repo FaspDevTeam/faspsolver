@@ -55,7 +55,7 @@ void fasp_smoother_dstr_jacobi (dSTRmat *A,
         diaginv = (REAL *)fasp_mem_calloc(size,sizeof(REAL));
     
         // diaginv = diag;
-        fasp_array_cp(size,diag,diaginv);
+        fasp_darray_cp(size,diag,diaginv);
     
         // generate diaginv
         for (block = 0; block < ngrid; block ++) {          
@@ -123,7 +123,7 @@ void fasp_smoother_dstr_jacobi1 (dSTRmat *A,
     b_tmp = (REAL *)fasp_mem_calloc(size,sizeof(REAL));
     
     // b_tmp = b_val
-    fasp_array_cp(size,b_val,b_tmp);    
+    fasp_darray_cp(size,b_val,b_tmp);    
     
     // It's not necessary to assign the smoothing order since the results doesn't depend on it
     if (nc == 1) {
@@ -230,7 +230,7 @@ void fasp_smoother_dstr_gs (dSTRmat    *A,
         diaginv = (REAL *)fasp_mem_calloc(size,sizeof(REAL));
     
         // diaginv = diag;
-        fasp_array_cp(size,diag,diaginv);
+        fasp_darray_cp(size,diag,diaginv);
     
         // generate diaginv
         for (block = 0; block < ngrid; block ++) {    
@@ -883,7 +883,7 @@ void fasp_smoother_dstr_sor (dSTRmat    *A,
         diaginv = (REAL *)fasp_mem_calloc(size,sizeof(REAL));
     
         // diaginv = diag;
-        fasp_array_cp(size,diag,diaginv);
+        fasp_darray_cp(size,diag,diaginv);
     
         // generate diaginv
         for (block = 0; block < ngrid; block ++) {    

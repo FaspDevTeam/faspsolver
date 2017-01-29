@@ -59,15 +59,15 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
     const INT   m          = mgl[0].A.row;
 
     // local variables
-    SHORT         status = FASP_SUCCESS;
-    INT           lvl = 0, max_lvls = param->max_levels;
-    REAL          setup_start, setup_end;
-    ILU_param     iluparam;
-    Schwarz_param swzparam;
-    iCSRmat       Scouple; // strong n-couplings
+    SHORT      status = FASP_SUCCESS;
+    INT        lvl = 0, max_lvls = param->max_levels;
+    REAL       setup_start, setup_end;
+    ILU_param  iluparam;
+    SWZ_param  swzparam;
+    iCSRmat    Scouple; // strong n-couplings
 
     // level info (fine: 0; coarse: 1)
-    ivector       vertices = fasp_ivec_create(m);
+    ivector    vertices = fasp_ivec_create(m);
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -104,12 +104,12 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
     }
 
     // Initialize Schwarz parameters
-    mgl->Schwarz_levels = param->Schwarz_levels;
-    if ( param->Schwarz_levels > 0 ) {
-        swzparam.Schwarz_mmsize = param->Schwarz_mmsize;
-        swzparam.Schwarz_maxlvl = param->Schwarz_maxlvl;
-        swzparam.Schwarz_type   = param->Schwarz_type;
-        swzparam.Schwarz_blksolver = param->Schwarz_blksolver;
+    mgl->SWZ_levels = param->SWZ_levels;
+    if ( param->SWZ_levels > 0 ) {
+        swzparam.SWZ_mmsize = param->SWZ_mmsize;
+        swzparam.SWZ_maxlvl = param->SWZ_maxlvl;
+        swzparam.SWZ_type   = param->SWZ_type;
+        swzparam.SWZ_blksolver = param->SWZ_blksolver;
     }
 
 #if DIAGONAL_PREF
@@ -138,7 +138,7 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
         }
 
         /*-- Setup Schwarz smoother if needed --*/
-        if ( lvl < param->Schwarz_levels ) {
+        if ( lvl < param->SWZ_levels ) {
             mgl[lvl].Schwarz.A = fasp_dcsr_sympart(&mgl[lvl].A);
             fasp_dcsr_shift(&(mgl[lvl].Schwarz.A), 1);
             status = fasp_schwarz_setup(&mgl[lvl].Schwarz, &swzparam);
@@ -147,7 +147,7 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
                     printf("### WARNING: Schwarz on level-%d failed!\n", lvl);
                     printf("### WARNING: Disable Schwarz for level >= %d.\n", lvl);
                 }
-                param->Schwarz_levels = lvl;
+                param->SWZ_levels = lvl;
             }
         }
 
@@ -287,7 +287,7 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
 
         mgl[lvl].cycle_type     = cycle_type; // initialize cycle type!
         mgl[lvl].ILU_levels     = param->ILU_levels - lvl; // initialize ILU levels!
-        mgl[lvl].Schwarz_levels = param->Schwarz_levels -lvl; // initialize Schwarz!
+        mgl[lvl].SWZ_levels = param->SWZ_levels -lvl; // initialize Schwarz!
 
         // allocate work arrays for the solve phase
         if ( cycle_type == NL_AMLI_CYCLE )

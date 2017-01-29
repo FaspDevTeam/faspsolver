@@ -195,7 +195,7 @@ INT fasp_amg_solve_amli (AMG_data   *mgl,
 }
 
 /**
- * \fn INT fasp_amg_solve_nl_amli (AMG_data *mgl, AMG_param *param)
+ * \fn INT fasp_amg_solve_namli (AMG_data *mgl, AMG_param *param)
  *
  * \brief Nonlinear AMLI -- SOLVE phase
  *
@@ -214,8 +214,8 @@ INT fasp_amg_solve_amli (AMG_data   *mgl,
  *       "Comparative Convergence Analysis of Nonlinear AMLI-cycle Multigrid", 2013.
  *
  */
-INT fasp_amg_solve_nl_amli (AMG_data   *mgl,
-                            AMG_param  *param)
+INT fasp_amg_solve_namli (AMG_data   *mgl,
+                          AMG_param  *param)
 {
     dCSRmat      *ptrA = &mgl[0].A;
     dvector      *b = &mgl[0].b, *x = &mgl[0].x, *r = &mgl[0].w;
@@ -244,7 +244,7 @@ INT fasp_amg_solve_nl_amli (AMG_data   *mgl,
     while ( (++iter <= MaxIt) & (sumb > SMALLREAL) ) // MG solver here
     {
         // one multigrid cycle
-        fasp_solver_nl_amli(mgl, param, 0, mgl[0].num_levels);
+        fasp_solver_namli(mgl, param, 0, mgl[0].num_levels);
         
         // r = b-A*x
         fasp_dvec_cp(b, r);

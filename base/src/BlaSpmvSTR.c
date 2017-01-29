@@ -135,7 +135,7 @@ void fasp_blas_dstr_mxv (const dSTRmat  *A,
 }
 
 /*!
- * \fn INT fasp_dstr_diagscale (const dSTRmat *A, dSTRmat *B)
+ * \fn INT fasp_blas_dstr_diagscale (const dSTRmat *A, dSTRmat *B)
  *
  * \brief B=D^{-1}A
  *
@@ -145,11 +145,10 @@ void fasp_blas_dstr_mxv (const dSTRmat  *A,
  * \author Shiquan Zhang
  * \date   2010/10/15
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   08/30/2012
+ * Modified by Chunsheng Feng, Zheng Li on 08/30/2012
  */
-INT fasp_dstr_diagscale (const dSTRmat   *A,
-                         dSTRmat         *B)
+INT fasp_blas_dstr_diagscale (const dSTRmat  *A,
+                              dSTRmat        *B)
 {
     const INT ngrid=A->ngrid, nc=A->nc, nband=A->nband;
     const INT nc2=nc*nc, size=ngrid*nc2;
@@ -163,7 +162,7 @@ INT fasp_dstr_diagscale (const dSTRmat   *A,
     
     REAL *diag=(REAL *)fasp_mem_calloc(size,sizeof(REAL));
     
-    fasp_array_cp(size,A->diag,diag);
+    fasp_darray_cp(size,A->diag,diag);
     
     fasp_dstr_alloc(A->nx, A->ny, A->nz,A->nxy,ngrid, nband,nc,A->offsets, B);
     

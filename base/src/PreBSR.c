@@ -418,7 +418,7 @@ void fasp_precond_dbsr_ilu (REAL *r,
     case 5:
     
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp(nb,&(zr[0]),&(zz[0]));
+        fasp_darray_cp(nb,&(zr[0]),&(zz[0]));
     
         for (i=1;i<=mm1;++i) {
             begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
@@ -432,7 +432,7 @@ void fasp_precond_dbsr_ilu (REAL *r,
                 else break;
             }
     
-            fasp_array_cp(nb,&(zr[ibstart]),&(zz[ibstart]));
+            fasp_darray_cp(nb,&(zr[ibstart]),&(zz[ibstart]));
         }
     
         // backward sweep: solve upper matrix equation U*z=zz
@@ -463,7 +463,7 @@ void fasp_precond_dbsr_ilu (REAL *r,
     case 7:
     
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp(nb,&(zr[0]),&(zz[0]));
+        fasp_darray_cp(nb,&(zr[0]),&(zz[0]));
     
         for (i=1;i<=mm1;++i) {
             begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
@@ -477,7 +477,7 @@ void fasp_precond_dbsr_ilu (REAL *r,
                 else break;
             }
     
-            fasp_array_cp(nb,&(zr[ibstart]),&(zz[ibstart]));
+            fasp_darray_cp(nb,&(zr[ibstart]),&(zz[ibstart]));
         }
     
         // backward sweep: solve upper matrix equation U*z=zz
@@ -507,7 +507,7 @@ void fasp_precond_dbsr_ilu (REAL *r,
     default:
     
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp(nb,&(zr[0]),&(zz[0]));
+        fasp_darray_cp(nb,&(zr[0]),&(zz[0]));
     
         for (i=1;i<=mm1;++i) {
             begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
@@ -521,7 +521,7 @@ void fasp_precond_dbsr_ilu (REAL *r,
                 else break;
             }
     
-            fasp_array_cp(nb,&(zr[ibstart]),&(zz[ibstart]));
+            fasp_darray_cp(nb,&(zr[ibstart]),&(zz[ibstart]));
         }
     
         // backward sweep: solve upper matrix equation U*z=zz
@@ -994,16 +994,16 @@ void fasp_precond_dbsr_amg (REAL *r,
     amgparam.ILU_levels = predata->mgl_data->ILU_levels;
     
     AMG_data_bsr *mgl = predata->mgl_data;
-    mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
+    mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
     for ( i=maxit; i--; ) fasp_solver_mgcycle_bsr(mgl,&amgparam);
     
-    fasp_array_cp(m,mgl->x.val,z);    
+    fasp_darray_cp(m,mgl->x.val,z);    
 }
 
 /**
- * \fn void fasp_precond_dbsr_nl_amli (REAL *r, REAL *z, void *data)
+ * \fn void fasp_precond_dbsr_namli (REAL *r, REAL *z, void *data)
  *
  * \brief Nonlinear AMLI-cycle AMG preconditioner
  *
@@ -1014,9 +1014,9 @@ void fasp_precond_dbsr_amg (REAL *r,
  * \author Xiaozhe Hu
  * \date   02/06/2012
  */
-void fasp_precond_dbsr_nl_amli (REAL *r, 
-                                REAL *z, 
-                                void *data)
+void fasp_precond_dbsr_namli (REAL *r, 
+                              REAL *z,
+                              void *data)
 {    
     precond_data_bsr *pcdata=(precond_data_bsr *)data;
     const INT row=pcdata->mgl_data[0].A.ROW;
@@ -1030,12 +1030,12 @@ void fasp_precond_dbsr_nl_amli (REAL *r,
     fasp_param_prec_to_amg_bsr(&amgparam,pcdata);
     
     AMG_data_bsr *mgl = pcdata->mgl_data;
-    mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
+    mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
-    for ( i=maxit; i--; ) fasp_solver_nl_amli_bsr(mgl,&amgparam,0, num_levels);
+    for ( i=maxit; i--; ) fasp_solver_namli_bsr(mgl,&amgparam,0, num_levels);
     
-    fasp_array_cp(m,mgl->x.val,z);   
+    fasp_darray_cp(m,mgl->x.val,z);   
 }
 
 /**
@@ -1065,7 +1065,7 @@ void fasp_precond_dbsr_amg_nk (REAL *r,
     dCSRmat *P_nk = predata->P_nk;
     dCSRmat *R_nk = predata->R_nk;
     
-    fasp_array_set(m, z, 0.0);
+    fasp_darray_set(m, z, 0.0);
     
     // local variables
     dvector r_nk, z_nk;
@@ -1103,13 +1103,13 @@ void fasp_precond_dbsr_amg_nk (REAL *r,
     amgparam.ILU_levels = predata->mgl_data->ILU_levels;
     
     AMG_data_bsr *mgl = predata->mgl_data;
-    mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input
+    mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input
     mgl->x.row=m; //fasp_dvec_set(m,&mgl->x,0.0);
-    fasp_array_cp(m, z, mgl->x.val);
+    fasp_darray_cp(m, z, mgl->x.val);
     
     for ( i=maxit; i--; ) fasp_solver_mgcycle_bsr(mgl,&amgparam); 
     
-    fasp_array_cp(m,mgl->x.val,z);
+    fasp_darray_cp(m,mgl->x.val,z);
     
     //----------------------
     // extra kernel solve

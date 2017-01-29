@@ -122,29 +122,29 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
 #endif
     
     // r = b-A*u
-    fasp_array_cp(m,b->val,r);
+    fasp_darray_cp(m,b->val,r);
     fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
     
     if ( pc != NULL )
         pc->fct(r,z,pc->data); /* Apply preconditioner */
     else
-        fasp_array_cp(m,r,z); /* No preconditioner */
+        fasp_darray_cp(m,r,z); /* No preconditioner */
     
     // compute initial residuals
     switch ( stop_type ) {
         case STOP_REL_RES:
-            absres0 = fasp_blas_array_norm2(m,r);
+            absres0 = fasp_blas_darray_norm2(m,r);
             normr0  = MAX(SMALLREAL,absres0);
             relres  = absres0/normr0;
             break;
         case STOP_REL_PRECRES:
-            absres0 = sqrt(fasp_blas_array_dotprod(m,r,z));
+            absres0 = sqrt(fasp_blas_darray_dotprod(m,r,z));
             normr0  = MAX(SMALLREAL,absres0);
             relres  = absres0/normr0;
             break;
         case STOP_MOD_REL_RES:
-            absres0 = fasp_blas_array_norm2(m,r);
-            unorm2  = MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
+            absres0 = fasp_blas_darray_norm2(m,r);
+            unorm2  = MAX(SMALLREAL,fasp_blas_darray_norm2(m,u->val));
             relres  = absres0/unorm2;
             break;
         default:
@@ -158,8 +158,8 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
     // output iteration information if needed
     print_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
     
-    fasp_array_cp(m,z,p);
-    temp1 = fasp_blas_array_dotprod(m,z,r);
+    fasp_darray_cp(m,z,p);
+    temp1 = fasp_blas_darray_dotprod(m,z,r);
     
     // main PCG loop
     while ( iter++ < MaxIt ) {
@@ -168,7 +168,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
         fasp_blas_dcsr_mxv(A,p,t);
         
         // alpha_k = (z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
-        temp2 = fasp_blas_array_dotprod(m,t,p);
+        temp2 = fasp_blas_darray_dotprod(m,t,p);
         if ( ABS(temp2) > SMALLREAL2 ) {
             alpha = temp1/temp2;
         }
@@ -177,15 +177,15 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
         }
         
         // u_k = u_{k-1} + alpha_k*p_{k-1}
-        fasp_blas_array_axpy(m,alpha,p,u->val);
+        fasp_blas_darray_axpy(m,alpha,p,u->val);
         
         // r_k = r_{k-1} - alpha_k*A*p_{k-1}
-        fasp_blas_array_axpy(m,-alpha,t,r);
+        fasp_blas_darray_axpy(m,-alpha,t,r);
         
         // compute norm of residual
         switch ( stop_type ) {
             case STOP_REL_RES:
-                absres = fasp_blas_array_norm2(m,r);
+                absres = fasp_blas_darray_norm2(m,r);
                 relres = absres/normr0;
                 break;
             case STOP_REL_PRECRES:
@@ -193,12 +193,12 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
                 if ( pc != NULL )
                     pc->fct(r,z,pc->data); /* Apply preconditioner */
                 else
-                    fasp_array_cp(m,r,z); /* No preconditioner */
-                absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                    fasp_darray_cp(m,r,z); /* No preconditioner */
+                absres = sqrt(ABS(fasp_blas_darray_dotprod(m,z,r)));
                 relres = absres/normr0;
                 break;
             case STOP_MOD_REL_RES:
-                absres = fasp_blas_array_norm2(m,r);
+                absres = fasp_blas_darray_norm2(m,r);
                 relres = absres/unorm2;
                 break;
         }
@@ -212,7 +212,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
         if ( factor > 0.9 ) {
             
             // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
-            unorminf = fasp_blas_array_norminf(m, u->val);
+            unorminf = fasp_blas_darray_norminf(m, u->val);
             if ( unorminf <= sol_inf_tol ) {
                 if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
                 iter = ERROR_SOLVER_SOLSTAG;
@@ -220,10 +220,10 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
             }
             
             // Check II: if stagnated, try to restart
-            unorm2 = fasp_blas_array_norm2(m, u->val);
+            unorm2 = fasp_blas_darray_norm2(m, u->val);
             
             // compute relative difference
-            reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/unorm2;
+            reldiff = ABS(alpha)*fasp_blas_darray_norm2(m,p)/unorm2;
             if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
                 
                 if ( prtlvl >= PRINT_MORE ) {
@@ -231,13 +231,13 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
                     ITS_RESTART;
                 }
                 
-                fasp_array_cp(m,b->val,r);
+                fasp_darray_cp(m,b->val,r);
                 fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
                 
                 // compute residual norms
                 switch ( stop_type ) {
                     case STOP_REL_RES:
-                        absres = fasp_blas_array_norm2(m,r);
+                        absres = fasp_blas_darray_norm2(m,r);
                         relres = absres/normr0;
                         break;
                     case STOP_REL_PRECRES:
@@ -245,12 +245,12 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
                         if ( pc != NULL )
                             pc->fct(r,z,pc->data); /* Apply preconditioner */
                         else
-                            fasp_array_cp(m,r,z); /* No preconditioner */
-                        absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                            fasp_darray_cp(m,r,z); /* No preconditioner */
+                        absres = sqrt(ABS(fasp_blas_darray_dotprod(m,z,r)));
                         relres = absres/normr0;
                         break;
                     case STOP_MOD_REL_RES:
-                        absres = fasp_blas_array_norm2(m,r);
+                        absres = fasp_blas_darray_norm2(m,r);
                         relres = absres/unorm2;
                         break;
                 }
@@ -265,7 +265,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
                         iter = ERROR_SOLVER_STAG;
                         break;
                     }
-                    fasp_array_set(m,p,0.0);
+                    fasp_darray_set(m,p,0.0);
                     ++stag;
                 }
                 
@@ -279,13 +279,13 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
             REAL updated_relres = relres;
             
             // compute true residual r = b - Ax and update residual
-            fasp_array_cp(m,b->val,r);
+            fasp_darray_cp(m,b->val,r);
             fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
             
             // compute residual norms
             switch ( stop_type ) {
                 case STOP_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
+                    absres = fasp_blas_darray_norm2(m,r);
                     relres = absres/normr0;
                     break;
                 case STOP_REL_PRECRES:
@@ -293,12 +293,12 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
                     if ( pc != NULL )
                         pc->fct(r,z,pc->data); /* Apply preconditioner */
                     else
-                        fasp_array_cp(m,r,z); /* No preconditioner */
-                    absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                        fasp_darray_cp(m,r,z); /* No preconditioner */
+                    absres = sqrt(ABS(fasp_blas_darray_dotprod(m,z,r)));
                     relres = absres/normr0;
                     break;
                 case STOP_MOD_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
+                    absres = fasp_blas_darray_norm2(m,r);
                     relres = absres/unorm2;
                     break;
             }
@@ -317,7 +317,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
             }
             
             // prepare for restarting method
-            fasp_array_set(m,p,0.0);
+            fasp_darray_set(m,p,0.0);
             ++more_step;
             
         } // end of safe-guard check!
@@ -330,16 +330,16 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
             if ( pc != NULL )
                 pc->fct(r,z,pc->data); /* Apply preconditioner */
             else
-                fasp_array_cp(m,r,z); /* No preconditioner, B=I */
+                fasp_darray_cp(m,r,z); /* No preconditioner, B=I */
         }
         
         // compute beta_k = (z_k, r_k)/(z_{k-1}, r_{k-1})
-        temp2 = fasp_blas_array_dotprod(m,z,r);
+        temp2 = fasp_blas_darray_dotprod(m,z,r);
         beta  = temp2/temp1;
         temp1 = temp2;
         
         // compute p_k = z_k + beta_k*p_{k-1}
-        fasp_blas_array_axpby(m,1.0,z,beta,p);
+        fasp_blas_darray_axpby(m,1.0,z,beta,p);
         
     } // end of main PCG loop.
     
@@ -411,29 +411,29 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
 #endif
     
     // r = b-A*u
-    fasp_array_cp(m,b->val,r);
+    fasp_darray_cp(m,b->val,r);
     fasp_blas_dbsr_aAxpy(-1.0,A,u->val,r);
     
     if ( pc != NULL )
         pc->fct(r,z,pc->data); /* Apply preconditioner */
     else
-        fasp_array_cp(m,r,z); /* No preconditioner */
+        fasp_darray_cp(m,r,z); /* No preconditioner */
     
     // compute initial residuals
     switch ( stop_type ) {
         case STOP_REL_RES:
-            absres0 = fasp_blas_array_norm2(m,r);
+            absres0 = fasp_blas_darray_norm2(m,r);
             normr0  = MAX(SMALLREAL,absres0);
             relres  = absres0/normr0;
             break;
         case STOP_REL_PRECRES:
-            absres0 = sqrt(fasp_blas_array_dotprod(m,r,z));
+            absres0 = sqrt(fasp_blas_darray_dotprod(m,r,z));
             normr0  = MAX(SMALLREAL,absres0);
             relres  = absres0/normr0;
             break;
         case STOP_MOD_REL_RES:
-            absres0 = fasp_blas_array_norm2(m,r);
-            unorm2  = MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
+            absres0 = fasp_blas_darray_norm2(m,r);
+            unorm2  = MAX(SMALLREAL,fasp_blas_darray_norm2(m,u->val));
             relres  = absres0/unorm2;
             break;
         default:
@@ -447,8 +447,8 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
     // output iteration information if needed
     print_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
     
-    fasp_array_cp(m,z,p);
-    temp1 = fasp_blas_array_dotprod(m,z,r);
+    fasp_darray_cp(m,z,p);
+    temp1 = fasp_blas_darray_dotprod(m,z,r);
     
     // main PCG loop
     while ( iter++ < MaxIt ) {
@@ -457,7 +457,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
         fasp_blas_dbsr_mxv(A,p,t);
         
         // alpha_k = (z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
-        temp2 = fasp_blas_array_dotprod(m,t,p);
+        temp2 = fasp_blas_darray_dotprod(m,t,p);
         if ( ABS(temp2) > SMALLREAL2 ) {
             alpha = temp1/temp2;
         }
@@ -466,15 +466,15 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
         }
         
         // u_k = u_{k-1} + alpha_k*p_{k-1}
-        fasp_blas_array_axpy(m,alpha,p,u->val);
+        fasp_blas_darray_axpy(m,alpha,p,u->val);
         
         // r_k = r_{k-1} - alpha_k*A*p_{k-1}
-        fasp_blas_array_axpy(m,-alpha,t,r);
+        fasp_blas_darray_axpy(m,-alpha,t,r);
         
         // compute norm of residual
         switch ( stop_type ) {
             case STOP_REL_RES:
-                absres = fasp_blas_array_norm2(m,r);
+                absres = fasp_blas_darray_norm2(m,r);
                 relres = absres/normr0;
                 break;
             case STOP_REL_PRECRES:
@@ -482,12 +482,12 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
                 if ( pc != NULL )
                     pc->fct(r,z,pc->data); /* Apply preconditioner */
                 else
-                    fasp_array_cp(m,r,z); /* No preconditioner */
-                absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                    fasp_darray_cp(m,r,z); /* No preconditioner */
+                absres = sqrt(ABS(fasp_blas_darray_dotprod(m,z,r)));
                 relres = absres/normr0;
                 break;
             case STOP_MOD_REL_RES:
-                absres = fasp_blas_array_norm2(m,r);
+                absres = fasp_blas_darray_norm2(m,r);
                 relres = absres/unorm2;
                 break;
         }
@@ -501,7 +501,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
         if ( factor > 0.9 ) {
             
             // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
-            unorminf = fasp_blas_array_norminf(m, u->val);
+            unorminf = fasp_blas_darray_norminf(m, u->val);
             if ( unorminf <= sol_inf_tol ) {
                 if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
                 iter = ERROR_SOLVER_SOLSTAG;
@@ -509,10 +509,10 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
             }
             
             // Check II: if stagnated, try to restart
-            unorm2 = fasp_blas_array_norm2(m, u->val);
+            unorm2 = fasp_blas_darray_norm2(m, u->val);
             
             // compute relative difference
-            reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/unorm2;
+            reldiff = ABS(alpha)*fasp_blas_darray_norm2(m,p)/unorm2;
             if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
                 
                 if ( prtlvl >= PRINT_MORE ) {
@@ -520,13 +520,13 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
                     ITS_RESTART;
                 }
                 
-                fasp_array_cp(m,b->val,r);
+                fasp_darray_cp(m,b->val,r);
                 fasp_blas_dbsr_aAxpy(-1.0,A,u->val,r);
                 
                 // compute residual norms
                 switch ( stop_type ) {
                     case STOP_REL_RES:
-                        absres = fasp_blas_array_norm2(m,r);
+                        absres = fasp_blas_darray_norm2(m,r);
                         relres = absres/normr0;
                         break;
                     case STOP_REL_PRECRES:
@@ -534,12 +534,12 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
                         if ( pc != NULL )
                             pc->fct(r,z,pc->data); /* Apply preconditioner */
                         else
-                            fasp_array_cp(m,r,z); /* No preconditioner */
-                        absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                            fasp_darray_cp(m,r,z); /* No preconditioner */
+                        absres = sqrt(ABS(fasp_blas_darray_dotprod(m,z,r)));
                         relres = absres/normr0;
                         break;
                     case STOP_MOD_REL_RES:
-                        absres = fasp_blas_array_norm2(m,r);
+                        absres = fasp_blas_darray_norm2(m,r);
                         relres = absres/unorm2;
                         break;
                 }
@@ -554,7 +554,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
                         iter = ERROR_SOLVER_STAG;
                         break;
                     }
-                    fasp_array_set(m,p,0.0);
+                    fasp_darray_set(m,p,0.0);
                     ++stag;
                 }
                 
@@ -568,13 +568,13 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
             REAL updated_relres = relres;
             
             // compute true residual r = b - Ax and update residual
-            fasp_array_cp(m,b->val,r);
+            fasp_darray_cp(m,b->val,r);
             fasp_blas_dbsr_aAxpy(-1.0,A,u->val,r);
             
             // compute residual norms
             switch ( stop_type ) {
                 case STOP_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
+                    absres = fasp_blas_darray_norm2(m,r);
                     relres = absres/normr0;
                     break;
                 case STOP_REL_PRECRES:
@@ -582,12 +582,12 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
                     if ( pc != NULL )
                         pc->fct(r,z,pc->data); /* Apply preconditioner */
                     else
-                        fasp_array_cp(m,r,z); /* No preconditioner */
-                    absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                        fasp_darray_cp(m,r,z); /* No preconditioner */
+                    absres = sqrt(ABS(fasp_blas_darray_dotprod(m,z,r)));
                     relres = absres/normr0;
                     break;
                 case STOP_MOD_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
+                    absres = fasp_blas_darray_norm2(m,r);
                     relres = absres/unorm2;
                     break;
             }
@@ -606,7 +606,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
             }
             
             // prepare for restarting method
-            fasp_array_set(m,p,0.0);
+            fasp_darray_set(m,p,0.0);
             ++more_step;
             
         } // end of safe-guard check!
@@ -619,16 +619,16 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
             if ( pc != NULL )
                 pc->fct(r,z,pc->data); /* Apply preconditioner */
             else
-                fasp_array_cp(m,r,z); /* No preconditioner, B=I */
+                fasp_darray_cp(m,r,z); /* No preconditioner, B=I */
         }
         
         // compute beta_k = (z_k, r_k)/(z_{k-1}, r_{k-1})
-        temp2 = fasp_blas_array_dotprod(m,z,r);
+        temp2 = fasp_blas_darray_dotprod(m,z,r);
         beta  = temp2/temp1;
         temp1 = temp2;
         
         // compute p_k = z_k + beta_k*p_{k-1}
-        fasp_blas_array_axpby(m,1.0,z,beta,p);
+        fasp_blas_darray_axpby(m,1.0,z,beta,p);
         
     } // end of main PCG loop.
     
@@ -703,29 +703,29 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
 #endif
     
     // r = b-A*u
-    fasp_array_cp(m,b->val,r);
+    fasp_darray_cp(m,b->val,r);
     fasp_blas_dblc_aAxpy(-1.0,A,u->val,r);
     
     if ( pc != NULL )
         pc->fct(r,z,pc->data); /* Apply preconditioner */
     else
-        fasp_array_cp(m,r,z); /* No preconditioner */
+        fasp_darray_cp(m,r,z); /* No preconditioner */
     
     // compute initial residuals
     switch ( stop_type ) {
         case STOP_REL_RES:
-            absres0 = fasp_blas_array_norm2(m,r);
+            absres0 = fasp_blas_darray_norm2(m,r);
             normr0  = MAX(SMALLREAL,absres0);
             relres  = absres0/normr0;
             break;
         case STOP_REL_PRECRES:
-            absres0 = sqrt(fasp_blas_array_dotprod(m,r,z));
+            absres0 = sqrt(fasp_blas_darray_dotprod(m,r,z));
             normr0  = MAX(SMALLREAL,absres0);
             relres  = absres0/normr0;
             break;
         case STOP_MOD_REL_RES:
-            absres0 = fasp_blas_array_norm2(m,r);
-            unorm2  = MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
+            absres0 = fasp_blas_darray_norm2(m,r);
+            unorm2  = MAX(SMALLREAL,fasp_blas_darray_norm2(m,u->val));
             relres  = absres0/unorm2;
             break;
         default:
@@ -739,8 +739,8 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
     // output iteration information if needed
     print_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
     
-    fasp_array_cp(m,z,p);
-    temp1 = fasp_blas_array_dotprod(m,z,r);
+    fasp_darray_cp(m,z,p);
+    temp1 = fasp_blas_darray_dotprod(m,z,r);
     
     // main PCG loop
     while ( iter++ < MaxIt ) {
@@ -749,7 +749,7 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
         fasp_blas_dblc_mxv(A,p,t);
         
         // alpha_k = (z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
-        temp2 = fasp_blas_array_dotprod(m,t,p);
+        temp2 = fasp_blas_darray_dotprod(m,t,p);
         if ( ABS(temp2) > SMALLREAL2 ) {
             alpha = temp1/temp2;
         }
@@ -758,15 +758,15 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
         }
         
         // u_k = u_{k-1} + alpha_k*p_{k-1}
-        fasp_blas_array_axpy(m,alpha,p,u->val);
+        fasp_blas_darray_axpy(m,alpha,p,u->val);
         
         // r_k = r_{k-1} - alpha_k*A*p_{k-1}
-        fasp_blas_array_axpy(m,-alpha,t,r);
+        fasp_blas_darray_axpy(m,-alpha,t,r);
         
         // compute norm of residual
         switch ( stop_type ) {
             case STOP_REL_RES:
-                absres = fasp_blas_array_norm2(m,r);
+                absres = fasp_blas_darray_norm2(m,r);
                 relres = absres/normr0;
                 break;
             case STOP_REL_PRECRES:
@@ -774,12 +774,12 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
                 if ( pc != NULL )
                     pc->fct(r,z,pc->data); /* Apply preconditioner */
                 else
-                    fasp_array_cp(m,r,z); /* No preconditioner */
-                absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                    fasp_darray_cp(m,r,z); /* No preconditioner */
+                absres = sqrt(ABS(fasp_blas_darray_dotprod(m,z,r)));
                 relres = absres/normr0;
                 break;
             case STOP_MOD_REL_RES:
-                absres = fasp_blas_array_norm2(m,r);
+                absres = fasp_blas_darray_norm2(m,r);
                 relres = absres/unorm2;
                 break;
         }
@@ -793,7 +793,7 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
         if ( factor > 0.9 ) {
             
             // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
-            unorminf = fasp_blas_array_norminf(m, u->val);
+            unorminf = fasp_blas_darray_norminf(m, u->val);
             if ( unorminf <= sol_inf_tol ) {
                 if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
                 iter = ERROR_SOLVER_SOLSTAG;
@@ -801,10 +801,10 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
             }
             
             // Check II: if stagnated, try to restart
-            unorm2 = fasp_blas_array_norm2(m, u->val);
+            unorm2 = fasp_blas_darray_norm2(m, u->val);
             
             // compute relative difference
-            reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/unorm2;
+            reldiff = ABS(alpha)*fasp_blas_darray_norm2(m,p)/unorm2;
             if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
                 
                 if ( prtlvl >= PRINT_MORE ) {
@@ -812,13 +812,13 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
                     ITS_RESTART;
                 }
                 
-                fasp_array_cp(m,b->val,r);
+                fasp_darray_cp(m,b->val,r);
                 fasp_blas_dblc_aAxpy(-1.0,A,u->val,r);
                 
                 // compute residual norms
                 switch ( stop_type ) {
                     case STOP_REL_RES:
-                        absres = fasp_blas_array_norm2(m,r);
+                        absres = fasp_blas_darray_norm2(m,r);
                         relres = absres/normr0;
                         break;
                     case STOP_REL_PRECRES:
@@ -826,12 +826,12 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
                         if ( pc != NULL )
                             pc->fct(r,z,pc->data); /* Apply preconditioner */
                         else
-                            fasp_array_cp(m,r,z); /* No preconditioner */
-                        absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                            fasp_darray_cp(m,r,z); /* No preconditioner */
+                        absres = sqrt(ABS(fasp_blas_darray_dotprod(m,z,r)));
                         relres = absres/normr0;
                         break;
                     case STOP_MOD_REL_RES:
-                        absres = fasp_blas_array_norm2(m,r);
+                        absres = fasp_blas_darray_norm2(m,r);
                         relres = absres/unorm2;
                         break;
                 }
@@ -846,7 +846,7 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
                         iter = ERROR_SOLVER_STAG;
                         break;
                     }
-                    fasp_array_set(m,p,0.0);
+                    fasp_darray_set(m,p,0.0);
                     ++stag;
                 }
                 
@@ -860,13 +860,13 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
             REAL updated_relres = relres;
             
             // compute true residual r = b - Ax and update residual
-            fasp_array_cp(m,b->val,r);
+            fasp_darray_cp(m,b->val,r);
             fasp_blas_dblc_aAxpy(-1.0,A,u->val,r);
             
             // compute residual norms
             switch ( stop_type ) {
                 case STOP_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
+                    absres = fasp_blas_darray_norm2(m,r);
                     relres = absres/normr0;
                     break;
                 case STOP_REL_PRECRES:
@@ -874,12 +874,12 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
                     if ( pc != NULL )
                         pc->fct(r,z,pc->data); /* Apply preconditioner */
                     else
-                        fasp_array_cp(m,r,z); /* No preconditioner */
-                    absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                        fasp_darray_cp(m,r,z); /* No preconditioner */
+                    absres = sqrt(ABS(fasp_blas_darray_dotprod(m,z,r)));
                     relres = absres/normr0;
                     break;
                 case STOP_MOD_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
+                    absres = fasp_blas_darray_norm2(m,r);
                     relres = absres/unorm2;
                     break;
             }
@@ -898,7 +898,7 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
             }
             
             // prepare for restarting method
-            fasp_array_set(m,p,0.0);
+            fasp_darray_set(m,p,0.0);
             ++more_step;
             
         } // end of safe-guard check!
@@ -911,16 +911,16 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
             if ( pc != NULL )
                 pc->fct(r,z,pc->data); /* Apply preconditioner */
             else
-                fasp_array_cp(m,r,z); /* No preconditioner, B=I */
+                fasp_darray_cp(m,r,z); /* No preconditioner, B=I */
         }
         
         // compute beta_k = (z_k, r_k)/(z_{k-1}, r_{k-1})
-        temp2 = fasp_blas_array_dotprod(m,z,r);
+        temp2 = fasp_blas_darray_dotprod(m,z,r);
         beta  = temp2/temp1;
         temp1 = temp2;
         
         // compute p_k = z_k + beta_k*p_{k-1}
-        fasp_blas_array_axpby(m,1.0,z,beta,p);
+        fasp_blas_darray_axpby(m,1.0,z,beta,p);
         
     } // end of main PCG loop.
     
@@ -995,29 +995,29 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
 #endif
     
     // r = b-A*u
-    fasp_array_cp(m,b->val,r);
+    fasp_darray_cp(m,b->val,r);
     fasp_blas_dstr_aAxpy(-1.0,A,u->val,r);
     
     if ( pc != NULL )
         pc->fct(r,z,pc->data); /* Apply preconditioner */
     else
-        fasp_array_cp(m,r,z); /* No preconditioner */
+        fasp_darray_cp(m,r,z); /* No preconditioner */
     
     // compute initial residuals
     switch ( stop_type ) {
         case STOP_REL_RES:
-            absres0 = fasp_blas_array_norm2(m,r);
+            absres0 = fasp_blas_darray_norm2(m,r);
             normr0  = MAX(SMALLREAL,absres0);
             relres  = absres0/normr0;
             break;
         case STOP_REL_PRECRES:
-            absres0 = sqrt(fasp_blas_array_dotprod(m,r,z));
+            absres0 = sqrt(fasp_blas_darray_dotprod(m,r,z));
             normr0  = MAX(SMALLREAL,absres0);
             relres  = absres0/normr0;
             break;
         case STOP_MOD_REL_RES:
-            absres0 = fasp_blas_array_norm2(m,r);
-            unorm2  = MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
+            absres0 = fasp_blas_darray_norm2(m,r);
+            unorm2  = MAX(SMALLREAL,fasp_blas_darray_norm2(m,u->val));
             relres  = absres0/unorm2;
             break;
         default:
@@ -1031,8 +1031,8 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
     // output iteration information if needed
     print_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
     
-    fasp_array_cp(m,z,p);
-    temp1 = fasp_blas_array_dotprod(m,z,r);
+    fasp_darray_cp(m,z,p);
+    temp1 = fasp_blas_darray_dotprod(m,z,r);
     
     // main PCG loop
     while ( iter++ < MaxIt ) {
@@ -1041,7 +1041,7 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
         fasp_blas_dstr_mxv(A,p,t);
         
         // alpha_k = (z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
-        temp2 = fasp_blas_array_dotprod(m,t,p);
+        temp2 = fasp_blas_darray_dotprod(m,t,p);
         if ( ABS(temp2) > SMALLREAL2 ) {
             alpha = temp1/temp2;
         }
@@ -1050,15 +1050,15 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
         }
         
         // u_k = u_{k-1} + alpha_k*p_{k-1}
-        fasp_blas_array_axpy(m,alpha,p,u->val);
+        fasp_blas_darray_axpy(m,alpha,p,u->val);
         
         // r_k = r_{k-1} - alpha_k*A*p_{k-1}
-        fasp_blas_array_axpy(m,-alpha,t,r);
+        fasp_blas_darray_axpy(m,-alpha,t,r);
         
         // compute norm of residual
         switch ( stop_type ) {
             case STOP_REL_RES:
-                absres = fasp_blas_array_norm2(m,r);
+                absres = fasp_blas_darray_norm2(m,r);
                 relres = absres/normr0;
                 break;
             case STOP_REL_PRECRES:
@@ -1066,12 +1066,12 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
                 if ( pc != NULL )
                     pc->fct(r,z,pc->data); /* Apply preconditioner */
                 else
-                    fasp_array_cp(m,r,z); /* No preconditioner */
-                absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                    fasp_darray_cp(m,r,z); /* No preconditioner */
+                absres = sqrt(ABS(fasp_blas_darray_dotprod(m,z,r)));
                 relres = absres/normr0;
                 break;
             case STOP_MOD_REL_RES:
-                absres = fasp_blas_array_norm2(m,r);
+                absres = fasp_blas_darray_norm2(m,r);
                 relres = absres/unorm2;
                 break;
         }
@@ -1085,7 +1085,7 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
         if ( factor > 0.9 ) {
             
             // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
-            unorminf = fasp_blas_array_norminf(m, u->val);
+            unorminf = fasp_blas_darray_norminf(m, u->val);
             if ( unorminf <= sol_inf_tol ) {
                 if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
                 iter = ERROR_SOLVER_SOLSTAG;
@@ -1093,10 +1093,10 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
             }
             
             // Check II: if stagnated, try to restart
-            unorm2 = fasp_blas_array_norm2(m, u->val);
+            unorm2 = fasp_blas_darray_norm2(m, u->val);
             
             // compute relative difference
-            reldiff = ABS(alpha)*fasp_blas_array_norm2(m,p)/unorm2;
+            reldiff = ABS(alpha)*fasp_blas_darray_norm2(m,p)/unorm2;
             if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
                 
                 if ( prtlvl >= PRINT_MORE ) {
@@ -1104,13 +1104,13 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
                     ITS_RESTART;
                 }
                 
-                fasp_array_cp(m,b->val,r);
+                fasp_darray_cp(m,b->val,r);
                 fasp_blas_dstr_aAxpy(-1.0,A,u->val,r);
                 
                 // compute residual norms
                 switch ( stop_type ) {
                     case STOP_REL_RES:
-                        absres = fasp_blas_array_norm2(m,r);
+                        absres = fasp_blas_darray_norm2(m,r);
                         relres = absres/normr0;
                         break;
                     case STOP_REL_PRECRES:
@@ -1118,12 +1118,12 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
                         if ( pc != NULL )
                             pc->fct(r,z,pc->data); /* Apply preconditioner */
                         else
-                            fasp_array_cp(m,r,z); /* No preconditioner */
-                        absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                            fasp_darray_cp(m,r,z); /* No preconditioner */
+                        absres = sqrt(ABS(fasp_blas_darray_dotprod(m,z,r)));
                         relres = absres/normr0;
                         break;
                     case STOP_MOD_REL_RES:
-                        absres = fasp_blas_array_norm2(m,r);
+                        absres = fasp_blas_darray_norm2(m,r);
                         relres = absres/unorm2;
                         break;
                 }
@@ -1138,7 +1138,7 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
                         iter = ERROR_SOLVER_STAG;
                         break;
                     }
-                    fasp_array_set(m,p,0.0);
+                    fasp_darray_set(m,p,0.0);
                     ++stag;
                 }
 
@@ -1152,13 +1152,13 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
             REAL updated_relres = relres;
             
             // compute true residual r = b - Ax and update residual
-            fasp_array_cp(m,b->val,r);
+            fasp_darray_cp(m,b->val,r);
             fasp_blas_dstr_aAxpy(-1.0,A,u->val,r);
             
             // compute residual norms
             switch ( stop_type ) {
                 case STOP_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
+                    absres = fasp_blas_darray_norm2(m,r);
                     relres = absres/normr0;
                     break;
                 case STOP_REL_PRECRES:
@@ -1166,12 +1166,12 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
                     if ( pc != NULL )
                         pc->fct(r,z,pc->data); /* Apply preconditioner */
                     else
-                        fasp_array_cp(m,r,z); /* No preconditioner */
-                    absres = sqrt(ABS(fasp_blas_array_dotprod(m,z,r)));
+                        fasp_darray_cp(m,r,z); /* No preconditioner */
+                    absres = sqrt(ABS(fasp_blas_darray_dotprod(m,z,r)));
                     relres = absres/normr0;
                     break;
                 case STOP_MOD_REL_RES:
-                    absres = fasp_blas_array_norm2(m,r);
+                    absres = fasp_blas_darray_norm2(m,r);
                     relres = absres/unorm2;
                     break;
             }
@@ -1190,7 +1190,7 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
             }
             
             // prepare for restarting method
-            fasp_array_set(m,p,0.0);
+            fasp_darray_set(m,p,0.0);
             ++more_step;
             
         } // end of safe-guard check!
@@ -1203,16 +1203,16 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
             if ( pc != NULL )
                 pc->fct(r,z,pc->data); /* Apply preconditioner */
             else
-                fasp_array_cp(m,r,z); /* No preconditioner, B=I */
+                fasp_darray_cp(m,r,z); /* No preconditioner, B=I */
         }
         
         // compute beta_k = (z_k, r_k)/(z_{k-1}, r_{k-1})
-        temp2 = fasp_blas_array_dotprod(m,z,r);
+        temp2 = fasp_blas_darray_dotprod(m,z,r);
         beta  = temp2/temp1;
         temp1 = temp2;
         
         // compute p_k = z_k + beta_k*p_{k-1}
-        fasp_blas_array_axpby(m,1.0,z,beta,p);
+        fasp_blas_darray_axpby(m,1.0,z,beta,p);
         
     } // end of main PCG loop.
     
@@ -1291,27 +1291,27 @@ INT fasp_solver_pcg (mxv_matfree *mf,
     
     // r = b-A*u
     mf->fct(mf->data, u->val, r);
-    fasp_blas_array_axpby(m, 1.0, b->val, -1.0, r);
+    fasp_blas_darray_axpby(m, 1.0, b->val, -1.0, r);
     
     if (pc != NULL)
         pc->fct(r,z,pc->data); /* Apply preconditioner */
     else
-        fasp_array_cp(m,r,z); /* No preconditioner */
+        fasp_darray_cp(m,r,z); /* No preconditioner */
     
     // compute initial relative residual
     switch (stop_type) {
         case STOP_REL_PRECRES:
-            absres0=sqrt(fasp_blas_array_dotprod(m,r,z));
+            absres0=sqrt(fasp_blas_darray_dotprod(m,r,z));
             normr0=MAX(SMALLREAL,absres0);
             relres=absres0/normr0;
             break;
         case STOP_MOD_REL_RES:
-            absres0=fasp_blas_array_norm2(m,r);
-            normu=MAX(SMALLREAL,fasp_blas_array_norm2(m,u->val));
+            absres0=fasp_blas_darray_norm2(m,r);
+            normu=MAX(SMALLREAL,fasp_blas_darray_norm2(m,u->val));
             relres=absres0/normu;
             break;
         default:
-            absres0=fasp_blas_array_norm2(m,r);
+            absres0=fasp_blas_darray_norm2(m,r);
             normr0=MAX(SMALLREAL,absres0);
             relres=absres0/normr0;
             break;
@@ -1320,8 +1320,8 @@ INT fasp_solver_pcg (mxv_matfree *mf,
     // if initial residual is small, no need to iterate!
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
     
-    fasp_array_cp(m,z,p);
-    temp1=fasp_blas_array_dotprod(m,z,r);
+    fasp_darray_cp(m,z,p);
+    temp1=fasp_blas_darray_dotprod(m,z,r);
     
     while ( iter++ < MaxIt ) {
         
@@ -1329,15 +1329,15 @@ INT fasp_solver_pcg (mxv_matfree *mf,
         mf->fct(mf->data, p, t);
         
         // alpha_k=(z_{k-1},r_{k-1})/(A*p_{k-1},p_{k-1})
-        temp2=fasp_blas_array_dotprod(m,t,p);
+        temp2=fasp_blas_darray_dotprod(m,t,p);
         alpha=temp1/temp2;
         
         // u_k=u_{k-1} + alpha_k*p_{k-1}
-        fasp_blas_array_axpy(m,alpha,p,u->val);
+        fasp_blas_darray_axpy(m,alpha,p,u->val);
         
         // r_k=r_{k-1} - alpha_k*A*p_{k-1}
-        fasp_blas_array_axpy(m,-alpha,t,r);
-        absres=fasp_blas_array_norm2(m,r);
+        fasp_blas_darray_axpy(m,-alpha,t,r);
+        absres=fasp_blas_darray_norm2(m,r);
         
         // compute reducation factor of residual ||r||
         factor=absres/absres0;
@@ -1349,8 +1349,8 @@ INT fasp_solver_pcg (mxv_matfree *mf,
                 if (pc != NULL)
                     pc->fct(r,z,pc->data); /* Apply preconditioner */
                 else
-                    fasp_array_cp(m,r,z); /* No preconditioner */
-                temp2=fasp_blas_array_dotprod(m,z,r);
+                    fasp_darray_cp(m,r,z); /* No preconditioner */
+                temp2=fasp_blas_darray_dotprod(m,z,r);
                 relres=sqrt(ABS(temp2))/normr0;
                 break;
             case STOP_MOD_REL_RES:
@@ -1365,7 +1365,7 @@ INT fasp_solver_pcg (mxv_matfree *mf,
         print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         // solution check, if soultion is too small, return ERROR_SOLVER_SOLSTAG.
-        infnormu = fasp_blas_array_norminf(m, u->val);
+        infnormu = fasp_blas_darray_norminf(m, u->val);
         if ( infnormu <= sol_inf_tol ) {
             if ( prtlvl > PRINT_MIN ) ITS_ZEROSOL;
             iter = ERROR_SOLVER_SOLSTAG;
@@ -1373,8 +1373,8 @@ INT fasp_solver_pcg (mxv_matfree *mf,
         }
         
         // compute relative difference
-        normu = fasp_blas_array_norm2(m, u->val);
-        reldiff = ABS(alpha)*fasp_blas_array_norm2(m, p)/normu;
+        normu = fasp_blas_darray_norm2(m, u->val);
+        reldiff = ABS(alpha)*fasp_blas_darray_norm2(m, p)/normu;
         
         // stagnation check
         if ( (stag<=MaxStag) & (reldiff<maxdiff) ) {
@@ -1385,8 +1385,8 @@ INT fasp_solver_pcg (mxv_matfree *mf,
             }
             
             mf->fct(mf->data, u->val, r);
-            fasp_blas_array_axpby(m, 1.0, b->val, -1.0, r);
-            absres = fasp_blas_array_norm2(m,r);
+            fasp_blas_darray_axpby(m, 1.0, b->val, -1.0, r);
+            absres = fasp_blas_darray_norm2(m,r);
             
             // relative residual
             switch (stop_type) {
@@ -1395,8 +1395,8 @@ INT fasp_solver_pcg (mxv_matfree *mf,
                     if (pc != NULL)
                         pc->fct(r,z,pc->data); /* Apply preconditioner */
                     else
-                        fasp_array_cp(m,r,z); /* No preconditioner */
-                    temp2=fasp_blas_array_dotprod(m,z,r);
+                        fasp_darray_cp(m,r,z); /* No preconditioner */
+                    temp2=fasp_blas_darray_dotprod(m,z,r);
                     relres=sqrt(ABS(temp2))/normr0;
                     break;
                 case STOP_MOD_REL_RES:
@@ -1417,7 +1417,7 @@ INT fasp_solver_pcg (mxv_matfree *mf,
                     iter = ERROR_SOLVER_STAG;
                     break;
                 }
-                fasp_array_set(m,p,0.0);
+                fasp_darray_set(m,p,0.0);
                 ++stag;
                 ++restart_step;
             }
@@ -1428,7 +1428,7 @@ INT fasp_solver_pcg (mxv_matfree *mf,
             if ( prtlvl >= PRINT_MORE ) ITS_COMPRES(relres);
             
             mf->fct(mf->data, u->val, r);
-            fasp_blas_array_axpby(m, 1.0, b->val, -1.0, r);
+            fasp_blas_darray_axpby(m, 1.0, b->val, -1.0, r);
             
             // relative residual
             switch (stop_type) {
@@ -1437,16 +1437,16 @@ INT fasp_solver_pcg (mxv_matfree *mf,
                     if (pc != NULL)
                         pc->fct(r,z,pc->data); /* Apply preconditioner */
                     else
-                        fasp_array_cp(m,r,z); /* No preconditioner */
-                    temp2=fasp_blas_array_dotprod(m,z,r);
+                        fasp_darray_cp(m,r,z); /* No preconditioner */
+                    temp2=fasp_blas_darray_dotprod(m,z,r);
                     relres=sqrt(ABS(temp2))/normr0;
                     break;
                 case STOP_MOD_REL_RES:
-                    absres=fasp_blas_array_norm2(m,r);
+                    absres=fasp_blas_darray_norm2(m,r);
                     relres=absres/normu;
                     break;
                 default:
-                    absres=fasp_blas_array_norm2(m,r);
+                    absres=fasp_blas_darray_norm2(m,r);
                     relres=absres/normr0;
                     break;
             }
@@ -1463,7 +1463,7 @@ INT fasp_solver_pcg (mxv_matfree *mf,
             }
             
             // prepare for restarting method
-            fasp_array_set(m,p,0.0);
+            fasp_darray_set(m,p,0.0);
             ++more_step;
             ++restart_step;
             
@@ -1477,16 +1477,16 @@ INT fasp_solver_pcg (mxv_matfree *mf,
             if ( pc != NULL )
                 pc->fct(r,z,pc->data); /* Apply preconditioner */
             else
-                fasp_array_cp(m,r,z); /* No preconditioner, B=I */
+                fasp_darray_cp(m,r,z); /* No preconditioner, B=I */
         }
         
         // compute beta_k = (z_k, r_k)/(z_{k-1}, r_{k-1})
-        temp2=fasp_blas_array_dotprod(m,z,r);
+        temp2=fasp_blas_darray_dotprod(m,z,r);
         beta=temp2/temp1;
         temp1=temp2;
         
         // compute p_k = z_k + beta_k*p_{k-1}
-        fasp_blas_array_axpby(m,1.0,z,beta,p);
+        fasp_blas_darray_axpby(m,1.0,z,beta,p);
         
     } // end of main PCG loop.
     

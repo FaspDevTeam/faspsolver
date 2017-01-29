@@ -312,10 +312,8 @@ static void smooth_agg_bsr1 (const dBSRmat *A,
     for (i=0; i<row; ++i) {
         for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
             if (S.JA[j] == i) {
-                
                 fasp_blas_smat_add(Id, S.val+(j*nb2), nb, 1.0, 1.0, temp);
-                fasp_array_cp(nb2, temp, S.val+(j*nb2));
-                
+                fasp_darray_cp(nb2, temp, S.val+(j*nb2));
             }
         }
     }

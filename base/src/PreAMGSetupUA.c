@@ -25,7 +25,7 @@
 #include "PreAMGAggregationCSR.inl"
 #include "PreAMGAggregation.inl"
 
-static SHORT amg_setup_unsmoothP_unsmoothR(AMG_data *, AMG_param *);
+static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *, AMG_param *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -102,11 +102,11 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
     REAL  eta, fracratio;
 
     // local variables
-    SHORT         max_levels = param->max_levels, lvl = 0, status = FASP_SUCCESS;
-    INT           i;
-    REAL          setup_start, setup_end;
-    ILU_param     iluparam;
-    Schwarz_param swzparam;
+    SHORT      max_levels = param->max_levels, lvl = 0, status = FASP_SUCCESS;
+    INT        i;
+    REAL       setup_start, setup_end;
+    ILU_param  iluparam;
+    SWZ_param  swzparam;
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -133,7 +133,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
 
     for ( i = 0; i < mgl->near_kernel_dim; ++i ) {
         mgl[0].near_kernel_basis[i] = (REAL *)fasp_mem_calloc(m,sizeof(REAL));
-        fasp_array_set(m, mgl[0].near_kernel_basis[i], 1.0);
+        fasp_darray_set(m, mgl[0].near_kernel_basis[i], 1.0);
     }
 
     // Initialize ILU parameters
@@ -147,12 +147,12 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
     }
 
     // Initialize Schwarz parameters
-    mgl->Schwarz_levels = param->Schwarz_levels;
-    if ( param->Schwarz_levels > 0 ) {
-        swzparam.Schwarz_mmsize = param->Schwarz_mmsize;
-        swzparam.Schwarz_maxlvl = param->Schwarz_maxlvl;
-        swzparam.Schwarz_type   = param->Schwarz_type;
-        swzparam.Schwarz_blksolver = param->Schwarz_blksolver;
+    mgl->SWZ_levels = param->SWZ_levels;
+    if ( param->SWZ_levels > 0 ) {
+        swzparam.SWZ_mmsize = param->SWZ_mmsize;
+        swzparam.SWZ_maxlvl = param->SWZ_maxlvl;
+        swzparam.SWZ_type   = param->SWZ_type;
+        swzparam.SWZ_blksolver = param->SWZ_blksolver;
     }
 
     // Initialize AMLI coefficients
@@ -198,7 +198,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
         }
 
         /*-- Setup Schwarz smoother if necessary */
-        if ( lvl < param->Schwarz_levels ) {
+        if ( lvl < param->SWZ_levels ) {
             mgl[lvl].Schwarz.A=fasp_dcsr_sympart(&mgl[lvl].A);
             fasp_dcsr_shift(&(mgl[lvl].Schwarz.A), 1);
             status = fasp_schwarz_setup(&mgl[lvl].Schwarz, &swzparam);
@@ -207,7 +207,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
                     printf("### WARNING: Schwarz on level-%d failed!\n", lvl);
                     printf("### WARNING: Disable Schwarz for level >= %d.\n", lvl);
                 }
-                param->Schwarz_levels = lvl;
+                param->SWZ_levels = lvl;
             }
         }
 
@@ -346,7 +346,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
 
         mgl[lvl].cycle_type     = cycle_type; // initialize cycle type!
         mgl[lvl].ILU_levels     = param->ILU_levels - lvl; // initialize ILU levels!
-        mgl[lvl].Schwarz_levels = param->Schwarz_levels -lvl; // initialize Schwarz!
+        mgl[lvl].SWZ_levels = param->SWZ_levels -lvl; // initialize Schwarz!
 
         if ( cycle_type == NL_AMLI_CYCLE )
             mgl[lvl].w = fasp_dvec_create(3*mm);

@@ -27,7 +27,7 @@
 
 /**
  * \fn INT fasp_solver_dstr_itsolver (dSTRmat *A, dvector *b, dvector *x, 
- *                                    precond *pc, itsolver_param *itparam)
+ *                                    precond *pc, ITS_param *itparam)
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
@@ -43,11 +43,11 @@
  * \date   09/25/2009 
  * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
-INT fasp_solver_dstr_itsolver (dSTRmat        *A,
-                               dvector        *b,
-                               dvector        *x,
-                               precond        *pc,
-                               itsolver_param *itparam)
+INT fasp_solver_dstr_itsolver (dSTRmat    *A,
+                               dvector    *b,
+                               dvector    *x,
+                               precond    *pc,
+                               ITS_param  *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
     const SHORT itsolver_type = itparam->itsolver_type;
@@ -117,7 +117,7 @@ INT fasp_solver_dstr_itsolver (dSTRmat        *A,
 
 /**
  * \fn INT fasp_solver_dstr_krylov (dSTRmat *A, dvector *b, dvector *x, 
- *                                  itsolver_param *itparam)
+ *                                  ITS_param *itparam)
  *
  * \brief Solve Ax=b by standard Krylov methods 
  *
@@ -131,10 +131,10 @@ INT fasp_solver_dstr_itsolver (dSTRmat        *A,
  * \author Zhiyang Zhou
  * \date   04/25/2010
  */
-INT fasp_solver_dstr_krylov (dSTRmat        *A,
-                             dvector        *b,
-                             dvector        *x,
-                             itsolver_param *itparam)
+INT fasp_solver_dstr_krylov (dSTRmat    *A,
+                             dvector    *b,
+                             dvector    *x,
+                             ITS_param  *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
     INT status = FASP_SUCCESS;
@@ -165,7 +165,7 @@ INT fasp_solver_dstr_krylov (dSTRmat        *A,
 
 /**
  * \fn INT fasp_solver_dstr_krylov_diag (dSTRmat *A, dvector *b, dvector *x, 
- *                                       itsolver_param *itparam)
+ *                                       ITS_param *itparam)
  *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
  *
@@ -179,10 +179,10 @@ INT fasp_solver_dstr_krylov (dSTRmat        *A,
  * \author Zhiyang Zhou
  * \date   4/23/2010
  */
-INT fasp_solver_dstr_krylov_diag (dSTRmat        *A,
-                                  dvector        *b,
-                                  dvector        *x,
-                                  itsolver_param *itparam)
+INT fasp_solver_dstr_krylov_diag (dSTRmat    *A,
+                                  dvector    *b,
+                                  dvector    *x,
+                                  ITS_param  *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
     const INT ngrid = A->ngrid;
@@ -192,9 +192,9 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat        *A,
     INT nc = A->nc, nc2 = nc*nc, i;
     
     // setup preconditioner
-    precond_diagstr diag;
+    precond_diag_str diag;
     fasp_dvec_alloc(ngrid*nc2, &(diag.diag));
-    fasp_array_cp(ngrid*nc2, A->diag, diag.diag.val);
+    fasp_darray_cp(ngrid*nc2, A->diag, diag.diag.val);
     
     diag.nc = nc;
     
@@ -230,7 +230,7 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat        *A,
 
 /**
  * \fn INT fasp_solver_dstr_krylov_ilu(dSTRmat *A, dvector *b, dvector *x, 
- *                                 itsolver_param *itparam, ILU_param *iluparam)
+ *                                 ITS_param *itparam, ILU_param *iluparam)
  *
  * \brief Solve Ax=b by structured ILU preconditioned Krylov methods 
  *
@@ -245,11 +245,11 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat        *A,
  * \author Xiaozhe Hu
  * \date   05/01/2010
  */
-INT fasp_solver_dstr_krylov_ilu (dSTRmat        *A,
-                                 dvector        *b,
-                                 dvector        *x,
-                                 itsolver_param *itparam, 
-                                 ILU_param      *iluparam)
+INT fasp_solver_dstr_krylov_ilu (dSTRmat    *A,
+                                 dvector    *b,
+                                 dvector    *x,
+                                 ITS_param  *itparam,
+                                 ILU_param  *iluparam)
 {
     const SHORT prtlvl = itparam->print_level;
     const INT ILU_lfil = iluparam->ILU_lfil;
@@ -321,7 +321,7 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat        *A,
 
 /**
  * \fn INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A, dvector *b, dvector *x, 
- *                                          itsolver_param *itparam, ivector *neigh,
+ *                                          ITS_param *itparam, ivector *neigh,
  *                                          ivector *order)
  *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
@@ -338,12 +338,12 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat        *A,
  * \author Xiaozhe Hu
  * \date   10/10/2010
  */
-INT fasp_solver_dstr_krylov_blockgs (dSTRmat        *A,
-                                     dvector        *b,
-                                     dvector        *x,
-                                     itsolver_param *itparam, 
-                                     ivector        *neigh,
-                                     ivector        *order)
+INT fasp_solver_dstr_krylov_blockgs (dSTRmat    *A,
+                                     dvector    *b,
+                                     dvector    *x,
+                                     ITS_param  *itparam,
+                                     ivector    *neigh,
+                                     ivector    *order)
 {
     // Parameter for iterative method
     const SHORT prtlvl = itparam->print_level;

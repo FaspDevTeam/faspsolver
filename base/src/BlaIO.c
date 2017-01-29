@@ -349,7 +349,7 @@ void fasp_dcoo_read (const char  *filename,
             Atmp.rowind[k]=i; Atmp.colind[k]=j; Atmp.val[k] = value;
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo_read");
+            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
         }
     }
     
@@ -371,7 +371,8 @@ void fasp_dcoo_read (const char  *filename,
  *   - nrow ncol nnz     % number of rows, number of columns, and nnz
  *   - i  j  a_ij        % i, j a_ij in each line
  *
- * \note difference between fasp_dcoo_read and this funciton is this function do not change to CSR format
+ * \note Difference between fasp_dcoo_read and this funciton is this function do
+ *       not change to CSR format
  *
  * \author Xiaozhe Hu
  * \date   03/24/2013
@@ -400,7 +401,7 @@ void fasp_dcoo1_read (const char  *filename,
             A->rowind[k]=i-1; A->colind[k]=j-1; A->val[k] = value;
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo1_read");
+            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
         }
     }
     
@@ -421,7 +422,8 @@ void fasp_dcoo1_read (const char  *filename,
  *
  * \note i and j suppose to start with index 1!!!
  *
- * \note After read in, it shifts the index to C fashin and converts the matrix to dCSRmat format.
+ * \note After read in, it shifts the index to C fashin and converts the matrix 
+ *       to dCSRmat format.
  *
  * \author Xiaozhe Hu
  * \date   04/01/2014
@@ -510,7 +512,7 @@ void fasp_dmtx_read (const char  *filename,
             
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtx_read");
+            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
         }
     }
     
@@ -583,7 +585,7 @@ void fasp_dmtxsym_read (const char  *filename,
             
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dmtxsym_read");
+            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
         }
     }
     
@@ -1509,7 +1511,8 @@ void fasp_dbsr_write_coo (const char    *filename,
     
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
     
-    fprintf(fp,"%% dimension of the block matrix and nonzeros %d  %d  %d\n",A->ROW,A->COL,A->NNZ); // write dimension of the block matrix
+    fprintf(fp,"%% dimension of the block matrix and nonzeros %d  %d  %d\n",
+            A->ROW,A->COL,A->NNZ); // write dimension of the block matrix
     fprintf(fp,"%% the size of each block %d\n",A->nb); // write the size of each block
     fprintf(fp,"%% storage manner of each block %d\n",A->storage_manner); // write storage manner of each block
     
@@ -2210,7 +2213,7 @@ void fasp_hb_read (const char *input_file,
     
     for (i=0; i<=ncol;  i++) tempA.IA[i] = colptr[i]-1;
     for (i=0; i<nnzero; i++) tempA.JA[i] = rowind[i]-1;
-    fasp_array_cp (nnzero, values, tempA.val);
+    fasp_darray_cp (nnzero, values, tempA.val);
     
     // if the matrix is symmeric
     if (mxtype[1] == 'S'){
@@ -2262,7 +2265,7 @@ void fasp_hb_read (const char *input_file,
     else {
         
         fasp_dvec_alloc(nrow, b);
-        fasp_array_cp(nrow, rhsval, b->val);
+        fasp_darray_cp(nrow, rhsval, b->val);
     }
     
     //-------------------------
@@ -2367,10 +2370,9 @@ static void fasp_dcoo_read_s (FILE        *fp,
             Atmp.rowind[k]=i; Atmp.colind[k]=j; Atmp.val[k] = value;
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo_read");
+            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
         }
     }
-    
     
     fasp_format_dcoo_dcsr(&Atmp,A);
     fasp_dcoo_free(&Atmp);
@@ -2401,7 +2403,7 @@ static void fasp_dcoo_read_b (FILE        *fp,
             Atmp.val[k] = endian_convert_real(value, sizeof(REAL), EndianFlag);
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, "fasp_dcoo_read");
+            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
         }
     }
     

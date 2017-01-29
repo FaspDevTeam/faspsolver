@@ -100,11 +100,11 @@ int main (int argc, const char * argv[])
     {
         dvector x; // just on DOF, not including boundary
 
-        input_param     inparam;  // parameters from input files
-        itsolver_param  itparam;  // parameters for itsolver
-        AMG_param       amgparam; // parameters for AMG
-        ILU_param       iluparam; // parameters for ILU
-        Schwarz_param   swzparam; // parameters for Schwarz method
+        input_param  inparam;  // parameters from input files
+        ITS_param    itparam;  // parameters for itsolver
+        AMG_param    amgparam; // parameters for AMG
+        ILU_param    iluparam; // parameters for ILU
+        SWZ_param    swzparam; // parameters for Schwarz method
 
         // Read input parameters from a disk file
         fasp_param_input_init(&inparam);
@@ -116,17 +116,17 @@ int main (int argc, const char * argv[])
 // test by chunsheng
 	itparam.itsolver_type= SOLVER_BiCGstab;
 	itparam.itsolver_type= SOLVER_VBiCGstab;
-        itparam.precond_type =  PREC_NULL;
+    itparam.precond_type =  PREC_NULL;
 	//itparam.precond_type =  PREC_AMG;
 	inparam.print_level = 3;
 	inparam.solver_type = SOLVER_VBiCGstab;
-//	inparam.precond_type = PREC_AMG;
+    //inparam.precond_type = PREC_AMG;
 	inparam.precond_type = PREC_NULL;
-        itparam.maxit = 1000;
+    itparam.maxit = 1000;
 // test by chunsheng
 #endif
 
-	const int print_level   = inparam.print_level;
+	    const int print_level   = inparam.print_level;
         const int solver_type   = inparam.solver_type;
         const int precond_type  = inparam.precond_type;
 

@@ -512,8 +512,8 @@ static void interp_STD (dCSRmat    *A,
     
     // Step 0. Prepare diagonal, Cs-sum, and N-sum
     fasp_iarray_set(row, cindex, -1);
-    fasp_array_set(row, csum, 0.0);
-    fasp_array_set(row, nsum, 0.0);
+    fasp_darray_set(row, csum, 0.0);
+    fasp_darray_set(row, nsum, 0.0);
     
     for ( i = 0; i < row; i++ ) {
         
@@ -718,8 +718,8 @@ static void interp_EXT (dCSRmat    *A,
     
     // Step 0. Prepare diagonal, Cs-sum, and N-sum
     fasp_iarray_set(row, cindex, -1);
-    fasp_array_set(row, csum, 0.0);
-    fasp_array_set(row, nsum, 0.0);
+    fasp_darray_set(row, csum, 0.0);
+    fasp_darray_set(row, nsum, 0.0);
     
     for ( i = 0; i < row; i++ ) {
         

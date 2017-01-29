@@ -74,32 +74,32 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
-    normb=fasp_blas_array_norm2(m,b->val);
+    normb=fasp_blas_darray_norm2(m,b->val);
     
     // -------------------------------------
     // 1st iteration (Steepest descent)
     // -------------------------------------
     // r = b-A*u
-    fasp_array_cp(m,b->val,r);
+    fasp_darray_cp(m,b->val,r);
     fasp_blas_dcsr_aAxpy(-1.0,A,u->val,r);
     
     // Br
     if (pc != NULL)
         pc->fct(r,p,pc->data); /* Preconditioning */
     else
-        fasp_array_cp(m,r,p); /* No preconditioner, B=I */
+        fasp_darray_cp(m,r,p); /* No preconditioner, B=I */
     
     // alpha = (p'r)/(p'Ap)
-    alpha = fasp_blas_array_dotprod (m,r,p) / fasp_blas_dcsr_vmv (A, p, p);
+    alpha = fasp_blas_darray_dotprod (m,r,p) / fasp_blas_dcsr_vmv (A, p, p);
     
     // u = u + alpha *p
-    fasp_blas_array_axpy(m, alpha , p, u->val);
+    fasp_blas_darray_axpy(m, alpha , p, u->val);
     
     // r = r - alpha *Ap
     fasp_blas_dcsr_aAxpy((-1.0*alpha),A,p,r);
     
     // norm(r), factor
-    absres = fasp_blas_array_norm2(m,r); factor = absres/absres0;
+    absres = fasp_blas_darray_norm2(m,r); factor = absres/absres0;
     
     // compute relative residual
     relres = absres/normb;
@@ -116,16 +116,16 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
         if (pc != NULL)
             pc->fct(r, Br ,pc->data); // Preconditioning
         else
-            fasp_array_cp(m,r, Br); // No preconditioner, B=I
+            fasp_darray_cp(m,r, Br); // No preconditioner, B=I
         
         // form p
-        fasp_array_cp(m, Br, p+iter*m);
+        fasp_darray_cp(m, Br, p+iter*m);
         
         for (i=0; i<iter; i++) {
             beta[i] = (-1.0) * ( fasp_blas_dcsr_vmv (A, Br, p+i*m)
                                 /fasp_blas_dcsr_vmv (A, p+i*m, p+i*m) );
             
-            fasp_blas_array_axpy(m, beta[i], p+i*m, p+iter*m);
+            fasp_blas_darray_axpy(m, beta[i], p+i*m, p+iter*m);
         }
         
         // -------------------------------------
@@ -133,17 +133,17 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
         // -------------------------------------
         
         // alpha = (p'r)/(p'Ap)
-        alpha = fasp_blas_array_dotprod(m,r,p+iter*m)
+        alpha = fasp_blas_darray_dotprod(m,r,p+iter*m)
         / fasp_blas_dcsr_vmv (A, p+iter*m, p+iter*m);
         
         // u = u + alpha *p
-        fasp_blas_array_axpy(m, alpha , p+iter*m, u->val);
+        fasp_blas_darray_axpy(m, alpha , p+iter*m, u->val);
         
         // r = r - alpha *Ap
         fasp_blas_dcsr_aAxpy((-1.0*alpha),A,p+iter*m,r);
         
         // norm(r), factor
-        absres = fasp_blas_array_norm2(m,r); factor = absres/absres0;
+        absres = fasp_blas_darray_norm2(m,r); factor = absres/absres0;
         
         // compute relative residual
         relres = absres/normb;
@@ -225,34 +225,34 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
-    normb=fasp_blas_array_norm2(m,b->val);
+    normb=fasp_blas_darray_norm2(m,b->val);
     
     // -------------------------------------
     // 1st iteration (Steepest descent)
     // -------------------------------------
     // r = b-A*u
     mf->fct(mf->data, u->val, r);
-    fasp_blas_array_axpby(m, 1.0, b->val, -1.0, r);
+    fasp_blas_darray_axpby(m, 1.0, b->val, -1.0, r);
     
     // Br
     if (pc != NULL)
         pc->fct(r,p,pc->data); /* Preconditioning */
     else
-        fasp_array_cp(m,r,p); /* No preconditioner, B=I */
+        fasp_darray_cp(m,r,p); /* No preconditioner, B=I */
     
     // alpha = (p'r)/(p'Ap)
     mf->fct(mf->data, p, q);
-    alpha = fasp_blas_array_dotprod (m,r,p) / fasp_blas_array_dotprod (m, p, q);
+    alpha = fasp_blas_darray_dotprod (m,r,p) / fasp_blas_darray_dotprod (m, p, q);
     
     // u = u + alpha *p
-    fasp_blas_array_axpy(m, alpha , p, u->val);
+    fasp_blas_darray_axpy(m, alpha , p, u->val);
     
     // r = r - alpha *Ap
     mf->fct(mf->data, p, q);
-    fasp_blas_array_axpby(m, (-1.0*alpha), q, 1.0, r);
+    fasp_blas_darray_axpby(m, (-1.0*alpha), q, 1.0, r);
     
     // norm(r), factor
-    absres = fasp_blas_array_norm2(m,r); factor = absres/absres0;
+    absres = fasp_blas_darray_norm2(m,r); factor = absres/absres0;
     
     // compute relative residual
     relres = absres/normb;
@@ -269,19 +269,19 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
         if (pc != NULL)
             pc->fct(r, Br ,pc->data); // Preconditioning
         else
-            fasp_array_cp(m,r, Br); // No preconditioner, B=I
+            fasp_darray_cp(m,r, Br); // No preconditioner, B=I
         
         // form p
-        fasp_array_cp(m, Br, p+iter*m);
+        fasp_darray_cp(m, Br, p+iter*m);
         
         for (i=0; i<iter; i++) {
             mf->fct(mf->data, Br, q);
-            gama_1 = fasp_blas_array_dotprod(m, p+i*m, q);
+            gama_1 = fasp_blas_darray_dotprod(m, p+i*m, q);
             mf->fct(mf->data, p+i*m, q);
-            gama_2 = fasp_blas_array_dotprod(m, p+i*m, q);
+            gama_2 = fasp_blas_darray_dotprod(m, p+i*m, q);
             beta[i] = (-1.0) * ( gama_1 / gama_2 );
             
-            fasp_blas_array_axpy(m, beta[i], p+i*m, p+iter*m);
+            fasp_blas_darray_axpy(m, beta[i], p+i*m, p+iter*m);
         }
         
         // -------------------------------------
@@ -290,18 +290,18 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
         
         // alpha = (p'r)/(p'Ap)
         mf->fct(mf->data, p+iter*m, q);
-        alpha = fasp_blas_array_dotprod(m,r,p+iter*m)
-        / fasp_blas_array_dotprod (m, q, p+iter*m);
+        alpha = fasp_blas_darray_dotprod(m,r,p+iter*m)
+        / fasp_blas_darray_dotprod (m, q, p+iter*m);
         
         // u = u + alpha *p
-        fasp_blas_array_axpy(m, alpha , p+iter*m, u->val);
+        fasp_blas_darray_axpy(m, alpha , p+iter*m, u->val);
         
         // r = r - alpha *Ap
         mf->fct(mf->data, p+iter*m, q);
-        fasp_blas_array_axpby(m, (-1.0*alpha), q, 1.0, r);
+        fasp_blas_darray_axpby(m, (-1.0*alpha), q, 1.0, r);
         
         // norm(r), factor
-        absres = fasp_blas_array_norm2(m,r); factor = absres/absres0;
+        absres = fasp_blas_darray_norm2(m,r); factor = absres/absres0;
         
         // compute relative residual
         relres = absres/normb;

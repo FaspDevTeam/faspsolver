@@ -25,7 +25,7 @@
 #include "PreAMGAggregationBSR.inl"
 #include "PreAMGAggregation.inl"
 
-static SHORT amg_setup_unsmoothP_unsmoothR_bsr(AMG_data_bsr *, AMG_param *);
+static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *, AMG_param *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -44,8 +44,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr(AMG_data_bsr *, AMG_param *);
  * \author Xiaozhe Hu
  * \date   03/16/2012
  */
-SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr   *mgl,
-                             AMG_param      *param)
+SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr  *mgl,
+                             AMG_param     *param)
 {
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);

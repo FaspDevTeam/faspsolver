@@ -32,13 +32,13 @@ void fasp_precond_dstr_diag (REAL *r,
                              REAL *z, 
                              void *data)
 {
-    precond_diagstr *diag=(precond_diagstr *)data;
-    REAL *diagptr=diag->diag.val;
-    INT i,nc=diag->nc;
-    INT nc2=nc*nc;
-    INT m=diag->diag.row/nc2;    
+    const precond_diag_str *diag = (precond_diag_str *)data;
+    const REAL *diagptr = diag->diag.val;
+    const INT   nc = diag->nc, nc2 = nc*nc;
+    const INT   m = diag->diag.row/nc2;
     
-    for (i=0;i<m;++i) {
+    INT i;
+    for ( i=0; i<m; ++i ) {
         fasp_blas_smat_mxv(&(diagptr[i*nc2]),&(r[i*nc]),&(z[i*nc]),nc);
     }    
 }
@@ -125,23 +125,23 @@ void fasp_precond_dstr_ilu0 (REAL *r,
     
     else if (nc == 3) {
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp_nc3(&(zr[0]),&(zz[0]));
+        fasp_darray_cp_nc3(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
             ic=i*nc;
             ic2=i*nc2;
     
             fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);
-            fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             if (i>=nline) {
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[2][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc);
-                fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             }
             if (i>=nplane) {
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[4][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc);
-                fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             }
-            fasp_array_cp_nc3(&(zr[ic]),&(zz[ic]));
+            fasp_darray_cp_nc3(&(zr[ic]),&(zz[ic]));
         } // end for (i=1;i<m;++i) 
     
         // backward sweep: solve upper matrix equation U*z=zz
@@ -153,16 +153,16 @@ void fasp_precond_dstr_ilu0 (REAL *r,
             ic2=i*nc2;
     
             fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc);
-            fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
     
             if (i<m-nline) {
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline)*nc]),tc);
-                fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
             }
     
             if (i<m-nplane) {
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[5][ic2]),&(z[(i+nplane)*nc]),tc);
-                fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
             }
     
             fasp_blas_smat_mxv_nc3(&(ILU_data->diag[ic2]),&(zz[ic]),&(z[ic]));
@@ -172,23 +172,23 @@ void fasp_precond_dstr_ilu0 (REAL *r,
     
     else if (nc == 5) {
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp_nc5(&(zr[0]),&(zz[0]));
+        fasp_darray_cp_nc5(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
             ic=i*nc;
             ic2=i*nc2;
     
             fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);
-            fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             if (i>=nline) {
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[2][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc);
-                fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             }
             if (i>=nplane) {
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[4][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc);
-                fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             }
-            fasp_array_cp_nc5(&(zr[ic]),&(zz[ic]));
+            fasp_darray_cp_nc5(&(zr[ic]),&(zz[ic]));
         } // end for (i=1;i<m;++i) 
     
         // backward sweep: solve upper matrix equation U*z=zz
@@ -200,16 +200,16 @@ void fasp_precond_dstr_ilu0 (REAL *r,
             ic2=i*nc2;
     
             fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc);
-            fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
     
             if (i<m-nline) {
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline)*nc]),tc);
-                fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
             }
     
             if (i<m-nplane) {
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[5][ic2]),&(z[(i+nplane)*nc]),tc);
-                fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
             }
     
             fasp_blas_smat_mxv_nc5(&(ILU_data->diag[ic2]),&(zz[ic]),&(z[ic]));
@@ -220,23 +220,23 @@ void fasp_precond_dstr_ilu0 (REAL *r,
     
     else if (nc == 7) {
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp_nc7(&(zr[0]),&(zz[0]));
+        fasp_darray_cp_nc7(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
             ic=i*nc;
             ic2=i*nc2;
     
             fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);
-            fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             if (i>=nline) {
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[2][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc);
-                fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             }
             if (i>=nplane) {
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[4][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc);
-                fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             }
-            fasp_array_cp_nc7(&(zr[ic]),&(zz[ic]));
+            fasp_darray_cp_nc7(&(zr[ic]),&(zz[ic]));
         } // end for (i=1;i<m;++i) 
     
         // backward sweep: solve upper matrix equation U*z=zz
@@ -248,16 +248,16 @@ void fasp_precond_dstr_ilu0 (REAL *r,
             ic2=i*nc2;
     
             fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc);
-            fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
     
             if (i<m-nline) {
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline)*nc]),tc);
-                fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
             }
     
             if (i<m-nplane) {
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[5][ic2]),&(z[(i+nplane)*nc]),tc);
-                fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
             }
     
             fasp_blas_smat_mxv_nc7(&(ILU_data->diag[ic2]),&(zz[ic]),&(z[ic]));
@@ -267,25 +267,25 @@ void fasp_precond_dstr_ilu0 (REAL *r,
     
     else {
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp(nc,&(zr[0]),&(zz[0]));
+        fasp_darray_cp(nc,&(zr[0]),&(zz[0]));
         for (i=1;i<m;++i) {
             ic=i*nc;
             ic2=i*nc2;
     
             fasp_blas_smat_mxv(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc,nc);
-            fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
     
             if (i>=nline) {
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[2][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc,nc);
-                fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
             }
     
             if (i>=nplane) {
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[4][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc,nc);
-                fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
             }
     
-            fasp_array_cp(nc,&(zr[ic]),&(zz[ic]));
+            fasp_darray_cp(nc,&(zr[ic]),&(zz[ic]));
     
         } // end for (i=1; i<m; ++i)
     
@@ -297,16 +297,16 @@ void fasp_precond_dstr_ilu0 (REAL *r,
             ic2=i*nc2;
     
             fasp_blas_smat_mxv(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc,nc);
-            fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
     
             if (i<m-nline) {
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline)*nc]),tc,nc);
-                fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
             }
     
             if (i<m-nplane) {
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[5][ic2]),&(z[(i+nplane)*nc]),tc,nc);
-                fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
             }
     
             fasp_blas_smat_mxv(&(ILU_data->diag[ic2]),&(zz[ic]),&(z[ic]),nc);
@@ -425,7 +425,7 @@ void fasp_precond_dstr_ilu1 (REAL *r,
     else if (nc == 3) {
     
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp_nc3(&(zr[0]),&(zz[0]));
+        fasp_darray_cp_nc3(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
             ic=i*nc;
@@ -433,39 +433,39 @@ void fasp_precond_dstr_ilu1 (REAL *r,
     
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);           
-            fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
     
             if (i>=nline-1) {
                 //zz[i]=zz[i]-ILU_data->offdiag[2][i-nx+1]*zz[i-nx+1];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[2][(i-nline+1)*nc2]),&(zz[(i-nline+1)*nc]),tc);           
-                fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             }
             
             if (i>=nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[4][i-nx]*zz[i-nx];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[4][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc);           
-                fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             } 
     
             if (i>=nplane-nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[6][i-nxy+nx]*zz[i-nxy+nx];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[6][(i-nplane+nline)*nc2]),&(zz[(i-nplane+nline)*nc]),tc);           
-                fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             }
     
             if (i>=nplane-1) {
                 // zz[i]=zz[i]-ILU_data->offdiag[8][i-nxy+1]*zz[i-nxy+1];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[8][(i-nplane+1)*nc2]),&(zz[(i-nplane+1)*nc]),tc);           
-                fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             }
     
             if (i>=nplane) {
                 //zz[i]=zz[i]-ILU_data->offdiag[10][i-nxy]*zz[i-nxy];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[10][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc);           
-                fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             }
     
-            fasp_array_cp_nc3(&(zr[ic]),&(zz[ic]));          
+            fasp_darray_cp_nc3(&(zr[ic]),&(zz[ic]));          
         }
     
         // backward sweep: solve upper matrix equation U*z=zz
@@ -479,36 +479,36 @@ void fasp_precond_dstr_ilu1 (REAL *r,
     
             //zz[i]=zz[i]-ILU_data->offdiag[1][i]*z[i+1];
             fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc);          
-            fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
     
             if (i+nline-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[3][i]*z[i+nx-1];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline-1)*nc]),tc);          
-                fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
             }
     
             if (i+nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[5][i]*z[i+nx];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[5][ic2]),&(z[(i+nline)*nc]),tc);          
-                fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane-nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[7][i]*z[i+nxy-nx];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[7][ic2]),&(z[(i+nplane-nline)*nc]),tc);          
-                fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[9][i]*z[i+nxy-1]; 
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[9][ic2]),&(z[(i+nplane-1)*nc]),tc);          
-                fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[11][i]*z[i+nxy];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[11][ic2]),&(z[(i+nplane)*nc]),tc);          
-                fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
             }
     
             //z[i]=ILU_data->diag[i]*zz[i];
@@ -520,7 +520,7 @@ void fasp_precond_dstr_ilu1 (REAL *r,
     else if (nc == 5) {
     
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp_nc5(&(zr[0]),&(zz[0]));
+        fasp_darray_cp_nc5(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
             ic=i*nc;
@@ -528,39 +528,39 @@ void fasp_precond_dstr_ilu1 (REAL *r,
     
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);           
-            fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
     
             if (i>=nline-1) {
                 //zz[i]=zz[i]-ILU_data->offdiag[2][i-nx+1]*zz[i-nx+1];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[2][(i-nline+1)*nc2]),&(zz[(i-nline+1)*nc]),tc);           
-                fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             }
             
             if (i>=nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[4][i-nx]*zz[i-nx];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[4][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc);           
-                fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             } 
     
             if (i>=nplane-nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[6][i-nxy+nx]*zz[i-nxy+nx];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[6][(i-nplane+nline)*nc2]),&(zz[(i-nplane+nline)*nc]),tc);           
-                fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             }
     
             if (i>=nplane-1) {
                 // zz[i]=zz[i]-ILU_data->offdiag[8][i-nxy+1]*zz[i-nxy+1];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[8][(i-nplane+1)*nc2]),&(zz[(i-nplane+1)*nc]),tc);           
-                fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             }
     
             if (i>=nplane) {
                 //zz[i]=zz[i]-ILU_data->offdiag[10][i-nxy]*zz[i-nxy];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[10][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc);           
-                fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             }
     
-            fasp_array_cp_nc5(&(zr[ic]),&(zz[ic]));          
+            fasp_darray_cp_nc5(&(zr[ic]),&(zz[ic]));          
         }
     
         // backward sweep: solve upper matrix equation U*z=zz
@@ -574,36 +574,36 @@ void fasp_precond_dstr_ilu1 (REAL *r,
     
             //zz[i]=zz[i]-ILU_data->offdiag[1][i]*z[i+1];
             fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc);          
-            fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
     
             if (i+nline-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[3][i]*z[i+nx-1];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline-1)*nc]),tc);          
-                fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
             }
     
             if (i+nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[5][i]*z[i+nx];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[5][ic2]),&(z[(i+nline)*nc]),tc);          
-                fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane-nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[7][i]*z[i+nxy-nx];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[7][ic2]),&(z[(i+nplane-nline)*nc]),tc);          
-                fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[9][i]*z[i+nxy-1]; 
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[9][ic2]),&(z[(i+nplane-1)*nc]),tc);          
-                fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[11][i]*z[i+nxy];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[11][ic2]),&(z[(i+nplane)*nc]),tc);          
-                fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
             }
     
             //z[i]=ILU_data->diag[i]*zz[i];
@@ -615,7 +615,7 @@ void fasp_precond_dstr_ilu1 (REAL *r,
     else if (nc == 7) {
     
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp_nc7(&(zr[0]),&(zz[0]));
+        fasp_darray_cp_nc7(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
             ic=i*nc;
@@ -623,39 +623,39 @@ void fasp_precond_dstr_ilu1 (REAL *r,
     
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);           
-            fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
     
             if (i>=nline-1) {
                 //zz[i]=zz[i]-ILU_data->offdiag[2][i-nx+1]*zz[i-nx+1];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[2][(i-nline+1)*nc2]),&(zz[(i-nline+1)*nc]),tc);           
-                fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             }
             
             if (i>=nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[4][i-nx]*zz[i-nx];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[4][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc);           
-                fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             } 
     
             if (i>=nplane-nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[6][i-nxy+nx]*zz[i-nxy+nx];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[6][(i-nplane+nline)*nc2]),&(zz[(i-nplane+nline)*nc]),tc);           
-                fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             }
     
             if (i>=nplane-1) {
                 // zz[i]=zz[i]-ILU_data->offdiag[8][i-nxy+1]*zz[i-nxy+1];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[8][(i-nplane+1)*nc2]),&(zz[(i-nplane+1)*nc]),tc);           
-                fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             }
     
             if (i>=nplane) {
                 //zz[i]=zz[i]-ILU_data->offdiag[10][i-nxy]*zz[i-nxy];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[10][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc);           
-                fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             }
     
-            fasp_array_cp_nc7(&(zr[ic]),&(zz[ic]));          
+            fasp_darray_cp_nc7(&(zr[ic]),&(zz[ic]));          
         }
     
         // backward sweep: solve upper matrix equation U*z=zz
@@ -669,36 +669,36 @@ void fasp_precond_dstr_ilu1 (REAL *r,
     
             //zz[i]=zz[i]-ILU_data->offdiag[1][i]*z[i+1];
             fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc);          
-            fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
     
             if (i+nline-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[3][i]*z[i+nx-1];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline-1)*nc]),tc);          
-                fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
             }
     
             if (i+nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[5][i]*z[i+nx];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[5][ic2]),&(z[(i+nline)*nc]),tc);          
-                fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane-nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[7][i]*z[i+nxy-nx];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[7][ic2]),&(z[(i+nplane-nline)*nc]),tc);          
-                fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[9][i]*z[i+nxy-1]; 
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[9][ic2]),&(z[(i+nplane-1)*nc]),tc);          
-                fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[11][i]*z[i+nxy];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[11][ic2]),&(z[(i+nplane)*nc]),tc);          
-                fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
             }
     
             //z[i]=ILU_data->diag[i]*zz[i];
@@ -709,45 +709,45 @@ void fasp_precond_dstr_ilu1 (REAL *r,
         
     else {
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp(nc,&(zr[0]),&(zz[0]));
+        fasp_darray_cp(nc,&(zr[0]),&(zz[0]));
          
         for (i=1;i<m;++i) {
             ic=i*nc;
             ic2=ic*nc;
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc,nc);           
-            fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
     
             if (i>=nline-1) {
                 //zz[i]=zz[i]-ILU_data->offdiag[2][i-nx+1]*zz[i-nx+1];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[2][(i-nline+1)*nc2]),&(zz[(i-nline+1)*nc]),tc,nc);           
-                fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
             }
             
             if (i>=nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[4][i-nx]*zz[i-nx];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[4][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc,nc);           
-                fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
             } 
 
             if (i>=nplane-nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[6][i-nxy+nx]*zz[i-nxy+nx];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[6][(i-nplane+nline)*nc2]),&(zz[(i-nplane+nline)*nc]),tc,nc);           
-                fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
             }
 
             if (i>=nplane-1) {
                 // zz[i]=zz[i]-ILU_data->offdiag[8][i-nxy+1]*zz[i-nxy+1];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[8][(i-nplane+1)*nc2]),&(zz[(i-nplane+1)*nc]),tc,nc);           
-                fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
             }
 
             if (i>=nplane) {
                 //zz[i]=zz[i]-ILU_data->offdiag[10][i-nxy]*zz[i-nxy];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[10][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc,nc);           
-                fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
             }
-            fasp_array_cp(nc,&(zr[ic]),&(zz[ic]));          
+            fasp_darray_cp(nc,&(zr[ic]),&(zz[ic]));          
         }
     
         // backward sweep: solve upper matrix equation U*z=zz
@@ -760,36 +760,36 @@ void fasp_precond_dstr_ilu1 (REAL *r,
             ic2=ic*nc;
             //zz[i]=zz[i]-ILU_data->offdiag[1][i]*z[i+1];
             fasp_blas_smat_mxv(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc,nc);          
-            fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
     
             if (i+nline-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[3][i]*z[i+nx-1];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline-1)*nc]),tc,nc);          
-                fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
             }
     
             if (i+nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[5][i]*z[i+nx];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[5][ic2]),&(z[(i+nline)*nc]),tc,nc);          
-                fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
             }
 
             if (i+nplane-nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[7][i]*z[i+nxy-nx];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[7][ic2]),&(z[(i+nplane-nline)*nc]),tc,nc);          
-                fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
             }
 
             if (i+nplane-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[9][i]*z[i+nxy-1]; 
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[9][ic2]),&(z[(i+nplane-1)*nc]),tc,nc);          
-                fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
             }
 
             if (i+nplane<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[11][i]*z[i+nxy];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[11][ic2]),&(z[(i+nplane)*nc]),tc,nc);          
-                fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
             }
 
             //z[i]=ILU_data->diag[i]*zz[i];
@@ -871,42 +871,42 @@ void fasp_precond_dstr_ilu0_forward (REAL *r,
     
     else if (nc == 3) {
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp_nc3(&(zr[0]),&(zz[0]));
+        fasp_darray_cp_nc3(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
             ic=i*nc;    
             fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);
-            fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             if (i>=nline) {
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[2][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc);
-                fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             }
             if (i>=nplane) {
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[4][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc);
-                fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             }
-            fasp_array_cp_nc3(&(zr[ic]),&(zz[ic]));
+            fasp_darray_cp_nc3(&(zr[ic]),&(zz[ic]));
         } // end for (i=1;i<m;++i) 
     
     } // end else if (nc == 3)
     
     else if (nc == 5) {
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp_nc5(&(zr[0]),&(zz[0]));
+        fasp_darray_cp_nc5(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
             ic=i*nc;    
             fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);
-            fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             if (i>=nline) {
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[2][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc);
-                fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             }
             if (i>=nplane) {
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[4][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc);
-                fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             }
-            fasp_array_cp_nc5(&(zr[ic]),&(zz[ic]));
+            fasp_darray_cp_nc5(&(zr[ic]),&(zz[ic]));
         } // end for (i=1;i<m;++i) 
     
     } // end else if (nc == 5)
@@ -914,21 +914,21 @@ void fasp_precond_dstr_ilu0_forward (REAL *r,
     
     else if (nc == 7) {
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp_nc7(&(zr[0]),&(zz[0]));
+        fasp_darray_cp_nc7(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
             ic=i*nc;    
             fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);
-            fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             if (i>=nline) {
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[2][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc);
-                fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             }
             if (i>=nplane) {
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[4][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc);
-                fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             }
-            fasp_array_cp_nc7(&(zr[ic]),&(zz[ic]));
+            fasp_darray_cp_nc7(&(zr[ic]),&(zz[ic]));
         } // end for (i=1;i<m;++i) 
     
     } // end else if (nc == 7)
@@ -936,23 +936,23 @@ void fasp_precond_dstr_ilu0_forward (REAL *r,
     
     else {
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp(nc,&(zr[0]),&(zz[0]));
+        fasp_darray_cp(nc,&(zr[0]),&(zz[0]));
         for (i=1;i<m;++i) {
             ic=i*nc;    
             fasp_blas_smat_mxv(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc,nc);
-            fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
     
             if (i>=nline) {
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[2][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc,nc);
-                fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
             }
     
             if (i>=nplane) {
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[4][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc,nc);
-                fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
             }
     
-            fasp_array_cp(nc,&(zr[ic]),&(zz[ic]));
+            fasp_darray_cp(nc,&(zr[ic]),&(zz[ic]));
     
         } // end for (i=1; i<m; ++i)
     
@@ -1043,16 +1043,16 @@ void fasp_precond_dstr_ilu0_backward (REAL *r,
             ic2=i*nc2;
     
             fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc);
-            fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
     
             if (i<m-nline) {
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline)*nc]),tc);
-                fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
             }
     
             if (i<m-nplane) {
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[5][ic2]),&(z[(i+nplane)*nc]),tc);
-                fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
             }
     
             fasp_blas_smat_mxv_nc3(&(ILU_data->diag[ic2]),&(zz[ic]),&(z[ic]));
@@ -1070,16 +1070,16 @@ void fasp_precond_dstr_ilu0_backward (REAL *r,
             ic2=i*nc2;
     
             fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc);
-            fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
     
             if (i<m-nline) {
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline)*nc]),tc);
-                fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
             }
     
             if (i<m-nplane) {
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[5][ic2]),&(z[(i+nplane)*nc]),tc);
-                fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
             }
     
             fasp_blas_smat_mxv_nc5(&(ILU_data->diag[ic2]),&(zz[ic]),&(z[ic]));
@@ -1097,16 +1097,16 @@ void fasp_precond_dstr_ilu0_backward (REAL *r,
             ic2=i*nc2;
     
             fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc);
-            fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
     
             if (i<m-nline) {
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline)*nc]),tc);
-                fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
             }
     
             if (i<m-nplane) {
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[5][ic2]),&(z[(i+nplane)*nc]),tc);
-                fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
             }
     
             fasp_blas_smat_mxv_nc7(&(ILU_data->diag[ic2]),&(zz[ic]),&(z[ic]));
@@ -1125,16 +1125,16 @@ void fasp_precond_dstr_ilu0_backward (REAL *r,
                 ic2=i*nc2;
     
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc,nc);
-                fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
     
                 if (i<m-nline) {
                     fasp_blas_smat_mxv(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline)*nc]),tc,nc);
-                    fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                    fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
                 }
     
                 if (i<m-nplane) {
                     fasp_blas_smat_mxv(&(ILU_data->offdiag[5][ic2]),&(z[(i+nplane)*nc]),tc,nc);
-                    fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                    fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
                 }
     
                 fasp_blas_smat_mxv(&(ILU_data->diag[ic2]),&(zz[ic]),&(z[ic]),nc);
@@ -1228,45 +1228,45 @@ void fasp_precond_dstr_ilu1_forward (REAL *r,
     else if (nc == 3) {
     
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp_nc3(&(zr[0]),&(zz[0]));
+        fasp_darray_cp_nc3(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
             ic=i*nc;    
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);           
-            fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
     
             if (i>=nline-1) {
                 //zz[i]=zz[i]-ILU_data->offdiag[2][i-nx+1]*zz[i-nx+1];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[2][(i-nline+1)*nc2]),&(zz[(i-nline+1)*nc]),tc);           
-                fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             }
             
             if (i>=nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[4][i-nx]*zz[i-nx];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[4][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc);           
-                fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             } 
     
             if (i>=nplane-nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[6][i-nxy+nx]*zz[i-nxy+nx];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[6][(i-nplane+nline)*nc2]),&(zz[(i-nplane+nline)*nc]),tc);           
-                fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             }
     
             if (i>=nplane-1) {
                 // zz[i]=zz[i]-ILU_data->offdiag[8][i-nxy+1]*zz[i-nxy+1];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[8][(i-nplane+1)*nc2]),&(zz[(i-nplane+1)*nc]),tc);           
-                fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             }
     
             if (i>=nplane) {
                 //zz[i]=zz[i]-ILU_data->offdiag[10][i-nxy]*zz[i-nxy];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[10][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc);           
-                fasp_blas_array_axpy_nc3(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
             }
     
-            fasp_array_cp_nc3(&(zr[ic]),&(zz[ic]));          
+            fasp_darray_cp_nc3(&(zr[ic]),&(zz[ic]));          
         }
     
     }  // end if (nc == 3)
@@ -1274,45 +1274,45 @@ void fasp_precond_dstr_ilu1_forward (REAL *r,
     else if (nc == 5) {
     
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp_nc5(&(zr[0]),&(zz[0]));
+        fasp_darray_cp_nc5(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
             ic=i*nc;    
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);           
-            fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
     
             if (i>=nline-1) {
                 //zz[i]=zz[i]-ILU_data->offdiag[2][i-nx+1]*zz[i-nx+1];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[2][(i-nline+1)*nc2]),&(zz[(i-nline+1)*nc]),tc);           
-                fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             }
             
             if (i>=nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[4][i-nx]*zz[i-nx];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[4][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc);           
-                fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             } 
     
             if (i>=nplane-nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[6][i-nxy+nx]*zz[i-nxy+nx];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[6][(i-nplane+nline)*nc2]),&(zz[(i-nplane+nline)*nc]),tc);           
-                fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             }
     
             if (i>=nplane-1) {
                 // zz[i]=zz[i]-ILU_data->offdiag[8][i-nxy+1]*zz[i-nxy+1];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[8][(i-nplane+1)*nc2]),&(zz[(i-nplane+1)*nc]),tc);           
-                fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             }
     
             if (i>=nplane) {
                 //zz[i]=zz[i]-ILU_data->offdiag[10][i-nxy]*zz[i-nxy];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[10][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc);           
-                fasp_blas_array_axpy_nc5(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             }
     
-            fasp_array_cp_nc5(&(zr[ic]),&(zz[ic]));          
+            fasp_darray_cp_nc5(&(zr[ic]),&(zz[ic]));          
         }
     
     }  // end if (nc == 5)
@@ -1320,88 +1320,88 @@ void fasp_precond_dstr_ilu1_forward (REAL *r,
     else if (nc == 7) {
     
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp_nc7(&(zr[0]),&(zz[0]));
+        fasp_darray_cp_nc7(&(zr[0]),&(zz[0]));
     
         for (i=1;i<m;++i) {
             ic=i*nc;    
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);           
-            fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
     
             if (i>=nline-1) {
                 //zz[i]=zz[i]-ILU_data->offdiag[2][i-nx+1]*zz[i-nx+1];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[2][(i-nline+1)*nc2]),&(zz[(i-nline+1)*nc]),tc);           
-                fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             }
             
             if (i>=nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[4][i-nx]*zz[i-nx];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[4][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc);           
-                fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             } 
     
             if (i>=nplane-nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[6][i-nxy+nx]*zz[i-nxy+nx];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[6][(i-nplane+nline)*nc2]),&(zz[(i-nplane+nline)*nc]),tc);           
-                fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             }
     
             if (i>=nplane-1) {
                 // zz[i]=zz[i]-ILU_data->offdiag[8][i-nxy+1]*zz[i-nxy+1];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[8][(i-nplane+1)*nc2]),&(zz[(i-nplane+1)*nc]),tc);           
-                fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             }
     
             if (i>=nplane) {
                 //zz[i]=zz[i]-ILU_data->offdiag[10][i-nxy]*zz[i-nxy];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[10][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc);           
-                fasp_blas_array_axpy_nc7(-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             }
     
-            fasp_array_cp_nc7(&(zr[ic]),&(zz[ic]));          
+            fasp_darray_cp_nc7(&(zr[ic]),&(zz[ic]));          
         }
     
     }  // end if (nc == 7)
     
     else {
         // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_array_cp(nc,&(zr[0]),&(zz[0]));
+        fasp_darray_cp(nc,&(zr[0]),&(zz[0]));
         for (i=1;i<m;++i) {
             ic=i*nc;
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc,nc);           
-            fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+            fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
     
             if (i>=nline-1) {
                 //zz[i]=zz[i]-ILU_data->offdiag[2][i-nx+1]*zz[i-nx+1];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[2][(i-nline+1)*nc2]),&(zz[(i-nline+1)*nc]),tc,nc);           
-                fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
             }
             
             if (i>=nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[4][i-nx]*zz[i-nx];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[4][(i-nline)*nc2]),&(zz[(i-nline)*nc]),tc,nc);           
-                fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
             } 
 
             if (i>=nplane-nline) {
                 //zz[i]=zz[i]-ILU_data->offdiag[6][i-nxy+nx]*zz[i-nxy+nx];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[6][(i-nplane+nline)*nc2]),&(zz[(i-nplane+nline)*nc]),tc,nc);           
-                fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
             }
 
             if (i>=nplane-1) {
                 // zz[i]=zz[i]-ILU_data->offdiag[8][i-nxy+1]*zz[i-nxy+1];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[8][(i-nplane+1)*nc2]),&(zz[(i-nplane+1)*nc]),tc,nc);           
-                fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
             }
 
             if (i>=nplane) {
                 //zz[i]=zz[i]-ILU_data->offdiag[10][i-nxy]*zz[i-nxy];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[10][(i-nplane)*nc2]),&(zz[(i-nplane)*nc]),tc,nc);           
-                fasp_blas_array_axpy(nc,-1,tc,&(zr[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
             }
-            fasp_array_cp(nc,&(zr[ic]),&(zz[ic]));          
+            fasp_darray_cp(nc,&(zr[ic]),&(zz[ic]));          
         }
     }  // end else
     
@@ -1504,36 +1504,36 @@ void fasp_precond_dstr_ilu1_backward (REAL *r,
     
             //zz[i]=zz[i]-ILU_data->offdiag[1][i]*z[i+1];
             fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc);          
-            fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
     
             if (i+nline-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[3][i]*z[i+nx-1];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline-1)*nc]),tc);          
-                fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
             }
     
             if (i+nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[5][i]*z[i+nx];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[5][ic2]),&(z[(i+nline)*nc]),tc);          
-                fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane-nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[7][i]*z[i+nxy-nx];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[7][ic2]),&(z[(i+nplane-nline)*nc]),tc);          
-                fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[9][i]*z[i+nxy-1]; 
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[9][ic2]),&(z[(i+nplane-1)*nc]),tc);          
-                fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[11][i]*z[i+nxy];
                 fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[11][ic2]),&(z[(i+nplane)*nc]),tc);          
-                fasp_blas_array_axpy_nc3(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc3(-1,tc,&(zz[ic]));
             }
     
             //z[i]=ILU_data->diag[i]*zz[i];
@@ -1554,36 +1554,36 @@ void fasp_precond_dstr_ilu1_backward (REAL *r,
     
             //zz[i]=zz[i]-ILU_data->offdiag[1][i]*z[i+1];
             fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc);          
-            fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
     
             if (i+nline-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[3][i]*z[i+nx-1];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline-1)*nc]),tc);          
-                fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
             }
     
             if (i+nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[5][i]*z[i+nx];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[5][ic2]),&(z[(i+nline)*nc]),tc);          
-                fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane-nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[7][i]*z[i+nxy-nx];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[7][ic2]),&(z[(i+nplane-nline)*nc]),tc);          
-                fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[9][i]*z[i+nxy-1]; 
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[9][ic2]),&(z[(i+nplane-1)*nc]),tc);          
-                fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[11][i]*z[i+nxy];
                 fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[11][ic2]),&(z[(i+nplane)*nc]),tc);          
-                fasp_blas_array_axpy_nc5(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc5(-1,tc,&(zz[ic]));
             }
     
             //z[i]=ILU_data->diag[i]*zz[i];
@@ -1604,36 +1604,36 @@ void fasp_precond_dstr_ilu1_backward (REAL *r,
     
             //zz[i]=zz[i]-ILU_data->offdiag[1][i]*z[i+1];
             fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc);          
-            fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
     
             if (i+nline-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[3][i]*z[i+nx-1];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline-1)*nc]),tc);          
-                fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
             }
     
             if (i+nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[5][i]*z[i+nx];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[5][ic2]),&(z[(i+nline)*nc]),tc);          
-                fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane-nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[7][i]*z[i+nxy-nx];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[7][ic2]),&(z[(i+nplane-nline)*nc]),tc);          
-                fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[9][i]*z[i+nxy-1]; 
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[9][ic2]),&(z[(i+nplane-1)*nc]),tc);          
-                fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
             }
     
             if (i+nplane<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[11][i]*z[i+nxy];
                 fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[11][ic2]),&(z[(i+nplane)*nc]),tc);          
-                fasp_blas_array_axpy_nc7(-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy_nc7(-1,tc,&(zz[ic]));
             }
     
             //z[i]=ILU_data->diag[i]*zz[i];
@@ -1653,36 +1653,36 @@ void fasp_precond_dstr_ilu1_backward (REAL *r,
             ic2=ic*nc;
             //zz[i]=zz[i]-ILU_data->offdiag[1][i]*z[i+1];
             fasp_blas_smat_mxv(&(ILU_data->offdiag[1][ic2]),&(z[(i+1)*nc]),tc,nc);          
-            fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+            fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
     
             if (i+nline-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[3][i]*z[i+nx-1];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[3][ic2]),&(z[(i+nline-1)*nc]),tc,nc);          
-                fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
             }
     
             if (i+nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[5][i]*z[i+nx];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[5][ic2]),&(z[(i+nline)*nc]),tc,nc);          
-                fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
             }
 
             if (i+nplane-nline<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[7][i]*z[i+nxy-nx];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[7][ic2]),&(z[(i+nplane-nline)*nc]),tc,nc);          
-                fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
             }
 
             if (i+nplane-1<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[9][i]*z[i+nxy-1]; 
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[9][ic2]),&(z[(i+nplane-1)*nc]),tc,nc);          
-                fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
             }
 
             if (i+nplane<m) {
                 //zz[i]=zz[i]-ILU_data->offdiag[11][i]*z[i+nxy];
                 fasp_blas_smat_mxv(&(ILU_data->offdiag[11][ic2]),&(z[(i+nplane)*nc]),tc,nc);          
-                fasp_blas_array_axpy(nc,-1,tc,&(zz[ic]));
+                fasp_blas_darray_axpy(nc,-1,tc,&(zz[ic]));
             }
             //z[i]=ILU_data->diag[i]*zz[i];
             fasp_blas_smat_mxv(&(ILU_data->diag[ic2]),&(zz[ic]),&(z[ic]),nc);

@@ -100,7 +100,7 @@ void fasp_solver_amg (const dCSRmat  *A,
                 fasp_amg_solve_amli(mgl, param); break;
                 
             case NL_AMLI_CYCLE: // Nonlinear AMLI-cycle
-                fasp_amg_solve_nl_amli(mgl, param); break;
+                fasp_amg_solve_namli(mgl, param); break;
                 
             default: // V,W-cycles (determined by param)
                 fasp_amg_solve(mgl, param); break;

@@ -846,7 +846,7 @@ void fasp_dcsr_cp (const dCSRmat *A,
     
     fasp_iarray_cp (A->row+1, A->IA, B->IA);
     fasp_iarray_cp (A->nnz, A->JA, B->JA);
-    fasp_array_cp  (A->nnz, A->val, B->val);
+    fasp_darray_cp  (A->nnz, A->val, B->val);
 }
 
 /**

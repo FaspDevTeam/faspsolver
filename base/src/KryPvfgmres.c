@@ -136,11 +136,11 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
     for ( i = 0; i < Restart1; i++ ) z[i] = hh[Restart] + Restart + i*n;
     
     /* initialization */
-    fasp_array_cp(n, b->val, p[0]);
+    fasp_darray_cp(n, b->val, p[0]);
     fasp_blas_dcsr_aAxpy(-1.0, A, x->val, p[0]);
     
-    b_norm = fasp_blas_array_norm2(n, b->val);
-    r_norm = fasp_blas_array_norm2(n, p[0]);
+    b_norm = fasp_blas_darray_norm2(n, b->val);
+    r_norm = fasp_blas_darray_norm2(n, p[0]);
     norms[0] = r_norm;
     
     if ( prtlvl >= PRINT_SOME) {
@@ -199,7 +199,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
         // Always enter the cycle at the first iteration
         // For at least one iteration step
         t = 1.0 / r_norm;
-        fasp_blas_array_ax(n, t, p[0]);
+        fasp_blas_darray_ax(n, t, p[0]);
         i = 0;
 
         // RESTART CYCLE (right-preconditioning)
@@ -209,7 +209,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
             
             /* apply preconditioner */
             if ( pc == NULL )
-                fasp_array_cp(n, p[i-1], z[i-1]);
+                fasp_darray_cp(n, p[i-1], z[i-1]);
             else
                 pc->fct(p[i-1], z[i-1], pc->data);
             
@@ -217,14 +217,14 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
             
             /* modified Gram_Schmidt */
             for ( j = 0; j < i; j++ ) {
-                hh[j][i-1] = fasp_blas_array_dotprod(n, p[j], p[i]);
-                fasp_blas_array_axpy(n, -hh[j][i-1], p[j], p[i]);
+                hh[j][i-1] = fasp_blas_darray_dotprod(n, p[j], p[i]);
+                fasp_blas_darray_axpy(n, -hh[j][i-1], p[j], p[i]);
             }
-            t = fasp_blas_array_norm2(n, p[i]);
+            t = fasp_blas_darray_norm2(n, p[i]);
             hh[i][i-1] = t;
             if ( t != 0.0 ) {
                 t = 1.0 / t;
-                fasp_blas_array_ax(n, t, p[i]);
+                fasp_blas_darray_ax(n, t, p[i]);
             }
             
             for ( j = 1; j < i; ++j ) {
@@ -270,17 +270,17 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
             rs[k] = t / hh[k][k];
         }
         
-        fasp_array_cp(n, z[i-1], r);
-        fasp_blas_array_ax(n, rs[i-1], r);
+        fasp_darray_cp(n, z[i-1], r);
+        fasp_blas_darray_ax(n, rs[i-1], r);
         
-        for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], z[j], r);
+        for ( j = i-2; j >= 0; j-- ) fasp_blas_darray_axpy(n, rs[j], z[j], r);
         
-        fasp_blas_array_axpy(n, 1.0, r, x->val);
+        fasp_blas_darray_axpy(n, 1.0, r, x->val);
         
         if ( r_norm <= epsilon && iter >= min_iter ) {
-            fasp_array_cp(n, b->val, r);
+            fasp_darray_cp(n, b->val, r);
             fasp_blas_dcsr_aAxpy(-1.0, A, x->val, r);
-            r_norm = fasp_blas_array_norm2(n, r);
+            r_norm = fasp_blas_darray_norm2(n, r);
             
             switch (stop_type) {
                 case STOP_REL_RES:
@@ -288,14 +288,14 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
                     break;
                 case STOP_REL_PRECRES:
                     if ( pc == NULL )
-                        fasp_array_cp(n, r, p[0]);
+                        fasp_darray_cp(n, r, p[0]);
                     else
                         pc->fct(r, p[0], pc->data);
-                    r_normb = sqrt(fasp_blas_array_dotprod(n,p[0],r));
+                    r_normb = sqrt(fasp_blas_darray_dotprod(n,p[0],r));
                     relres  = r_normb/den_norm;
                     break;
                 case STOP_MOD_REL_RES:
-                    normu   = MAX(SMALLREAL,fasp_blas_array_norm2(n,x->val));
+                    normu   = MAX(SMALLREAL,fasp_blas_darray_norm2(n,x->val));
                     relres  = r_norm/normu;
                     break;
                 default:
@@ -308,7 +308,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
             }
             else {
                 if ( prtlvl >= PRINT_SOME ) ITS_FACONV;
-                fasp_array_cp(n, r, p[0]); i = 0;
+                fasp_darray_cp(n, r, p[0]); i = 0;
             }
         
         } /* end of convergence check */
@@ -319,13 +319,13 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
             rs[j] = c[j-1]*rs[j];
         }
         
-        if (i) fasp_blas_array_axpy(n, rs[i]-1.0, p[i], p[i]);
+        if (i) fasp_blas_darray_axpy(n, rs[i]-1.0, p[i], p[i]);
         
-        for ( j = i-1; j > 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], p[i]);
+        for ( j = i-1; j > 0; j-- ) fasp_blas_darray_axpy(n, rs[j], p[j], p[i]);
         
         if (i) {
-            fasp_blas_array_axpy(n, rs[0]-1.0, p[0], p[0]);
-            fasp_blas_array_axpy(n, 1.0, p[i], p[0]);
+            fasp_blas_darray_axpy(n, rs[0]-1.0, p[0], p[0]);
+            fasp_blas_darray_axpy(n, 1.0, p[i], p[0]);
         }
         
         //-----------------------------------//
@@ -464,11 +464,11 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
     for ( i = 0; i < Restart1; i++ ) z[i] = hh[Restart] + Restart + i*n;
     
     /* initialization */
-    fasp_array_cp(n, b->val, p[0]);
+    fasp_darray_cp(n, b->val, p[0]);
     fasp_blas_dbsr_aAxpy(-1.0, A, x->val, p[0]);
     
-    b_norm = fasp_blas_array_norm2(n, b->val);
-    r_norm = fasp_blas_array_norm2(n, p[0]);
+    b_norm = fasp_blas_darray_norm2(n, b->val);
+    r_norm = fasp_blas_darray_norm2(n, p[0]);
     norms[0] = r_norm;
     
     if ( prtlvl >= PRINT_SOME) {
@@ -527,7 +527,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
         // Always enter the cycle at the first iteration
         // For at least one iteration step
         t = 1.0 / r_norm;
-        fasp_blas_array_ax(n, t, p[0]);
+        fasp_blas_darray_ax(n, t, p[0]);
         i = 0;
         
         // RESTART CYCLE (right-preconditioning)
@@ -537,7 +537,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
             
             /* apply preconditioner */
             if ( pc == NULL )
-                fasp_array_cp(n, p[i-1], z[i-1]);
+                fasp_darray_cp(n, p[i-1], z[i-1]);
             else
                 pc->fct(p[i-1], z[i-1], pc->data);
             
@@ -545,14 +545,14 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
             
             /* modified Gram_Schmidt */
             for ( j = 0; j < i; j++ ) {
-                hh[j][i-1] = fasp_blas_array_dotprod(n, p[j], p[i]);
-                fasp_blas_array_axpy(n, -hh[j][i-1], p[j], p[i]);
+                hh[j][i-1] = fasp_blas_darray_dotprod(n, p[j], p[i]);
+                fasp_blas_darray_axpy(n, -hh[j][i-1], p[j], p[i]);
             }
-            t = fasp_blas_array_norm2(n, p[i]);
+            t = fasp_blas_darray_norm2(n, p[i]);
             hh[i][i-1] = t;
             if ( t != 0.0 ) {
                 t = 1.0 / t;
-                fasp_blas_array_ax(n, t, p[i]);
+                fasp_blas_darray_ax(n, t, p[i]);
             }
             
             for ( j = 1; j < i; ++j ) {
@@ -598,17 +598,17 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
             rs[k] = t / hh[k][k];
         }
         
-        fasp_array_cp(n, z[i-1], r);
-        fasp_blas_array_ax(n, rs[i-1], r);
+        fasp_darray_cp(n, z[i-1], r);
+        fasp_blas_darray_ax(n, rs[i-1], r);
         
-        for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], z[j], r);
+        for ( j = i-2; j >= 0; j-- ) fasp_blas_darray_axpy(n, rs[j], z[j], r);
         
-        fasp_blas_array_axpy(n, 1.0, r, x->val);
+        fasp_blas_darray_axpy(n, 1.0, r, x->val);
         
         if ( r_norm <= epsilon && iter >= min_iter ) {
-            fasp_array_cp(n, b->val, r);
+            fasp_darray_cp(n, b->val, r);
             fasp_blas_dbsr_aAxpy(-1.0, A, x->val, r);
-            r_norm = fasp_blas_array_norm2(n, r);
+            r_norm = fasp_blas_darray_norm2(n, r);
             
             switch (stop_type) {
                 case STOP_REL_RES:
@@ -616,14 +616,14 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
                     break;
                 case STOP_REL_PRECRES:
                     if ( pc == NULL )
-                        fasp_array_cp(n, r, p[0]);
+                        fasp_darray_cp(n, r, p[0]);
                     else
                         pc->fct(r, p[0], pc->data);
-                    r_normb = sqrt(fasp_blas_array_dotprod(n,p[0],r));
+                    r_normb = sqrt(fasp_blas_darray_dotprod(n,p[0],r));
                     relres  = r_normb/den_norm;
                     break;
                 case STOP_MOD_REL_RES:
-                    normu   = MAX(SMALLREAL,fasp_blas_array_norm2(n,x->val));
+                    normu   = MAX(SMALLREAL,fasp_blas_darray_norm2(n,x->val));
                     relres  = r_norm/normu;
                     break;
                 default:
@@ -636,7 +636,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
             }
             else {
                 if ( prtlvl >= PRINT_SOME ) ITS_FACONV;
-                fasp_array_cp(n, r, p[0]); i = 0;
+                fasp_darray_cp(n, r, p[0]); i = 0;
             }
             
         } /* end of convergence check */
@@ -647,13 +647,13 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
             rs[j] = c[j-1]*rs[j];
         }
         
-        if (i) fasp_blas_array_axpy(n, rs[i]-1.0, p[i], p[i]);
+        if (i) fasp_blas_darray_axpy(n, rs[i]-1.0, p[i], p[i]);
         
-        for ( j = i-1; j > 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], p[i]);
+        for ( j = i-1; j > 0; j-- ) fasp_blas_darray_axpy(n, rs[j], p[j], p[i]);
         
         if (i) {
-            fasp_blas_array_axpy(n, rs[0]-1.0, p[0], p[0]);
-            fasp_blas_array_axpy(n, 1.0, p[i], p[0]);
+            fasp_blas_darray_axpy(n, rs[0]-1.0, p[0], p[0]);
+            fasp_blas_darray_axpy(n, 1.0, p[i], p[0]);
         }
         
         //-----------------------------------//
@@ -794,11 +794,11 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
     for ( i = 0; i < Restart1; i++ ) z[i] = hh[Restart] + Restart + i*n;
     
     /* initialization */
-    fasp_array_cp(n, b->val, p[0]);
+    fasp_darray_cp(n, b->val, p[0]);
     fasp_blas_dblc_aAxpy(-1.0, A, x->val, p[0]);
     
-    b_norm = fasp_blas_array_norm2(n, b->val);
-    r_norm = fasp_blas_array_norm2(n, p[0]);
+    b_norm = fasp_blas_darray_norm2(n, b->val);
+    r_norm = fasp_blas_darray_norm2(n, p[0]);
     norms[0] = r_norm;
     
     if ( prtlvl >= PRINT_SOME) {
@@ -857,7 +857,7 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
         // Always enter the cycle at the first iteration
         // For at least one iteration step
         t = 1.0 / r_norm;
-        fasp_blas_array_ax(n, t, p[0]);
+        fasp_blas_darray_ax(n, t, p[0]);
         i = 0;
         
         // RESTART CYCLE (right-preconditioning)
@@ -867,7 +867,7 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
             
             /* apply preconditioner */
             if ( pc == NULL )
-                fasp_array_cp(n, p[i-1], z[i-1]);
+                fasp_darray_cp(n, p[i-1], z[i-1]);
             else
                 pc->fct(p[i-1], z[i-1], pc->data);
             
@@ -875,14 +875,14 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
             
             /* modified Gram_Schmidt */
             for ( j = 0; j < i; j++ ) {
-                hh[j][i-1] = fasp_blas_array_dotprod(n, p[j], p[i]);
-                fasp_blas_array_axpy(n, -hh[j][i-1], p[j], p[i]);
+                hh[j][i-1] = fasp_blas_darray_dotprod(n, p[j], p[i]);
+                fasp_blas_darray_axpy(n, -hh[j][i-1], p[j], p[i]);
             }
-            t = fasp_blas_array_norm2(n, p[i]);
+            t = fasp_blas_darray_norm2(n, p[i]);
             hh[i][i-1] = t;
             if ( t != 0.0 ) {
                 t = 1.0 / t;
-                fasp_blas_array_ax(n, t, p[i]);
+                fasp_blas_darray_ax(n, t, p[i]);
             }
             
             for ( j = 1; j < i; ++j ) {
@@ -928,17 +928,17 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
             rs[k] = t / hh[k][k];
         }
         
-        fasp_array_cp(n, z[i-1], r);
-        fasp_blas_array_ax(n, rs[i-1], r);
+        fasp_darray_cp(n, z[i-1], r);
+        fasp_blas_darray_ax(n, rs[i-1], r);
         
-        for ( j = i-2; j >= 0; j-- ) fasp_blas_array_axpy(n, rs[j], z[j], r);
+        for ( j = i-2; j >= 0; j-- ) fasp_blas_darray_axpy(n, rs[j], z[j], r);
         
-        fasp_blas_array_axpy(n, 1.0, r, x->val);
+        fasp_blas_darray_axpy(n, 1.0, r, x->val);
         
         if ( r_norm <= epsilon && iter >= min_iter ) {
-            fasp_array_cp(n, b->val, r);
+            fasp_darray_cp(n, b->val, r);
             fasp_blas_dblc_aAxpy(-1.0, A, x->val, r);
-            r_norm = fasp_blas_array_norm2(n, r);
+            r_norm = fasp_blas_darray_norm2(n, r);
             
             switch (stop_type) {
                 case STOP_REL_RES:
@@ -946,14 +946,14 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
                     break;
                 case STOP_REL_PRECRES:
                     if ( pc == NULL )
-                        fasp_array_cp(n, r, p[0]);
+                        fasp_darray_cp(n, r, p[0]);
                     else
                         pc->fct(r, p[0], pc->data);
-                    r_normb = sqrt(fasp_blas_array_dotprod(n,p[0],r));
+                    r_normb = sqrt(fasp_blas_darray_dotprod(n,p[0],r));
                     relres  = r_normb/den_norm;
                     break;
                 case STOP_MOD_REL_RES:
-                    normu   = MAX(SMALLREAL,fasp_blas_array_norm2(n,x->val));
+                    normu   = MAX(SMALLREAL,fasp_blas_darray_norm2(n,x->val));
                     relres  = r_norm/normu;
                     break;
                 default:
@@ -966,7 +966,7 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
             }
             else {
                 if ( prtlvl >= PRINT_SOME ) ITS_FACONV;
-                fasp_array_cp(n, r, p[0]); i = 0;
+                fasp_darray_cp(n, r, p[0]); i = 0;
             }
             
         } /* end of convergence check */
@@ -977,13 +977,13 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
             rs[j] = c[j-1]*rs[j];
         }
         
-        if (i) fasp_blas_array_axpy(n, rs[i]-1.0, p[i], p[i]);
+        if (i) fasp_blas_darray_axpy(n, rs[i]-1.0, p[i], p[i]);
         
-        for ( j = i-1; j > 0; j-- ) fasp_blas_array_axpy(n, rs[j], p[j], p[i]);
+        for ( j = i-1; j > 0; j-- ) fasp_blas_darray_axpy(n, rs[j], p[j], p[i]);
         
         if (i) {
-            fasp_blas_array_axpy(n, rs[0]-1.0, p[0], p[0]);
-            fasp_blas_array_axpy(n, 1.0, p[i], p[0]);
+            fasp_blas_darray_axpy(n, rs[0]-1.0, p[0], p[0]);
+            fasp_blas_darray_axpy(n, 1.0, p[i], p[0]);
         }
         
         //-----------------------------------//
@@ -1124,10 +1124,10 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
     
     /* initialization */
     mf->fct(mf->data, x->val, p[0]);
-    fasp_blas_array_axpby(n, 1.0, b->val, -1.0, p[0]);
+    fasp_blas_darray_axpby(n, 1.0, b->val, -1.0, p[0]);
     
-    b_norm = fasp_blas_array_norm2(n, b->val);
-    r_norm = fasp_blas_array_norm2(n, p[0]);
+    b_norm = fasp_blas_darray_norm2(n, b->val);
+    r_norm = fasp_blas_darray_norm2(n, p[0]);
     norms[0] = r_norm;
     
     if ( prtlvl >= PRINT_SOME) {
@@ -1174,8 +1174,8 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
         
         if (r_norm <= epsilon && iter >= min_iter) {
             mf->fct(mf->data, x->val, r);
-            fasp_blas_array_axpby(n, 1.0, b->val, -1.0, r);
-            r_norm = fasp_blas_array_norm2(n, r);
+            fasp_blas_darray_axpby(n, 1.0, b->val, -1.0, r);
+            r_norm = fasp_blas_darray_norm2(n, r);
             
             if (r_norm <= epsilon) {
                 break;
@@ -1187,7 +1187,7 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
         
         t = 1.0 / r_norm;
         //for (j = 0; j < n; j ++) p[0][j] *= t;
-        fasp_blas_array_ax(n, t, p[0]);
+        fasp_blas_darray_ax(n, t, p[0]);
         
         /* RESTART CYCLE (right-preconditioning) */
         i = 0;
@@ -1197,7 +1197,7 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
             
             /* apply preconditioner */
             if (pc == NULL)
-                fasp_array_cp(n, p[i-1], z[i-1]);
+                fasp_darray_cp(n, p[i-1], z[i-1]);
             else
                 pc->fct(p[i-1], z[i-1], pc->data);
             
@@ -1205,15 +1205,15 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
             
             /* modified Gram_Schmidt */
             for (j = 0; j < i; j ++) {
-                hh[j][i-1] = fasp_blas_array_dotprod(n, p[j], p[i]);
-                fasp_blas_array_axpy(n, -hh[j][i-1], p[j], p[i]);
+                hh[j][i-1] = fasp_blas_darray_dotprod(n, p[j], p[i]);
+                fasp_blas_darray_axpy(n, -hh[j][i-1], p[j], p[i]);
             }
-            t = fasp_blas_array_norm2(n, p[i]);
+            t = fasp_blas_darray_norm2(n, p[i]);
             hh[i][i-1] = t;
             if (t != 0.0) {
                 t = 1.0/t;
                 //for (j = 0; j < n; j ++) p[i][j] *= t;
-                fasp_blas_array_ax(n, t, p[i]);
+                fasp_blas_darray_ax(n, t, p[i]);
             }
             
             for (j = 1; j < i; ++j) {
@@ -1259,24 +1259,24 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
             rs[k] = t / hh[k][k];
         }
         
-        fasp_array_cp(n, z[i-1], r);
+        fasp_darray_cp(n, z[i-1], r);
         //for (j = 0; j < n; j ++) r[j] *= rs[i-1];
-        fasp_blas_array_ax(n, rs[i-1], r);
-        for (j = i-2; j >= 0; j --)  fasp_blas_array_axpy(n, rs[j], z[j], r);
+        fasp_blas_darray_ax(n, rs[i-1], r);
+        for (j = i-2; j >= 0; j --)  fasp_blas_darray_axpy(n, rs[j], z[j], r);
         
-        fasp_blas_array_axpy(n, 1.0, r, x->val);
+        fasp_blas_darray_axpy(n, 1.0, r, x->val);
         
         if (r_norm  <= epsilon && iter >= min_iter) {
             mf->fct(mf->data, x->val, r);
-            fasp_blas_array_axpby(n, 1.0, b->val, -1.0, r);
-            r_norm = fasp_blas_array_norm2(n, r);
+            fasp_blas_darray_axpby(n, 1.0, b->val, -1.0, r);
+            r_norm = fasp_blas_darray_norm2(n, r);
             
             if (r_norm  <= epsilon) {
                 break;
             }
             else {
                 if (prtlvl >= PRINT_SOME) ITS_FACONV;
-                fasp_array_cp(n, r, p[0]); i = 0;
+                fasp_darray_cp(n, r, p[0]); i = 0;
             }
         } /* end of convergence check */
         
@@ -1287,13 +1287,13 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
             rs[j] = c[j-1]*rs[j];
         }
         
-        if (i) fasp_blas_array_axpy(n, rs[i]-1.0, p[i], p[i]);
+        if (i) fasp_blas_darray_axpy(n, rs[i]-1.0, p[i], p[i]);
         
-        for (j = i-1 ; j > 0; j --) fasp_blas_array_axpy(n, rs[j], p[j], p[i]);
+        for (j = i-1 ; j > 0; j --) fasp_blas_darray_axpy(n, rs[j], p[j], p[i]);
         
         if (i) {
-            fasp_blas_array_axpy(n, rs[0]-1.0, p[0], p[0]);
-            fasp_blas_array_axpy(n, 1.0, p[i], p[0]);
+            fasp_blas_darray_axpy(n, rs[0]-1.0, p[0], p[0]);
+            fasp_blas_darray_axpy(n, 1.0, p[i], p[0]);
         }
         
         //-----------------------------------//

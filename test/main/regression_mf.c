@@ -57,17 +57,17 @@ static void check_solu(dvector *x, dvector *sol, double tol)
  */
 int main (int argc, const char * argv[])
 {
-    const INT      print_level = 1;    // how much information to print out
-    const INT      num_prob    = 2;    // how many problems to be used
-    const REAL     tolerance   = 1e-4; // tolerance for accepting the solution
+    const INT  print_level = 1;    // how much information to print out
+    const INT  num_prob    = 2;    // how many problems to be used
+    const REAL tolerance   = 1e-4; // tolerance for accepting the solution
     
     /* Local Variables */
-    itsolver_param itparam;      // input parameters for iterative solvers
-    dCSRmat        A;            // coefficient matrix
-    dvector        b, x, sol;    // rhs, numerical sol, exact sol
-    INT            indp;         // index for test problems
+    ITS_param   itparam;      // input parameters for iterative solvers
+    dCSRmat     A;            // coefficient matrix
+    dvector     b, x, sol;    // rhs, numerical sol, exact sol
+    INT         indp;         // index for test problems
     
-    time_t         lt  = time(NULL);
+    time_t      lt  = time(NULL);
     
     printf("\n\n");
     printf("------------------------- Test starts at -------------------------\n");

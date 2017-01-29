@@ -171,16 +171,16 @@ void fasp_ilu_dstr_setup0 (dSTRmat   *A,
     
             fasp_blas_smat_mul_nc3(&(LU->offdiag[0][i1]),&(LU->offdiag[1][i1]),smat);
     
-            fasp_blas_array_axpyz_nc3(-1,smat,&(diag[ii]),&(LU->diag[ii]));
+            fasp_blas_darray_axpyz_nc3(-1,smat,&(diag[ii]),&(LU->diag[ii]));
             
             if (i>=nline) {
                 fasp_blas_smat_mul_nc3(&(LU->offdiag[2][ix]),&(LU->offdiag[3][ix]),smat);
-                fasp_blas_array_axpy_nc3(-1.0,smat,&(LU->diag[ii]));
+                fasp_blas_darray_axpy_nc3(-1.0,smat,&(LU->diag[ii]));
             } //end if (i>=nline)
     
             if (i>=nplane) {
                 fasp_blas_smat_mul_nc3(&(LU->offdiag[4][ixy]),&(LU->offdiag[5][ixy]),smat);
-                fasp_blas_array_axpy_nc3(-1,smat,&(LU->diag[ii]));
+                fasp_blas_darray_axpy_nc3(-1,smat,&(LU->diag[ii]));
             } // end if (i>=nplane)
     
             fasp_smat_inv_nc3(&(LU->diag[ii]));
@@ -209,16 +209,16 @@ void fasp_ilu_dstr_setup0 (dSTRmat   *A,
     
             fasp_blas_smat_mul_nc5(&(LU->offdiag[0][i1]),&(LU->offdiag[1][i1]),smat);
     
-            fasp_blas_array_axpyz_nc5(-1.0,smat,&(diag[ii]),&(LU->diag[ii]));
+            fasp_blas_darray_axpyz_nc5(-1.0,smat,&(diag[ii]),&(LU->diag[ii]));
             
             if (i>=nline) {
                 fasp_blas_smat_mul_nc5(&(LU->offdiag[2][ix]),&(LU->offdiag[3][ix]),smat);
-                fasp_blas_array_axpy_nc5(-1.0,smat,&(LU->diag[ii]));
+                fasp_blas_darray_axpy_nc5(-1.0,smat,&(LU->diag[ii]));
             } //end if (i>=nline)
     
             if (i>=nplane) {
                 fasp_blas_smat_mul_nc5(&(LU->offdiag[4][ixy]),&(LU->offdiag[5][ixy]),smat);
-                fasp_blas_array_axpy_nc5(-1.0,smat,&(LU->diag[ii]));
+                fasp_blas_darray_axpy_nc5(-1.0,smat,&(LU->diag[ii]));
             } // end if (i>=nplane)
     
             fasp_smat_inv_nc5(&(LU->diag[ii]));
@@ -247,16 +247,16 @@ void fasp_ilu_dstr_setup0 (dSTRmat   *A,
     
             fasp_blas_smat_mul_nc7(&(LU->offdiag[0][i1]),&(LU->offdiag[1][i1]),smat);
     
-            fasp_blas_array_axpyz_nc7(-1.0,smat,&(diag[ii]),&(LU->diag[ii]));
+            fasp_blas_darray_axpyz_nc7(-1.0,smat,&(diag[ii]),&(LU->diag[ii]));
             
             if (i>=nline) {
                 fasp_blas_smat_mul_nc7(&(LU->offdiag[2][ix]),&(LU->offdiag[3][ix]),smat);
-                fasp_blas_array_axpy_nc7(-1.0,smat,&(LU->diag[ii]));
+                fasp_blas_darray_axpy_nc7(-1.0,smat,&(LU->diag[ii]));
             } //end if (i>=nline)
     
             if (i>=nplane) {
                 fasp_blas_smat_mul_nc7(&(LU->offdiag[4][ixy]),&(LU->offdiag[5][ixy]),smat);
-                fasp_blas_array_axpy_nc7(-1.0,smat,&(LU->diag[ii]));
+                fasp_blas_darray_axpy_nc7(-1.0,smat,&(LU->diag[ii]));
             } // end if (i>=nplane)
     
             fasp_smat_inv_nc7(&(LU->diag[ii]));
@@ -285,16 +285,16 @@ void fasp_ilu_dstr_setup0 (dSTRmat   *A,
     
             fasp_blas_smat_mul(&(LU->offdiag[0][i1]),&(LU->offdiag[1][i1]),smat,nc);
     
-            fasp_blas_array_axpyz(nc2,-1,smat,&(diag[ii]),&(LU->diag[ii]));
+            fasp_blas_darray_axpyz(nc2,-1,smat,&(diag[ii]),&(LU->diag[ii]));
             
             if (i>=nline) {
                 fasp_blas_smat_mul(&(LU->offdiag[2][ix]),&(LU->offdiag[3][ix]),smat,nc);
-                fasp_blas_array_axpy(nc2,-1,smat,&(LU->diag[ii]));
+                fasp_blas_darray_axpy(nc2,-1,smat,&(LU->diag[ii]));
             } //end if (i>=nline)
     
             if (i>=nplane) {
                 fasp_blas_smat_mul(&(LU->offdiag[4][ixy]),&(LU->offdiag[5][ixy]),smat,nc);
-                fasp_blas_array_axpy(nc2,-1,smat,&(LU->diag[ii]));
+                fasp_blas_darray_axpy(nc2,-1,smat,&(LU->diag[ii]));
             } // end if (i>=nplane)
     
             fasp_smat_inv(&(LU->diag[ii]),nc);
@@ -511,7 +511,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ixy>=0) {    
                     fasp_blas_smat_mul_nc3(&(LU->offdiag[10][ixyc]),&(LU->offdiag[1][ixyc]),smat);  
-                    fasp_blas_array_axpy_nc3(-1,smat,tc); 
+                    fasp_blas_darray_axpy_nc3(-1,smat,tc); 
                 }  
     
                 fasp_blas_smat_mul_nc3(tc,&(LU->diag[ixy1c]),&(LU->offdiag[8][ixy1c]));
@@ -523,12 +523,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ixy>=0) {
                     fasp_blas_smat_mul_nc3(&(LU->offdiag[10][ixyc]),&(LU->offdiag[5][ixyc]),smat);
-                    fasp_blas_array_axpy_nc3(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc3(-1,smat,tc);
                 }
     
                 if (ixy1>=0) {
                     fasp_blas_smat_mul_nc3(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[3][ixy1c]),smat);
-                    fasp_blas_array_axpy_nc3(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc3(-1,smat,tc);
                 }
     
                 fasp_blas_smat_mul_nc3(tc,&(LU->diag[ixyxc]),&(LU->offdiag[6][ixyxc]));
@@ -541,7 +541,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ixy>=0) {
                     fasp_blas_smat_mul_nc3(&(LU->offdiag[10][ixyc]),&(LU->offdiag[7][ixyc]),smat);
-                    fasp_blas_array_axpy_nc3(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc3(-1,smat,tc);
                 }
     
                 fasp_blas_smat_mul_nc3(tc,&(LU->diag[ixc]),&(LU->offdiag[4][ixc]));
@@ -554,12 +554,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ix>=0) {
                     fasp_blas_smat_mul_nc3(&(LU->offdiag[4][ixc]),&(LU->offdiag[1][ixc]),smat);
-                    fasp_blas_array_axpy_nc3(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc3(-1,smat,tc);
                 }
     
                 if (ixy1>=0) {
                     fasp_blas_smat_mul_nc3(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[7][ixy1c]),smat);
-                    fasp_blas_array_axpy_nc3(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc3(-1,smat,tc);
                 }
     
                 fasp_blas_smat_mul_nc3(tc,&(LU->diag[ix1c]),&(LU->offdiag[2][ix1c]));
@@ -572,12 +572,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
             if (ix>=0) {
                 fasp_blas_smat_mul_nc3(&(LU->offdiag[4][ixc]),&(LU->offdiag[3][ixc]),smat);
-                fasp_blas_array_axpy_nc3(-1,smat,tc);
+                fasp_blas_darray_axpy_nc3(-1,smat,tc);
             }
     
             if (ixy>=0) {
                 fasp_blas_smat_mul_nc3(&(LU->offdiag[10][ixyc]),&(LU->offdiag[9][ixyc]),smat);
-                fasp_blas_array_axpy_nc3(-1,smat,tc);
+                fasp_blas_darray_axpy_nc3(-1,smat,tc);
             }
     
             fasp_blas_smat_mul_nc3(tc,&(LU->diag[i1c]),&(LU->offdiag[0][i1c]));
@@ -589,12 +589,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
                 
                 if (ix1>=0) {
                     fasp_blas_smat_mul_nc3(&(LU->offdiag[2][ix1c]),&(LU->offdiag[5][ix1c]),smat);
-                    fasp_blas_array_axpy_nc3(-1,smat,&(LU->offdiag[1][ic]));
+                    fasp_blas_darray_axpy_nc3(-1,smat,&(LU->offdiag[1][ic]));
                 }
     
                 if (ixy1>=0) {
                     fasp_blas_smat_mul_nc3(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[11][ixy1c]),smat);
-                    fasp_blas_array_axpy_nc3(-1,smat,&(LU->offdiag[1][ic]));
+                    fasp_blas_darray_axpy_nc3(-1,smat,&(LU->offdiag[1][ic]));
                 }
     
             }
@@ -604,12 +604,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 {
                     fasp_blas_smat_mul_nc3(&(LU->offdiag[0][i1c]),&(LU->offdiag[5][i1c]),smat);
-                    fasp_blas_array_axpy_nc3(-1,smat,&(LU->offdiag[3][ic]));
+                    fasp_blas_darray_axpy_nc3(-1,smat,&(LU->offdiag[3][ic]));
                 }
     
                 if (ixyx>=0) {
                     fasp_blas_smat_mul_nc3(&(LU->offdiag[6][ixyxc]),&(LU->offdiag[9][ixyxc]),smat);
-                    fasp_blas_array_axpy_nc3(-1,smat,&(LU->offdiag[3][ic]));
+                    fasp_blas_darray_axpy_nc3(-1,smat,&(LU->offdiag[3][ic]));
                 }
     
             }
@@ -621,7 +621,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ixyx>=0) {
                     fasp_blas_smat_mul_nc3(&(LU->offdiag[6][ixyxc]),&(LU->offdiag[11][ixyxc]),smat);
-                    fasp_blas_array_axpy_nc3(-1,smat,&(LU->offdiag[5][ic]));
+                    fasp_blas_darray_axpy_nc3(-1,smat,&(LU->offdiag[5][ic]));
                 }
     
             }
@@ -631,12 +631,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ix1>=0) {
                     fasp_blas_smat_mul_nc3(&(LU->offdiag[2][ix1c]),&(LU->offdiag[9][ix1c]),smat);
-                    fasp_blas_array_axpy_nc3(-1,smat,&(LU->offdiag[7][ic]));
+                    fasp_blas_darray_axpy_nc3(-1,smat,&(LU->offdiag[7][ic]));
                 }
     
                 if (ix>=0) {
                     fasp_blas_smat_mul_nc3(&(LU->offdiag[4][ixc]),&(LU->offdiag[11][ixc]),smat);
-                    fasp_blas_array_axpy_nc3(-1,smat,&(LU->offdiag[7][ic]));
+                    fasp_blas_darray_axpy_nc3(-1,smat,&(LU->offdiag[7][ic]));
                 }
     
             }
@@ -644,38 +644,38 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
             // comput beta5[i]
             if (i+nplane-1<ngrid) {
                 fasp_blas_smat_mul_nc3(&(LU->offdiag[0][i1c]),&(LU->offdiag[11][i1c]),smat);
-                fasp_blas_array_axpy_nc3(-1,smat,&(LU->offdiag[9][ic]));
+                fasp_blas_darray_axpy_nc3(-1,smat,&(LU->offdiag[9][ic]));
             }
     
             // comput d[i]
             {
                 fasp_blas_smat_mul_nc3(&(LU->offdiag[0][i1c]),&(LU->offdiag[1][i1c]),smat);
-                fasp_blas_array_axpyz_nc3(-1,smat,&(A->diag[ic]),&(LU->diag[ic]));
+                fasp_blas_darray_axpyz_nc3(-1,smat,&(A->diag[ic]),&(LU->diag[ic]));
             }
     
             if (ix1>=0) {
                 fasp_blas_smat_mul_nc3(&(LU->offdiag[2][ix1c]),&(LU->offdiag[3][ix1c]),smat);
-                fasp_blas_array_axpy_nc3(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc3(-1,smat,&(LU->diag[ic]));
             }
     
             if (ix>=0) {
                 fasp_blas_smat_mul_nc3(&(LU->offdiag[4][ixc]),&(LU->offdiag[5][ixc]),smat);
-                fasp_blas_array_axpy_nc3(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc3(-1,smat,&(LU->diag[ic]));
             }
     
             if (ixyx>=0) {
                 fasp_blas_smat_mul_nc3(&(LU->offdiag[6][ixyxc]),&(LU->offdiag[7][ixyxc]),smat);
-                fasp_blas_array_axpy_nc3(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc3(-1,smat,&(LU->diag[ic]));
             }
     
             if (ixy1>=0) {
                 fasp_blas_smat_mul_nc3(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[9][ixy1c]),smat);
-                fasp_blas_array_axpy_nc3(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc3(-1,smat,&(LU->diag[ic]));
             }
     
             if (ixy>=0) {
                 fasp_blas_smat_mul_nc3(&(LU->offdiag[10][ixyc]),&(LU->offdiag[11][ixyc]),smat);
-                fasp_blas_array_axpy_nc3(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc3(-1,smat,&(LU->diag[ic]));
             }
     
             fasp_smat_inv_nc3(&(LU->diag[ic]));
@@ -704,7 +704,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ixy>=0) {    
                     fasp_blas_smat_mul_nc5(&(LU->offdiag[10][ixyc]),&(LU->offdiag[1][ixyc]),smat);  
-                    fasp_blas_array_axpy_nc5(-1.0,smat,tc); 
+                    fasp_blas_darray_axpy_nc5(-1.0,smat,tc); 
                 }  
     
                 fasp_blas_smat_mul_nc5(tc,&(LU->diag[ixy1c]),&(LU->offdiag[8][ixy1c]));
@@ -716,12 +716,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ixy>=0) {
                     fasp_blas_smat_mul_nc5(&(LU->offdiag[10][ixyc]),&(LU->offdiag[5][ixyc]),smat);
-                    fasp_blas_array_axpy_nc5(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc5(-1,smat,tc);
                 }
     
                 if (ixy1>=0) {
                     fasp_blas_smat_mul_nc5(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[3][ixy1c]),smat);
-                    fasp_blas_array_axpy_nc5(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc5(-1,smat,tc);
                 }
     
                 fasp_blas_smat_mul_nc5(tc,&(LU->diag[ixyxc]),&(LU->offdiag[6][ixyxc]));
@@ -734,7 +734,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ixy>=0) {
                     fasp_blas_smat_mul_nc5(&(LU->offdiag[10][ixyc]),&(LU->offdiag[7][ixyc]),smat);
-                    fasp_blas_array_axpy_nc5(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc5(-1,smat,tc);
                 }
     
                 fasp_blas_smat_mul_nc5(tc,&(LU->diag[ixc]),&(LU->offdiag[4][ixc]));
@@ -747,12 +747,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ix>=0) {
                     fasp_blas_smat_mul_nc5(&(LU->offdiag[4][ixc]),&(LU->offdiag[1][ixc]),smat);
-                    fasp_blas_array_axpy_nc5(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc5(-1,smat,tc);
                 }
     
                 if (ixy1>=0) {
                     fasp_blas_smat_mul_nc5(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[7][ixy1c]),smat);
-                    fasp_blas_array_axpy_nc5(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc5(-1,smat,tc);
                 }
     
                 fasp_blas_smat_mul_nc5(tc,&(LU->diag[ix1c]),&(LU->offdiag[2][ix1c]));
@@ -765,12 +765,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
             if (ix>=0) {
                 fasp_blas_smat_mul_nc5(&(LU->offdiag[4][ixc]),&(LU->offdiag[3][ixc]),smat);
-                fasp_blas_array_axpy_nc5(-1,smat,tc);
+                fasp_blas_darray_axpy_nc5(-1,smat,tc);
             }
     
             if (ixy>=0) {
                 fasp_blas_smat_mul_nc5(&(LU->offdiag[10][ixyc]),&(LU->offdiag[9][ixyc]),smat);
-                fasp_blas_array_axpy_nc5(-1,smat,tc);
+                fasp_blas_darray_axpy_nc5(-1,smat,tc);
             }
     
             fasp_blas_smat_mul_nc5(tc,&(LU->diag[i1c]),&(LU->offdiag[0][i1c]));
@@ -782,12 +782,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
                 
                 if (ix1>=0) {
                     fasp_blas_smat_mul_nc5(&(LU->offdiag[2][ix1c]),&(LU->offdiag[5][ix1c]),smat);
-                    fasp_blas_array_axpy_nc5(-1,smat,&(LU->offdiag[1][ic]));
+                    fasp_blas_darray_axpy_nc5(-1,smat,&(LU->offdiag[1][ic]));
                 }
     
                 if (ixy1>=0) {
                     fasp_blas_smat_mul_nc5(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[11][ixy1c]),smat);
-                    fasp_blas_array_axpy_nc5(-1,smat,&(LU->offdiag[1][ic]));
+                    fasp_blas_darray_axpy_nc5(-1,smat,&(LU->offdiag[1][ic]));
                 }
     
             }
@@ -797,12 +797,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 {
                     fasp_blas_smat_mul_nc5(&(LU->offdiag[0][i1c]),&(LU->offdiag[5][i1c]),smat);
-                    fasp_blas_array_axpy_nc5(-1,smat,&(LU->offdiag[3][ic]));
+                    fasp_blas_darray_axpy_nc5(-1,smat,&(LU->offdiag[3][ic]));
                 }
     
                 if (ixyx>=0) {
                     fasp_blas_smat_mul_nc5(&(LU->offdiag[6][ixyxc]),&(LU->offdiag[9][ixyxc]),smat);
-                    fasp_blas_array_axpy_nc5(-1,smat,&(LU->offdiag[3][ic]));
+                    fasp_blas_darray_axpy_nc5(-1,smat,&(LU->offdiag[3][ic]));
                 }
     
             }
@@ -814,7 +814,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ixyx>=0) {
                     fasp_blas_smat_mul_nc5(&(LU->offdiag[6][ixyxc]),&(LU->offdiag[11][ixyxc]),smat);
-                    fasp_blas_array_axpy_nc5(-1,smat,&(LU->offdiag[5][ic]));
+                    fasp_blas_darray_axpy_nc5(-1,smat,&(LU->offdiag[5][ic]));
                 }
     
             }
@@ -824,12 +824,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ix1>=0) {
                     fasp_blas_smat_mul_nc5(&(LU->offdiag[2][ix1c]),&(LU->offdiag[9][ix1c]),smat);
-                    fasp_blas_array_axpy_nc5(-1,smat,&(LU->offdiag[7][ic]));
+                    fasp_blas_darray_axpy_nc5(-1,smat,&(LU->offdiag[7][ic]));
                 }
     
                 if (ix>=0) {
                     fasp_blas_smat_mul_nc5(&(LU->offdiag[4][ixc]),&(LU->offdiag[11][ixc]),smat);
-                    fasp_blas_array_axpy_nc5(-1,smat,&(LU->offdiag[7][ic]));
+                    fasp_blas_darray_axpy_nc5(-1,smat,&(LU->offdiag[7][ic]));
                 }
     
             }
@@ -837,38 +837,38 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
             // comput beta5[i]
             if (i+nplane-1<ngrid) {
                 fasp_blas_smat_mul_nc5(&(LU->offdiag[0][i1c]),&(LU->offdiag[11][i1c]),smat);
-                fasp_blas_array_axpy_nc5(-1,smat,&(LU->offdiag[9][ic]));
+                fasp_blas_darray_axpy_nc5(-1,smat,&(LU->offdiag[9][ic]));
             }
     
             // comput d[i]       
             {
                 fasp_blas_smat_mul_nc5(&(LU->offdiag[0][i1c]),&(LU->offdiag[1][i1c]),smat);
-                fasp_blas_array_axpyz_nc5(-1,smat,&(A->diag[ic]),&(LU->diag[ic]));
+                fasp_blas_darray_axpyz_nc5(-1,smat,&(A->diag[ic]),&(LU->diag[ic]));
             }
     
             if (ix1>=0) {
                 fasp_blas_smat_mul_nc5(&(LU->offdiag[2][ix1c]),&(LU->offdiag[3][ix1c]),smat);
-                fasp_blas_array_axpy_nc5(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc5(-1,smat,&(LU->diag[ic]));
             }
     
             if (ix>=0) {
                 fasp_blas_smat_mul_nc5(&(LU->offdiag[4][ixc]),&(LU->offdiag[5][ixc]),smat);
-                fasp_blas_array_axpy_nc5(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc5(-1,smat,&(LU->diag[ic]));
             }
     
             if (ixyx>=0) {
                 fasp_blas_smat_mul_nc5(&(LU->offdiag[6][ixyxc]),&(LU->offdiag[7][ixyxc]),smat);
-                fasp_blas_array_axpy_nc5(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc5(-1,smat,&(LU->diag[ic]));
             }
     
             if (ixy1>=0) {
                 fasp_blas_smat_mul_nc5(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[9][ixy1c]),smat);
-                fasp_blas_array_axpy_nc5(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc5(-1,smat,&(LU->diag[ic]));
             }
     
             if (ixy>=0) {
                 fasp_blas_smat_mul_nc5(&(LU->offdiag[10][ixyc]),&(LU->offdiag[11][ixyc]),smat);
-                fasp_blas_array_axpy_nc5(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc5(-1,smat,&(LU->diag[ic]));
             }
     
             //fasp_smat_inv_nc5(&(LU->diag[ic]));
@@ -898,7 +898,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ixy>=0) {    
                     fasp_blas_smat_mul_nc7(&(LU->offdiag[10][ixyc]),&(LU->offdiag[1][ixyc]),smat);  
-                    fasp_blas_array_axpy_nc7(-1.0,smat,tc); 
+                    fasp_blas_darray_axpy_nc7(-1.0,smat,tc); 
                 }  
     
                 fasp_blas_smat_mul_nc7(tc,&(LU->diag[ixy1c]),&(LU->offdiag[8][ixy1c]));
@@ -910,12 +910,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ixy>=0) {
                     fasp_blas_smat_mul_nc7(&(LU->offdiag[10][ixyc]),&(LU->offdiag[5][ixyc]),smat);
-                    fasp_blas_array_axpy_nc7(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc7(-1,smat,tc);
                 }
     
                 if (ixy1>=0) {
                     fasp_blas_smat_mul_nc7(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[3][ixy1c]),smat);
-                    fasp_blas_array_axpy_nc7(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc7(-1,smat,tc);
                 }
     
                 fasp_blas_smat_mul_nc7(tc,&(LU->diag[ixyxc]),&(LU->offdiag[6][ixyxc]));
@@ -928,7 +928,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ixy>=0) {
                     fasp_blas_smat_mul_nc7(&(LU->offdiag[10][ixyc]),&(LU->offdiag[7][ixyc]),smat);
-                    fasp_blas_array_axpy_nc7(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc7(-1,smat,tc);
                 }
     
                 fasp_blas_smat_mul_nc7(tc,&(LU->diag[ixc]),&(LU->offdiag[4][ixc]));
@@ -941,12 +941,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ix>=0) {
                     fasp_blas_smat_mul_nc7(&(LU->offdiag[4][ixc]),&(LU->offdiag[1][ixc]),smat);
-                    fasp_blas_array_axpy_nc7(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc7(-1,smat,tc);
                 }
     
                 if (ixy1>=0) {
                     fasp_blas_smat_mul_nc7(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[7][ixy1c]),smat);
-                    fasp_blas_array_axpy_nc7(-1,smat,tc);
+                    fasp_blas_darray_axpy_nc7(-1,smat,tc);
                 }
     
                 fasp_blas_smat_mul_nc7(tc,&(LU->diag[ix1c]),&(LU->offdiag[2][ix1c]));
@@ -959,12 +959,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
             if (ix>=0) {
                 fasp_blas_smat_mul_nc7(&(LU->offdiag[4][ixc]),&(LU->offdiag[3][ixc]),smat);
-                fasp_blas_array_axpy_nc7(-1,smat,tc);
+                fasp_blas_darray_axpy_nc7(-1,smat,tc);
             }
     
             if (ixy>=0) {
                 fasp_blas_smat_mul_nc7(&(LU->offdiag[10][ixyc]),&(LU->offdiag[9][ixyc]),smat);
-                fasp_blas_array_axpy_nc7(-1,smat,tc);
+                fasp_blas_darray_axpy_nc7(-1,smat,tc);
             }
     
             fasp_blas_smat_mul_nc7(tc,&(LU->diag[i1c]),&(LU->offdiag[0][i1c]));
@@ -976,12 +976,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
                 
                 if (ix1>=0) {
                     fasp_blas_smat_mul_nc7(&(LU->offdiag[2][ix1c]),&(LU->offdiag[5][ix1c]),smat);
-                    fasp_blas_array_axpy_nc7(-1,smat,&(LU->offdiag[1][ic]));
+                    fasp_blas_darray_axpy_nc7(-1,smat,&(LU->offdiag[1][ic]));
                 }
     
                 if (ixy1>=0) {
                     fasp_blas_smat_mul_nc7(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[11][ixy1c]),smat);
-                    fasp_blas_array_axpy_nc7(-1,smat,&(LU->offdiag[1][ic]));
+                    fasp_blas_darray_axpy_nc7(-1,smat,&(LU->offdiag[1][ic]));
                 }
     
             }
@@ -991,12 +991,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 {
                     fasp_blas_smat_mul_nc7(&(LU->offdiag[0][i1c]),&(LU->offdiag[5][i1c]),smat);
-                    fasp_blas_array_axpy_nc7(-1,smat,&(LU->offdiag[3][ic]));
+                    fasp_blas_darray_axpy_nc7(-1,smat,&(LU->offdiag[3][ic]));
                 }
     
                 if (ixyx>=0) {
                     fasp_blas_smat_mul_nc7(&(LU->offdiag[6][ixyxc]),&(LU->offdiag[9][ixyxc]),smat);
-                    fasp_blas_array_axpy_nc7(-1,smat,&(LU->offdiag[3][ic]));
+                    fasp_blas_darray_axpy_nc7(-1,smat,&(LU->offdiag[3][ic]));
                 }
     
             }
@@ -1008,7 +1008,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ixyx>=0) {
                     fasp_blas_smat_mul_nc7(&(LU->offdiag[6][ixyxc]),&(LU->offdiag[11][ixyxc]),smat);
-                    fasp_blas_array_axpy_nc7(-1,smat,&(LU->offdiag[5][ic]));
+                    fasp_blas_darray_axpy_nc7(-1,smat,&(LU->offdiag[5][ic]));
                 }
     
             }
@@ -1018,12 +1018,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ix1>=0) {
                     fasp_blas_smat_mul_nc7(&(LU->offdiag[2][ix1c]),&(LU->offdiag[9][ix1c]),smat);
-                    fasp_blas_array_axpy_nc7(-1,smat,&(LU->offdiag[7][ic]));
+                    fasp_blas_darray_axpy_nc7(-1,smat,&(LU->offdiag[7][ic]));
                 }
     
                 if (ix>=0) {
                     fasp_blas_smat_mul_nc7(&(LU->offdiag[4][ixc]),&(LU->offdiag[11][ixc]),smat);
-                    fasp_blas_array_axpy_nc7(-1,smat,&(LU->offdiag[7][ic]));
+                    fasp_blas_darray_axpy_nc7(-1,smat,&(LU->offdiag[7][ic]));
                 }
     
             }
@@ -1031,38 +1031,38 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
             // comput beta5[i]
             if (i+nplane-1<ngrid) {
                 fasp_blas_smat_mul_nc7(&(LU->offdiag[0][i1c]),&(LU->offdiag[11][i1c]),smat);
-                fasp_blas_array_axpy_nc7(-1,smat,&(LU->offdiag[9][ic]));
+                fasp_blas_darray_axpy_nc7(-1,smat,&(LU->offdiag[9][ic]));
             }
     
             // comput d[i]       
             {
                 fasp_blas_smat_mul_nc7(&(LU->offdiag[0][i1c]),&(LU->offdiag[1][i1c]),smat);
-                fasp_blas_array_axpyz_nc7(-1,smat,&(A->diag[ic]),&(LU->diag[ic]));
+                fasp_blas_darray_axpyz_nc7(-1,smat,&(A->diag[ic]),&(LU->diag[ic]));
             }
     
             if (ix1>=0) {
                 fasp_blas_smat_mul_nc7(&(LU->offdiag[2][ix1c]),&(LU->offdiag[3][ix1c]),smat);
-                fasp_blas_array_axpy_nc7(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc7(-1,smat,&(LU->diag[ic]));
             }
     
             if (ix>=0) {
                 fasp_blas_smat_mul_nc7(&(LU->offdiag[4][ixc]),&(LU->offdiag[5][ixc]),smat);
-                fasp_blas_array_axpy_nc7(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc7(-1,smat,&(LU->diag[ic]));
             }
     
             if (ixyx>=0) {
                 fasp_blas_smat_mul_nc7(&(LU->offdiag[6][ixyxc]),&(LU->offdiag[7][ixyxc]),smat);
-                fasp_blas_array_axpy_nc7(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc7(-1,smat,&(LU->diag[ic]));
             }
     
             if (ixy1>=0) {
                 fasp_blas_smat_mul_nc7(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[9][ixy1c]),smat);
-                fasp_blas_array_axpy_nc7(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc7(-1,smat,&(LU->diag[ic]));
             }
     
             if (ixy>=0) {
                 fasp_blas_smat_mul_nc7(&(LU->offdiag[10][ixyc]),&(LU->offdiag[11][ixyc]),smat);
-                fasp_blas_array_axpy_nc7(-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy_nc7(-1,smat,&(LU->diag[ic]));
             }
     
             //fasp_smat_inv_nc5(&(LU->diag[ic]));
@@ -1091,7 +1091,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
                 for (j=0;j<nc2;++j) tc[j]=0;
                 if (ixy>=0) {    
                     fasp_blas_smat_mul(&(LU->offdiag[10][ixyc]),&(LU->offdiag[1][ixyc]),smat,nc);  
-                    fasp_blas_array_axpy(nc2,-1,smat,tc); 
+                    fasp_blas_darray_axpy(nc2,-1,smat,tc); 
                 }  
     
                 fasp_blas_smat_mul(tc,&(LU->diag[ixy1c]),&(LU->offdiag[8][ixy1c]),nc);
@@ -1102,11 +1102,11 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
                 for (j=0;j<nc2;++j) tc[j]=0;
                 if (ixy>=0) {
                     fasp_blas_smat_mul(&(LU->offdiag[10][ixyc]),&(LU->offdiag[5][ixyc]),smat,nc);
-                    fasp_blas_array_axpy(nc2,-1,smat,tc);
+                    fasp_blas_darray_axpy(nc2,-1,smat,tc);
                 }
                 if (ixy1>=0) {
                     fasp_blas_smat_mul(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[3][ixy1c]),smat,nc);
-                    fasp_blas_array_axpy(nc2,-1,smat,tc);
+                    fasp_blas_darray_axpy(nc2,-1,smat,tc);
                 }
     
                 fasp_blas_smat_mul(tc,&(LU->diag[ixyxc]),&(LU->offdiag[6][ixyxc]),nc);
@@ -1118,7 +1118,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
                 memcpy(tc,&(A->offdiag[2][ixc]),nc2*sizeof(REAL));
                 if (ixy>=0) {
                     fasp_blas_smat_mul(&(LU->offdiag[10][ixyc]),&(LU->offdiag[7][ixyc]),smat,nc);
-                    fasp_blas_array_axpy(nc2,-1,smat,tc);
+                    fasp_blas_darray_axpy(nc2,-1,smat,tc);
                 }
     
                 fasp_blas_smat_mul(tc,&(LU->diag[ixc]),&(LU->offdiag[4][ixc]),nc);
@@ -1131,12 +1131,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ix>=0) {
                     fasp_blas_smat_mul(&(LU->offdiag[4][ixc]),&(LU->offdiag[1][ixc]),smat,nc);
-                    fasp_blas_array_axpy(nc2,-1,smat,tc);
+                    fasp_blas_darray_axpy(nc2,-1,smat,tc);
                 }
     
                 if (ixy1>=0) {
                     fasp_blas_smat_mul(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[7][ixy1c]),smat,nc);
-                    fasp_blas_array_axpy(nc2,-1,smat,tc);
+                    fasp_blas_darray_axpy(nc2,-1,smat,tc);
                 }
     
                 fasp_blas_smat_mul(tc,&(LU->diag[ix1c]),&(LU->offdiag[2][ix1c]),nc);
@@ -1147,11 +1147,11 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
             memcpy(tc,&(A->offdiag[0][i1c]),nc2*sizeof(REAL));
             if (ix>=0) {
                 fasp_blas_smat_mul(&(LU->offdiag[4][ixc]),&(LU->offdiag[3][ixc]),smat,nc);
-                fasp_blas_array_axpy(nc2,-1,smat,tc);
+                fasp_blas_darray_axpy(nc2,-1,smat,tc);
             }
             if (ixy>=0) {
                 fasp_blas_smat_mul(&(LU->offdiag[10][ixyc]),&(LU->offdiag[9][ixyc]),smat,nc);
-                fasp_blas_array_axpy(nc2,-1,smat,tc);
+                fasp_blas_darray_axpy(nc2,-1,smat,tc);
             }
     
             fasp_blas_smat_mul(tc,&(LU->diag[i1c]),&(LU->offdiag[0][i1c]),nc);
@@ -1162,11 +1162,11 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
                 memcpy(&(LU->offdiag[1][ic]),&(A->offdiag[1][ic]),nc2*sizeof(REAL));
                 if (ix1>=0) {
                     fasp_blas_smat_mul(&(LU->offdiag[2][ix1c]),&(LU->offdiag[5][ix1c]),smat,nc);
-                    fasp_blas_array_axpy(nc2,-1,smat,&(LU->offdiag[1][ic]));
+                    fasp_blas_darray_axpy(nc2,-1,smat,&(LU->offdiag[1][ic]));
                 }
                 if (ixy1>=0) {
                     fasp_blas_smat_mul(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[11][ixy1c]),smat,nc);
-                    fasp_blas_array_axpy(nc2,-1,smat,&(LU->offdiag[1][ic]));
+                    fasp_blas_darray_axpy(nc2,-1,smat,&(LU->offdiag[1][ic]));
                 }
     
             }
@@ -1176,12 +1176,12 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 {
                     fasp_blas_smat_mul(&(LU->offdiag[0][i1c]),&(LU->offdiag[5][i1c]),smat,nc);
-                    fasp_blas_array_axpy(nc2,-1,smat,&(LU->offdiag[3][ic]));
+                    fasp_blas_darray_axpy(nc2,-1,smat,&(LU->offdiag[3][ic]));
                 }
     
                 if (ixyx>=0) {
                     fasp_blas_smat_mul(&(LU->offdiag[6][ixyxc]),&(LU->offdiag[9][ixyxc]),smat,nc);
-                    fasp_blas_array_axpy(nc2,-1,smat,&(LU->offdiag[3][ic]));
+                    fasp_blas_darray_axpy(nc2,-1,smat,&(LU->offdiag[3][ic]));
                 }
     
             }
@@ -1192,7 +1192,7 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
                 memcpy(&(LU->offdiag[5][ic]),&(A->offdiag[3][ic]),nc2*sizeof(REAL));
                 if (ixyx>=0) {
                     fasp_blas_smat_mul(&(LU->offdiag[6][ixyxc]),&(LU->offdiag[11][ixyxc]),smat,nc);
-                    fasp_blas_array_axpy(nc2,-1,smat,&(LU->offdiag[5][ic]));
+                    fasp_blas_darray_axpy(nc2,-1,smat,&(LU->offdiag[5][ic]));
                 }
     
             }
@@ -1202,51 +1202,51 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     
                 if (ix1>=0) {
                     fasp_blas_smat_mul(&(LU->offdiag[2][ix1c]),&(LU->offdiag[9][ix1c]),smat,nc);
-                    fasp_blas_array_axpy(nc2,-1,smat,&(LU->offdiag[7][ic]));
+                    fasp_blas_darray_axpy(nc2,-1,smat,&(LU->offdiag[7][ic]));
                 }
     
                 if (ix>=0) {
                     fasp_blas_smat_mul(&(LU->offdiag[4][ixc]),&(LU->offdiag[11][ixc]),smat,nc);
-                    fasp_blas_array_axpy(nc2,-1,smat,&(LU->offdiag[7][ic]));
+                    fasp_blas_darray_axpy(nc2,-1,smat,&(LU->offdiag[7][ic]));
                 }
             }
     
             // comput beta5[i]
             if (i+nplane-1<ngrid) {
                 fasp_blas_smat_mul(&(LU->offdiag[0][i1c]),&(LU->offdiag[11][i1c]),smat,nc);
-                fasp_blas_array_axpy(nc2,-1,smat,&(LU->offdiag[9][ic]));
+                fasp_blas_darray_axpy(nc2,-1,smat,&(LU->offdiag[9][ic]));
             }
     
             // comput d[i]           
             {
                 fasp_blas_smat_mul(&(LU->offdiag[0][i1c]),&(LU->offdiag[1][i1c]),smat,nc);
-                fasp_blas_array_axpyz(nc2,-1,smat,&(A->diag[ic]),&(LU->diag[ic]));
+                fasp_blas_darray_axpyz(nc2,-1,smat,&(A->diag[ic]),&(LU->diag[ic]));
             }
     
             if (ix1>=0) {
                 fasp_blas_smat_mul(&(LU->offdiag[2][ix1c]),&(LU->offdiag[3][ix1c]),smat,nc);
-                fasp_blas_array_axpy(nc2,-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy(nc2,-1,smat,&(LU->diag[ic]));
             }
         
             if (ix>=0) {
                 fasp_blas_smat_mul(&(LU->offdiag[4][ixc]),&(LU->offdiag[5][ixc]),smat,nc);
-                fasp_blas_array_axpy(nc2,-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy(nc2,-1,smat,&(LU->diag[ic]));
             }
         
             if (ixyx>=0) {
                 fasp_blas_smat_mul(&(LU->offdiag[6][ixyxc]),&(LU->offdiag[7][ixyxc]),smat,nc);
-                fasp_blas_array_axpy(nc2,-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy(nc2,-1,smat,&(LU->diag[ic]));
             }
     
     
             if (ixy1>=0) {
                 fasp_blas_smat_mul(&(LU->offdiag[8][ixy1c]),&(LU->offdiag[9][ixy1c]),smat,nc);
-                fasp_blas_array_axpy(nc2,-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy(nc2,-1,smat,&(LU->diag[ic]));
             }
         
             if (ixy>=0) {
                 fasp_blas_smat_mul(&(LU->offdiag[10][ixyc]),&(LU->offdiag[11][ixyc]),smat,nc);
-                fasp_blas_array_axpy(nc2,-1,smat,&(LU->diag[ic]));
+                fasp_blas_darray_axpy(nc2,-1,smat,&(LU->diag[ic]));
             }
     
             fasp_smat_inv(&(LU->diag[ic]),nc);
