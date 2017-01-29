@@ -1,18 +1,11 @@
-/**
- *      Test matrix properties 
+/*! \file  testmat.c
  *
- *------------------------------------------------------
- *
- *      Created by Chensong Zhang on 03/31/2009.
- *      Modified by Chensong Zhang on 09/02/2011.
- *      Modified by Chensong Zhang on 12/26/2012.
- *
- *------------------------------------------------------
- *
- */
-
-/*! \file testmat.c
  *  \brief Test matrix properties
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>

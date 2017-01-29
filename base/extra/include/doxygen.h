@@ -1,5 +1,10 @@
 /*! \file doxygen.h
  *  \brief Main page for Doygen documentation
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2010--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Less Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
  
 /** \mainpage Introduction

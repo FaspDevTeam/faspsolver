@@ -1,10 +1,15 @@
-/*! \file BlaSparseCSR.c
+/*! \file  BlaSparseCSR.c
  *
  *  \brief Sparse matrix operations for dCSRmat matrices
  *
- *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxArray.c, AuxMemory.c, BlaSparseCSR.c, BlaSparseUtil.c, 
- *        and BlaArray.c
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, BlaSparseCSR.c, BlaSparseUtil.c,
+ *         and BlaArray.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -1004,8 +1009,8 @@ INT fasp_dcsr_trans (const dCSRmat *A,
 }
 
 /*
- * \fn void fasp_dcsr_transpose (INT *row[2], INT *col[2], REAL *val[2], INT *nn,
- *                               INT *tniz)
+ * \fn void fasp_dcsr_transpose (INT *row[2], INT *col[2], REAL *val[2], 
+ *                               INT *nn, INT *tniz)
  *
  * \brief Transpose of a dCSRmat matrix
  *

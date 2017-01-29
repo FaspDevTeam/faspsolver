@@ -1,15 +1,21 @@
-/*! \file KryPbcgs.c
+/*! \file  KryPbcgs.c
  *
  *  \brief Krylov subspace methods -- Preconditioned BiCGstab
  *
- *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c, 
- *        BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
+ *  \note  This file contains Level-3 (Kry) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c,
+ *         BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
  *
- *  \note Refer to Y. Saad 2003
- *        Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *  \note  See KrySPbcgs.c for a safer version
  *
- *  \note See KrySPbcgs.c for a safer version
+ *  Reference:
+ *         Y. Saad 2003
+ *         Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -49,7 +55,6 @@
  * \author Chensong Zhang
  * \date   09/09/2009
  *
- * Rewritten by Chensong Zhang on 04/30/2012
  * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Chensong Zhang on 03/31/2013
  */
@@ -391,7 +396,6 @@ FINISHED:  // finish iterative method
  * \author Chensong Zhang
  * \date   09/09/2009
  *
- * Rewritten by Chensong Zhang on 04/30/2012
  * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
  * Modified by Chensong Zhang on 03/31/2013
  */
@@ -734,8 +738,6 @@ FINISHED:  // finish iterative method
  * \date   05/24/2010
  *
  * Rewritten by Chensong Zhang on 04/30/2012
- * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
- * Modified by Chensong Zhang on 03/31/2013
  */
 INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
                             dvector     *b,
@@ -1076,8 +1078,6 @@ FINISHED:  // finish iterative method
  * \date   04/25/2010
  *
  * Rewritten by Chensong Zhang on 04/30/2012
- * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
- * Modified by Chensong Zhang on 03/31/2013
  */
 INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
                             dvector     *b,
@@ -1418,8 +1418,6 @@ FINISHED:  // finish iterative method
  * \date   09/09/2009
  *
  * Rewritten by Chensong Zhang on 04/30/2012
- * Modified by Feiteng Huang on 06/01/2012: fix restart param-init
- * Modified by Feiteng Huang on 09/26/2012, (mmatrix free)
  */
 INT fasp_solver_pbcgs (mxv_matfree  *mf,
                        dvector      *b,

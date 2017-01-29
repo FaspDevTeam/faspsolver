@@ -1,19 +1,15 @@
-/*! \file fasp.h
- *  \brief Main header file for FASP
+/*! \file  fasp.h
  *
- *  This header file contains general constants and data structures for FASP.
+ *  \brief Main header file for the FASP project
  *
- *  \note Only define macros and data structures, no function declarations.
+ *  \note  This header file contains general constants and data structures of
+ *         FASP. It contains macros and data structure definitions; should not
+ *         include function declarations here.
  *
- *-----------------------------------------------------------------------------------
- *  Created  by Chensong Zhang on 08/12/2010.
- *  Modified by Chensong Zhang on 12/13/2011.
- *  Modified by Chensong Zhang on 12/25/2011.
- *  Modified by Chensong Zhang on 01/25/2015: clean up code
- *  Modified by Chensong Zhang on 01/27/2015: remove N2C, C2N, ISTART
- *  Modified by Ludmil Zikatanov on 20151011: cosmetics.
- *  Modified by Hongxuan Zhang on 11/28/2015: add Intel MKL PARDISO support.
- *-----------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2008--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <stdio.h>

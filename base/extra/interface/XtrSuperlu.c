@@ -1,9 +1,14 @@
-/*! \file XtrSuperlu.c
+/*! \file  XtrSuperlu.c
  *
  *  \brief Interface to SuperLU direct solvers
  *
  *  Reference for SuperLU:
  *  http://crd-legacy.lbl.gov/~xiaoye/SuperLU/
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <stdio.h>
@@ -33,9 +38,8 @@
  * \param prtlvl    Output level
  *
  * \author Xiaozhe Hu
- * \date   11/05/09
+ * \date   11/05/2009
  *
- * Modified by Chensong Zhang on 11/01/2012 for new FASP function names.
  * Modified by Chensong Zhang on 02/27/2013 for new FASP function names.
  */
 int fasp_solver_superlu (dCSRmat *ptrA,
@@ -62,7 +66,8 @@ int fasp_solver_superlu (dCSRmat *ptrA,
     dvector tempb=fasp_dvec_create(n);       fasp_dvec_cp(b, &tempb);
     
     /* Create matrix A in the format expected by SuperLU. */
-    dCreate_CompCol_Matrix(&A, m, n, nnz, tempA.val, tempA.JA, tempA.IA, SLU_NR, SLU_D, SLU_GE);
+    dCreate_CompCol_Matrix(&A, m, n, nnz, tempA.val, tempA.JA, tempA.IA,
+                           SLU_NR, SLU_D, SLU_GE);
     
     /* Create right-hand side B. */
     dCreate_Dense_Matrix(&B, m, nrhs, tempb.val, m, SLU_DN, SLU_D, SLU_GE);

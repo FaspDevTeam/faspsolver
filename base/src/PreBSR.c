@@ -1,11 +1,16 @@
-/*! \file PreBSR.c
+/*! \file  PreBSR.c
  *
  *  \brief Preconditioners for dBSRmat matrices
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxParam.c, AuxVector.c, BlaSmallMat.c, BlaSpmvBSR.c, 
- *        BlaSpmvCSR.c, KrySPcg.c, KrySPvgmres.c, PreMGCycle.c, 
- *        and PreMGRecurAMLI.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxArray.c, AuxParam.c, AuxVector.c, BlaSmallMat.c, BlaSpmvBSR.c,
+ *         BlaSpmvCSR.c, KrySPcg.c, KrySPvgmres.c, PreMGCycle.c,
+ *         and PreMGRecurAMLI.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2010--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #ifdef _OPENMP
@@ -37,8 +42,7 @@
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   10/26/2010
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/24/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012
  *
  * \note Works for general nb (Xiaozhe)
  */
@@ -110,8 +114,7 @@ void fasp_precond_dbsr_diag (REAL *r,
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   11/18/2011
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/24/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012
  *
  * \note Works for 2-component (Xiaozhe)
  */
@@ -159,8 +162,7 @@ void fasp_precond_dbsr_diag_nc2 (REAL *r,
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date 01/06/2011
  *
- * Modified by Chunsheng Feng Xiaoqiang Yue
- * \date 05/24/2012    
+ * Modified by Chunsheng Feng Xiaoqiang Yue on 05/24/2012
  *
  * \note Works for 3-component (Xiaozhe)
  */
@@ -208,8 +210,7 @@ void fasp_precond_dbsr_diag_nc3 (REAL *r,
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   01/06/2011
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue
- * \date   05/24/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012    
  *
  * \note Works for 5-component (Xiaozhe)
  */
@@ -257,8 +258,7 @@ void fasp_precond_dbsr_diag_nc5 (REAL *r,
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   01/06/2011
  *
- * Modified by Chunsheng Feng Xiaoqiang Yue
- * \date   05/24/2012    
+ * Modified by Chunsheng Feng Xiaoqiang Yue on 05/24/2012
  *
  * \note Works for 7-component (Xiaozhe)
  */

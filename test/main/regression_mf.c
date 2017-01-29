@@ -1,17 +1,11 @@
-/**
- *      Regression test for FASP: matrix-free
+/*! \file  regression_mf.c
  *
- *------------------------------------------------------
- *
- *      Created  by Feiteng Huang on 09/19/2010
- *      Modified by Chensong Zhang on 01/23/2017
- *
- *------------------------------------------------------
- *
- */
-
-/*! \file regression_mf.c
  *  \brief Regression tests for matrix-free iterative solvers
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>

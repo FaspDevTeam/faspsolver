@@ -1,9 +1,11 @@
-/*! \file fasp_grid.h
+/*! \file  fasp_grid.h
+ *
  *  \brief Header file for FASP grid
  *
- *-----------------------------------------------------------------------------------
- *  Created  by Chensong Zhang on 01/21/2017.
- *-----------------------------------------------------------------------------------
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #ifndef __FASPGRID_HEADER__  /*-- allow multiple inclusions --*/

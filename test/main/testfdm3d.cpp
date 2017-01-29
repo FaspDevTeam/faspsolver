@@ -1,4 +1,5 @@
-/*! \file testfdm3d.cpp
+/*! \file  testfdm3d.cpp
+ *
  *  \brief Test program to generate FDM linear system for 3D Possion Problem.
  *
  *  Consider a three-dimensional Possion equation
@@ -18,9 +19,10 @@
  *
  *             \f$u(x,y,z,t) = sin(\pi*x)*sin(\pi*y)*sin(\pi*z)\f$
  *
- *  Created by peghoty 2010/08/04
- *  Modified by Chensong Zhang 2012/03/07
- *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 extern "C"

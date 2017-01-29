@@ -1,6 +1,21 @@
-/*! \file KryPcg.c
+/*! \file  KryPcg.c
  *
  *  \brief Krylov subspace methods -- Preconditioned CG
+ *
+ *  \note  This file contains Level-3 (Kry) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c,
+ *         BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
+ *
+ *  \note  See KrySPcg.c for a safer version
+ *
+ *  Reference:
+ *         Y. Saad 2003
+ *         Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  *
  *  Abstract algorithm
  *
@@ -40,16 +55,6 @@
  *          -# convergence check;
  *          -# IF ( not converged & restart_number < Max_Res_Check ) restart;
  *      - END IF
- *
- *
- *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c, 
- *        BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
- *
- *  \note Refer to Y. Saad 2003
- *        Iterative methods for sparse linear systems (2nd Edition), SIAM
- *
- *  \note See KrySPcg.c for a safer version
  */
 
 #include <math.h>
@@ -87,9 +92,6 @@
  *
  * \author Chensong Zhang, Xiaozhe Hu, Shiquan Zhang
  * \date   05/06/2010
- *
- * Modified by Chensong Zhang on 04/30/2012
- * Modified by Chensong Zhang on 03/28/2013
  */
 INT fasp_solver_dcsr_pcg (dCSRmat     *A,
                           dvector     *b,
@@ -669,7 +671,6 @@ FINISHED:  // finish iterative method
  * \author Xiaozhe Hu
  * \date   05/24/2010
  *
- * Modified by Chensong Zhang on 04/30/2012
  * Modified by Chensong Zhang on 03/28/2013
  */
 INT fasp_solver_dblc_pcg (dBLCmat     *A,
@@ -961,7 +962,6 @@ FINISHED:  // finish iterative method
  * \author Zhiyang Zhou
  * \date   04/25/2010
  *
- * Modified by Chensong Zhang on 04/30/2012
  * Modified by Chensong Zhang on 03/28/2013
  */
 INT fasp_solver_dstr_pcg (dSTRmat     *A,
@@ -1253,7 +1253,6 @@ FINISHED:  // finish iterative method
  * \author Chensong Zhang, Xiaozhe Hu, Shiquan Zhang
  * \date   05/06/2010
  *
- * Modified by Chensong Zhang on 04/30/2012
  * Modified by Feiteng Huang on 09/19/2012: matrix free
  */
 INT fasp_solver_pcg (mxv_matfree *mf,

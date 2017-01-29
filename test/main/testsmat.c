@@ -1,5 +1,11 @@
-/*! \file testsmat.c
+/*! \file  testsmat.c
+ *
  *  \brief Test smat (dense) matrix operations
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2015--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "fasp.h"

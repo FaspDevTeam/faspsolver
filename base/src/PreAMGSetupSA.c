@@ -1,15 +1,22 @@
-/*! \file PreAMGSetupSA.c
+/*! \file  PreAMGSetupSA.c
  *
  *  \brief Smoothed aggregation AMG: SETUP phase
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c, 
- *        BlaILUSetupCSR.c, BlaSchwarzSetup.c, BlaSparseCSR.c, BlaSpmvCSR.c,
- *        and PreMGRecurAMLI.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c,
+ *         BlaILUSetupCSR.c, BlaSchwarzSetup.c, BlaSparseCSR.c, BlaSpmvCSR.c,
+ *         and PreMGRecurAMLI.c
  *
- *  \note Setup A, P, PT and levels using the unsmoothed aggregation algorithm;
- *        Refer to P. Vanek, J. Madel and M. Brezina
- *        Algebraic Multigrid on Unstructured Meshes, 1994
+ *  \note  Setup A, P, PT and levels using the unsmoothed aggregation algorithm
+ *
+ *  Reference: 
+ *         P. Vanek, J. Madel and M. Brezina
+ *         Algebraic Multigrid on Unstructured Meshes, 1994
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -49,8 +56,6 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data *, AMG_param *);
  * \author Xiaozhe Hu
  * \date   09/29/2009
  *
- * Modified by Chensong Zhang on 04/06/2010.
- * Modified by Chensong Zhang on 05/09/2010.
  * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle.
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
  */

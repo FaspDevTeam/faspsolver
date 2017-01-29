@@ -1,17 +1,23 @@
-/*! \file KryPvgmres.c
+/*! \file  KryPvgmres.c
  *
  *  \brief Krylov subspace methods -- Preconditioned variable-restart GMRes
  *
- *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c, 
- *        BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
+ *  \note  This file contains Level-3 (Kry) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c,
+ *         BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
  *
- *  \note Refer to A.H. Baker, E.R. Jessup, and Tz.V. Kolev
- *        A Simple Strategy for Varying the Restart Parameter in GMRES(m)
- *        Journal of Computational and Applied Mathematics, 230 (2009)
- *        pp. 751-761. UCRL-JRNL-235266.
+ *  \note  See KrySPvgmres.c for a safer version
  *
- *  \note See KrySPvgmres.c for a safer version
+ *  Reference:
+ *         A.H. Baker, E.R. Jessup, and Tz.V. Kolev
+ *         A Simple Strategy for Varying the Restart Parameter in GMRES(m)
+ *         Journal of Computational and Applied Mathematics, 230 (2009)
+ *         pp. 751-761. UCRL-JRNL-235266.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2010--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -52,8 +58,6 @@
  * \author Zhiyang Zhou
  * \date   2010/12/14
  *
- * Modified by Chensong Zhang on 12/13/2011
- * Modified by Chensong Zhang on 05/01/2012
  * Modified by Chensong Zhang on 04/06/2013: Add stop type support
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */
@@ -720,7 +724,8 @@ FINISHED:
 
 /*!
  * \fn INT fasp_solver_dbsr_pvgmres (dBSRmat *A, dvector *b, dvector *x, precond *pc,
- *                                   const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                   const REAL tol, const INT MaxIt, 
+ *                                   const SHORT restart,
  *                                   const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Right preconditioned GMRES method in which the restart parameter
@@ -741,7 +746,6 @@ FINISHED:
  * \author Zhiyang Zhou
  * \date   12/21/2011
  *
- * Modified by Chensong Zhang on 05/01/2012
  * Modified by Chensong Zhang on 04/06/2013: Add stop type support
  */
 INT fasp_solver_dbsr_pvgmres (dBSRmat      *A,
@@ -1065,7 +1069,8 @@ FINISHED:
 
 /*!
  * \fn INT fasp_solver_dstr_pvgmres (dSTRmat *A, dvector *b, dvector *x, precond *pc,
- *                                   const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                   const REAL tol, const INT MaxIt, 
+ *                                   const SHORT restart,
  *                                   const SHORT stop_type, const SHORT prtlvl)
  *
  * \brief Right preconditioned GMRES method in which the restart parameter
@@ -1086,7 +1091,6 @@ FINISHED:
  * \author Zhiyang Zhou
  * \date   2010/12/14
  *
- * Modified by Chensong Zhang on 05/01/2012
  * Modified by Chensong Zhang on 04/06/2013: Add stop type support
  */
 INT fasp_solver_dstr_pvgmres (dSTRmat      *A,
@@ -1431,8 +1435,6 @@ FINISHED:
  * \author Zhiyang Zhou
  * \date   2010/12/14
  *
- * Modified by Chensong Zhang on 12/13/2011
- * Modified by Chensong Zhang on 05/01/2012
  * Modified by Feiteng Huang on 09/26/2012: matrix free
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */

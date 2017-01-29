@@ -1,4 +1,5 @@
-/*! \file testfdm2d.cpp
+/*! \file  testfdm2d.cpp
+ *
  *  \brief Test program to generate FDM linear system for 2D Possion Problem.
  *
  *  Consider a two-dimensional Possion equation
@@ -18,10 +19,10 @@
  *
  *             \f$u(x,y,t) = sin(pi*x)*sin(pi*y)*t\f$
  *
- *  Created by Zhiyang Zhou 2010/08/04
- *  Modified by Feiteng Huang 2011/12/13
- *  Modified by Chensong Zhang 2012/03/07
- *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
  

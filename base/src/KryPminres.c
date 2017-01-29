@@ -1,15 +1,21 @@
-/*! \file KryPminres.c
+/*! \file  KryPminres.c
  *
  *  \brief Krylov subspace methods -- Preconditioned minimal residual
  *
- *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c, 
- *        BlaSpmvCSR.c, and BlaSpmvSTR.c.o
+ *  \note  This file contains Level-3 (Kry) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c,
+ *         BlaSpmvCSR.c, and BlaSpmvSTR.c.o
  *
- *  \note Refer to Y. Saad 2003
- *        Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *  \note  See KrySPminres.c for a safer version
  *
- *  \note See KrySPminres.c for a safer version
+ *  Reference:
+ *         Y. Saad 2003
+ *         Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2012--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -48,8 +54,7 @@
  * \author Chensong Zhang
  * \date   05/01/2012
  *
- * \note Rewritten based on the original version by Shiquan Zhang 05/10/2010
- *
+ * Rewritten based on the original version by Shiquan Zhang 05/10/2010
  * Modified by Chensong Zhang on 04/09/2013
  */
 INT fasp_solver_dcsr_pminres (dCSRmat      *A,
@@ -455,8 +460,7 @@ FINISHED:  // finish iterative method
  * \author Chensong Zhang
  * \date   05/01/2012
  *
- * \note Rewritten based on the original version by Xiaozhe Hu 05/24/2010
- *
+ * Rewritten based on the original version by Xiaozhe Hu 05/24/2010
  * Modified by Chensong Zhang on 04/09/2013
  */
 INT fasp_solver_dblc_pminres (dBLCmat     *A,
@@ -1266,7 +1270,6 @@ FINISHED:  // finish iterative method
  * \date   10/24/2010
  *
  * Rewritten by Chensong Zhang on 05/01/2012
- * Modified by Feiteng Huang on 09/26/2012: matrix free
  */
 INT fasp_solver_pminres (mxv_matfree  *mf,
                          dvector      *b,

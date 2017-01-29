@@ -1,10 +1,10 @@
-/*! \file BlaSpmvCSR.c
+/*! \file  BlaSpmvCSR.c
  *
  *  \brief BLAS operations for dCSRmat matrices
  *
- *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxArray.c, AuxMemory.c, BlaSparseCSR.c, BlaSparseUtil.c,
- *        and BlaArray.c
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, BlaSparseCSR.c, BlaSparseUtil.c,
+ *         and BlaArray.c
  *
  *  \note Sparse functions usually contain three runs. The three runs are all the
  *        same but thy serve different purpose.
@@ -14,6 +14,11 @@
  *    - allocate space (memory) for jc and form this one;
  *    - if you only care about a "boolean" result of the addition, you stop here;
  *    - you call another routine, which uses ic and jc to perform the addition.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -223,7 +228,6 @@ void fasp_blas_dcsr_axm (dCSRmat     *A,
  * \date   07/01/2009
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/26/2012
- *
  */
 void fasp_blas_dcsr_mxv (const dCSRmat  *A,
                          const REAL     *x,

@@ -1,20 +1,11 @@
-/**
- *      Regression test for FASP: Matrix-Market
+/*! \file  regression_mm.c
  *
- *------------------------------------------------------
- *
- *      Created  by Feiteng Huang on 06/12/2012
- *      Modified by Chensong Zhang on 09/28/2013
- *      Modified by Chensong Zhang on 10/03/2013
- *      Modified by Chensong Zhang on 10/06/2015
- *      Modified by Chensong Zhang on 01/23/2017
- *
- *------------------------------------------------------
- *
- */
-
-/*! \file regression_mm.c
  *  \brief Regression tests with Matrix-Market problems
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2012--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>

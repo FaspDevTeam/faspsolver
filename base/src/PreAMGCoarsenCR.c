@@ -1,9 +1,14 @@
-/*! \file PreAMGCoarsenCR.c
+/*! \file  PreAMGCoarsenCR.c
  *
  *  \brief Coarsening with Brannick-Falgout strategy.
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxMemory.c and ItrSmootherCSRcr.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxMemory.c and ItrSmootherCSRcr.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2010--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -44,7 +49,7 @@ static INT indset(INT, INT, INT, INT *, INT *, INT, INT *, REAL *);
  * \return          Number of coarse level points
  * 
  * \author James Brannick
- * \date 04/21/2010
+ * \date   04/21/2010
  *
  * \note vertices = 0: fine; 1: coarse; 2: isolated or special
  *
@@ -292,9 +297,7 @@ static INT GraphRemove (Link   *list,
  * \param cf contains CF list  
  * \param ma contains candidate set info. 
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date 10/14/2012
- *
+ * Modified by Chunsheng Feng, Zheng Li on 10/14/2012
  */
 static INT indset (INT   cand,
                    INT   cpt,

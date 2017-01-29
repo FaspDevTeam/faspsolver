@@ -1,11 +1,16 @@
-/*! \file PreBLC.c
+/*! \file  PreBLC.c
  *
  *  \brief Preconditioners for dBLCmat matrices
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxVector.c, BlaSpmvCSR.c, and PreMGCycle.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxVector.c, BlaSpmvCSR.c, and PreMGCycle.c
  *
- *  \warning Need to be cleaned up. --Chensong
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
+ *
+ *  //TODO: Need to be cleaned up. --Chensong
  */
 
 #include "fasp.h"

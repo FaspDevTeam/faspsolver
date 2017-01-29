@@ -1,13 +1,19 @@
-/*! \file ItrSmootherCSRpoly.c
+/*! \file  ItrSmootherCSRpoly.c
  *
  *  \brief Smoothers for dCSRmat matrices using poly. approx. to A^{-1}. 
  *
- *  \note This file contains Level-2 (Itr) functions. It requires
- *        AuxArray.c, AuxMemory.c, BlaArray.c, and BlaSpmvCSR.c
+ *  \note  This file contains Level-2 (Itr) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, BlaArray.c, and BlaSpmvCSR.c
  *
- *  \note Refer to Johannes K. Kraus, Panayot S. Vassilevski, Ludmil T. Zikatanov
- *        Polynomial of best uniform approximation to $x^{-1}$ and smoothing in
- *        two-leve methods, 2013.
+ *  Reference: 
+ *         Johannes K. Kraus, Panayot S. Vassilevski, Ludmil T. Zikatanov
+ *         Polynomial of best uniform approximation to $x^{-1}$ and smoothing in
+ *         two-leve methods, 2013.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -320,8 +326,7 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
  * \author James Brannick and Ludmil T Zikatanov
  * \date 06/28/2010
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date 10/18/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/18/2012
  */
 static void bminax (REAL *b,
                     INT  *ia,
@@ -379,8 +384,7 @@ static void bminax (REAL *b,
  * \author Fei Cao, Xiaozhe Hu
  * \date   05/24/2012
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/18/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/18/2012
  */
 static void Diaginv (dCSRmat *Amat,
                      REAL    *Dinv)
@@ -416,8 +420,7 @@ static void Diaginv (dCSRmat *Amat,
  * \author Fei Cao, Xiaozhe Hu
  * \date   05/24/2012
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date   10/18/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/18/2012
  */
 static REAL DinvAnorminf (dCSRmat *Amat,
                           REAL    *Dinv)
@@ -479,8 +482,7 @@ static REAL DinvAnorminf (dCSRmat *Amat,
  * \author Fei Cao, Xiaozhe Hu
  * \date 05/24/2012
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date 08/27/2012
+ * Modified by Chunsheng Feng, Zheng Li on 08/27/2012
  */
 static void Diagx (REAL *Dinv,
                    INT   n,
@@ -538,8 +540,7 @@ static void Diagx (REAL *Dinv,
  * \author Fei Cao, Xiaozhe Hu
  * \date 05/24/2012
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date 10/18/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/18/2012
  */
 static void Rr (dCSRmat *Amat, 
                 REAL    *Dinv,

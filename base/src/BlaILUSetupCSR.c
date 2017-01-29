@@ -1,9 +1,14 @@
-/*! \file BlaILUSetupCSR.c
+/*! \file  BlaILUSetupCSR.c
  *
  *  \brief Setup incomplete LU decomposition for dCSRmat matrices
  *
- *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxTiming.c, BlaILU.c, BlaSparseCSR.c, and PreDataInit.c
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         AuxTiming.c, BlaILU.c, BlaSparseCSR.c, and PreDataInit.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

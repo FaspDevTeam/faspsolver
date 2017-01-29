@@ -1,10 +1,15 @@
-/*! \file BlaSchwarzSetup.c
+/*! \file  BlaSchwarzSetup.c
  *
  *  \brief Setup phase for the Schwarz methods
  *
- *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxMemory.c, AuxVector.c, BlaSparseCSR.c, BlaSparseUtil.c,
- *        and KryPvgmres.c
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         AuxMemory.c, AuxVector.c, BlaSparseCSR.c, BlaSparseUtil.c,
+ *         and KryPvgmres.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

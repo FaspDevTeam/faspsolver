@@ -1,10 +1,15 @@
-/*! \file KryPgcr.c
+/*! \file  KryPgcr.c
  *
  *  \brief Krylov subspace methods -- Preconditioned GCR
  *
- *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvCSR.c, 
- *        and BlaVector.c
+ *  \note  This file contains Level-3 (Kry) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvCSR.c,
+ *         and BlaVector.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2014--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

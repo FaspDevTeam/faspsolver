@@ -1,5 +1,11 @@
-!> \file testf.f90
+!> \file  testf.f90
+!>
 !> \brief Test function for F90 interfaces
+!>
+!>---------------------------------------------------------------------------------
+!>  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+!>  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+!>---------------------------------------------------------------------------------
 
 program test
 

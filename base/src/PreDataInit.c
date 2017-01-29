@@ -1,9 +1,14 @@
-/*! \file PreDataInit.c
+/*! \file  PreDataInit.c
  *
  *  \brief Initialize important data structures
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxMemory.c, AuxVector.c, BlaSparseBSR.c, and BlaSparseCSR.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxMemory.c, AuxVector.c, BlaSparseBSR.c, and BlaSparseCSR.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  *
  *  \warning Every structures should be initialized before usage.
  */
@@ -102,7 +107,7 @@ AMG_data * fasp_amg_data_create (SHORT max_levels)
  * \date   2010/04/06
  *
  * Modified by Chensong Zhang on 05/05/2013: Clean up param as well!
- * Modified by Hongxuan Zhang on 12/15/2015: free internal memory for Intel MKL PARDISO.
+ * Modified by Hongxuan Zhang on 12/15/2015: free memory for Intel MKL PARDISO.
  */
 void fasp_amg_data_free (AMG_data   *mgl,
                          AMG_param  *param)

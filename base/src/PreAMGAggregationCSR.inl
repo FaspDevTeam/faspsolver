@@ -2,8 +2,13 @@
  *
  *  \brief Utilities for aggregation methods for CSR matrices
  *
- *  \note This file contains Level-4 (Pre) functions, which are used in
- *        PreAMGSetupSA.c and PreAMGSetupUA.c
+ *  \note  This file contains Level-4 (Pre) functions, which are used in:
+ *         PreAMGSetupSA.c and PreAMGSetupUA.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  *
  *  \warning This file is also used in FASP4BLKOIL!!!
  *
@@ -974,7 +979,6 @@ static void form_tentative_p (ivector *vertices,
  * \author Xiaozhe Hu
  * \date   09/29/2009
  *
- * Modified by Chunsheng Feng, Zheng Li on 10/12/2012
  * Modified by Chensong on 04/29/2014: Fix a sign problem
  */
 static void smooth_agg (dCSRmat *A,

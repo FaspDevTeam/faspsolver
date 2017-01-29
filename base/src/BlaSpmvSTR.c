@@ -1,10 +1,15 @@
-/*! \file BlaSpmvSTR.c
+/*! \file  BlaSpmvSTR.c
  *
  *  \brief BLAS operations for dSTRmat matrices
  *
- *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxArray.c, AuxMemory.c, BlaSmallMatInv.c, BlaSmallMat.c,
- *        and BlaSparseSTR.c
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, BlaSmallMatInv.c, BlaSmallMat.c,
+ *         and BlaSparseSTR.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

@@ -1,12 +1,17 @@
-/*! \file PreCSR.c
+/*! \file  PreCSR.c
  *
  *  \brief Preconditioners for dCSRmat matrices
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxParam.c, AuxVector.c, BlaILUSetupCSR.c, 
- *        BlaSchwarzSetup.c, BlaSparseCSR.c, BlaSpmvCSR.c, KrySPcg.c, 
- *        KrySPvgmres.c, PreAMGSetupRS.c, PreAMGSetupSA.c, PreAMGSetupUA.c, 
- *        PreDataInit.c, PreMGCycle.c, PreMGCycleFull.c, and PreMGRecurAMLI.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxParam.c, AuxVector.c, BlaILUSetupCSR.c,
+ *         BlaSchwarzSetup.c, BlaSparseCSR.c, BlaSpmvCSR.c, KrySPcg.c,
+ *         KrySPvgmres.c, PreAMGSetupRS.c, PreAMGSetupSA.c, PreAMGSetupUA.c,
+ *         PreDataInit.c, PreMGCycle.c, PreMGCycleFull.c, and PreMGRecurAMLI.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "fasp.h"

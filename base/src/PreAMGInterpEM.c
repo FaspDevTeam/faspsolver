@@ -1,14 +1,20 @@
-/*! \file PreAMGInterpEM.c
+/*! \file  PreAMGInterpEM.c
  *
  *  \brief Interpolation operators for AMG based on energy-min
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxVector.c, BlaSmallMatLU.c, BlaSparseCSR.c, 
- *        KryPcg.c, and PreCSR.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxVector.c, BlaSmallMatLU.c, BlaSparseCSR.c,
+ *         KryPcg.c, and PreCSR.c
  *
- *  \note Refer to J. Xu and L. Zikatanov
- *        On An Energy Minimizing Basis in Algebraic Multigrid Methods
- *        Computing and visualization in sciences, 2003
+ *  Reference: 
+ *         J. Xu and L. Zikatanov
+ *         On An Energy Minimizing Basis in Algebraic Multigrid Methods,
+ *         Computing and visualization in sciences, 2003
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -105,8 +111,6 @@ void fasp_amg_interp_em (dCSRmat    *A,
  *
  * \author Xuehai Huang
  * \date   04/04/2009
- *
- * Modified by Chunsheng Feng, Zheng Li on 10/14/2012
  */
 static SHORT invden (INT    nn,
                      REAL  *mat,

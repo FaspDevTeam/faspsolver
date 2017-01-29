@@ -1,8 +1,13 @@
-/*! \file AuxArray.c
+/*! \file  AuxArray.c
  *
  *  \brief Simple array operations -- init, set, copy, etc
  *
- *  \note This file contains Level-0 (Aux) functions
+ *  \note  This file contains Level-0 (Aux) functions.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

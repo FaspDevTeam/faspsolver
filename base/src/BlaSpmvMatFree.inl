@@ -1,9 +1,14 @@
-/*! \file BlaSpmvMatFree.inl
+/*! \file  BlaSpmvMatFree.inl
  *
- *  \brief BLAS2 operations when matrix is implicit or its format is not specified
+ *  \brief BLAS operations when matrix is implicit or its format is not specified
  *
- *  \note This file contains Level-1 (Bla) functions, which are used in
- *        SolMatFree.c
+ *  \note  This file contains Level-1 (Bla) functions, which are used in:
+ *         SolMatFree.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 /*---------------------------------*/

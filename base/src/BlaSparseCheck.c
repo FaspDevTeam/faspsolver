@@ -1,9 +1,14 @@
-/*! \file BlaSparseCheck.c
+/*! \file  BlaSparseCheck.c
  *
  *  \brief Check properties of sparse matrices
  *
- *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxMemory.c, AuxMessage.c, AuxVector.c, and BlaSparseCSR.c
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         AuxMemory.c, AuxMessage.c, AuxVector.c, and BlaSparseCSR.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

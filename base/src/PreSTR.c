@@ -1,10 +1,15 @@
-/*! \file PreSTR.c
+/*! \file  PreSTR.c
  *
  *  \brief Preconditioners for dSTRmat matrices
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxVector.c, BlaSmallMat.c, BlaArray.c, 
- *        and ItrSmootherSTR.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxVector.c, BlaSmallMat.c, BlaArray.c,
+ *         and ItrSmootherSTR.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

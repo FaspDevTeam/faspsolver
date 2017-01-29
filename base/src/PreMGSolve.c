@@ -1,14 +1,19 @@
-/*! \file PreMGSolve.c
+/*! \file  PreMGSolve.c
  *
  *  \brief Algebraic multigrid iterations: SOLVE phase.
  *
- *  \note Solve Ax=b using multigrid method. This is SOLVE phase only and is
- *        independent of SETUP method used! Should be called after multigrid
- *        hierarchy has been generated!
+ *  \note  Solve Ax=b using multigrid method. This is SOLVE phase only and is
+ *         independent of SETUP method used! Should be called after multigrid
+ *         hierarchy has been generated!
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxMessage.c, AuxTiming.c, AuxVector.c, BlaSpmvCSR.c, BlaVector.c, 
- *        PreMGCycle.c, PreMGCycleFull.c, and PreMGRecurAMLI.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxMessage.c, AuxTiming.c, AuxVector.c, BlaSpmvCSR.c, BlaVector.c,
+ *         PreMGCycle.c, PreMGCycleFull.c, and PreMGRecurAMLI.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>
@@ -122,13 +127,12 @@ INT fasp_amg_solve (AMG_data   *mgl,
  * \author Xiaozhe Hu
  * \date   01/23/2011
  *
+ * Modified by Chensong 04/21/2013: Fix an output typo
+ *
  * \note AMLI polynomial computed by the best approximation of 1/x. 
  *       Refer to Johannes K. Kraus, Panayot S. Vassilevski,
  *       Ludmil T. Zikatanov, "Polynomial of best uniform approximation to $x^{-1}$ 
  *       and smoothing in two-level methods", 2013.
- *
- *
- * Modified by Chensong 04/21/2013: Fix an output typo
  */
 INT fasp_amg_solve_amli (AMG_data   *mgl,
                          AMG_param  *param)
@@ -212,7 +216,6 @@ INT fasp_amg_solve_amli (AMG_data   *mgl,
  * \note Nonlinear AMLI-cycle.  
  *       Refer to Xiazhe Hu, Panayot S. Vassilevski, Jinchao Xu
  *       "Comparative Convergence Analysis of Nonlinear AMLI-cycle Multigrid", 2013.
- *
  */
 INT fasp_amg_solve_namli (AMG_data   *mgl,
                           AMG_param  *param)

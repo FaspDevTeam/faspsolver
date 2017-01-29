@@ -1,15 +1,22 @@
-/*! \file PreAMGSetupUABSR.c
+/*! \file  PreAMGSetupUABSR.c
  *
  *  \brief Unsmoothed aggregation AMG: SETUP phase (for BSR matrices)
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c, 
- *        BlaFormat.c, BlaILUSetupBSR.c, BlaSparseBLC.c, BlaSparseBSR.c, 
- *        BlaSparseCSR.c, BlaSpmvBSR.c, BlaSpmvCSR.c, and PreDataInit.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c,
+ *         BlaFormat.c, BlaILUSetupBSR.c, BlaSparseBLC.c, BlaSparseBSR.c,
+ *         BlaSparseCSR.c, BlaSpmvBSR.c, BlaSpmvCSR.c, and PreDataInit.c
  *
- *  \note Setup A, P, PT and levels using the unsmoothed aggregation algorithm;
- *        Refer to P. Vanek, J. Madel and M. Brezina
- *        Algebraic Multigrid on Unstructured Meshes, 1994
+ *  \note  Setup A, P, PT and levels using the unsmoothed aggregation algorithm
+ *
+ *  Reference:
+ *         P. Vanek, J. Madel and M. Brezina
+ *         Algebraic Multigrid on Unstructured Meshes, 1994
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2012--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

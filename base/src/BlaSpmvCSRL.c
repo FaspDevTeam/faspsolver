@@ -1,12 +1,18 @@
-/*! \file BlaSpmvCSRL.c
+/*! \file  BlaSpmvCSRL.c
  *
  *  \brief BLAS operations for dCSRLmat matrices
  *
- *  \note This file contains Level-1 (Bla) functions.
+ *  \note  This file contains Level-1 (Bla) functions.
  *
- *  \note Refer to John Mellor-Crummey and John Garvin
- *        Optimizaing sparse matrix vector product computations using unroll and 
- *        jam, Tech Report Rice Univ, Aug 2002.
+ *  Reference: 
+ *         John Mellor-Crummey and John Garvin
+ *         Optimizaing sparse matrix vector product computations using unroll and
+ *         jam, Tech Report Rice Univ, Aug 2002.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "fasp.h"

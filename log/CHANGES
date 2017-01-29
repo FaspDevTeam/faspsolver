@@ -8,8 +8,9 @@ File Name: CHANGES
   -- Reordering.
 - Change a few inconsistent function names.
 - Move things around.
-- Clean up public functions.
+- Clean up all files.
 - Update parameters in ini/*.
+- Add legal information.
 
 01/28/2017 FASP 1.9.5:
 - Happy Chinese New Year!

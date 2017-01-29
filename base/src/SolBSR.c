@@ -1,12 +1,17 @@
-/*! \file SolBSR.c
+/*! \file  SolBSR.c
  *
  *  \brief Iterative solvers for dBSRmat matrices
  *
- *  \note This file contains Level-5 (Sol) functions. It requires
- *        AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c, BlaSmallMatInv.c,  
- *        BlaILUSetupBSR.c, BlaSparseBSR.c, KryPbcgs.c, KryPcg.c, KryPgmres.c, 
- *        KryPvbcgs.c, KryPvfgmres.c, KryPvgmres.c, PreAMGSetupSA.c, 
- *        PreAMGSetupUA.c, PreBSR.c, and PreDataInit.c
+ *  \note  This file contains Level-5 (Sol) functions. It requires:
+ *         AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c, BlaSmallMatInv.c,
+ *         BlaILUSetupBSR.c, BlaSparseBSR.c, KryPbcgs.c, KryPcg.c, KryPgmres.c,
+ *         KryPvbcgs.c, KryPvfgmres.c, KryPvgmres.c, PreAMGSetupSA.c,
+ *         PreAMGSetupUA.c, PreBSR.c, and PreDataInit.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>
@@ -44,6 +49,7 @@
  *
  * \author Zhiyang Zhou, Xiaozhe Hu
  * \date   10/26/2010
+ *
  * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
 INT fasp_solver_dbsr_itsolver (dBSRmat    *A,
@@ -189,7 +195,6 @@ INT fasp_solver_dbsr_krylov (dBSRmat    *A,
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/15/2012
  */
-
 INT fasp_solver_dbsr_krylov_diag (dBSRmat    *A,
                                   dvector    *b,
                                   dvector    *x,

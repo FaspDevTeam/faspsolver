@@ -1,13 +1,19 @@
-/*! \file BlaSparseCSRL.c
+/*! \file  BlaSparseCSRL.c
  *
  *  \brief Sparse matrix operations for dCSRLmat matrices
  *
- *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxMemory.c
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         AuxMemory.c
  *
- *  \note Refer to John Mellor-Crummey and John Garvin
- *        Optimizaing sparse matrix vector product computations using unroll and 
- *        jam, Tech Report Rice Univ, Aug 2002.
+ *  Reference: 
+ *         John Mellor-Crummey and John Garvin
+ *         Optimizaing sparse matrix vector product computations using unroll and
+ *         jam, Tech Report Rice Univ, Aug 2002.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2011--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "fasp.h"
@@ -28,7 +34,7 @@
  * \param num_nonzeros  Number of nonzero entries
  *
  * \author Zhiyang Zhou
- * \date   01/07/2001
+ * \date   01/07/2011
  */
 dCSRLmat * fasp_dcsrl_create (const INT num_rows,
                               const INT num_cols,

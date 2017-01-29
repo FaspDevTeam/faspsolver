@@ -1,9 +1,14 @@
-/*! \file SolGMGPoisson.c
+/*! \file  SolGMGPoisson.c
  *
  *  \brief GMG method as an iterative solver for Poisson Problem
  *
- *  \note This file contains Level-5 (Sol) functions. It requires
- *        AuxArray.c, AuxMessage.c, and AuxTiming.c
+ *  \note  This file contains Level-5 (Sol) functions. It requires:
+ *         AuxArray.c, AuxMessage.c, and AuxTiming.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>
@@ -39,8 +44,6 @@
  *
  * \author Ziteng Wang, Chensong Zhang
  * \date   06/07/2013
- *
- * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
 INT fasp_poisson_gmg1d (REAL         *u,
                         REAL         *b,
@@ -165,8 +168,6 @@ FINISHED:
  *
  * \author Ziteng Wang, Chensong Zhang
  * \date   06/07/2013
- *
- * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
 INT fasp_poisson_gmg2d (REAL         *u,
                         REAL         *b,
@@ -303,8 +304,6 @@ FINISHED:
  *
  * \author Ziteng Wang, Chensong Zhang
  * \date   06/07/2013
- *
- * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
 INT fasp_poisson_gmg3d (REAL         *u,
                         REAL         *b,
@@ -439,8 +438,6 @@ FINISHED:
  *
  * \author Ziteng Wang, Chensong Zhang
  * \date   06/07/2013
- *
- * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
 void fasp_poisson_fgmg1d (REAL         *u,
                           REAL         *b,
@@ -534,8 +531,6 @@ FINISHED:
  *
  * \author Ziteng Wang, Chensong Zhang
  * \date   06/07/2013
- *
- * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
 void fasp_poisson_fgmg2d (REAL         *u,
                           REAL         *b,
@@ -643,8 +638,6 @@ FINISHED:
  *
  * \author Ziteng Wang, Chensong Zhang
  * \date   06/07/2013
- *
- * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
 void fasp_poisson_fgmg3d (REAL         *u,
                           REAL         *b,
@@ -754,8 +747,6 @@ FINISHED:
  *
  * \author Ziteng Wang, Chensong Zhang
  * \date   06/07/2013
- *
- * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
 INT fasp_poisson_gmgcg1d (REAL         *u,
                           REAL         *b,
@@ -850,8 +841,6 @@ FINISHED:
  *
  * \author Ziteng Wang, Chensong Zhang
  * \date   06/07/2013
- *
- * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
 INT fasp_poisson_gmgcg2d (REAL         *u,
                           REAL         *b,
@@ -961,8 +950,6 @@ FINISHED:
  *
  * \author Ziteng Wang, Chensong Zhang
  * \date   06/07/2013
- *
- * Modified by Chensong Zhang on 01/14/2017: Clean up
  */
 INT fasp_poisson_gmgcg3d (REAL         *u,
                           REAL         *b,

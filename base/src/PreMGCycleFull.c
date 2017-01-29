@@ -1,11 +1,16 @@
-/*! \file PreMGCycleFull.c
+/*! \file  PreMGCycleFull.c
  *
  *  \brief Abstract non-recursive full multigrid cycle
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMessage.c, AuxVector.c, BlaSchwarzSetup.c, 
- *        BlaArray.c, BlaSpmvCSR.c, BlaVector.c, ItrSmootherCSR.c, 
- *        ItrSmootherCSRpoly.c, KryPcg.c, KrySPcg.c, and KrySPvgmres.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxArray.c, AuxMessage.c, AuxVector.c, BlaSchwarzSetup.c,
+ *         BlaArray.c, BlaSpmvCSR.c, BlaVector.c, ItrSmootherCSR.c,
+ *         ItrSmootherCSRpoly.c, KryPcg.c, KrySPcg.c, and KrySPvgmres.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -37,8 +42,6 @@
  * \date   02/27/2011
  *
  * Modified by Chensong Zhang on 06/01/2012: fix a bug when there is only one level.
- * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
- * Modified by Zheng Li on 11/10/2014: update direct solvers.
  * Modified by Hongxuan Zhang on 12/15/2015: update direct solvers.
  */
 void fasp_solver_fmgcycle (AMG_data   *mgl,

@@ -1,11 +1,16 @@
-/*! \file SolMatFree.c
+/*! \file  SolMatFree.c
  *
  *  \brief Iterative solvers using MatFree spmv operations
  *
- *  \note This file contains Level-5 (Sol) functions. It requires
- *        AuxMessage.c, AuxTiming.c, BlaSpmvBLC.c, BlaSpmvBSR.c, BlaSpmvCSR.c, 
- *        BlaSpmvCSRL.c, BlaSpmvSTR.c, KryPbcgs.c, KryPcg.c, KryPgcg.c, 
- *        KryPgmres.c, KryPminres.c, KryPvfgmres.c, and KryPvgmres.c
+ *  \note  This file contains Level-5 (Sol) functions. It requires:
+ *         AuxMessage.c, AuxTiming.c, BlaSpmvBLC.c, BlaSpmvBSR.c, BlaSpmvCSR.c,
+ *         BlaSpmvCSRL.c, BlaSpmvSTR.c, KryPbcgs.c, KryPcg.c, KryPgcg.c,
+ *         KryPgmres.c, KryPminres.c, KryPvfgmres.c, and KryPvgmres.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>
@@ -35,6 +40,8 @@
  *
  * \brief Solve Ax=b by preconditioned Krylov methods for CSR matrices
  *
+ * \note This is an abstract interface for iterative methods.
+ *
  * \param mf       Pointer to mxv_matfree MatFree spmv operation
  * \param b        Pointer to the right hand side in dvector format
  * \param x        Pointer to the approx solution in dvector format
@@ -44,9 +51,7 @@
  * \return         Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang
- * \date   09/25/2009 
- *
- * \note This is an abstract interface for iterative methods.
+ * \date   09/25/2009
  *
  * Modified by Feiteng Huang on 09/19/2012: matrix free
  */
@@ -201,7 +206,6 @@ INT fasp_solver_krylov (mxv_matfree  *mf,
  * \date   09/18/2012
  *
  * Modified by Chensong Zhang on 05/10/2013: Change interface of mat-free mv
- * Modified by Chensong Zhang on 01/20/2017
  */
 void fasp_solver_matfree_init (INT           matrix_format,
                                mxv_matfree  *mf,

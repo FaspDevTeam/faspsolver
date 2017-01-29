@@ -1,9 +1,14 @@
-/*! \file AuxParam.c
+/*! \file  AuxParam.c
  *
  *  \brief Initialize, set, or print input data and parameters
  *
- *  \note This file contains Level-0 (Aux) functions. It requires
- *        AuxInput.c and AuxMessage.c
+ *  \note  This file contains Level-0 (Aux) functions. It requires:
+ *         AuxInput.c and AuxMessage.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <stdio.h>
@@ -267,8 +272,6 @@ void fasp_param_set (const int    argc,
  * \author Chensong Zhang
  * \date   2010/08/12
  *
- * Modified by Xiaozhe Hu (01/23/2011): initialize, then set value
- * Modified by Chensong Zhang (09/12/2012): find a bug during debugging in VS08
  * Modified by Chensong Zhang (12/29/2013): rewritten
  */
 void fasp_param_init (const input_param  *iniparam,
