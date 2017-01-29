@@ -12,6 +12,7 @@ File Name: CHANGES
 - Clean up all files.
 - Add legal information.
 - Update file dependency information.
+- Remove a few unwanted functions, e.g., fasp_mem_check.
 
 01/28/2017 FASP 1.9.5:
 - Happy Chinese New Year!

@@ -39,7 +39,7 @@ void dvector2SAMGInput (dvector *vec,
     INT m = vec->row, i;
     
     FILE *fp=fopen(filename,"w");
-    if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
+    if ( fp == NULL ) {
         printf("### ERROR: Opening file %s failed!\n",filename);
         exit(ERROR_OPEN_FILE);
     }

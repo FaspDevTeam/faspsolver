@@ -103,13 +103,13 @@ void fasp_dcsrvec1_read (const char  *filename,
                          dCSRmat     *A,
                          dvector     *b)
 {
-    int  i,m,n,idata;
+    INT  i, m, n, idata;
     REAL ddata;
     
     // Open input disk file
     FILE *fp = fopen(filename, "r");
     
-    if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
+    if ( fp == NULL ) {
         printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
@@ -118,9 +118,9 @@ void fasp_dcsrvec1_read (const char  *filename,
     
     // Read CSR matrix
     fscanf(fp, "%d %d", &m, &n);
-    A->row=m; A->col=n;
+    A->row = m; A->col = n;
     
-    A->IA=(INT *)fasp_mem_calloc(m+1, sizeof(INT));
+    A->IA = (INT *)fasp_mem_calloc(m+1, sizeof(INT));
     for ( i = 0; i <= m; ++i ) {
         fscanf(fp, "%d", &idata);
         A->IA[i] = idata;
@@ -272,13 +272,13 @@ void fasp_dcsrvec2_read (const char  *filemat,
 void fasp_dcsr_read (const char  *filename,
                      dCSRmat     *A)
 {
-    int  i,m,idata;
+    INT  i,m,idata;
     REAL ddata;
     
     // Open input disk file
     FILE *fp = fopen(filename, "r");
     
-    if (fasp_mem_check((void *)fp,NULL,ERROR_OPEN_FILE) < 0) {
+    if ( fp == NULL ) {
         printf("### ERROR: Cannot open %s!\n", filename);
         fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
