@@ -1,12 +1,17 @@
-/*! \file SolSTR.c
+/*! \file  SolSTR.c
  *
  *  \brief Iterative solvers for dSTRmat matrices
  *
- *  \note This file contains Level-5 (Sol) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c,
- *        BlaSmallMatInv.c, BlaILUSetupSTR.c, BlaSparseSTR.c, ItrSmootherSTR.c,
- *        KryPbcgs.c, KryPcg.c, KryPgmres.c, KryPvbcgs.c, KryPvgmres.c, 
- *        and PreSTR.c
+ *  \note  This file contains Level-5 (Sol) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c,
+ *         BlaSmallMatInv.c, BlaILUSetupSTR.c, BlaSparseSTR.c, ItrSmootherSTR.c,
+ *         KryPbcgs.c, KryPcg.c, KryPgmres.c, KryPvbcgs.c, KryPvgmres.c,
+ *         and PreSTR.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -41,6 +46,7 @@
  *
  * \author Chensong Zhang
  * \date   09/25/2009 
+ *
  * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
 INT fasp_solver_dstr_itsolver (dSTRmat    *A,

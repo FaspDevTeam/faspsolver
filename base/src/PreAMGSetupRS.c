@@ -1,15 +1,21 @@
-/*! \file PreAMGSetupRS.c
+/*! \file  PreAMGSetupRS.c
  *
  *  \brief Ruge-Stuben AMG: SETUP phase
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c, BlaILUSetupCSR.c,
- *        BlaSchwarzSetup.c, BlaSparseCSR.c, BlaSpmvCSR.c, PreAMGCoarsenRS.c, 
- *        PreAMGInterp.c, and PreMGRecurAMLI.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c, BlaILUSetupCSR.c,
+ *         BlaSchwarzSetup.c, BlaSparseCSR.c, BlaSpmvCSR.c, PreAMGCoarsenRS.c,
+ *         PreAMGInterp.c, and PreMGRecurAMLI.c
  *
- *  \note Refer to Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller
- *        Appendix P475 A.7 (by A. Brandt, P. Oswald and K. Stuben)
- *        Academic Press Inc., San Diego, CA, 2001.
+ *  Reference: 
+ *         Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller
+ *         Appendix P475 A.7 (by A. Brandt, P. Oswald and K. Stuben)
+ *         Academic Press Inc., San Diego, CA, 2001.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>
@@ -38,15 +44,8 @@
  * \author Chensong Zhang
  * \date   05/09/2010
  *
- * Modified by Chensong Zhang on 04/04/2009.
- * Modified by Chensong Zhang on 05/09/2010.
- * Modified by Zhiyang Zhou on 11/17/2010.
  * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle.
- * Modified by Chensong zhang on 09/09/2011: add min dof.
  * Modified by Xiaozhe Hu on 04/24/2013: aggressive coarsening.
- * Modified by Chensong Zhang on 05/03/2013: add error handling in setup.
- * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
- * Modified by Chensong Zhang on 07/26/2014: handle coarsening errors.
  * Modified by Chensong Zhang on 09/23/2014: check coarse spaces.
  */
 SHORT fasp_amg_setup_rs (AMG_data   *mgl,

@@ -1,16 +1,23 @@
-/*! \file PreAMGSetupCR.c
+/*! \file  PreAMGSetupCR.c
  *
  *  \brief Brannick-Falgout compatible relaxation based AMG: SETUP phase
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxMessage.c, AuxTiming.c, AuxVector.c, and PreAMGCoarsenCR.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxMessage.c, AuxTiming.c, AuxVector.c, and PreAMGCoarsenCR.c
  *
- *  \note Setup A, P, R and levels using the Compatible Relaxation coarsening
- *        for classic AMG interpolation
- *        Refer to J. Brannick and R. Falgout
- *        Compatible relaxation and coarsening in AMG
+ *  \note  Setup A, P, R and levels using the Compatible Relaxation coarsening
+ *         for classic AMG interpolation
  *
- *  \warning Not working. Yet need to be fixed. --Chensong
+ *  Reference: 
+ *         J. Brannick and R. Falgout
+ *         Compatible relaxation and coarsening in AMG
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2010--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
+ *
+ *  //TODO: Not working. Need to be fixed. --Chensong
  */
 
 #include <math.h>

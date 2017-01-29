@@ -1,14 +1,20 @@
-/*! \file KryPgcg.c
+/*! \file  KryPgcg.c
  *
  *  \brief Krylov subspace methods -- Preconditioned generalized CG
  *
- *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, and BlaSpmvCSR.c
+ *  \note  This file contains Level-3 (Kry) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, and BlaSpmvCSR.c
  *
- *  \note Refer to Concus, P. and Golub, G.H. and O'Leary, D.P.
- *        A Generalized Conjugate Gradient Method for the Numerical:
- *        Solution of Elliptic Partial Differential Equations,
- *        Computer Science Department, Stanford University, 1976
+ *  Reference: 
+ *         Concus, P. and Golub, G.H. and O'Leary, D.P.
+ *         A Generalized Conjugate Gradient Method for the Numerical:
+ *         Solution of Elliptic Partial Differential Equations,
+ *         Computer Science Department, Stanford University, 1976
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2012--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -197,7 +203,6 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
  *
  * \note Not completely implemented yet! --Chensong
  *
- * Modified by Chensong Zhang on 05/01/2012
  * Modified by Feiteng Huang on 09/26/2012: matrix free
  */
 INT fasp_solver_pgcg (mxv_matfree *mf,

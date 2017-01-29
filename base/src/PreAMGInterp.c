@@ -1,14 +1,20 @@
-/*! \file PreAMGInterp.c
+/*! \file  PreAMGInterp.c
  *
  *  \brief Direct and standard interpolations for classical AMG
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, and PreAMGInterpEM.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, and PreAMGInterpEM.c
  *
- *  \note Refer to U. Trottenberg, C. W. Oosterlee, and A. Schuller
- *        Multigrid (Appendix A: An Intro to Algebraic Multigrid)
- *        Academic Press Inc., San Diego, CA, 2001
- *        With contributions by A. Brandt, P. Oswald and K. Stuben.
+ *  Reference:
+ *         U. Trottenberg, C. W. Oosterlee, and A. Schuller
+ *         Multigrid (Appendix A: An Intro to Algebraic Multigrid)
+ *         Academic Press Inc., San Diego, CA, 2001
+ *         With contributions by A. Brandt, P. Oswald and K. Stuben.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -467,8 +473,7 @@ static void interp_DIR (dCSRmat    *A,
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/17/2012: add OMP support
  * Modified by Chensong Zhang on 05/15/2013: reconstruct the code
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 12/25/2013: add cfsplitting of RS 
- *             coarsening check C1 Criterion
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 12/25/2013: check C1 Criterion
  */
 static void interp_STD (dCSRmat    *A,
                         ivector    *vertices,

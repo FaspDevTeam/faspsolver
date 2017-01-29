@@ -1,12 +1,17 @@
-/*! \file PreMGCycle.c
+/*! \file  PreMGCycle.c
  *
  *  \brief Abstract multigrid cycle -- non-recursive version
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMessage.c, AuxVector.c, BlaSchwarzSetup.c, 
- *        BlaArray.c, BlaSpmvBSR.c, BlaSpmvCSR.c, ItrSmootherBSR.c, 
- *        ItrSmootherCSR.c, ItrSmootherCSRpoly.c, KryPcg.c, KryPvgmres.c, 
- *        KrySPcg.c, and KrySPvgmres.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxArray.c, AuxMessage.c, AuxVector.c, BlaSchwarzSetup.c,
+ *         BlaArray.c, BlaSpmvBSR.c, BlaSpmvCSR.c, ItrSmootherBSR.c,
+ *         ItrSmootherCSR.c, ItrSmootherCSRpoly.c, KryPcg.c, KryPvgmres.c,
+ *         KrySPcg.c, and KrySPvgmres.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -45,7 +50,6 @@ INT *IMAP    = NULL; /**< Red Black GS Smoother imap */
  * \author Chensong Zhang
  * \date   10/06/2010
  *
- * Modified by Chensong Zhang on 12/13/2011
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  * Modified by Chensong Zhang on 12/30/2014: update Schwarz smoothers.
  */

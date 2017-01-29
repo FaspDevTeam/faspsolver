@@ -1,12 +1,17 @@
-/*! \file BlaIO.c
+/*! \file  BlaIO.c
  *
  *  \brief Matrix/vector input/output subroutines
  *
- *  \note Read, write or print a matrix or a vector in various formats
+ *  \note  Read, write or print a matrix or a vector in various formats
  *
- *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxArray.c, AuxConvert.c, AuxMemory.c, AuxMessage.c, AuxVector.c,
- *        and BlaFormat.c
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         AuxArray.c, AuxConvert.c, AuxMemory.c, AuxMessage.c, AuxVector.c,
+ *         and BlaFormat.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "fasp.h"
@@ -182,7 +187,6 @@ void fasp_dcsrvec1_read (const char  *filename,
  * \author Zhiyang Zhou
  * \date   2010/08/06
  *
- * Modified by Chensong Zhang on 2011/03/01
  * Modified by Chensong Zhang on 2012/01/05
  */
 void fasp_dcsrvec2_read (const char  *filemat,

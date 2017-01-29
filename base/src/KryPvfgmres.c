@@ -1,17 +1,23 @@
-/*! \file KryPvfgmres.c
+/*! \file  KryPvfgmres.c
  *
  *  \brief Krylov subspace methods – Preconditioned variable-restarting FGMRes
  *
- *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c, 
- *        BlaSpmvBSR.c, and BlaSpmvCSR.c
+ *  \note  This file contains Level-3 (Kry) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c,
+ *         BlaSpmvBSR.c, and BlaSpmvCSR.c
  *
- *  \note Refer to A.H. Baker, E.R. Jessup, and Tz.V. Kolev
- *        A Simple Strategy for Varying the Restart Parameter in GMRES(m)
- *        Journal of Computational and Applied Mathematics, 230 (2009)
- *        pp. 751-761. UCRL-JRNL-235266.
+ *  \note  This file is modifed from KryPvgmres.c
  *
- *  \note This file is modifed from KryPvgmres.c
+ *  Reference:
+ *         A.H. Baker, E.R. Jessup, and Tz.V. Kolev
+ *         A Simple Strategy for Varying the Restart Parameter in GMRES(m)
+ *         Journal of Computational and Applied Mathematics, 230 (2009)
+ *         pp. 751-761. UCRL-JRNL-235266.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2012--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -53,7 +59,6 @@
  * \author Xiaozhe Hu
  * \date   01/04/2012
  *
- * Modified by Chensong Zhang on 05/01/2012
  * Modified by Chunsheng Feng on 07/22/2013: Add adaptive memory allocate
  * Modified by Chensong Zhang on 05/09/2015: Clean up for stopping types
  */
@@ -381,7 +386,6 @@ FINISHED:
  * \author Xiaozhe Hu
  * \date   02/05/2012
  *
- * Modified by Chensong Zhang on 05/01/2012
  * Modified by Chunsheng Feng on 07/22/2013: Add adaptive memory allocate
  * Modified by Chensong Zhang on 05/09/2015: Clean up for stopping types
  */
@@ -1039,7 +1043,6 @@ FINISHED:
  * \author Xiaozhe Hu
  * \date   01/04/2012
  *
- * Modified by Chensong Zhang on 05/01/2012
  * Modified by Feiteng Huang on 09/26/2012: matrix free
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */

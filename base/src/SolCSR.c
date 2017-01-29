@@ -1,13 +1,18 @@
-/*! \file SolCSR.c
+/*! \file  SolCSR.c
  *
  *  \brief Iterative solvers for dCSRmat matrices
  *
- *  \note This file contains Level-5 (Sol) functions. It requires
- *        AuxMemory.c, AuxMessage.c, AuxParam.c, AuxTiming.c, AuxVector.c, 
- *        BlaILUSetupCSR.c, BlaSchwarzSetup.c, BlaSparseCSR.c, KryPbcgs.c, 
- *        KryPcg.c, KryPgcg.c, KryPgcr.c, KryPgmres.c, KryPminres.c, KryPvbcgs.c, 
- *        KryPvfgmres.c, KryPvgmres.c, PreAMGSetupRS.c, PreAMGSetupSA.c, 
- *        PreAMGSetupUA.c, PreCSR.c, and PreDataInit.c
+ *  \note  This file contains Level-5 (Sol) functions. It requires:
+ *         AuxMemory.c, AuxMessage.c, AuxParam.c, AuxTiming.c, AuxVector.c,
+ *         BlaILUSetupCSR.c, BlaSchwarzSetup.c, BlaSparseCSR.c, KryPbcgs.c,
+ *         KryPcg.c, KryPgcg.c, KryPgcr.c, KryPgmres.c, KryPminres.c, KryPvbcgs.c,
+ *         KryPvfgmres.c, KryPvgmres.c, PreAMGSetupRS.c, PreAMGSetupSA.c,
+ *         PreAMGSetupUA.c, PreCSR.c, and PreDataInit.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>
@@ -35,6 +40,8 @@
  *
  * \brief Solve Ax=b by preconditioned Krylov methods for CSR matrices
  *
+ * \note  This is an abstract interface for iterative methods.
+ *
  * \param A        Pointer to the coeff matrix in dCSRmat format
  * \param b        Pointer to the right hand side in dvector format
  * \param x        Pointer to the approx solution in dvector format
@@ -46,7 +53,6 @@
  * \author Chensong Zhang
  * \date   09/25/2009
  *
- * \note This is an abstract interface for iterative methods.
  * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
 INT fasp_solver_dcsr_itsolver (dCSRmat    *A,

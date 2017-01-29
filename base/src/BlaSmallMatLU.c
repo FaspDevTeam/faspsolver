@@ -1,8 +1,13 @@
-/*! \file BlaSmallMatLU.c
+/*! \file  BlaSmallMatLU.c
  *
  *  \brief LU decomposition and direct solver for small dense matrices
  *
- *  \note This file contains Level-1 (Bla) functions.
+ *  \note  This file contains Level-1 (Bla) functions.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

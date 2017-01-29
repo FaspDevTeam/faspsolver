@@ -1,11 +1,16 @@
-/*! \file PreAMGUtil.inl
+/*! \file  PreAMGUtil.inl
  *
  *  \brief Utilities for link list data structure
  *
- *  \note This file contains Level-4 (Pre) functions, which are used in
- *        PreAMGCoarsenRS.c
+ *  \note  This file contains Level-4 (Pre) functions, which are used in:
+ *         PreAMGCoarsenRS.c
  *
- *  \note These linked-list operations are adapted from hypre 2.0
+ *  Adapted from hypre 2.0 by Xuehai Huang, 09/06/2009
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #define LIST_HEAD -1 /**< head of the linked list */

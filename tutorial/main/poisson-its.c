@@ -1,10 +1,14 @@
-/*! \file poisson-its.c
+/*! \file  poisson-its.c
+ *
  *  \brief The second test example for FASP: using ITS to solve 
  *         the discrete Poisson equation from P1 finite element.
  *
- *  \note  ITS example for FASP: C version
+ *  \note  Solving the Poisson equation (P1 FEM) with iterative methods: C version
  *
- *  Solving the Poisson equation (P1 FEM) with iterative methods
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2012--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "fasp.h"

@@ -1,8 +1,13 @@
-/*! \file AuxMemory.c
+/*! \file  AuxMemory.c
  *
  *  \brief Memory allocation and deallocation subroutines
  *
- *  \note This file contains Level-0 (Aux) functions
+ *  \note  This file contains Level-0 (Aux) functions.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 /*---------------------------------*/
@@ -56,9 +61,6 @@ const    INT Million           = 1048576;  //! 1M = 1024*1024
  * \author Chensong Zhang
  * \date   2010/08/12
  *
- * Modified by Chunsheng Feng on 12/20/2013
- * Modified by Chunsheng Feng on 07/23/2013
- * Modified by Chunsheng Feng on 07/30/2013
  * Modified by Chensong Zhang on 07/30/2013: print error if failed
  */
 void * fasp_mem_calloc (const LONGLONG  size,
@@ -108,7 +110,6 @@ void * fasp_mem_calloc (const LONGLONG  size,
  * \author Chensong Zhang
  * \date   2010/08/12
  *
- * Modified by Chunsheng Feng on 07/23/2013
  * Modified by Chensong Zhang on 07/30/2013: print error if failed
  */
 void * fasp_mem_realloc (void           *oldmem,

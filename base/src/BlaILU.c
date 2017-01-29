@@ -1,11 +1,16 @@
-/*! \file BlaILU.c
+/*! \file  BlaILU.c
  *
  *  \brief Incomplete LU decomposition: ILUk, ILUt, ILUtp
  *
- *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxMemory.c
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         AuxMemory.c
  *
- *  Translated from SparseKit Fortran version by Chunsheng Feng, 09/03/2016
+ *  Translated from SparseKit (Fortran code) by Chunsheng Feng, 09/03/2016
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2016--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

@@ -1,6 +1,11 @@
-/*! \file FemBasis.inl
+/*! \file  FemBasis.inl
  *
- *   \brief Finite Element Basis Functions
+ *  \brief Finite Element Basis Functions
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 /** 

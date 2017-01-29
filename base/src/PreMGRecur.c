@@ -1,12 +1,17 @@
-/*! \file PreMGRecur.c
+/*! \file  PreMGRecur.c
  *
  *  \brief Abstract multigrid cycle -- recursive version
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMessage.c, AuxVector.c, BlaSpmvCSR.c, ItrSmootherCSR.c, 
- *        ItrSmootherCSRpoly.c, KryPcg.c, KrySPcg.c, and KrySPvgmres.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxArray.c, AuxMessage.c, AuxVector.c, BlaSpmvCSR.c, ItrSmootherCSR.c,
+ *         ItrSmootherCSRpoly.c, KryPcg.c, KrySPcg.c, and KrySPvgmres.c
  *
- *  \warning Not used any more. Will be removed! --Chensong
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
+ *
+ *  //TODO: Not used any more. Will be removed! --Chensong
  */
 
 #include <time.h>
@@ -37,7 +42,6 @@
  * \author Xuehai Huang, Chensong Zhang
  * \date   04/06/2010
  *
- * Modified by Chensong Zhang on 01/10/2012
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  */
 void fasp_solver_mgrecur (AMG_data   *mgl,

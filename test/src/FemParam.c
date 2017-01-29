@@ -1,6 +1,11 @@
-/*! \file FemParam.c
+/*! \file  FemParam.c
  *
  *  \brief Miscellaneous functions for setting parameters of FEM
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "misc.h"

@@ -1,10 +1,15 @@
-/*! \file PreMGUtil.inl
+/*! \file  PreMGUtil.inl
  *
  *  \brief Routines for multigrid coarsest level solver
  *
- *  \note This file contains Level-4 (Pre) functions, which are used in
- *        PreBSR.c, PreCSR.c, PreMGCycle.c, PreMGCycleFull.c, PreMGRecur.c, 
- *        and PreMGRecurAMLI.c
+ *  \note  This file contains Level-4 (Pre) functions, which are used in:
+ *         PreBSR.c, PreCSR.c, PreMGCycle.c, PreMGCycleFull.c, PreMGRecur.c,
+ *         and PreMGRecurAMLI.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  *
  *  \warning This file is also used in FASP4BLKOIL!!!
  */

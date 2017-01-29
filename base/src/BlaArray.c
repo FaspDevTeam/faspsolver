@@ -1,8 +1,8 @@
-/*! \file BlaArray.c
+/*! \file  BlaArray.c
  *
  *  \brief BLAS1 operations for arrays
  *
- *  \note This file contains Level-1 (Bla) functions.
+ *  \note  This file contains Level-1 (Bla) functions.
  */
 
 #include <math.h>
@@ -32,7 +32,7 @@
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  *
- * \note x is reused to store the resulting array.
+ * \warning x is reused to store the resulting array.
  */
 void fasp_blas_darray_ax (const INT    n,
                           const REAL   a,
@@ -85,7 +85,7 @@ void fasp_blas_darray_ax (const INT    n,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  *
- * \note y is reused to store the resulting array.
+ * \warning y is reused to store the resulting array.
  */
 void fasp_blas_darray_axpy (const INT   n,
                             const REAL  a,
@@ -218,7 +218,7 @@ void fasp_blas_darray_axpyz (const INT   n,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  *
- * \note y is reused to store the resulting array.
+ * \warning y is reused to store the resulting array.
  */
 void fasp_blas_darray_axpby (const INT   n,
                              const REAL  a,

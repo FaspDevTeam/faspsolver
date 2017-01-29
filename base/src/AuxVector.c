@@ -1,8 +1,13 @@
-/*! \file AuxVector.c
+/*! \file  AuxVector.c
  *
  *  \brief Simple operations for vectors
  *
- *  \note This file contains Level-0 (Aux) functions
+ *  \note  This file contains Level-0 (Aux) functions.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -296,8 +301,7 @@ void fasp_dvec_set (INT       n,
  * \author Chensong Zhang
  * \date   04/03/2010  
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue  
- * \date   05/23/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012    
  */
 void fasp_ivec_set (const INT  m,
                     ivector   *u)

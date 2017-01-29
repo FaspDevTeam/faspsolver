@@ -2,8 +2,14 @@
  *
  *  \brief Utilities for aggregation methods
  *
- *  \note This file contains Level-4 (Pre) functions, which are used in
- *        PreAMGSetupSA.c, PreAMGSetupUA.c, PreAMGSetupSABSR.c, PreAMGSetupUABSR.c
+ *  \note  This file contains Level-4 (Pre) functions, which are used in:
+ *         PreAMGSetupSA.c, PreAMGSetupUA.c, PreAMGSetupSABSR.c, 
+ *         and PreAMGSetupUABSR.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2012--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  *
  *  \warning This file is also used in FASP4BLKOIL!!!
  */
@@ -150,8 +156,6 @@ static dCSRmat condenseBSRLinf (const dBSRmat *A)
  *
  * \author Xiaozhe Hu
  * \date   09/29/2009
- *
- * Modified by Xiaozhe Hu on 05/25/2014
  */
 static void form_boolean_p (const ivector *vertices,
                             dCSRmat *tentp,
@@ -350,7 +354,6 @@ static void form_pairwise (const dCSRmat * A,
  *       Refer to A. Napov and Y. Notay
  *       "An algebraic multigrid method with guaranteed convergence rate", 2012
  *
- * Modified by Xiaozhe Hu on 05/25/2014
  * Modified by Chensong Zhang, Zheng Li on 07/29/2014
  */
 static SHORT aggregation_pairwise (AMG_data *mgl,
@@ -478,7 +481,6 @@ END:
  *       Refer to P. Vanek, J. Madel and M. Brezina
  *       "Algebraic Multigrid on Unstructured Meshes", 1994
  *
- * Modified by Chunsheng Feng, Zheng Li on 09/03/2012
  * Modified by Zheng Li, Chensong Zhang on 07/29/2014
  */
 static SHORT aggregation_vmb (dCSRmat *A,

@@ -1,9 +1,14 @@
-/*! \file PreMGSmoother.inl
+/*! \file  PreMGSmoother.inl
  *
  *  \brief Routines for multigrid smoothers
  *
- *  \note This file contains Level-4 (Pre) functions, which are used in
- *        PreMGCycle.c, PreMGCycleFull.c, PreMGRecur.c, and PreMGRecurAMLI.c
+ *  \note  This file contains Level-4 (Pre) functions, which are used in:
+ *         PreMGCycle.c, PreMGCycleFull.c, PreMGRecur.c, and PreMGRecurAMLI.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  *
  *  \warning This file is also used in FASP4BLKOIL!!!
  */

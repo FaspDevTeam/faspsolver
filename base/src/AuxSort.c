@@ -1,9 +1,14 @@
-/*! \file AuxSort.c
+/*! \file  AuxSort.c
  *
  *  \brief Subroutines for sorting, merging, removing duplicated integers
  *
- *  \note This file contains Level-0 (Aux) functions. It requires
- *        AuxMemory.c
+ *  \note  This file contains Level-0 (Aux) functions. It requires:
+ *         AuxMemory.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "fasp.h"
@@ -15,7 +20,6 @@
 
 static void dSwapping(REAL *w, const INT i, const INT j);
 static void iSwapping(INT *w, const INT i, const INT j);
-static void multicoloring (AMG_data *, REAL, INT *, INT *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

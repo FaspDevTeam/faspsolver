@@ -1,4 +1,4 @@
-/*! \file BlaSparseUtil.c
+/*! \file  BlaSparseUtil.c
  *
  *  \brief Routines for sparse matrix operations
  *
@@ -6,18 +6,16 @@
  *         (a) Boolean operations (to determine the nonzero structure);
  *         (b) Numerical part, where the result is calculated.
  *
- *  \note: Parameter notation
+ *  \note  Parameter notation
  *         :I: is input; :O: is output; :IO: is both
  *
- *------------------------------------------------------
- * C-version: by Ludmil Zikatanov 2010-04-08
- *                         tested 2010-04-08
- *          : Modifed Xiaozhe Hu  2010-10-18
- *------------------------------------------------------
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         AuxMemory.c
  *
- *
- *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxMemory.c
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2010--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 // TODO: Remove unwanted functions from this file. --Chensong

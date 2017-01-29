@@ -1,20 +1,15 @@
-/*! \file fasp_block.h
+/*! \file  fasp_block.h
+ *
  *  \brief Header file for FASP block matrices
  *
- *  \note This header file contains definitions of block matrices, including
- *        grid-major type and variable-major type. In this header, we only
- *        define macros and data structures, not function declarations.
+ *  \note  This header file contains definitions of block matrices, including
+ *         grid-major type and variable-major type. In this header, we only
+ *         define macros and data structures, not function declarations.
  *
- *-----------------------------------------------------------------------------
- *  Created by Chensong Zhang on 05/21/2010.
- *  Modified by Xiaozhe Hu on 05/28/2010: add precond_block_reservoir_data.
- *  Modified by Xiaozhe Hu on 06/15/2010: modify precond_block_reservoir_data.
- *  Modified by Chensong Zhang on 10/11/2010: add BSR data.
- *  Modified by Chensong Zhang on 10/17/2012: modify comments.
- *  Modified by Ludmil Zikatanov on 10/11/2015: cosmetics.
- *  Modified by Chensong Zhang on 01/13/2017: remove reservoir simulation part
- *-----------------------------------------------------------------------------
- *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "fasp.h"

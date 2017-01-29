@@ -1,8 +1,13 @@
-/*! \file AuxGivens.c
+/*! \file  AuxGivens.c
  *
  *  \brief Givens transformation
  *
- *  \note This file contains Level-0 (Aux) functions
+ *  \note  This file contains Level-0 (Aux) functions.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2008--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

@@ -1,17 +1,11 @@
-/**
- *      Test speed of RAP 
+/*! \file  testrap.c
  *
- *------------------------------------------------------
- *
- *      Created by Chensong Zhang on 04/28/2010.
- *      Modified by Chensong Zhang on 09/02/2011.
- *
- *------------------------------------------------------
- *
- */
-
-/*! \file testrap.c
  *  \brief Test speed of RAP implementations
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2010--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>

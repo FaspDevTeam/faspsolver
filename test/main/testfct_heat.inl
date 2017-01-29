@@ -1,6 +1,11 @@
-/*! \file testfct_heat.inl
+/*! \file  testfct_heat.inl
  *
  *  \brief Test functions for the Heat equation
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
  
 #include <math.h>

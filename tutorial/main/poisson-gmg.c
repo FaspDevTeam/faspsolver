@@ -1,12 +1,16 @@
-/*! \file poisson-gmg.c
+/*! \file  poisson-gmg.c
  *
  *  \brief The fourth test example for FASP: using GMG to solve
  *         the discrete Poisson equation from five-point finite
  *         difference stencil. C version.
  *
- *  \note  GMG example for FASP: C version
+ *  \note  Solving the Poisson equation (FDM) with GMG: C version
  *
- *  Solving the Poisson equation (FDM) with GMG
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2013--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>

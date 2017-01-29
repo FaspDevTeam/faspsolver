@@ -1,10 +1,15 @@
-/*! \file ItrSmootherSTR.c
+/*! \file  ItrSmootherSTR.c
  *
  *  \brief Smoothers for dSTRmat matrices
  *
- *  \note This file contains Level-2 (Itr) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxVector.c, BlaSmallMat.c, BlaSmallMatInv.c, 
- *        BlaSmallMatLU.c, and BlaSpmvSTR.c
+ *  \note  This file contains Level-2 (Itr) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxVector.c, BlaSmallMat.c, BlaSmallMatInv.c,
+ *         BlaSmallMatLU.c, and BlaSpmvSTR.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

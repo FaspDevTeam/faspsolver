@@ -1,14 +1,20 @@
-/*! \file PreAMGCoarsenRS.c
+/*! \file  PreAMGCoarsenRS.c
  *
  *  \brief Coarsening with a modified Ruge-Stuben strategy.
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxVector.c, BlaSparseCSR.c, 
- *        and PreAMGCoarsenCR.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxVector.c, BlaSparseCSR.c,
+ *         and PreAMGCoarsenCR.c
  *
- *  \note Refer to Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller
- *        Appendix P475 A.7 (by A. Brandt, P. Oswald and K. Stuben)
- *        Academic Press Inc., San Diego, CA, 2001.
+ *  Reference:
+ *         Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller
+ *         Appendix P475 A.7 (by A. Brandt, P. Oswald and K. Stuben)
+ *         Academic Press Inc., San Diego, CA, 2001.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  *
  *  \warning Do NOT use auto-indentation in this file!!!
  */
@@ -43,29 +49,29 @@ static void ordering1          (iCSRmat *, ivector *);
 /*---------------------------------*/
 
 /**
-* \fn SHORT fasp_amg_coarsening_rs (dCSRmat *A, ivector *vertices, dCSRmat *P,
-*                                   iCSRmat *S, AMG_param *param)
-*
-* \brief Standard and aggressive coarsening schemes
-*
-* \param A          Pointer to dCSRmat: Coefficient matrix (index starts from 0)
-* \param vertices   Indicator vector for the C/F splitting of the variables
-* \param P          Interpolation matrix (nonzero pattern only)
-* \param S          Strong connection matrix
-* \param param      Pointer to AMG_param: AMG parameters
-*
-* \return           FASP_SUCCESS if successed; otherwise, error information.
-*
-* \author Xuehai Huang, Chensong Zhang, Xiaozhe Hu, Ludmil Zikatanov
-* \date   09/06/2010
-*
-* \note vertices = 0: fine; 1: coarse; 2: isolated or special
-*
-* Modified by Xiaozhe Hu on 05/23/2011: add strength matrix as an argument
-* Modified by Xiaozhe Hu on 04/24/2013: modify aggressive coarsening
-* Modified by Chensong Zhang on 04/28/2013: remove linked list
-* Modified by Chensong Zhang on 05/11/2013: restructure the code
-*/
+ * \fn SHORT fasp_amg_coarsening_rs (dCSRmat *A, ivector *vertices, dCSRmat *P,
+ *                                   iCSRmat *S, AMG_param *param)
+ *
+ * \brief Standard and aggressive coarsening schemes
+ *
+ * \param A          Pointer to dCSRmat: Coefficient matrix (index starts from 0)
+ * \param vertices   Indicator vector for the C/F splitting of the variables
+ * \param P          Interpolation matrix (nonzero pattern only)
+ * \param S          Strong connection matrix
+ * \param param      Pointer to AMG_param: AMG parameters
+ *
+ * \return           FASP_SUCCESS if successed; otherwise, error information.
+ *
+ * \author Xuehai Huang, Chensong Zhang, Xiaozhe Hu, Ludmil Zikatanov
+ * \date   09/06/2010
+ *
+ * \note vertices = 0: fine; 1: coarse; 2: isolated or special
+ *
+ * Modified by Xiaozhe Hu on 05/23/2011: add strength matrix as an argument
+ * Modified by Xiaozhe Hu on 04/24/2013: modify aggressive coarsening
+ * Modified by Chensong Zhang on 04/28/2013: remove linked list
+ * Modified by Chensong Zhang on 05/11/2013: restructure the code
+ */
 SHORT fasp_amg_coarsening_rs (dCSRmat   *A,
                               ivector   *vertices,
                               dCSRmat   *P,
@@ -163,22 +169,22 @@ SHORT fasp_amg_coarsening_rs (dCSRmat   *A,
 /*---------------------------------*/
 
 /**
-* \fn static void strong_couplings (dCSRmat *A, iCSRmat *S, AMG_param *param)
-*
-* \brief Generate the set of all strong negative couplings
-*
-* \param A          Coefficient matrix, the index starts from zero
-* \param S          Strong connection matrix
-* \param param      AMG parameters
-*
-* \author Xuehai Huang, Chensong Zhang
-* \date   09/06/2010
-*
-* \note   For flexibility, we do NOT compress S here!!! It is due to the C/F
-*         splitting routines to decide when to compress S.
-*
-* Modified by Chensong Zhang on 05/11/2013: restructure the code
-*/
+ * \fn static void strong_couplings (dCSRmat *A, iCSRmat *S, AMG_param *param)
+ *
+ * \brief Generate the set of all strong negative couplings
+ *
+ * \param A          Coefficient matrix, the index starts from zero
+ * \param S          Strong connection matrix
+ * \param param      AMG parameters
+ *
+ * \author Xuehai Huang, Chensong Zhang
+ * \date   09/06/2010
+ *
+ * \note   For flexibility, we do NOT compress S here!!! It is due to the C/F
+ *         splitting routines to decide when to compress S.
+ *
+ * Modified by Chensong Zhang on 05/11/2013: restructure the code
+ */
 static void strong_couplings (dCSRmat   *A,
                               iCSRmat   *S,
                               AMG_param *param )
@@ -323,19 +329,19 @@ static void strong_couplings (dCSRmat   *A,
 }
 
 /**
-* \fn static INT compress_S (iCSRmat *S)
-*
-* \brief Remove weak couplings from S (marked as -1)
-*
-* \param S        Strong connection matrix (in: with weak, out: without weak)
-*
-* \return Number of cols of P
-*
-* \author Chensong Zhang
-* \date   05/16/2013
-*
-* \note   Compression is done in-place. Used by the C/F splitting schemes!
-*/
+ * \fn static INT compress_S (iCSRmat *S)
+ *
+ * \brief Remove weak couplings from S (marked as -1)
+ *
+ * \param S        Strong connection matrix (in: with weak, out: without weak)
+ *
+ * \return Number of cols of P
+ *
+ * \author Chensong Zhang
+ * \date   05/16/2013
+ *
+ * \note   Compression is done in-place. Used by the C/F splitting schemes!
+ */
 static INT compress_S (iCSRmat *S)
 {
 	const INT   row = S->row;
@@ -367,19 +373,19 @@ static INT compress_S (iCSRmat *S)
 }
 
 /**
-* \fn static void rem_positive_ff (dCSRmat *A, iCSRmat *Stemp, ivector *vertices)
-*
-* \brief Update interpolation support for positive strong couplings
-*
-* \param A            Coefficient matrix, the index starts from zero
-* \param Stemp        Original strong connection matrix
-* \param vertices     Indicator vector for the C/F splitting of the variables
-*
-* \return Number of cols of P
-*
-* \author Chensong Zhang
-* \date   06/07/2013
-*/
+ * \fn static void rem_positive_ff (dCSRmat *A, iCSRmat *Stemp, ivector *vertices)
+ *
+ * \brief Update interpolation support for positive strong couplings
+ *
+ * \param A            Coefficient matrix, the index starts from zero
+ * \param Stemp        Original strong connection matrix
+ * \param vertices     Indicator vector for the C/F splitting of the variables
+ *
+ * \return Number of cols of P
+ *
+ * \author Chensong Zhang
+ * \date   06/07/2013
+ */
 static void rem_positive_ff (dCSRmat   *A,
                              iCSRmat   *Stemp,
                              ivector   *vertices)
@@ -443,8 +449,7 @@ static void rem_positive_ff (dCSRmat   *A,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012: add OMP support
  * Modified by Chensong Zhang on 07/06/2012: fix a data type bug
  * Modified by Chensong Zhang on 05/11/2013: restructure the code
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 12/25/2013: C/F splitting of RS coarsening 
- *                                                          check C1 Criterion
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 12/25/2013: check C1 Criterion
  */
 static INT cfsplitting_cls (dCSRmat   *A,
                             iCSRmat   *S,
@@ -741,24 +746,24 @@ FINISHED:
 }
         
 /**
-* \fn static INT cfsplitting_clsp (dCSRmat *A, iCSRmat *S, ivector *vertices)
-*
+ * \fn static INT cfsplitting_clsp (dCSRmat *A, iCSRmat *S, ivector *vertices)
+ *
  * \brief Find coarse level variables (C/F splitting with positive connections)
-*
-* \param A            Coefficient matrix, the index starts from zero
-* \param S            Strong connection matrix
-* \param vertices     Indicator vector for the C/F splitting of the variables
-*
-* \return Number of cols of P
-*
-* \author Chensong Zhang
-* \date   05/16/2013
-*
-* \note   Compared with cfsplitting_cls, cfsplitting_clsp has an extra step for
-*         checking strong positive couplings and pick some of them as C.
-*
-* Modified by Chensong Zhang on 06/07/2013: restructure the code
-*/
+ *
+ * \param A            Coefficient matrix, the index starts from zero
+ * \param S            Strong connection matrix
+ * \param vertices     Indicator vector for the C/F splitting of the variables
+ *
+ * \return Number of cols of P
+ *
+ * \author Chensong Zhang
+ * \date   05/16/2013
+ *
+ * \note   Compared with cfsplitting_cls, cfsplitting_clsp has an extra step for
+ *         checking strong positive couplings and pick some of them as C.
+ *
+ * Modified by Chensong Zhang on 06/07/2013: restructure the code
+ */
 static INT cfsplitting_clsp (dCSRmat   *A,
                              iCSRmat   *S,
                              ivector   *vertices)
@@ -1002,25 +1007,25 @@ FINISHED:
 }
 
 /**
-* \fn static void strong_couplings_agg1 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh,
-*                                        ivector *vertices, ivector *CGPT_index,
-*                                        ivector *CGPT_rindex)
-*
-* \brief Generate the set of all strong negative or absolute couplings using
-*        aggressive coarsening A1
-*
-* \param A            Coefficient matrix, the index starts from zero
-* \param S            Strong connection matrix
-* \param Sh           Strong couplings matrix between coarse grid points
-* \param vertices     Type of variables--C/F splitting
-* \param CGPT_index   Index of CGPT from CGPT to all points
-* \param CGPT_rindex  Index of CGPT from all points to CGPT
-*
-* \author Kai Yang, Xiaozhe Hu
-* \date   09/06/2010
-*
-* Modified by Chensong Zhang on 05/13/2013: restructure the code
-*/
+ * \fn static void strong_couplings_agg1 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh,
+ *                                        ivector *vertices, ivector *CGPT_index,
+ *                                        ivector *CGPT_rindex)
+ *
+ * \brief Generate the set of all strong negative or absolute couplings using
+ *        aggressive coarsening A1
+ *
+ * \param A            Coefficient matrix, the index starts from zero
+ * \param S            Strong connection matrix
+ * \param Sh           Strong couplings matrix between coarse grid points
+ * \param vertices     Type of variables--C/F splitting
+ * \param CGPT_index   Index of CGPT from CGPT to all points
+ * \param CGPT_rindex  Index of CGPT from all points to CGPT
+ *
+ * \author Kai Yang, Xiaozhe Hu
+ * \date   09/06/2010
+ *
+ * Modified by Chensong Zhang on 05/13/2013: restructure the code
+ */
 static void strong_couplings_agg1 (dCSRmat   *A,
                                    iCSRmat   *S,
                                    iCSRmat   *Sh,
@@ -1174,31 +1179,31 @@ static void strong_couplings_agg1 (dCSRmat   *A,
 }
         
 /**
-* \fn static void strong_couplings_agg2 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh,
-*                                        ivector *vertices, ivector *CGPT_index,
-*                                        ivector *CGPT_rindex)
-*
-* \brief Generate the set of all strong negative or absolute couplings using
-*        aggressive coarsening A2
-*
-* \param A            Coefficient matrix, the index starts from zero
-* \param S            Strong connection matrix
-* \param Sh           Strong couplings matrix between coarse grid points
-* \param vertices     Type of variables--C/F splitting
-* \param CGPT_index   Index of CGPT from CGPT to all points
-* \param CGPT_rindex  Index of CGPT from all points to CGPT
-*
-* \author Xiaozhe Hu
-* \date   04/24/2013
-*
-* \note   The difference between strong_couplings_agg1 and strong_couplings_agg2
-*         is that strong_couplings_agg1 uses one path to determine strongly coupled
-*         C points while strong_couplings_agg2 uses two paths to determine strongly
-*         coupled C points. Usually strong_couplings_agg1 gives more aggressive
-*         coarsening!
-*
-* Modified by Chensong Zhang on 05/13/2013: restructure the code
-*/
+ * \fn static void strong_couplings_agg2 (dCSRmat *A, iCSRmat *S, iCSRmat *Sh,
+ *                                        ivector *vertices, ivector *CGPT_index,
+ *                                        ivector *CGPT_rindex)
+ *
+ * \brief Generate the set of all strong negative or absolute couplings using
+ *        aggressive coarsening A2
+ *
+ * \param A            Coefficient matrix, the index starts from zero
+ * \param S            Strong connection matrix
+ * \param Sh           Strong couplings matrix between coarse grid points
+ * \param vertices     Type of variables--C/F splitting
+ * \param CGPT_index   Index of CGPT from CGPT to all points
+ * \param CGPT_rindex  Index of CGPT from all points to CGPT
+ *
+ * \author Xiaozhe Hu
+ * \date   04/24/2013
+ *
+ * \note   The difference between strong_couplings_agg1 and strong_couplings_agg2
+ *         is that strong_couplings_agg1 uses one path to determine strongly coupled
+ *         C points while strong_couplings_agg2 uses two paths to determine strongly
+ *         coupled C points. Usually strong_couplings_agg1 gives more aggressive
+ *         coarsening!
+ *
+ * Modified by Chensong Zhang on 05/13/2013: restructure the code
+ */
 static void strong_couplings_agg2 (dCSRmat   *A,
                                    iCSRmat   *S,
                                    iCSRmat   *Sh,
@@ -1856,23 +1861,23 @@ static void form_P_pattern_dir (dCSRmat   *P,
 }
     
 /**
-* \fn static void form_P_pattern_std (dCSRmat *P, iCSRmat *S, ivector *vertices,
-*                                     INT row, INT col)
-*
-* \brief Generate sparsity pattern of prolongation for standard interpolation
-*
-* \param P         Pointer to the prolongation matrix
-* \param S         Pointer to the set of all strong couplings matrix
-* \param vertices  Pointer to the type of variables
-* \param row       Number of rows of P
-* \param col       Number of cols of P
-*
-* \author Kai Yang, Xiaozhe Hu
-* \date   05/21/2012
-*
-* Modified by Chunsheng Feng, Zheng Li on 10/13/2012: add OMP support
-* Modified by Chensong Zhang on 05/13/2013: restructure the code
-*/
+ * \fn static void form_P_pattern_std (dCSRmat *P, iCSRmat *S, ivector *vertices,
+ *                                     INT row, INT col)
+ *
+ * \brief Generate sparsity pattern of prolongation for standard interpolation
+ *
+ * \param P         Pointer to the prolongation matrix
+ * \param S         Pointer to the set of all strong couplings matrix
+ * \param vertices  Pointer to the type of variables
+ * \param row       Number of rows of P
+ * \param col       Number of cols of P
+ *
+ * \author Kai Yang, Xiaozhe Hu
+ * \date   05/21/2012
+ *
+ * Modified by Chunsheng Feng, Zheng Li on 10/13/2012: add OMP support
+ * Modified by Chensong Zhang on 05/13/2013: restructure the code
+ */
 static void form_P_pattern_std (dCSRmat   *P,
                                 iCSRmat   *S,
                                 ivector   *vertices,

@@ -1,15 +1,22 @@
-/*! \file PreAMGSetupUA.c
+/*! \file  PreAMGSetupUA.c
  *
  *  \brief Unsmoothed aggregation AMG: SETUP phase
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c, 
- *        BlaILUSetupCSR.c, BlaSchwarzSetup.c, BlaSparseCSR.c, BlaSpmvCSR.c, 
- *        and PreMGRecurAMLI.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c,
+ *         BlaILUSetupCSR.c, BlaSchwarzSetup.c, BlaSparseCSR.c, BlaSpmvCSR.c,
+ *         and PreMGRecurAMLI.c
  *
- *  \note Setup A, P, PT and levels using the unsmoothed aggregation algorithm;
- *        Refer to P. Vanek, J. Madel and M. Brezina
- *        Algebraic Multigrid on Unstructured Meshes, 1994
+ *  \note  Setup A, P, PT and levels using the unsmoothed aggregation algorithm
+ *
+ *  Reference:
+ *         P. Vanek, J. Madel and M. Brezina
+ *         Algebraic Multigrid on Unstructured Meshes, 1994
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2011--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -79,9 +86,7 @@ SHORT fasp_amg_setup_ua (AMG_data   *mgl,
  * \author Xiaozhe Hu
  * \date   02/21/2011
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/27/2012.
  * Modified by Chensong Zhang on 05/10/2013: adjust the structure.
- * Modified by Chensong Zhang on 07/26/2014: handle coarsening errors.
  * Modified by Chensong Zhang on 09/23/2014: check coarse spaces.
  * Modified by Zheng Li on 01/13/2015: adjust coarsening stop criterion.
  * Modified by Zheng Li on 03/22/2015: adjust coarsening ratio.

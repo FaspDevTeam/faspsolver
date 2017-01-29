@@ -1,17 +1,23 @@
-/*! \file KryPgmres.c
+/*! \file  KryPgmres.c
  *
  *  \brief Krylov subspace methods -- Right-preconditioned GMRes
  *
- *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c, 
- *        BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
+ *  \note  This file contains Level-3 (Kry) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c,
+ *         BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
  *
- *  \note Refer to Y. Saad 2003
- *        Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *  \note  See also KryPvgmres.c for a variable restarting version.
  *
- *  \note See also KryPvgmres.c for a variable restarting version.
+ *  \note  See KrySPgmres.c for a safer version
  *
- *  \note See KrySPgmres.c for a safer version
+ *  Reference:
+ *         Y. Saad 2003
+ *         Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2010--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -31,8 +37,9 @@
 
 /*!
  * \fn INT fasp_solver_dcsr_pgmres (dCSRmat *A, dvector *b, dvector *x, precond *pc,
- *                                  const REAL tol, const INT MaxIt, const SHORT restart,
- *                                  const SHORT stop_type, const SHORT prtlvl)
+ *                                  const REAL tol, const INT MaxIt, 
+ *                                  const SHORT restart, const SHORT stop_type, 
+ *                                  const SHORT prtlvl)
  *
  * \brief Right preconditioned GMRES method for solving Au=b
  *
@@ -51,10 +58,8 @@
  * \author Zhiyang Zhou
  * \date   2010/11/28
  *
- * Modified by Chensong Zhang on 05/01/2012
  * Modified by Chensong Zhang on 04/05/2013: Add stop_type and safe check
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
- * Modified by Chensong Zhang on 07/30/2014: Make memory allocation size long int
  * Modified by Chensong Zhang on 09/21/2014: Add comments and reorganize code
  */
 INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
@@ -357,7 +362,6 @@ FINISHED:
  * \author Xiaozhe Hu
  * \date   05/24/2010
  *
- * Modified by Chensong Zhang on 05/01/2012
  * Modified by Chensong Zhang on 04/05/2013: add stop_type and safe check
  */
 INT fasp_solver_dblc_pgmres (dBLCmat     *A,
@@ -660,7 +664,6 @@ FINISHED:
  * \author Zhiyang Zhou
  * \date   2010/12/21
  *
- * Modified by Chensong Zhang on 05/01/2012
  * Modified by Chensong Zhang on 04/05/2013: add stop_type and safe check
  */
 INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
@@ -964,7 +967,6 @@ FINISHED:
  * \author Zhiyang Zhou
  * \date   2010/11/28
  *
- * Modified by Chensong Zhang on 05/01/2012
  * Modified by Chensong Zhang on 04/05/2013: add stop_type and safe check
  */
 INT fasp_solver_dstr_pgmres (dSTRmat     *A,
@@ -1267,8 +1269,6 @@ FINISHED:
  * \author Zhiyang Zhou
  * \date   2010/11/28
  *
- * Modified by Chensong Zhang on 05/01/2012
- * Modified by Feiteng Huang on 09/26/2012: matrix free
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */
 INT fasp_solver_pgmres (mxv_matfree  *mf,

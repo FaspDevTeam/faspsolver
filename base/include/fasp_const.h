@@ -1,25 +1,18 @@
-/*! \file fasp_const.h
- *  \brief Definition of all kinds of messages, including error messages,
+/*! \file  fasp_const.h
+ *
+ *  \brief Definition of all kinds of FASP constants, including error messages,
  *         solver types, etc.
  *
- *  \note  This is internal use only. Do NOT change.
- *
  *---------------------------------------------------------------------------------
- *  Created  by Chensong Zhang on 03/20/2010.
- *  Modified by Chensong Zhang on 12/06/2011.
- *  Modified by Chensong Zhang on 12/25/2011.
- *  Modified by Chensong Zhang on 04/22/2012.
- *  Modified by Ludmil Zikatanov on 02/15/2013: CG -> SMOOTHER_CG.
- *  Modified by Chensong Zhang on 02/16/2013: GS -> SMOOTHER_GS, etc.
- *  Modified by Chensong Zhang on 04/09/2013: Add safe Krylov methods.
- *  Modified by Chensong Zhang on 09/22/2013: Clean up Doxygen.
- *  Modified by Chensong Zhang on 09/17/2013: Filename changed from message.h.
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
+ *  \warning This is for internal use only. Do NOT change!
  */
 
-#ifndef __FASP_MESSAGES__          /*-- allow multiple inclusions --*/
-#define __FASP_MESSAGES__
+#ifndef __FASP_CONST__             /*-- allow multiple inclusions --*/
+#define __FASP_CONST__
 
 /**
  * \brief Definition of return status and error messages
@@ -262,7 +255,7 @@
 #define STAG_RATIO           1e-4  /**< Stagnation tolerance = tol*STAGRATIO */
 #define OPENMP_HOLDS         2000  /**< Smallest size for OpenMP version */
 
-#endif                             /* end if for __FASP_MESSAGES__ */
+#endif                             /* end if for __FASP_CONST__ */
 
 /*---------------------------------*/
 /*--        End of File          --*/

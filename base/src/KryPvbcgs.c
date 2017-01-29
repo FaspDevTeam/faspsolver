@@ -1,15 +1,23 @@
-/*! \file KryPvbcgs.c
+/*! \file  KryPvbcgs.c
  *
  *  \brief Krylov subspace methods -- Preconditioned BiCGstab
  *
- *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c, 
- *        BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
+ *  \note  This file contains Level-3 (Kry) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, BlaSpmvBLC.c,
+ *         BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
  *
- *  \note Refer to Y. Saad 2003
- *        Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *  \note  See KrySPbcgs.c for a safer version
  *
- *  \note See KrySPbcgs.c for a safer version
+ *  Reference:
+ *         Y. Saad 2003
+ *         Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2016--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
+ *
+ *  // TODO: Is this version better? Remove the older version! --Chensong
  */
 
 #include <math.h>

@@ -1,9 +1,14 @@
-/*! \file BlaEigen.c
+/*! \file  BlaEigen.c
  *
  *  \brief Subroutines for computing the extreme eigenvalues
  *
- *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxVector.c, BlaArray.c, BlaSpmvCSR.c, and BlaVector.c
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         AuxVector.c, BlaArray.c, BlaSpmvCSR.c, and BlaVector.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h> 

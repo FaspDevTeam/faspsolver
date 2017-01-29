@@ -1,11 +1,16 @@
-/*! \file SolAMG.c
+/*! \file  SolAMG.c
  *
  *  \brief AMG method as an iterative solver
  *
- *  \note This file contains Level-5 (Sol) functions. It requires
- *        AuxMessage.c, AuxTiming.c, AuxVector.c, BlaSparseCSR.c, KrySPgmres.c, 
- *        PreAMGSetupRS.c, PreAMGSetupSA.c, PreAMGSetupUA.c, PreDataInit.c, 
- *        and PreMGSolve.c
+ *  \note  This file contains Level-5 (Sol) functions. It requires:
+ *         AuxMessage.c, AuxTiming.c, AuxVector.c, BlaSparseCSR.c, KrySPgmres.c,
+ *         PreAMGSetupRS.c, PreAMGSetupSA.c, PreAMGSetupUA.c, PreDataInit.c,
+ *         and PreMGSolve.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>
@@ -36,7 +41,6 @@
  *       Appendix A.7 (by A. Brandt, P. Oswald and K. Stuben)
  *       Academic Press Inc., San Diego, CA, 2001.
  *
- * Modified by Chensong Zhang on 01/10/2012
  * Modified by Chensong Zhang on 07/26/2014: Add error handling for AMG setup
  */
 void fasp_solver_amg (const dCSRmat  *A,

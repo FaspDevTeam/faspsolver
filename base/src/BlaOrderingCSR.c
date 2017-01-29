@@ -1,8 +1,13 @@
-/*! \file BlaOrderingCSR.c
+/*! \file  BlaOrderingCSR.c
  *
  *  \brief Subroutines for generating ordering using algebraic information
  *
- *  \note This file contains Level-1 (Bla) functions.
+ *  \note  This file contains Level-1 (Bla) functions.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "fasp.h"

@@ -1,17 +1,23 @@
-/*! \file KrySPgmres.c
+/*! \file  KrySPgmres.c
  *
  *  \brief Krylov subspace methods -- Preconditioned GMRes with safety net
  *
- *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxVector.c, BlaArray.c, 
- *        BlaSpmvBLC.c, BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
+ *  \note  This file contains Level-3 (Kry) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxVector.c, BlaArray.c,
+ *         BlaSpmvBLC.c, BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
  *
- *  \note Refer to Y. Saad 2003
- *        Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *  \note  See also pgmres.c for a variable restarting version.
  *
- *  \note See also pgmres.c for a variable restarting version.
+ *  \note  See KryPgmres.c for a version without safety net
  *
- *  \note See KryPgmres.c for a version without safety net
+ *  Reference:
+ *         Y. Saad 2003
+ *         Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2013--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -51,6 +57,7 @@
  *
  * \author Chensong Zhang
  * \date   04/05/2013
+ *
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */
 INT fasp_solver_dcsr_spgmres (const dCSRmat  *A,

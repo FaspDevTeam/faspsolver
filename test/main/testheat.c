@@ -1,12 +1,11 @@
-/**
- *    Testing the FASP FEM assembling routines. 
+/*! \file  testheat.c
  *
- *------------------------------------------------------
- *
- */
-
-/*! \file testheat.c
  *  \brief The main test function for FASP FEM assembling.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2011--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>

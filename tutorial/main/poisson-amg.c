@@ -1,12 +1,15 @@
-/*! \file poisson-amg.c
+/*! \file  poisson-amg.c
  *
  *  \brief The first test example for FASP: using AMG to solve 
  *         the discrete Poisson equation from P1 finite element.
  *         C version.
  *
- *  \note  AMG example for FASP: C version
+ *  \note  Solving the Poisson equation (P1 FEM) with AMG: C version
  *
- *  Solving the Poisson equation (P1 FEM) with AMG
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2011--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "fasp.h"

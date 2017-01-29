@@ -1,14 +1,15 @@
-/*! \file ItrAuxiliary.inl
+/*! \file  ItrAuxiliary.inl
  *
  *  \brief Read, write, and other auxiliary routines. Also routines to convert
  *         matrix formats
  *
- *------------------------------------------------------
- * C-version: by Ludmil Zikatanov 2010-04-08
- *------------------------------------------------------
+ *  \note  This file contains Level-2 (Itr) functions, which are used in:
+ *         ItrSmootherCSR.c
  *
- *  \note This file contains Level-2 (Itr) functions, which are used in
- *        ItrSmootherCSR.c
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

@@ -1,9 +1,14 @@
-/*! \file XtrUmfpack.c
+/*! \file  XtrUmfpack.c
  *
  *  \brief Interface to UMFPACK direct solvers
  *
  *  Reference for SuiteSparse:
  *  http://faculty.cse.tamu.edu/davis/suitesparse.html
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>
@@ -97,8 +102,6 @@ INT fasp_solver_umfpack (dCSRmat *ptrA,
  *
  * \author Xiaozhe Hu
  * \date   10/20/2010
- *
- * Modified by Xiaozhe Hu on 05/02/2014
  */
 void* fasp_umfpack_factorize (dCSRmat *ptrA,
                               const SHORT prtlvl)
@@ -151,8 +154,6 @@ void* fasp_umfpack_factorize (dCSRmat *ptrA,
  *
  * \author Xiaozhe Hu
  * \date   10/20/2010
- * 
- * Modified by Xiaozhe on 05/10/2014
  */
 INT fasp_umfpack_solve (dCSRmat *ptrA,
                         dvector *b,

@@ -1,9 +1,14 @@
-/*! \file BlaSmallMatInv.c
+/*! \file  BlaSmallMatInv.c
  *
  *  \brief Find inversion of *small* dense matrices in row-major format
  *
- *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxMemory.c
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         AuxMemory.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "fasp.h"

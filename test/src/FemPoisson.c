@@ -1,6 +1,11 @@
-/*! \file FemPoisson.c
+/*! \file  FemPoisson.c
  *
  *  \brief Setup P1 FEM for the Poisson's equation
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

@@ -1,10 +1,15 @@
-/*! \file BlaFormat.c
+/*! \file  BlaFormat.c
  *
  *  \brief Subroutines for matrix format conversion
  *
- *  \note This file contains Level-1 (Bla) functions. It requires
- *        AuxArray.c, AuxMemory.c, BlaSparseBSR.c, BlaSparseCSR.c,
- *        and BlaSparseCSRL.c
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, BlaSparseBSR.c, BlaSparseCSR.c,
+ *         and BlaSparseCSRL.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "fasp.h"
@@ -73,8 +78,7 @@ SHORT fasp_format_dcoo_dcsr (const dCOOmat  *A,
  * \author Xuehai Huang
  * \date   08/10/2009
  *
- * Modified by Chunsheng Feng, Zheng Li
- * \date  10/12/2012
+ * Modified by Chunsheng Feng, Zheng Li on 10/12/2012
  */
 SHORT fasp_format_dcsr_dcoo (const dCSRmat  *A,
                              dCOOmat        *B)

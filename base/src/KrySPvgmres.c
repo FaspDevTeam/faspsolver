@@ -1,18 +1,24 @@
-/*! \file KrySPvgmres.c
+/*! \file  KrySPvgmres.c
  *
  *  \brief Krylov subspace methods -- Preconditioned variable-restart GMRes with
  *         safety net
  *
- *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxVector.c, BlaArray.c, 
- *        BlaSpmvBLC.c, BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
- *
- *  \note Refer to A.H. Baker, E.R. Jessup, and Tz.V. Kolev
- *        A Simple Strategy for Varying the Restart Parameter in GMRES(m)
- *        Journal of Computational and Applied Mathematics, 230 (2009)
- *        pp. 751-761. UCRL-JRNL-235266.
+ *  \note  This file contains Level-3 (Kry) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxVector.c, BlaArray.c,
+ *         BlaSpmvBLC.c, BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
  *
  *  \note See KryPvgmres.c a version without safety net
+ *
+ *  Reference:
+ *         A.H. Baker, E.R. Jessup, and Tz.V. Kolev
+ *         A Simple Strategy for Varying the Restart Parameter in GMRES(m)
+ *         Journal of Computational and Applied Mathematics, 230 (2009)
+ *         pp. 751-761. UCRL-JRNL-235266.
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2013--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
@@ -53,6 +59,7 @@
  *
  * \author Chensong Zhang
  * \date   04/06/2013
+ *
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */
 INT fasp_solver_dcsr_spvgmres (const dCSRmat  *A,

@@ -1,9 +1,14 @@
-/*! \file XtrPardiso.c
+/*! \file  XtrPardiso.c
  *
  *  \brief Interface to Intel MKL PARDISO direct solvers
  *
  *  Reference for Intel MKL PARDISO:
  *  https://software.intel.com/en-us/node/470282
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2015--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>

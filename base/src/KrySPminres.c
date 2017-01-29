@@ -1,15 +1,21 @@
-/*! \file KrySPminres.c
+/*! \file  KrySPminres.c
  *
- *  \brief Krylov subspace methods -- Preconditioned minimal residual with safety net
+ *  \brief Krylov subspace methods -- Preconditioned MINRES with safety net
  *
- *  \note This file contains Level-3 (Kry) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxVector.c, BlaArray.c, 
- *        BlaSpmvBLC.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
+ *  \note  This file contains Level-3 (Kry) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxVector.c, BlaArray.c,
+ *         BlaSpmvBLC.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
  *
- *  \note Refer to Y. Saad 2003
- *        Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *  \note  See KryPminres.c for a version without safety net
  *
- *  \note See KryPminres.c for a version without safety net
+ *  Reference:
+ *         Y. Saad 2003
+ *         Iterative methods for sparse linear systems (2nd Edition), SIAM
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2013--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

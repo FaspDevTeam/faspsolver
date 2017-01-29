@@ -1,6 +1,11 @@
-/*! \file FemHeatEqn.c
+/*! \file  FemHeatEqn.c
  *
  *  \brief Setup P1 FEM & backward Euler for the heat transfer's equation
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2012--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #define DIM 2
@@ -19,7 +24,8 @@
 /*---------------------------------*/
 
 /** 
- * \fn static void localb (double (*node)[2], double *b, int num_qp, int nt, double dt)
+ * \fn static void localb (double (*node)[2], double *b, int num_qp, int nt, 
+ *                         double dt)
  *
  * \brief Form local right-hand side b from triangle node
  *

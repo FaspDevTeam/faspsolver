@@ -1,6 +1,11 @@
-/*! \file FenQuadrature.c
+/*! \file  FenQuadrature.c
  *
  *  \brief Quadrature rules for FEM assembling
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2008--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <stdio.h>

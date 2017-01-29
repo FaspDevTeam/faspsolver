@@ -1,11 +1,16 @@
-/*! \file ItrSmootherCSRcr.c
+/*! \file  ItrSmootherCSRcr.c
  *
  *  \brief Smoothers for dCSRmat matrices using compatible relaxation
  *
- *  \note Restricted-smoothers for compatible relaxation, C/F smoothing, etc.
+ *  \note  Restricted smoothers for compatible relaxation, C/F smoothing, etc.
  *
- *  \note This file contains Level-2 (Itr) functions. It requires
- *        AuxMessage.c
+ *  \note  This file contains Level-2 (Itr) functions. It requires:
+ *         AuxMessage.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>

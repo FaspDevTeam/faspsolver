@@ -1,12 +1,17 @@
-/*! \file BlaSmallMat.c
+/*! \file  BlaSmallMat.c
  *
  *  \brief BLAS operations for *small* dense matrices
  *
- *  \note This file contains Level-1 (Bla) functions. It requires
- *        BlaSparseBSR.c, BlaSparseCSR.c, BlaSpmvCSR.c, and PreDataInit.c
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         BlaSparseBSR.c, BlaSparseCSR.c, BlaSpmvCSR.c, and PreDataInit.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  *
  *  \warning These rountines are designed for full matrices only!
- * 
+ *
  *  \warning This file contains very long lines. Not print friendly!
  */
 

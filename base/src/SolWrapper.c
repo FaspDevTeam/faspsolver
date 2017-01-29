@@ -1,10 +1,15 @@
-/*! \file SolWrapper.c
+/*! \file  SolWrapper.c
  *
  *  \brief Wrappers for accessing functions by advanced users
  *
- *  \note This file contains Level-5 (Sol) functions. It requires
- *        AuxParam.c, BlaFormat.c, BlaSparseBSR.c, BlaSparseCSR.c, SolAMG.c, 
- *        SolBSR.c, and SolCSR.c
+ *  \note  This file contains Level-5 (Sol) functions. It requires:
+ *         AuxParam.c, BlaFormat.c, BlaSparseBSR.c, BlaSparseCSR.c, SolAMG.c,
+ *         SolBSR.c, and SolCSR.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "fasp.h"

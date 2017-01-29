@@ -1,9 +1,14 @@
-/*! \file AuxInput.c
+/*! \file  AuxInput.c
  *
  *  \brief Read and check input parameters
  *
- *  \note This file contains Level-0 (Aux) functions. It requires
- *        AuxMemory.c and AuxMessage.c
+ *  \note  This file contains Level-0 (Aux) functions. It requires:
+ *         AuxMemory.c and AuxMessage.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include "fasp.h"
@@ -97,8 +102,6 @@ SHORT fasp_param_check (input_param *inparam)
  * \date   03/20/2010 
  *
  * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle
- * Modified by Chensong Zhang on 01/10/2012
- * Modified by Ludmil Zikatanov on 02/15/2013
  * Modified by Chensong Zhang on 05/10/2013: add a new input.
  * Modified by Chensong Zhang on 03/23/2015: skip unknown keyword.
  */

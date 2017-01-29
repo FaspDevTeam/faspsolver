@@ -1,20 +1,11 @@
-/**
- *      Regression test for FASP
+/*! \file  regression.c
  *
- *------------------------------------------------------
- *
- *      Created  by Chensong Zhang on 03/20/2010
- *      Modified by Chensong Zhang on 09/02/2011
- *      Modified by Chenosng Zhang on 12/03/2011
- *      Modified by Chensong Zhang on 03/20/2012
- *      Modified by Chensong Zhang on 01/23/2017
- *
- *------------------------------------------------------
- *
- */
-
-/*! \file regression.c
  *  \brief Regression tests for iterative solvers
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <time.h>

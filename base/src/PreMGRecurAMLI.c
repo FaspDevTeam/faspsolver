@@ -1,14 +1,19 @@
-/*! \file PreMGRecurAMLI.c
+/*! \file  PreMGRecurAMLI.c
  *
  *  \brief Abstract AMLI multilevel iteration -- recursive version
  *
- *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxParam.c, AuxVector.c,
- *        BlaSchwarzSetup.c, BlaArray.c, BlaSpmvBSR.c, BlaSpmvCSR.c,
- *        ItrSmootherBSR.c, ItrSmootherCSR.c, ItrSmootherCSRpoly.c, KryPcg.c,
- *        KryPvfgmres.c, KrySPcg.c, KrySPvgmres.c, PreBSR.c, and PreCSR.c
+ *  \note  This file contains Level-4 (Pre) functions. It requires:
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxParam.c, AuxVector.c,
+ *         BlaSchwarzSetup.c, BlaArray.c, BlaSpmvBSR.c, BlaSpmvCSR.c,
+ *         ItrSmootherBSR.c, ItrSmootherCSR.c, ItrSmootherCSRpoly.c, KryPcg.c,
+ *         KryPvfgmres.c, KrySPcg.c, KrySPvgmres.c, PreBSR.c, and PreCSR.c
  *
- *  \note This file includes AMLI and non-linear AMLI cycles
+ *  \note  This file includes both AMLI and non-linear AMLI cycles
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
