@@ -3,7 +3,7 @@
  *  \brief Smoothers for dCSRmat matrices using poly. approx. to A^{-1}. 
  *
  *  \note  This file contains Level-2 (Itr) functions. It requires:
- *         AuxArray.c, AuxMemory.c, BlaArray.c, and BlaSpmvCSR.c
+ *         AuxArray.c, AuxMemory.c, AuxThreads.c, BlaArray.c, and BlaSpmvCSR.c
  *
  *  Reference: 
  *         Johannes K. Kraus, Panayot S. Vassilevski, Ludmil T. Zikatanov

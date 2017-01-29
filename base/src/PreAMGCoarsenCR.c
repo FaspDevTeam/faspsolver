@@ -3,7 +3,7 @@
  *  \brief Coarsening with Brannick-Falgout strategy.
  *
  *  \note  This file contains Level-4 (Pre) functions. It requires:
- *         AuxMemory.c and ItrSmootherCSRcr.c
+ *         AuxMemory.c, AuxThreads.c, and ItrSmootherCSRcr.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2010--2017 by the FASP team. All rights reserved.

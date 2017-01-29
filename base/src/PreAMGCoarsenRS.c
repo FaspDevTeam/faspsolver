@@ -3,8 +3,8 @@
  *  \brief Coarsening with a modified Ruge-Stuben strategy.
  *
  *  \note  This file contains Level-4 (Pre) functions. It requires:
- *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxVector.c, BlaSparseCSR.c,
- *         and PreAMGCoarsenCR.c
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxThreads.c, AuxVector.c,
+ *         BlaSparseCSR.c, and PreAMGCoarsenCR.c
  *
  *  Reference:
  *         Multigrid by U. Trottenberg, C. W. Oosterlee and A. Schuller

@@ -3,8 +3,8 @@
  *  \brief Interpolation operators for AMG based on energy-min
  *
  *  \note  This file contains Level-4 (Pre) functions. It requires:
- *         AuxArray.c, AuxMemory.c, AuxVector.c, BlaSmallMatLU.c, BlaSparseCSR.c,
- *         KryPcg.c, and PreCSR.c
+ *         AuxArray.c, AuxMemory.c, AuxThreads.c, AuxVector.c, BlaSmallMatLU.c,
+ *         BlaSparseCSR.c, KryPcg.c, and PreCSR.c
  *
  *  Reference: 
  *         J. Xu and L. Zikatanov

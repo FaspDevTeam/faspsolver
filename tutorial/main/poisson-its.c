@@ -26,8 +26,8 @@
  */
 int main (int argc, const char * argv[]) 
 {
-    input_param          inparam;  // parameters from input files
-    itsolver_param       itparam;  // parameters for itsolver
+    input_param     inparam;  // parameters from input files
+    ITS_param       itparam;  // parameters for itsolver
 
     printf("\n========================================");
     printf("\n||   FASP: ITS example -- C version   ||");

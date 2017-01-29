@@ -6,7 +6,8 @@
  *
  *  \note  This file contains Level-1 (Bla) functions. It requires:
  *         AuxArray.c, AuxConvert.c, AuxMemory.c, AuxMessage.c, AuxVector.c,
- *         and BlaFormat.c
+ *         BlaFormat.c, BlaSparseBSR.c, BlaSparseCOO.c, BlaSparseCSR.c,
+ *         and BlaSpmvCSR.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.

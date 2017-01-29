@@ -100,7 +100,7 @@ int main (int argc, const char *argv[])
     h = 1.0/((REAL) nx);
     
     u = (REAL *)malloc((nx+1)*(nx+1)*sizeof(REAL));
-    fasp_array_set((nx+1)*(nx+1), u, 0.0);
+    fasp_darray_set((nx+1)*(nx+1), u, 0.0);
     
     b = (REAL *)malloc((nx+1)*(nx+1)*sizeof(REAL));
     for (i = 0; i <= nx; i++) {

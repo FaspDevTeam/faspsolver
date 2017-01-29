@@ -3,8 +3,8 @@
  *  \brief Smoothers for dBSRmat matrices
  *
  *  \note  This file contains Level-2 (Itr) functions. It requires:
- *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxTiming.c, BlaSmallMatInv.c,
- *         BlaSmallMat.c, BlaArray.c, BlaSpmvBSR.c, and PreBSR.c
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxThreads.c, AuxTiming.c,
+ *         BlaSmallMatInv.c, BlaSmallMat.c, BlaArray.c, BlaSpmvBSR.c, and PreBSR.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.

@@ -3,7 +3,7 @@
  *  \brief Sparse matrix operations for dCOOmat matrices
  *
  *  \note  This file contains Level-1 (Bla) functions. It requires:
- *         AuxMemory.c
+ *         AuxMemory.c and AuxThreads.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.

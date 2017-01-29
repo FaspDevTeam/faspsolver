@@ -3,7 +3,7 @@
  *  \brief Smoothers for dSTRmat matrices
  *
  *  \note  This file contains Level-2 (Itr) functions. It requires:
- *         AuxArray.c, AuxMemory.c, AuxVector.c, BlaSmallMat.c, BlaSmallMatInv.c,
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, BlaSmallMat.c, BlaSmallMatInv.c,
  *         BlaSmallMatLU.c, and BlaSpmvSTR.c
  *
  *---------------------------------------------------------------------------------
