@@ -3,7 +3,7 @@
  *  \brief BLAS1 operations for vectors
  *
  *  \note  This file contains Level-1 (Bla) functions. It requires:
- *         AuxMessage.c and BlaArray.c
+ *         AuxMessage.c, AuxThreads.c, and BlaArray.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.

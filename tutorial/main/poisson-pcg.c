@@ -27,10 +27,10 @@
  */
 int main (int argc, const char * argv[]) 
 {
-    input_param          inparam;  // parameters from input files
-    itsolver_param       itparam;  // parameters for itsolver
-    AMG_param            amgparam; // parameters for AMG
-    ILU_param            iluparam; // parameters for ILU
+    input_param     inparam;  // parameters from input files
+    ITS_param       itparam;  // parameters for itsolver
+    AMG_param       amgparam; // parameters for AMG
+    ILU_param       iluparam; // parameters for ILU
 
     printf("\n========================================");
     printf("\n||   FASP: PCG example -- C version   ||");

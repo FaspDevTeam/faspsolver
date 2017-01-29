@@ -4,10 +4,10 @@
  *
  *  \note  This file contains Level-5 (Sol) functions. It requires:
  *         AuxMemory.c, AuxMessage.c, AuxParam.c, AuxTiming.c, AuxVector.c,
- *         BlaILUSetupCSR.c, BlaSchwarzSetup.c, BlaSparseCSR.c, KryPbcgs.c,
- *         KryPcg.c, KryPgcg.c, KryPgcr.c, KryPgmres.c, KryPminres.c, KryPvbcgs.c,
- *         KryPvfgmres.c, KryPvgmres.c, PreAMGSetupRS.c, PreAMGSetupSA.c,
- *         PreAMGSetupUA.c, PreCSR.c, and PreDataInit.c
+ *         BlaILUSetupCSR.c, BlaSchwarzSetup.c, BlaSparseCheck.c, BlaSparseCSR.c, 
+ *         KryPbcgs.c, KryPcg.c, KryPgcg.c, KryPgcr.c, KryPgmres.c, KryPminres.c,
+ *         KryPvbcgs.c, KryPvfgmres.c, KryPvgmres.c, PreAMGSetupRS.c,
+ *         PreAMGSetupSA.c, PreAMGSetupUA.c, PreCSR.c, and PreDataInit.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.

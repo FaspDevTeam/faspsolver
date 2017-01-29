@@ -3,7 +3,7 @@
  *  \brief BLAS operations for dBSRmat matrices
  *
  *  \note  This file contains Level-1 (Bla) functions. It requires:
- *         AuxArray.c, AuxMemory.c, BlaSmallMat.c, and BlaArray.c
+ *         AuxArray.c, AuxMemory.c, AuxThreads.c, BlaSmallMat.c, and BlaArray.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.

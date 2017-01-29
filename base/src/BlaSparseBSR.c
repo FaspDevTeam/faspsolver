@@ -3,7 +3,8 @@
  *  \brief Sparse matrix operations for dBSRmat matrices
  *
  *  \note  This file contains Level-1 (Bla) functions. It requires:
- *         AuxArray.c, AuxMemory.c, BlaSmallMatInv.c, and BlaSmallMat.c
+ *         AuxArray.c, AuxMemory.c, AuxThreads.c, BlaSmallMat.c, 
+ *         and BlaSmallMatInv.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.

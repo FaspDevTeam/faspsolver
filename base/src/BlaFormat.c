@@ -3,7 +3,7 @@
  *  \brief Subroutines for matrix format conversion
  *
  *  \note  This file contains Level-1 (Bla) functions. It requires:
- *         AuxArray.c, AuxMemory.c, BlaSparseBSR.c, BlaSparseCSR.c,
+ *         AuxArray.c, AuxMemory.c, AuxThreads.c, BlaSparseBSR.c, BlaSparseCSR.c,
  *         and BlaSparseCSRL.c
  *
  *---------------------------------------------------------------------------------

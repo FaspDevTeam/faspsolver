@@ -3,8 +3,8 @@
  *  \brief Sparse matrix operations for dCSRmat matrices
  *
  *  \note  This file contains Level-1 (Bla) functions. It requires:
- *         AuxArray.c, AuxMemory.c, BlaSparseCSR.c, BlaSparseUtil.c,
- *         and BlaArray.c
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxSort.c, AuxThreads.c,
+ *         AuxVector.c, and BlaSpmvCSR.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
@@ -137,27 +137,27 @@ void fasp_dcsr_alloc (const INT  m,
                       dCSRmat   *A)
 {
     if ( m > 0 ) {
-        A->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
+        A->IA = (INT*)fasp_mem_calloc(m+1,sizeof(INT));
     }
     else {
         A->IA = NULL;
     }
     
     if ( n > 0 ) {
-        A->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
+        A->JA = (INT*)fasp_mem_calloc(nnz,sizeof(INT));
     }
     else {
         A->JA = NULL;
     }
     
     if ( nnz > 0 ) {
-        A->val=(REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
+        A->val = (REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
     }
     else {
         A->val = NULL;
     }
     
-    A->row=m; A->col=n; A->nnz=nnz;
+    A->row = m; A->col = n; A->nnz = nnz;
     
     return;
 }
@@ -867,7 +867,7 @@ void fasp_dcsr_cp (const dCSRmat *A,
  * \author Chensong Zhang
  * \date   04/06/2010
  *
- *  Modified by Chunsheng Feng, Zheng Li on 06/20/2012
+ * Modified by Chunsheng Feng, Zheng Li on 06/20/2012
  */
 void fasp_icsr_trans (const iCSRmat *A,
                       iCSRmat       *AT)
@@ -1009,10 +1009,12 @@ INT fasp_dcsr_trans (const dCSRmat *A,
 }
 
 /*
- * \fn void fasp_dcsr_transpose (INT *row[2], INT *col[2], REAL *val[2], 
+ * \fn void fasp_dcsr_transpose (INT *row[2], INT *col[2], REAL *val[2],
  *                               INT *nn, INT *tniz)
  *
  * \brief Transpose of a dCSRmat matrix
+ *
+ * \note   This subroutine transpose in CSR format IN ORDER
  *
  * \param row[2]     Pointers of the rows of the matrix and its transpose
  * \param col[2]     Pointers of the columns of the matrix and its transpose
@@ -1022,8 +1024,6 @@ INT fasp_dcsr_trans (const dCSRmat *A,
  *
  * \author Shuo Zhang
  * \date   07/06/2009
- *
- * \note   This subroutine transpose in CSR format IN ORDER
  */
 void fasp_dcsr_transpose (INT   *row[2],
                           INT   *col[2],

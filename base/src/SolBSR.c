@@ -3,10 +3,11 @@
  *  \brief Iterative solvers for dBSRmat matrices
  *
  *  \note  This file contains Level-5 (Sol) functions. It requires:
- *         AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c, BlaSmallMatInv.c,
- *         BlaILUSetupBSR.c, BlaSparseBSR.c, KryPbcgs.c, KryPcg.c, KryPgmres.c,
- *         KryPvbcgs.c, KryPvfgmres.c, KryPvgmres.c, PreAMGSetupSA.c,
- *         PreAMGSetupUA.c, PreBSR.c, and PreDataInit.c
+ *         AuxMemory.c, AuxMessage.c, AuxThreads.c, AuxTiming.c, AuxVector.c,
+ *         BlaSmallMatInv.c, BlaILUSetupBSR.c, BlaSparseBSR.c, BlaSparseCheck.c,
+ *         KryPbcgs.c, KryPcg.c, KryPgmres.c, KryPvbcgs.c, KryPvfgmres.c,
+ *         KryPvgmres.c, PreAMGSetupSA.c, PreAMGSetupUA.c, PreBSR.c, 
+ *         and PreDataInit.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.

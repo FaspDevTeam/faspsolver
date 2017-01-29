@@ -2,7 +2,8 @@
  *
  *  \brief Simple operations for vectors
  *
- *  \note  This file contains Level-0 (Aux) functions.
+ *  \note  This file contains Level-0 (Aux) functions. It requires:
+ *         AuxThreads.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.

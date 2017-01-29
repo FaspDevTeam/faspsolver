@@ -3,9 +3,9 @@
  *  \brief Smoothed aggregation AMG: SETUP phase
  *
  *  \note  This file contains Level-4 (Pre) functions. It requires:
- *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c,
- *         BlaILUSetupCSR.c, BlaSchwarzSetup.c, BlaSparseCSR.c, BlaSpmvCSR.c,
- *         and PreMGRecurAMLI.c
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxThreads.c, AuxTiming.c,
+ *         AuxVector.c, BlaILUSetupCSR.c, BlaSchwarzSetup.c, BlaSparseCSR.c, 
+ *         BlaSpmvCSR.c, and PreMGRecurAMLI.c
  *
  *  \note  Setup A, P, PT and levels using the unsmoothed aggregation algorithm
  *

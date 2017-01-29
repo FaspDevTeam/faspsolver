@@ -3,7 +3,7 @@
  *  \brief Setup incomplete LU decomposition for dSTRmat matrices
  *
  *  \note  This file contains Level-1 (Bla) functions. It requires:
- *         AuxMemory.c, BlaSmallMatInv.c, BlaSmallMat.c, BlaSparseSTR.c,
+ *         AuxMemory.c, BlaSmallMat.c, BlaSmallMatInv.c, BlaSparseSTR.c,
  *         and BlaArray.c
  *
  *---------------------------------------------------------------------------------

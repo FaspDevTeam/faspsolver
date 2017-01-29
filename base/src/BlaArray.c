@@ -2,7 +2,8 @@
  *
  *  \brief BLAS1 operations for arrays
  *
- *  \note  This file contains Level-1 (Bla) functions.
+ *  \note  This file contains Level-1 (Bla) functions. It requires:
+ *         AuxThreads.c
  */
 
 #include <math.h>

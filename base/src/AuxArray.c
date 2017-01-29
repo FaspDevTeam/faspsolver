@@ -2,7 +2,8 @@
  *
  *  \brief Simple array operations -- init, set, copy, etc
  *
- *  \note  This file contains Level-0 (Aux) functions.
+ *  \note  This file contains Level-0 (Aux) functions. It requires:
+ *         AuxThreads.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.

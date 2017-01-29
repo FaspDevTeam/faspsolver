@@ -3,7 +3,8 @@
  *  \brief Direct and standard interpolations for classical AMG
  *
  *  \note  This file contains Level-4 (Pre) functions. It requires:
- *         AuxArray.c, AuxMemory.c, AuxMessage.c, and PreAMGInterpEM.c
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxThreads.c, 
+ *         and PreAMGInterpEM.c
  *
  *  Reference:
  *         U. Trottenberg, C. W. Oosterlee, and A. Schuller

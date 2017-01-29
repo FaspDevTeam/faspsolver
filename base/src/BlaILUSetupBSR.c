@@ -3,9 +3,9 @@
  *  \brief Setup incomplete LU decomposition for dBSRmat matrices
  *
  *  \note  This file contains Level-1 (Bla) functions. It requires:
- *         AuxArray.c, AuxMemory.c, AuxSort.c, AuxTiming.c, BlaSmallMatInv.c,
- *         BlaILU.c, BlaSmallMat.c, BlaSparseBSR.c, BlaSparseCSR.c, BlaSpmvCSR.c,
- *         and PreDataInit.c
+ *         AuxArray.c, AuxMemory.c, AuxTiming.c, BlaSmallMatInv.c, BlaILU.c,
+ *         BlaSmallMat.c, BlaSmallMatInv.c, BlaSparseBSR.c, BlaSparseCSR.c,
+ *         BlaSpmvCSR.c, and PreDataInit.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2010--2017 by the FASP team. All rights reserved.

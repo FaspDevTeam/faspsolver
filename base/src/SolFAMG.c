@@ -3,8 +3,9 @@
  *  \brief Full AMG method as an iterative solver
  *
  *  \note  This file contains Level-5 (Sol) functions. It requires:
- *         AuxMessage.c, AuxTiming.c, AuxVector.c, BlaSparseCSR.c, PreAMGSetupRS.c,
- *         PreAMGSetupSA.c, PreAMGSetupUA.c, PreDataInit.c, and PreMGSolve.c
+ *         AuxMessage.c, AuxTiming.c, AuxVector.c, BlaSparseCheck.c, BlaSparseCSR.c,
+ *         PreAMGSetupRS.c, PreAMGSetupSA.c, PreAMGSetupUA.c, PreDataInit.c, 
+ *         and PreMGSolve.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.

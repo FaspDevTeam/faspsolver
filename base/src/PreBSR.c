@@ -3,8 +3,8 @@
  *  \brief Preconditioners for dBSRmat matrices
  *
  *  \note  This file contains Level-4 (Pre) functions. It requires:
- *         AuxArray.c, AuxParam.c, AuxVector.c, BlaSmallMat.c, BlaSpmvBSR.c,
- *         BlaSpmvCSR.c, KrySPcg.c, KrySPvgmres.c, PreMGCycle.c,
+ *         AuxArray.c, AuxParam.c, AuxThreads.c, AuxVector.c, BlaSmallMat.c,
+ *         BlaSpmvBSR.c, BlaSpmvCSR.c, KrySPcg.c, KrySPvgmres.c, PreMGCycle.c,
  *         and PreMGRecurAMLI.c
  *
  *---------------------------------------------------------------------------------

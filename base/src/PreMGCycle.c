@@ -3,10 +3,10 @@
  *  \brief Abstract multigrid cycle -- non-recursive version
  *
  *  \note  This file contains Level-4 (Pre) functions. It requires:
- *         AuxArray.c, AuxMessage.c, AuxVector.c, BlaSchwarzSetup.c,
- *         BlaArray.c, BlaSpmvBSR.c, BlaSpmvCSR.c, ItrSmootherBSR.c,
- *         ItrSmootherCSR.c, ItrSmootherCSRpoly.c, KryPcg.c, KryPvgmres.c,
- *         KrySPcg.c, and KrySPvgmres.c
+ *         AuxArray.c, AuxMessage.c, AuxVector.c, BlaArray.c, BlaSchwarzSetup.c,
+ *         BlaSpmvBSR.c, BlaSpmvCSR.c, ItrSmootherBSR.c, ItrSmootherCSR.c,
+ *         ItrSmootherCSRpoly.c, KryPcg.c, KryPvgmres.c, KrySPcg.c,
+ *         and KrySPvgmres.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
