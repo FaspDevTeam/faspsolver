@@ -25,21 +25,6 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_darray_null (REAL *x)
- *
- * \brief Initialize an array
- *
- * \param x    Pointer to the vector
- *
- * \author Chensong Zhang
- * \date   2010/04/03  
- */
-void fasp_darray_null (REAL *x) 
-{
-    x = NULL;
-}
-
-/**
  * \fn void fasp_darray_set (const INT n, REAL *x, const REAL val)
  *
  * \brief Set initial value for an array to be x=val

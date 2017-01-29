@@ -15,8 +15,6 @@
 
 /*-------- In file: AuxArray.c --------*/
 
-void fasp_darray_null (REAL *x) ;
-
 void fasp_darray_set (const INT    n,
                       REAL        *x,
                       const REAL   val);
@@ -264,8 +262,6 @@ void fasp_ivec_alloc (const INT  m,
 void fasp_dvec_free (dvector *u);
 
 void fasp_ivec_free (ivector *u);
-
-void fasp_dvec_null (dvector *x) ;
 
 void fasp_dvec_rand (const INT  n,
                      dvector   *x);
@@ -799,8 +795,6 @@ void fasp_dbsr_alloc (const INT  ROW,
 
 void fasp_dbsr_free (dBSRmat *A);
 
-void fasp_dbsr_null (dBSRmat *A);
-
 void fasp_dbsr_cp (const dBSRmat *A,
                    dBSRmat       *B);
 
@@ -880,10 +874,6 @@ void fasp_dcsr_alloc (const INT  m,
 void fasp_dcsr_free (dCSRmat *A);
 
 void fasp_icsr_free (iCSRmat *A);
-
-void fasp_dcsr_null (dCSRmat *A);
-
-void fasp_icsr_null (iCSRmat *A);
 
 INT fasp_dcsr_bandwidth (const dCSRmat  *A);
 
@@ -985,8 +975,6 @@ SHORT fasp_check_iCSRmat (const iCSRmat *A);
 
 
 /*-------- In file: BlaSparseSTR.c --------*/
-
-void fasp_dstr_null (dSTRmat *A);
 
 dSTRmat fasp_dstr_create (const INT  nx,
                           const INT  ny,
@@ -2410,9 +2398,7 @@ void fasp_precond_free (const SHORT   precond_type,
 
 /*-------- In file: PreDataInit.c --------*/
 
-void fasp_precond_null (precond *pcdata);
-
-void fasp_precond_data_null (precond_data *pcdata);
+void fasp_precond_data_init (precond_data *pcdata);
 
 AMG_data * fasp_amg_data_create (SHORT max_levels);
 
@@ -2428,8 +2414,6 @@ void fasp_ilu_data_create (const INT   iwk,
                            ILU_data   *iludata);
 
 void fasp_ilu_data_free (ILU_data *ILUdata);
-
-void fasp_ilu_data_null (ILU_data *ILUdata);
 
 void fasp_schwarz_data_free (SWZ_data *Schwarz);
 

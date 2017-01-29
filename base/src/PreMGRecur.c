@@ -11,7 +11,7 @@
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
- *  //TODO: Not used any more. Will be removed! --Chensong
+ *  TODO: Not used any more. Will be removed! --Chensong
  */
 
 #include <time.h>

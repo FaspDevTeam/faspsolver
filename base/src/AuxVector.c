@@ -171,21 +171,6 @@ void fasp_ivec_free (ivector *u)
 }
 
 /**
- * \fn void fasp_dvec_null (dvector *x) 
- *
- * \brief Initialize dvector
- *
- * \param x   Pointer to dvector which needs to be initialized
- *
- * \author Chensong Zhang
- * \date 2010/04/03  
- */
-void fasp_dvec_null (dvector *x) 
-{
-    x->row = 0; x->val = NULL;
-}
-
-/**
  * \fn void fasp_dvec_rand (const INT n, dvector *x)
  *
  * \brief Generate random REAL vector in the range from 0 to 1

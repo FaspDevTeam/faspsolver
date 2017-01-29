@@ -21,30 +21,6 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_dstr_null (dSTRmat *A)
- *
- * \brief Initialize sparse matrix on structured grid
- *
- * \param A  Pointer to the dSTRmat matrix
- *
- * \author Shiquan Zhang, Xiaozhe Hu
- * \date   05/17/2010 
- */
-void fasp_dstr_null (dSTRmat *A)
-{    
-    A->nx=0;
-    A->ny=0;
-    A->nz=0;
-    A->nxy=0;
-    A->ngrid=0;
-    A->nband=0;
-    A->nc=0;    
-    A->offsets=NULL;
-    A->diag=NULL;
-    A->offdiag=NULL;
-}
-
-/**
  * \fn dSTRmat fasp_dstr_create (const INT nx, const INT ny, const INT nz, 
  *                               const INT nc, const INT nband, INT *offsets)
  *
