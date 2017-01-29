@@ -186,33 +186,6 @@ void fasp_mem_usage ()
 }
 
 /**
- * \fn SHORT fasp_mem_check (const void *ptr, const char *message, const SHORT ERR)
- *
- * \brief Check wether a point is null or not.
- *
- * \param ptr       Void pointer to be checked
- * \param message   Error message to print
- * \param ERR       Integer error code
- *
- * \return          FASP_SUCCESS or error code
- *
- * \author Chensong Zhang
- * \date   11/16/2009
- */
-SHORT fasp_mem_check (const void  *ptr,
-                      const char  *message,
-                      const SHORT  ERR)
-{
-    if ( ptr == NULL ) {
-        printf("### ERROR: %s", message);
-        return ERR;
-    }
-    else {
-        return FASP_SUCCESS;
-    }
-}
-
-/**
  * \fn SHORT fasp_mem_iludata_check (const ILU_data *iludata)
  *
  * \brief Check wether a ILU_data has enough work space

@@ -1,7 +1,7 @@
     1195 ./base/include/fasp.h
      404 ./base/include/fasp_block.h
      262 ./base/include/fasp_const.h
-    2926 ./base/include/fasp_functs.h
+    2922 ./base/include/fasp_functs.h
       51 ./base/include/fasp_grid.h
      120 ./base/src/BlaSpmvMatFree.inl
      235 ./base/src/ItrAuxiliary.inl
@@ -19,7 +19,7 @@
       86 ./base/src/AuxGivens.c
      769 ./base/src/AuxGraphics.c
      797 ./base/src/AuxInput.c
-     243 ./base/src/AuxMemory.c
+     216 ./base/src/AuxMemory.c
      295 ./base/src/AuxMessage.c
      994 ./base/src/AuxParam.c
      404 ./base/src/AuxSort.c
@@ -101,4 +101,4 @@
      247 ./base/src/SolMatFree.c
      419 ./base/src/SolSTR.c
      320 ./base/src/SolWrapper.c
-   86683 total
+   86652 total

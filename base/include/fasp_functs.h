@@ -98,10 +98,6 @@ void fasp_mem_free (void *mem);
 
 void fasp_mem_usage ();
 
-SHORT fasp_mem_check (const void  *ptr,
-                      const char  *message,
-                      const SHORT  ERR);
-
 SHORT fasp_mem_iludata_check (const ILU_data *iludata);
 
 
