@@ -18,6 +18,8 @@
  *  Copyright (C) 2010--2017 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
+ *
+ *  TODO: Use one single function for all! --Chensong
  */
 
 #include <math.h>

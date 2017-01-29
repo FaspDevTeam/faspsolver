@@ -21,23 +21,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_precond_null (precond *pcdata)
- *
- * \brief Initialize precond data
- *
- * \param pcdata   Pointer to precond
- *
- * \author Chensong Zhang
- * \date   2010/03/23
- */
-void fasp_precond_null (precond *pcdata)
-{
-    pcdata->data = NULL;
-    pcdata->fct  = NULL;
-}
-
-/**
- * \fn void fasp_precond_data_null (precond_data *pcdata)
+ * \fn void fasp_precond_data_init (precond_data *pcdata)
  *
  * \brief Initialize precond_data
  *
@@ -46,7 +30,7 @@ void fasp_precond_null (precond *pcdata)
  * \author Chensong Zhang
  * \date   2010/03/23
  */
-void fasp_precond_data_null (precond_data *pcdata)
+void fasp_precond_data_init (precond_data *pcdata)
 {
     pcdata->AMG_type            = CLASSIC_AMG;
     pcdata->print_level         = PRINT_NONE;
@@ -116,7 +100,7 @@ void fasp_amg_data_free (AMG_data   *mgl,
     
     INT i;
     
-    for (i=0; i<max_levels; ++i) {
+    for ( i=0; i<max_levels; ++i ) {
         fasp_dcsr_free(&mgl[i].A);
         fasp_dcsr_free(&mgl[i].P);
         fasp_dcsr_free(&mgl[i].R);
@@ -128,7 +112,7 @@ void fasp_amg_data_free (AMG_data   *mgl,
         fasp_schwarz_data_free(&mgl[i].Schwarz);
     }
     
-    for (i=0; i<mgl->near_kernel_dim; ++i) {
+    for ( i=0; i<mgl->near_kernel_dim; ++i ) {
         if (mgl->near_kernel_basis[i]) fasp_mem_free(mgl->near_kernel_basis[i]);
         mgl->near_kernel_basis[i] = NULL;
     }
@@ -302,22 +286,6 @@ void fasp_ilu_data_free (ILU_data *ILUdata)
     fasp_mem_free(ILUdata->jlevU);  ILUdata->jlevU  = NULL;
 
     ILUdata->row = ILUdata->col = ILUdata->nzlu = ILUdata ->nwork = ILUdata->nb = ILUdata->nlevL = ILUdata->nlevU = 0;
-}
-
-/**
- * \fn void fasp_ilu_data_null (ILU_data *ILUdata)
- *
- * \brief Initialize ILU data
- *
- * \param ILUdata   Pointer to ILU_data
- *
- * \author Chensong Zhang
- * \date   2010/03/23
- */
-void fasp_ilu_data_null (ILU_data *ILUdata)
-{
-    ILUdata->row = ILUdata->col = ILUdata->nzlu = 0;
-    ILUdata->ijlu = NULL; ILUdata->luval = NULL;
 }
 
 /**

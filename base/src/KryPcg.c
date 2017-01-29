@@ -17,6 +17,8 @@
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
+ *  TODO: Use one single function for all! --Chensong
+ *
  *  Abstract algorithm
  *
  *  PCG method to solve A*x=b is to generate {x_k} to approximate x

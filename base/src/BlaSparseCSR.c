@@ -201,40 +201,6 @@ void fasp_icsr_free (iCSRmat *A)
 }
 
 /**
- * \fn void fasp_dcsr_null (dCSRmat *A)
- *
- * \brief Initialize CSR sparse matrix
- *
- * \param A   Pointer to the dCSRmat matrix
- *
- * \author Chensong Zhang
- * \date   2010/04/03
- */
-void fasp_dcsr_null (dCSRmat *A)
-{
-    A->row = A->col = A->nnz = 0;
-    A->IA  = A->JA  = NULL;
-    A->val = NULL;
-}
-
-/**
- * \fn void fasp_icsr_null (iCSRmat *A)
- *
- * \brief Initialize CSR sparse matrix
- *
- * \param A   Pointer to the iCSRmat matrix
- *
- * \author Chensong Zhang
- * \date   2010/04/03
- */
-void fasp_icsr_null (iCSRmat *A)
-{
-    A->row = A->col = A->nnz = 0;
-    A->IA  = A->JA  = NULL;
-    A->val = NULL;
-}
-
-/**
  * \fn INT fasp_dcsr_bandwidth (const dCSRmat *A)
  *
  * \brief Get bandwith of matrix

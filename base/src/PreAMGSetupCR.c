@@ -17,7 +17,7 @@
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
- *  //TODO: Not working. Need to be fixed. --Chensong
+ *  TODO: Not working. Need to be fixed. --Chensong
  */
 
 #include <math.h>

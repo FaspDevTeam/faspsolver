@@ -155,28 +155,6 @@ void fasp_dbsr_free (dBSRmat *A)
 }
 
 /**
- * \fn void fasp_dbsr_null (dBSRmat *A)
- *
- * \brief Initialize sparse matrix on structured grid
- *
- * \param A   Pointer to the dBSRmat matrix
- *
- * \author Xiaozhe Hu
- * \date   10/26/2010
- */
-void fasp_dbsr_null (dBSRmat *A)
-{
-    A->ROW=0;
-    A->COL=0;
-    A->NNZ=0;
-    A->nb=0;
-    A->storage_manner=0;
-    A->IA=NULL;
-    A->JA=NULL;
-    A->val=NULL;
-}
-
-/**
  * \fn void fasp_dbsr_cp (const dBSRmat *A, dBSRmat *B)
  *
  * \brief copy a dCSRmat to a new one B=A

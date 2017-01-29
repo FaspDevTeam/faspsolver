@@ -17,7 +17,8 @@
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
- *  // TODO: Is this version better? Remove the older version! --Chensong
+ *  TODO: Is this version better? Remove the older version! --Chensong
+ *  TODO: Use one single function for all! --Chensong
  */
 
 #include <math.h>

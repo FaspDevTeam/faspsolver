@@ -10,7 +10,7 @@
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
- *  //TODO: Need to be cleaned up. --Chensong
+ *  TODO: Need to be cleaned up. --Chensong
  */
 
 #include "fasp.h"
