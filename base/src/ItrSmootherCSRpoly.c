@@ -105,13 +105,13 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     for ( i=0; i<L; i++ ) {
         // get residual
         fasp_blas_dcsr_mxv(Amat, u, r);// r= Amat*u;
-        fasp_blas_array_axpyz(n, -1, r, b, r);// r= -r+b;
+        fasp_blas_darray_axpyz(n, -1, r, b, r);// r= -r+b;
         
         // Get correction error = R*r
         Rr(Amat, Dinv, r, rbar, v0, v1, error, k, ndeg);
         
         // update solution
-        fasp_blas_array_axpy(n, 1, error, u);
+        fasp_blas_darray_axpy(n, 1, error, u);
         
     }
     
@@ -249,7 +249,7 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
 #endif
         for (i=1; i < ndeg0; ++i) {
             //for (j=0; j < n ; ++j) vsave[j]=v[j];
-            fasp_array_cp(n, v, vsave); 
+            fasp_darray_cp(n, v, vsave); 
 
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,j,ravj,iaa,iab,jk,k,vj,snj) if(n>OPENMP_HOLDS) 

@@ -102,7 +102,7 @@ void fasp_blas_dvec_axpyz (const REAL      a,
     z->row = m;
     
     memcpy(zpt, ypt, m*sizeof(REAL));
-    fasp_blas_array_axpy(m, a, xpt, zpt);
+    fasp_blas_darray_axpy(m, a, xpt, zpt);
 }
 
 /**

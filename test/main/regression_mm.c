@@ -73,22 +73,22 @@ static void check_solu(dvector *x, dvector *sol, double tol, unsigned int *nt, u
  */
 int main (int argc, const char * argv[])
 {
-    const INT      print_level = 1;    // how much information to print out
-    const REAL     tolerance   = 1e-4; // tolerance for accepting the solution
-    const char     solvers[num_solvers][128] = {"CG", "BiCGstab", "MinRes",
-                                                "GMRES", "VGMRES", "VFGMRES",
-                                                "GCG", "GCR", "VBiCGstab"};
+    const INT  print_level = 1;    // how much information to print out
+    const REAL tolerance   = 1e-4; // tolerance for accepting the solution
+    const char solvers[num_solvers][128] = {"CG", "BiCGstab", "MinRes",
+                                            "GMRES", "VGMRES", "VFGMRES",
+                                            "GCG", "GCR", "VBiCGstab"};
     
     /* Local Variables */
-    itsolver_param itparam;      // input parameters for iterative solvers
-    ILU_param      iluparam;     // input parameters for AMG
-    AMG_param      amgparam;     // input parameters for AMG
-    dCSRmat        A;            // coefficient matrix
-    dvector        b, x, sol;    // rhs, numerical sol, exact sol
-    INT            indp;         // index for test problems
-    INT            indm;         // index for test methods
+    ITS_param  itparam;      // input parameters for iterative solvers
+    ILU_param  iluparam;     // input parameters for AMG
+    AMG_param  amgparam;     // input parameters for AMG
+    dCSRmat    A;            // coefficient matrix
+    dvector    b, x, sol;    // rhs, numerical sol, exact sol
+    INT        indp;         // index for test problems
+    INT        indm;         // index for test methods
     
-    time_t         lt  = time(NULL);
+    time_t     lt  = time(NULL);
     
     printf("\n\n");
     printf("------------------------- Test starts at -------------------------\n");

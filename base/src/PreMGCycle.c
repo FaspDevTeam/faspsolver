@@ -64,9 +64,9 @@ void fasp_solver_mgcycle (AMG_data   *mgl,
     const SHORT  ndeg = param->polynomial_degree;
 
     // Schwarz parameters
-    Schwarz_param swzparam;
-    if ( param->Schwarz_levels > 0 ) {
-        swzparam.Schwarz_blksolver = param->Schwarz_blksolver;
+    SWZ_param swzparam;
+    if ( param->SWZ_levels > 0 ) {
+        swzparam.SWZ_blksolver = param->SWZ_blksolver;
     }
 
     // local variables
@@ -93,8 +93,8 @@ ForwardSweep:
         }
 
         // or pre-smoothing with Schwarz method
-        else if ( l < mgl->Schwarz_levels ) {
-            switch (mgl[l].Schwarz.Schwarz_type) {
+        else if ( l < mgl->SWZ_levels ) {
+            switch (mgl[l].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
                     fasp_dcsr_schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam,
                                                        &mgl[l].x, &mgl[l].b);
@@ -127,7 +127,7 @@ ForwardSweep:
         }
 
         // form residual r = b - A x
-        fasp_array_cp(mgl[l].A.row, mgl[l].b.val, mgl[l].w.val);
+        fasp_darray_cp(mgl[l].A.row, mgl[l].b.val, mgl[l].w.val);
         fasp_blas_dcsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
 
         // restriction r1 = R*r0
@@ -195,7 +195,7 @@ ForwardSweep:
 
         // find the optimal scaling factor alpha
         if ( param->coarse_scaling == ON ) {
-            alpha = fasp_blas_array_dotprod(mgl[l+1].A.row, mgl[l+1].x.val, mgl[l+1].b.val)
+            alpha = fasp_blas_darray_dotprod(mgl[l+1].A.row, mgl[l+1].x.val, mgl[l+1].b.val)
                   / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
             alpha = MIN(alpha, 1.0); // Add this for safety! --Chensong on 10/04/2014
         }
@@ -216,8 +216,8 @@ ForwardSweep:
         }
 
         // post-smoothing with Schwarz method
-        else if ( l < mgl->Schwarz_levels ) {
-            switch (mgl[l].Schwarz.Schwarz_type) {
+        else if ( l < mgl->SWZ_levels ) {
+            switch (mgl[l].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
                     fasp_dcsr_schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam,
                                                         &mgl[l].x, &mgl[l].b);
@@ -360,7 +360,7 @@ ForwardSweep:
             // extra kernel solve
             //--------------------------------------------
             // form residual r = b - A x
-            fasp_array_cp(mgl[l].A.ROW*mgl[l].A.nb, mgl[l].b.val, mgl[l].w.val);
+            fasp_darray_cp(mgl[l].A.ROW*mgl[l].A.nb, mgl[l].b.val, mgl[l].w.val);
             fasp_blas_dbsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
 
             // r_nk = R_nk*r
@@ -378,7 +378,7 @@ ForwardSweep:
         }
 
         // form residual r = b - A x
-        fasp_array_cp(mgl[l].A.ROW*mgl[l].A.nb, mgl[l].b.val, mgl[l].w.val);
+        fasp_darray_cp(mgl[l].A.ROW*mgl[l].A.nb, mgl[l].b.val, mgl[l].w.val);
         fasp_blas_dbsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
 
         // restriction r1 = R*r0
@@ -451,10 +451,10 @@ ForwardSweep:
             fasp_blas_dbsr_mxv (&mgl[l].P, mgl[l+1].x.val,  PeH.val);
             fasp_blas_dbsr_mxv (&mgl[l].A, PeH.val, Aeh.val);
 
-            alpha = (fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, mgl[l].w.val))
-                  / (fasp_blas_array_dotprod (mgl[l].b.row, Aeh.val, Aeh.val));
+            alpha = (fasp_blas_darray_dotprod (mgl[l].b.row, Aeh.val, mgl[l].w.val))
+                  / (fasp_blas_darray_dotprod (mgl[l].b.row, Aeh.val, Aeh.val));
             alpha = MIN(alpha, 1.0); // Add this for safety! --Chensong on 10/04/2014
-            fasp_blas_array_axpy (mgl[l].b.row, alpha, PeH.val, mgl[l].x.val);
+            fasp_blas_darray_axpy (mgl[l].b.row, alpha, PeH.val, mgl[l].x.val);
         }
         else {
             fasp_blas_dbsr_aAxpy(alpha, &mgl[l].P, mgl[l+1].x.val, mgl[l].x.val);
@@ -466,7 +466,7 @@ ForwardSweep:
             // extra kernel solve
             //--------------------------------------------
             // form residual r = b - A x
-            fasp_array_cp(mgl[l].A.ROW*mgl[l].A.nb, mgl[l].b.val, mgl[l].w.val);
+            fasp_darray_cp(mgl[l].A.ROW*mgl[l].A.nb, mgl[l].b.val, mgl[l].w.val);
             fasp_blas_dbsr_aAxpy(-1.0, &mgl[l].A, mgl[l].x.val, mgl[l].w.val);
 
             // r_nk = R_nk*r

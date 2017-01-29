@@ -84,7 +84,7 @@ void fasp_solver_mgrecur (AMG_data   *mgl,
         }
         
         // form residual r = b - A x
-        fasp_array_cp(m0,b0->val,r);
+        fasp_darray_cp(m0,b0->val,r);
         fasp_blas_dcsr_aAxpy(-1.0,A0,e0->val,r);
         
         // restriction r1 = R*r0

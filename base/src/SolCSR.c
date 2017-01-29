@@ -31,7 +31,7 @@
 
 /**
  * \fn INT fasp_solver_dcsr_itsolver (dCSRmat *A, dvector *b, dvector *x,
- *                                    precond *pc, itsolver_param *itparam)
+ *                                    precond *pc, ITS_param *itparam)
  *
  * \brief Solve Ax=b by preconditioned Krylov methods for CSR matrices
  *
@@ -49,11 +49,11 @@
  * \note This is an abstract interface for iterative methods.
  * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
-INT fasp_solver_dcsr_itsolver (dCSRmat        *A,
-                               dvector        *b,
-                               dvector        *x,
-                               precond        *pc,
-                               itsolver_param *itparam)
+INT fasp_solver_dcsr_itsolver (dCSRmat    *A,
+                               dvector    *b,
+                               dvector    *x,
+                               precond    *pc,
+                               ITS_param  *itparam)
 {
     const SHORT prtlvl        = itparam->print_level;
     const SHORT itsolver_type = itparam->itsolver_type;
@@ -147,7 +147,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat        *A,
 
 /**
  * \fn INT fasp_solver_dcsr_krylov (dCSRmat *A, dvector *b, dvector *x,
- *                                  itsolver_param *itparam)
+ *                                  ITS_param *itparam)
  *
  * \brief Solve Ax=b by standard Krylov methods for CSR matrices
  *
@@ -161,10 +161,10 @@ INT fasp_solver_dcsr_itsolver (dCSRmat        *A,
  * \author Chensong Zhang, Shiquan Zhang
  * \date   09/25/2009
  */
-INT fasp_solver_dcsr_krylov (dCSRmat        *A,
-                             dvector        *b,
-                             dvector        *x,
-                             itsolver_param *itparam)
+INT fasp_solver_dcsr_krylov (dCSRmat    *A,
+                             dvector    *b,
+                             dvector    *x,
+                             ITS_param  *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
     
@@ -197,7 +197,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat        *A,
 
 /**
  * \fn INT fasp_solver_dcsr_krylov_diag (dCSRmat *A, dvector *b, dvector *x,
- *                                       itsolver_param *itparam)
+ *                                       ITS_param *itparam)
  *
  * \brief Solve Ax=b by diagonal preconditioned Krylov methods
  *
@@ -211,10 +211,10 @@ INT fasp_solver_dcsr_krylov (dCSRmat        *A,
  * \author Chensong Zhang, Shiquan Zhang
  * \date   09/25/2009
  */
-INT fasp_solver_dcsr_krylov_diag (dCSRmat        *A,
-                                  dvector        *b,
-                                  dvector        *x,
-                                  itsolver_param *itparam)
+INT fasp_solver_dcsr_krylov_diag (dCSRmat    *A,
+                                  dvector    *b,
+                                  dvector    *x,
+                                  ITS_param  *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
     
@@ -257,8 +257,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat        *A,
 
 /**
  * \fn INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A, dvector *b, dvector *x,
- *                                          itsolver_param *itparam,
- *                                          Schwarz_param *schparam)
+ *                                          ITS_param *itparam, SWZ_param *schparam)
  *
  * \brief Solve Ax=b by overlapping Schwarz Krylov methods
  *
@@ -275,17 +274,17 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat        *A,
  *
  * Modified by Chensong on 07/02/2012: change interface
  */
-INT fasp_solver_dcsr_krylov_schwarz (dCSRmat        *A,
-                                     dvector        *b,
-                                     dvector        *x,
-                                     itsolver_param *itparam,
-                                     Schwarz_param  *schparam)
+INT fasp_solver_dcsr_krylov_schwarz (dCSRmat    *A,
+                                     dvector    *b,
+                                     dvector    *x,
+                                     ITS_param  *itparam,
+                                     SWZ_param  *schparam)
 {
-    Schwarz_param swzparam;
-    swzparam.Schwarz_mmsize    = schparam->Schwarz_mmsize;
-    swzparam.Schwarz_maxlvl    = schparam->Schwarz_maxlvl;
-    swzparam.Schwarz_type      = schparam->Schwarz_type;
-    swzparam.Schwarz_blksolver = schparam->Schwarz_blksolver;
+    SWZ_param swzparam;
+    swzparam.SWZ_mmsize    = schparam->SWZ_mmsize;
+    swzparam.SWZ_maxlvl    = schparam->SWZ_maxlvl;
+    swzparam.SWZ_type      = schparam->SWZ_type;
+    swzparam.SWZ_blksolver = schparam->SWZ_blksolver;
         
     const SHORT prtlvl = itparam->print_level;
 	
@@ -302,21 +301,21 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat        *A,
 	fasp_gettime(&setup_start);
     
 	// setup preconditioner
-	Schwarz_data Schwarz_data;
+	SWZ_data SWZ_data;
 	
 	// symmetrize the matrix (get rid of this later)
-	Schwarz_data.A = fasp_dcsr_sympart(A);
+	SWZ_data.A = fasp_dcsr_sympart(A);
 	
 	// construct Schwarz precondtioner
-	fasp_dcsr_shift (&Schwarz_data.A, 1);
-	fasp_schwarz_setup(&Schwarz_data, &swzparam);
+	fasp_dcsr_shift (&SWZ_data.A, 1);
+	fasp_schwarz_setup(&SWZ_data, &swzparam);
 	
 	fasp_gettime(&setup_end);
 	setup_duration = setup_end - setup_start;
-    printf("Schwarz_Krylov method setup %f seconds.\n", setup_duration);
+    printf("SWZ_Krylov method setup %f seconds.\n", setup_duration);
 	
 	precond prec;
-	prec.data = &Schwarz_data;
+	prec.data = &SWZ_data;
 	prec.fct = fasp_precond_schwarz;
 	
 	fasp_gettime(&solver_start);
@@ -327,21 +326,21 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat        *A,
 	if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
-        printf("Schwarz_Krylov method totally %f seconds.\n", solver_duration);
+        printf("SWZ_Krylov method totally %f seconds.\n", solver_duration);
 	}
 	
 #if DEBUG_MODE > 0
 	printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 	
-	fasp_schwarz_data_free(&Schwarz_data);
+	fasp_schwarz_data_free(&SWZ_data);
 	
 	return status;
 }
 
 /**
  * \fn INT fasp_solver_dcsr_krylov_amg (dCSRmat *A, dvector *b, dvector *x,
- *                                      itsolver_param *itparam, AMG_param *amgparam)
+ *                                      ITS_param *itparam, AMG_param *amgparam)
  *
  * \brief Solve Ax=b by AMG preconditioned Krylov methods
  *
@@ -356,11 +355,11 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat        *A,
  * \author Chensong Zhang
  * \date   09/25/2009
  */
-INT fasp_solver_dcsr_krylov_amg (dCSRmat        *A,
-                                 dvector        *b,
-                                 dvector        *x,
-                                 itsolver_param *itparam,
-                                 AMG_param      *amgparam)
+INT fasp_solver_dcsr_krylov_amg (dCSRmat    *A,
+                                 dvector    *b,
+                                 dvector    *x,
+                                 ITS_param  *itparam,
+                                 AMG_param  *amgparam)
 {
     const SHORT prtlvl = itparam->print_level;
     const SHORT max_levels = amgparam->max_levels;
@@ -419,7 +418,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat        *A,
             case AMLI_CYCLE: // AMLI cycle
                 pc.fct = fasp_precond_amli; break;
             case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
-                pc.fct = fasp_precond_nl_amli; break;
+                pc.fct = fasp_precond_namli; break;
             default: // V,W-Cycle AMG
                 pc.fct = fasp_precond_amg; break;
         }
@@ -446,7 +445,7 @@ FINISHED:
 
 /**
  * \fn INT fasp_solver_dcsr_krylov_ilu (dCSRmat *A, dvector *b, dvector *x,
- *                                      itsolver_param *itparam, ILU_param *iluparam)
+ *                                      ITS_param *itparam, ILU_param *iluparam)
  *
  * \brief Solve Ax=b by ILUs preconditioned Krylov methods
  *
@@ -461,11 +460,11 @@ FINISHED:
  * \author Chensong Zhang, Shiquan Zhang
  * \date   09/25/2009
  */
-INT fasp_solver_dcsr_krylov_ilu (dCSRmat        *A,
-                                 dvector        *b,
-                                 dvector        *x,
-                                 itsolver_param *itparam,
-                                 ILU_param      *iluparam)
+INT fasp_solver_dcsr_krylov_ilu (dCSRmat    *A,
+                                 dvector    *b,
+                                 dvector    *x,
+                                 ITS_param  *itparam,
+                                 ILU_param  *iluparam)
 {
     const SHORT prtlvl = itparam->print_level;
     
@@ -525,7 +524,7 @@ FINISHED:
 
 /**
  * \fn INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat *A, dvector *b, dvector *x,
- *                                        itsolver_param *itparam, ILU_param *iluparam,
+ *                                        ITS_param *itparam, ILU_param *iluparam,
  *                                        dCSRmat *M)
  *
  * \brief Solve Ax=b by ILUs preconditioned Krylov methods: ILU of M as preconditioner
@@ -545,12 +544,12 @@ FINISHED:
  * \note This function is specially designed for reservoir simulation.
  *       Have not been tested in any other places.
  */
-INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat        *A,
-                                   dvector        *b,
-                                   dvector        *x,
-                                   itsolver_param *itparam,
-                                   ILU_param      *iluparam,
-                                   dCSRmat        *M)
+INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat    *A,
+                                   dvector    *b,
+                                   dvector    *x,
+                                   ITS_param  *itparam,
+                                   ILU_param  *iluparam,
+                                   dCSRmat    *M)
 {
     const SHORT prtlvl = itparam->print_level;
     
@@ -610,7 +609,7 @@ FINISHED:
 
 /**
  * \fn INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat *A, dvector *b, dvector *x,
- *                                         itsolver_param *itparam, AMG_param *amgparam,
+ *                                         ITS_param *itparam, AMG_param *amgparam,
  *                                         dCSRmat *A_nk, dCSRmat *P_nk, dCSRmat *R_nk)
  *
  * \brief Solve Ax=b by AMG preconditioned Krylov methods with an extra near kernel solve
@@ -629,14 +628,14 @@ FINISHED:
  * \author Xiaozhe Hu
  * \date   05/26/2014
  */
-INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat        *A,
-                                    dvector        *b,
-                                    dvector        *x,
-                                    itsolver_param *itparam,
-                                    AMG_param      *amgparam,
-                                    dCSRmat        *A_nk,
-                                    dCSRmat        *P_nk,
-                                    dCSRmat        *R_nk)
+INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat    *A,
+                                    dvector    *b,
+                                    dvector    *x,
+                                    ITS_param  *itparam,
+                                    AMG_param  *amgparam,
+                                    dCSRmat    *A_nk,
+                                    dCSRmat    *P_nk,
+                                    dCSRmat    *R_nk)
 {
     const SHORT prtlvl = itparam->print_level;
     const SHORT max_levels = amgparam->max_levels;

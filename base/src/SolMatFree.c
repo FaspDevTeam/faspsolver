@@ -31,7 +31,7 @@
 
 /**
  * \fn INT fasp_solver_itsolver (mxv_matfree *mf, dvector *b, dvector *x, 
- *                               precond *pc, itsolver_param *itparam)
+ *                               precond *pc, ITS_param *itparam)
  *
  * \brief Solve Ax=b by preconditioned Krylov methods for CSR matrices
  *
@@ -50,11 +50,11 @@
  *
  * Modified by Feiteng Huang on 09/19/2012: matrix free
  */
-INT fasp_solver_itsolver (mxv_matfree    *mf,
-                          dvector        *b,
-                          dvector        *x,
-                          precond        *pc,
-                          itsolver_param *itparam)
+INT fasp_solver_itsolver (mxv_matfree  *mf,
+                          dvector      *b,
+                          dvector      *x,
+                          precond      *pc,
+                          ITS_param    *itparam)
 {
     const SHORT prtlvl        = itparam->print_level;
     const SHORT itsolver_type = itparam->itsolver_type;
@@ -139,7 +139,7 @@ INT fasp_solver_itsolver (mxv_matfree    *mf,
 
 /**
  * \fn INT fasp_solver_krylov (mxv_matfree *mf, dvector *b, dvector *x, 
- *                             itsolver_param *itparam)
+ *                             ITS_param *itparam)
  *
  * \brief Solve Ax=b by standard Krylov methods -- without preconditioner 
  *
@@ -155,10 +155,10 @@ INT fasp_solver_itsolver (mxv_matfree    *mf,
  *
  * Modified by Feiteng Huang on 09/20/2012: matrix free
  */
-INT fasp_solver_krylov (mxv_matfree    *mf,
-                        dvector        *b,
-                        dvector        *x,
-                        itsolver_param *itparam)
+INT fasp_solver_krylov (mxv_matfree  *mf,
+                        dvector      *b,
+                        dvector      *x,
+                        ITS_param    *itparam)
 {
     const SHORT prtlvl = itparam->print_level;
     
@@ -203,9 +203,9 @@ INT fasp_solver_krylov (mxv_matfree    *mf,
  * Modified by Chensong Zhang on 05/10/2013: Change interface of mat-free mv
  * Modified by Chensong Zhang on 01/20/2017
  */
-void fasp_solver_matfree_init (INT            matrix_format,
-                               mxv_matfree   *mf,
-                               void          *A)
+void fasp_solver_matfree_init (INT           matrix_format,
+                               mxv_matfree  *mf,
+                               void         *A)
 {
     switch ( matrix_format ) {
             

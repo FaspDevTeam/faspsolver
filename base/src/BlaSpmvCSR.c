@@ -207,7 +207,7 @@ void fasp_blas_dcsr_axm (dCSRmat     *A,
     const INT nnz = A->nnz;
     
     // A direct calculation can be written as:
-    fasp_blas_array_ax(nnz, alpha, A->val);
+    fasp_blas_darray_ax(nnz, alpha, A->val);
 }
 
 /**

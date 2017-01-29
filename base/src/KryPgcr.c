@@ -103,10 +103,10 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
     norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
     
     // r = b-A*x
-    fasp_array_cp(n, b->val, r);
+    fasp_darray_cp(n, b->val, r);
     fasp_blas_dcsr_aAxpy(-1.0, A, x->val, r);
     
-    absres = fasp_blas_array_dotprod(n, r, r);
+    absres = fasp_blas_darray_dotprod(n, r, r);
     
     absres0 = MAX(SMALLREAL,absres);
     
@@ -130,7 +130,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
             
             // z = B^-1r
             if ( pc == NULL )
-                fasp_array_cp(n, r, &z[i*n]);
+                fasp_darray_cp(n, r, &z[i*n]);
             else
                 pc->fct(r, &z[i*n], pc->data);
             
@@ -139,30 +139,30 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
             
             /* Modified Gram_Schmidt orthogonalization */
             for ( j = 0; j < i; j++ ) {
-                gamma = fasp_blas_array_dotprod(n, &c[j*n], &c[i*n]);
+                gamma = fasp_blas_darray_dotprod(n, &c[j*n], &c[i*n]);
                 h[i][j] = gamma/h[j][j];
-                fasp_blas_array_axpy(n, -h[i][j], &c[j*n], &c[i*n]);
+                fasp_blas_darray_axpy(n, -h[i][j], &c[j*n], &c[i*n]);
             }
             // gamma = (c,c)
-            gamma = fasp_blas_array_dotprod(n, &c[i*n], &c[i*n]);
+            gamma = fasp_blas_darray_dotprod(n, &c[i*n], &c[i*n]);
             
             h[i][i] = gamma;
             
             // alpha = (c, r)
-            alpha = fasp_blas_array_dotprod(n, &c[i*n], r);
+            alpha = fasp_blas_darray_dotprod(n, &c[i*n], r);
             
             beta = alpha/gamma;
             
             alp[i] = beta;
             
             // r = r - beta*c
-            fasp_blas_array_axpy(n, -beta, &c[i*n], r);
+            fasp_blas_darray_axpy(n, -beta, &c[i*n], r);
             
             // equivalent to ||r||_2
             absres = absres - alpha*alpha/gamma;
             
             if (absres < checktol) {
-                absres = fasp_blas_array_dotprod(n, r, r);
+                absres = fasp_blas_darray_dotprod(n, r, r);
                 checktol = MAX(tol*tol*absres0, absres*1.0e-4);
             }
             
@@ -240,7 +240,7 @@ static void dense_aAtxpby (INT   n,
 {
     INT i, j;
     
-    for (i=0; i<m; i++) fasp_blas_array_ax(n, x[i], &A[i*n]);
+    for (i=0; i<m; i++) fasp_blas_darray_ax(n, x[i], &A[i*n]);
     
     for (j=1; j<m; j++) {
         for (i=0; i<n; i++) {
@@ -248,7 +248,7 @@ static void dense_aAtxpby (INT   n,
         }
     }
     
-    fasp_blas_array_axpby(n, alpha, A, beta, y);
+    fasp_blas_darray_axpby(n, alpha, A, beta, y);
 }
 
 /*---------------------------------*/

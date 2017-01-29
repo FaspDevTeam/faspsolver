@@ -61,9 +61,9 @@ void fasp_solver_fmgcycle (AMG_data   *mgl,
     REAL alpha = 1.0, relerr;
 
     // Schwarz parameters
-    Schwarz_param swzparam;
-    if ( param->Schwarz_levels > 0 ) {
-        swzparam.Schwarz_blksolver = param->Schwarz_blksolver;
+    SWZ_param swzparam;
+    if ( param->SWZ_levels > 0 ) {
+        swzparam.SWZ_blksolver = param->SWZ_blksolver;
     }
 
 #if DEBUG_MODE > 0
@@ -183,7 +183,7 @@ void fasp_solver_fmgcycle (AMG_data   *mgl,
 
             // find the optimal scaling factor alpha
             if ( param->coarse_scaling == ON ) {
-                alpha = fasp_blas_array_dotprod(mgl[l+1].A.row, mgl[l+1].x.val, mgl[l+1].b.val)
+                alpha = fasp_blas_darray_dotprod(mgl[l+1].A.row, mgl[l+1].x.val, mgl[l+1].b.val)
                       / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
                 alpha = MIN(alpha, 1.0); // Add this for safty! --Chensong on 10/04/2014
             }
@@ -205,7 +205,7 @@ void fasp_solver_fmgcycle (AMG_data   *mgl,
             ++num_cycle;
 
             // form residual r = b - A x
-            fasp_array_cp(mgl[l].A.row, mgl[l].b.val, mgl[l].w.val);
+            fasp_darray_cp(mgl[l].A.row, mgl[l].b.val, mgl[l].w.val);
             fasp_blas_dcsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
             relerr = fasp_blas_dvec_norm2(&mgl[l].w) / fasp_blas_dvec_norm2(&mgl[l].b);
 
@@ -216,8 +216,8 @@ void fasp_solver_fmgcycle (AMG_data   *mgl,
                 if (l<param->ILU_levels) {
                     fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
                 }
-                else if (l<mgl->Schwarz_levels) {
-                    switch (mgl[l].Schwarz.Schwarz_type) {
+                else if (l<mgl->SWZ_levels) {
+                    switch (mgl[l].Schwarz.SWZ_type) {
                         case SCHWARZ_SYMMETRIC:
                             fasp_dcsr_schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam,
                                                                &mgl[l].x, &mgl[l].b);
@@ -237,7 +237,7 @@ void fasp_solver_fmgcycle (AMG_data   *mgl,
                 }
 
                 // form residual r = b - A x
-                fasp_array_cp(mgl[l].A.row, mgl[l].b.val, mgl[l].w.val);
+                fasp_darray_cp(mgl[l].A.row, mgl[l].b.val, mgl[l].w.val);
                 fasp_blas_dcsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
 
                 // restriction r1 = R*r0
@@ -303,7 +303,7 @@ void fasp_solver_fmgcycle (AMG_data   *mgl,
 
                 // find the optimal scaling factor alpha
                 if ( param->coarse_scaling == ON ) {
-                    alpha = fasp_blas_array_dotprod(mgl[l+1].A.row, mgl[l+1].x.val, mgl[l+1].b.val)
+                    alpha = fasp_blas_darray_dotprod(mgl[l+1].A.row, mgl[l+1].x.val, mgl[l+1].b.val)
                           / fasp_blas_dcsr_vmv(&mgl[l+1].A, mgl[l+1].x.val, mgl[l+1].x.val);
                     alpha = MIN(alpha, 1.0); // Add this for safty! --Chensong on 10/04/2014
                 }
@@ -323,8 +323,8 @@ void fasp_solver_fmgcycle (AMG_data   *mgl,
                 if (l<param->ILU_levels) {
                     fasp_smoother_dcsr_ilu(&mgl[l].A, &mgl[l].b, &mgl[l].x, &mgl[l].LU);
                 }
-                else if (l<mgl->Schwarz_levels) {
-                    switch (mgl[l].Schwarz.Schwarz_type) {
+                else if (l<mgl->SWZ_levels) {
+                    switch (mgl[l].Schwarz.SWZ_type) {
                         case SCHWARZ_SYMMETRIC:
                             fasp_dcsr_schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam,
                                                                 &mgl[l].x, &mgl[l].b);

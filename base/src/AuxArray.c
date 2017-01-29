@@ -19,7 +19,7 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_array_null (REAL *x)
+ * \fn void fasp_darray_null (REAL *x)
  *
  * \brief Initialize an array
  *
@@ -28,13 +28,13 @@
  * \author Chensong Zhang
  * \date   2010/04/03  
  */
-void fasp_array_null (REAL *x) 
+void fasp_darray_null (REAL *x) 
 {
     x = NULL;
 }
 
 /**
- * \fn void fasp_array_set (const INT n, REAL *x, const REAL val)
+ * \fn void fasp_darray_set (const INT n, REAL *x, const REAL val)
  *
  * \brief Set initial value for an array to be x=val
  *
@@ -47,9 +47,9 @@ void fasp_array_null (REAL *x)
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-void fasp_array_set (const INT    n,
-                     REAL        *x,
-                     const REAL   val)
+void fasp_darray_set (const INT    n,
+                      REAL        *x,
+                      const REAL   val)
 {
     SHORT use_openmp = FALSE;
     
@@ -159,7 +159,7 @@ void fasp_iarray_set (const INT   n,
 }
 
 /**
- * \fn void fasp_array_cp (const INT n, const REAL *x, REAL *y)
+ * \fn void fasp_darray_cp (const INT n, const REAL *x, REAL *y)
  *
  * \brief Copy an array to the other y=x
  *
@@ -170,9 +170,9 @@ void fasp_iarray_set (const INT   n,
  * \author Chensong Zhang
  * \date   2010/04/03  
  */
-void fasp_array_cp (const INT    n,
-                    const REAL  *x,
-                    REAL        *y)
+void fasp_darray_cp (const INT    n,
+                     const REAL  *x,
+                     REAL        *y)
 {
     memcpy(y, x, n*sizeof(REAL));
 }
@@ -198,7 +198,7 @@ void fasp_iarray_cp (const INT   n,
 }
 
 /**
- * \fn void fasp_array_cp_nc3 (const REAL *x, REAL *y)
+ * \fn void fasp_darray_cp_nc3 (const REAL *x, REAL *y)
  *
  * \brief Copy an array to the other y=x, the length is 3
  *
@@ -207,19 +207,15 @@ void fasp_iarray_cp (const INT   n,
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
- *
- * \note Special unrolled routine designed for a specific application
  */
-void fasp_array_cp_nc3 (const REAL  *x,
-                        REAL        *y)
+void fasp_darray_cp_nc3 (const REAL  *x,
+                         REAL        *y)
 {
-    y[0] = x[0];
-    y[1] = x[1];
-    y[2] = x[2];
+    memcpy(y, x, 3*sizeof(REAL));
 }
 
 /**
- * \fn void fasp_array_cp_nc5 (const REAL *x, REAL *y)
+ * \fn void fasp_darray_cp_nc5 (const REAL *x, REAL *y)
  *
  * \brief Copy an array to the other y=x, the length is 5
  *
@@ -228,21 +224,15 @@ void fasp_array_cp_nc3 (const REAL  *x,
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
- *
- * \note Special unrolled routine designed for a specific application
  */
-void fasp_array_cp_nc5 (const REAL  *x,
-                        REAL        *y)
+void fasp_darray_cp_nc5 (const REAL  *x,
+                         REAL        *y)
 {
-    y[0] = x[0];
-    y[1] = x[1];
-    y[2] = x[2];
-    y[3] = x[3];
-    y[4] = x[4];
+    memcpy(y, x, 5*sizeof(REAL));
 }
 
 /**
- * \fn void fasp_array_cp_nc7 (const REAL *x, REAL *y)
+ * \fn void fasp_darray_cp_nc7 (const REAL *x, REAL *y)
  *
  * \brief Copy an array to the other y=x, the length is 7
  *
@@ -251,19 +241,11 @@ void fasp_array_cp_nc5 (const REAL  *x,
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
- *
- * \note Special unrolled routine designed for a specific application
  */
-void fasp_array_cp_nc7 (const REAL  *x,
-                        REAL        *y)
+void fasp_darray_cp_nc7 (const REAL  *x,
+                         REAL        *y)
 {
-    y[0] = x[0];
-    y[1] = x[1];
-    y[2] = x[2];
-    y[3] = x[3];
-    y[4] = x[4];
-    y[5] = x[5];
-    y[6] = x[6];
+    memcpy(y, x, 7*sizeof(REAL));
 }
 
 /*---------------------------------*/

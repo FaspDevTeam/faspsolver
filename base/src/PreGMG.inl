@@ -1193,7 +1193,7 @@ static void fmg2d (REAL *u,
     REAL *r = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     
     // initial
-    fasp_array_set(level[maxlevel],r,0.0);
+    fasp_darray_set(level[maxlevel],r,0.0);
     residual2d(u, b, r, 0, level, nxk, nyk);
     
     // restriction on coarser grids
@@ -1260,7 +1260,7 @@ static void fmg3d (REAL *u,
     REAL *r = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     
     // initial
-    fasp_array_set(level[maxlevel], r, 0.0);
+    fasp_darray_set(level[maxlevel], r, 0.0);
     
     for (k = 0; k < maxlevel-1; k++) {
         residual3d(u, b, r, k, level, nxk, nyk, nzk);
@@ -1329,10 +1329,10 @@ static INT pcg1d (REAL        *u,
     k = 0;
     
     // initial residue and other vector
-    fasp_array_set(level[maxlevel], z, 0.0);
-    fasp_array_set(level[maxlevel], r, 0.0);
-    fasp_array_set(level[1], p, 0.0);
-    fasp_array_set(level[1], q, 0.0);
+    fasp_darray_set(level[maxlevel], z, 0.0);
+    fasp_darray_set(level[maxlevel], r, 0.0);
+    fasp_darray_set(level[1], p, 0.0);
+    fasp_darray_set(level[1], q, 0.0);
     
     residual1d(u, b, r, 0, level);
     normr = l2norm(r, level, 0);
@@ -1353,7 +1353,7 @@ static INT pcg1d (REAL        *u,
     
     while (k < maxit) {
         // init z
-        fasp_array_set(level[1], z, 0.0);
+        fasp_darray_set(level[1], z, 0.0);
         
         // calculating alpha
         ay1d(q, p, level, 0);
@@ -1449,10 +1449,10 @@ static INT pcg2d (REAL        *u,
 #endif
     
     // initial residue and other vector
-    fasp_array_set(level[maxlevel], z, 0.0);
-    fasp_array_set(level[maxlevel], r, 0.0);
-    fasp_array_set(level[1], p, 0.0);
-    fasp_array_set(level[1], q, 0.0);
+    fasp_darray_set(level[maxlevel], z, 0.0);
+    fasp_darray_set(level[maxlevel], r, 0.0);
+    fasp_darray_set(level[1], p, 0.0);
+    fasp_darray_set(level[1], q, 0.0);
     
     residual2d(u, b, r, 0, level, nxk, nyk);
     normr = l2norm(r, level, 0);
@@ -1473,7 +1473,7 @@ static INT pcg2d (REAL        *u,
     
     while (k < maxit) {
         // init z
-        fasp_array_set(level[1], z, 0.0);
+        fasp_darray_set(level[1], z, 0.0);
         
         // calculating alpha
         ay2d(q, p, level, 0, nxk, nyk);
@@ -1572,10 +1572,10 @@ static INT pcg3d (REAL        *u,
 #endif
     
     // initial residue and other vector
-    fasp_array_set(levelmax, z, 0.0);
-    fasp_array_set(levelmax, r, 0.0);
-    fasp_array_set(level[1], p, 0.0);
-    fasp_array_set(level[1], q, 0.0);
+    fasp_darray_set(levelmax, z, 0.0);
+    fasp_darray_set(levelmax, r, 0.0);
+    fasp_darray_set(level[1], p, 0.0);
+    fasp_darray_set(level[1], q, 0.0);
     residual3d(u, b, r, 0, level, nxk, nyk, nzk);
     normr = l2norm(r, level, 0);
     normb = l2norm(b, level, 0);

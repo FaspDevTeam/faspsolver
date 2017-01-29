@@ -43,8 +43,8 @@ void fasp_precond_block_diag_3 (REAL *r,
     const INT N = N0 + N1 + N2;
     
     // back up r, setup z;
-    fasp_array_cp(N, r, tempr->val);
-    fasp_array_set(N, z, 0.0);
+    fasp_darray_cp(N, r, tempr->val);
+    fasp_darray_set(N, z, 0.0);
     
     // prepare
 #if WITH_UMFPACK
@@ -96,7 +96,7 @@ void fasp_precond_block_diag_3 (REAL *r,
 #endif
     
     // restore r
-    fasp_array_cp(N, tempr->val, r);
+    fasp_darray_cp(N, tempr->val, r);
     
 }
 
@@ -130,8 +130,8 @@ void fasp_precond_block_diag_3_amg (REAL *r,
     const INT N = N0 + N1 + N2;
     
     // back up r, setup z;
-    fasp_array_cp(N, r, tempr->val);
-    fasp_array_set(N, z, 0.0);
+    fasp_darray_cp(N, r, tempr->val);
+    fasp_darray_set(N, z, 0.0);
     
     // prepare
     dvector r0, r1, r2, z0, z1, z2;
@@ -140,28 +140,28 @@ void fasp_precond_block_diag_3_amg (REAL *r,
     z1.val = &(z[N0]); z2.val = &(z[N0+N1]);
     
     // Preconditioning A00 block
-    mgl[0]->b.row=N0; fasp_array_cp(N0, r0.val, mgl[0]->b.val); // residual is an input
+    mgl[0]->b.row=N0; fasp_darray_cp(N0, r0.val, mgl[0]->b.val); // residual is an input
     mgl[0]->x.row=N0; fasp_dvec_set(N0, &mgl[0]->x, 0.0);
     
     fasp_solver_mgcycle(mgl[0], amgparam);
-    fasp_array_cp(N0, mgl[0]->x.val, z0.val);
+    fasp_darray_cp(N0, mgl[0]->x.val, z0.val);
     
     // Preconditioning A11 block
-    mgl[1]->b.row=N1; fasp_array_cp(N1, r1.val, mgl[1]->b.val); // residual is an input
+    mgl[1]->b.row=N1; fasp_darray_cp(N1, r1.val, mgl[1]->b.val); // residual is an input
     mgl[1]->x.row=N1; fasp_dvec_set(N1, &mgl[1]->x,0.0);
     
     fasp_solver_mgcycle(mgl[1], amgparam);
-    fasp_array_cp(N1, mgl[1]->x.val, z1.val);
+    fasp_darray_cp(N1, mgl[1]->x.val, z1.val);
     
     // Preconditioning A22 block
-    mgl[2]->b.row=N2; fasp_array_cp(N2, r2.val, mgl[2]->b.val); // residual is an input
+    mgl[2]->b.row=N2; fasp_darray_cp(N2, r2.val, mgl[2]->b.val); // residual is an input
     mgl[2]->x.row=N2; fasp_dvec_set(N2, &mgl[2]->x,0.0);
     
     fasp_solver_mgcycle(mgl[2], amgparam);
-    fasp_array_cp(N2, mgl[2]->x.val, z2.val);
+    fasp_darray_cp(N2, mgl[2]->x.val, z2.val);
     
     // restore r
-    fasp_array_cp(N, tempr->val, r);
+    fasp_darray_cp(N, tempr->val, r);
     
 }
 
@@ -193,8 +193,8 @@ void fasp_precond_block_diag_4 (REAL *r,
     const INT N = N0 + N1 + N2 + N3;
     
     // back up r, setup z;
-    fasp_array_cp(N, r, tempr->val);
-    fasp_array_set(N, z, 0.0);
+    fasp_darray_cp(N, r, tempr->val);
+    fasp_darray_set(N, z, 0.0);
     
     // prepare
 #if WITH_UMFPACK
@@ -257,7 +257,7 @@ void fasp_precond_block_diag_4 (REAL *r,
 #endif
     
     // restore r
-    fasp_array_cp(N, tempr->val, r);
+    fasp_darray_cp(N, tempr->val, r);
     
 }
 
@@ -294,8 +294,8 @@ void fasp_precond_block_lower_3 (REAL *r,
     const INT N = N0 + N1 + N2;
     
     // back up r, setup z;
-    fasp_array_cp(N, r, tempr->val);
-    fasp_array_set(N, z, 0.0);
+    fasp_darray_cp(N, r, tempr->val);
+    fasp_darray_set(N, z, 0.0);
     
     // prepare
     dvector r0, r1, r2, z0, z1, z2;
@@ -342,7 +342,7 @@ void fasp_precond_block_lower_3 (REAL *r,
 #endif
     
     // restore r
-    fasp_array_cp(N, tempr->val, r);
+    fasp_darray_cp(N, tempr->val, r);
     
 #endif
 }
@@ -379,8 +379,8 @@ void fasp_precond_block_lower_3_amg (REAL *r,
     INT i;
     
     // back up r, setup z;
-    fasp_array_cp(N, r, tempr->val);
-    fasp_array_set(N, z, 0.0);
+    fasp_darray_cp(N, r, tempr->val);
+    fasp_darray_set(N, z, 0.0);
     
     // prepare
     dvector r0, r1, r2, z0, z1, z2;
@@ -389,35 +389,35 @@ void fasp_precond_block_lower_3_amg (REAL *r,
     z1.val = &(z[N0]); z2.val = &(z[N0+N1]);
     
     // Preconditioning A00 block
-    mgl[0]->b.row=N0; fasp_array_cp(N0, r0.val, mgl[0]->b.val); // residual is an input
+    mgl[0]->b.row=N0; fasp_darray_cp(N0, r0.val, mgl[0]->b.val); // residual is an input
     mgl[0]->x.row=N0; fasp_dvec_set(N0, &mgl[0]->x, 0.0);
     
     for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[0], amgparam);
-    fasp_array_cp(N0, mgl[0]->x.val, z0.val);
+    fasp_darray_cp(N0, mgl[0]->x.val, z0.val);
     
     // r1 = r1 - A10*z0
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[3], z0.val, r1.val);
     
     // Preconditioning A11 block
-    mgl[1]->b.row=N1; fasp_array_cp(N1, r1.val, mgl[1]->b.val); // residual is an input
+    mgl[1]->b.row=N1; fasp_darray_cp(N1, r1.val, mgl[1]->b.val); // residual is an input
     mgl[1]->x.row=N1; fasp_dvec_set(N1, &mgl[1]->x,0.0);
     
     for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[1], amgparam);
-    fasp_array_cp(N1, mgl[1]->x.val, z1.val);
+    fasp_darray_cp(N1, mgl[1]->x.val, z1.val);
     
     // r2 = r2 - A20*z0 - A21*z1
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[6], z0.val, r2.val);
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[7], z1.val, r2.val);
     
     // Preconditioning A22 block
-    mgl[2]->b.row=N2; fasp_array_cp(N2, r2.val, mgl[2]->b.val); // residual is an input
+    mgl[2]->b.row=N2; fasp_darray_cp(N2, r2.val, mgl[2]->b.val); // residual is an input
     mgl[2]->x.row=N2; fasp_dvec_set(N2, &mgl[2]->x,0.0);
     
     for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[2], amgparam);
-    fasp_array_cp(N2, mgl[2]->x.val, z2.val);
+    fasp_darray_cp(N2, mgl[2]->x.val, z2.val);
     
     // restore r
-    fasp_array_cp(N, tempr->val, r);
+    fasp_darray_cp(N, tempr->val, r);
     
 }
 
@@ -455,8 +455,8 @@ void fasp_precond_block_lower_4 (REAL *r,
     const INT N = N0 + N1 + N2 + N3;
     
     // back up r, setup z;
-    fasp_array_cp(N, r, tempr->val);
-    fasp_array_set(N, z, 0.0);
+    fasp_darray_cp(N, r, tempr->val);
+    fasp_darray_set(N, z, 0.0);
     
     // prepare
     dvector r0, r1, r2, r3, z0, z1, z2, z3;
@@ -518,7 +518,7 @@ void fasp_precond_block_lower_4 (REAL *r,
 #endif
     
     // restore r
-    fasp_array_cp(N, tempr->val, r);
+    fasp_darray_cp(N, tempr->val, r);
 
 #endif
 }
@@ -556,8 +556,8 @@ void fasp_precond_block_upper_3 (REAL *r,
     const INT N = N0 + N1 + N2;
     
     // back up r, setup z;
-    fasp_array_cp(N, r, tempr->val);
-    fasp_array_set(N, z, 0.0);
+    fasp_darray_cp(N, r, tempr->val);
+    fasp_darray_set(N, z, 0.0);
     
     // prepare
     dvector r0, r1, r2, z0, z1, z2;
@@ -604,7 +604,7 @@ void fasp_precond_block_upper_3 (REAL *r,
 #endif
     
     // restore r
-    fasp_array_cp(N, tempr->val, r);
+    fasp_darray_cp(N, tempr->val, r);
 
 #endif
 }
@@ -643,8 +643,8 @@ void fasp_precond_block_upper_3_amg (REAL *r,
     INT i;
     
     // back up r, setup z;
-    fasp_array_cp(N, r, tempr->val);
-    fasp_array_set(N, z, 0.0);
+    fasp_darray_cp(N, r, tempr->val);
+    fasp_darray_set(N, z, 0.0);
     
     // prepare
     dvector r0, r1, r2, z0, z1, z2;
@@ -657,35 +657,35 @@ void fasp_precond_block_upper_3_amg (REAL *r,
     z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]);
     
     // Preconditioning A22 block
-    mgl[2]->b.row=N2; fasp_array_cp(N2, r2.val, mgl[2]->b.val); // residual is an input
+    mgl[2]->b.row=N2; fasp_darray_cp(N2, r2.val, mgl[2]->b.val); // residual is an input
     mgl[2]->x.row=N2; fasp_dvec_set(N2, &mgl[2]->x,0.0);
     
     for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[2], amgparam);
-    fasp_array_cp(N2, mgl[2]->x.val, z2.val);
+    fasp_darray_cp(N2, mgl[2]->x.val, z2.val);
     
     // r1 = r1 - A5*z2
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[5], z2.val, r1.val);
     
     // Preconditioning A11 block
-    mgl[1]->b.row=N1; fasp_array_cp(N1, r1.val, mgl[1]->b.val); // residual is an input
+    mgl[1]->b.row=N1; fasp_darray_cp(N1, r1.val, mgl[1]->b.val); // residual is an input
     mgl[1]->x.row=N1; fasp_dvec_set(N1, &mgl[1]->x,0.0);
     
     for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[1], amgparam);
-    fasp_array_cp(N1, mgl[1]->x.val, z1.val);
+    fasp_darray_cp(N1, mgl[1]->x.val, z1.val);
     
     // r0 = r0 - A1*z1 - A2*z2
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[1], z1.val, r0.val);
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[2], z2.val, r0.val);
     
     // Preconditioning A00 block
-    mgl[0]->b.row=N0; fasp_array_cp(N0, r0.val, mgl[0]->b.val); // residual is an input
+    mgl[0]->b.row=N0; fasp_darray_cp(N0, r0.val, mgl[0]->b.val); // residual is an input
     mgl[0]->x.row=N0; fasp_dvec_set(N0, &mgl[0]->x, 0.0);
     
     for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[0], amgparam);
-    fasp_array_cp(N0, mgl[0]->x.val, z0.val);
+    fasp_darray_cp(N0, mgl[0]->x.val, z0.val);
     
     // restore r
-    fasp_array_cp(N, tempr->val, r);
+    fasp_darray_cp(N, tempr->val, r);
     
 }
 
@@ -721,8 +721,8 @@ void fasp_precond_block_SGS_3 (REAL *r,
     const INT N = N0 + N1 + N2;
     
     // back up r, setup z;
-    fasp_array_cp(N, r, tempr->val);
-    fasp_array_set(N, z, 0.0);
+    fasp_darray_cp(N, r, tempr->val);
+    fasp_darray_set(N, z, 0.0);
     
     // prepare
     dvector r0, r1, r2, z0, z1, z2;
@@ -794,7 +794,7 @@ void fasp_precond_block_SGS_3 (REAL *r,
 #endif
     
     // restore r
-    fasp_array_cp(N, tempr->val, r);
+    fasp_darray_cp(N, tempr->val, r);
     
 }
 
@@ -832,8 +832,8 @@ void fasp_precond_block_SGS_3_amg (REAL *r,
     const INT N = N0 + N1 + N2;
     
     // back up r, setup z;
-    fasp_array_cp(N, r, tempr->val);
-    fasp_array_set(N, z, 0.0);
+    fasp_darray_cp(N, r, tempr->val);
+    fasp_darray_set(N, z, 0.0);
     
     // prepare
     dvector r0, r1, r2, z0, z1, z2;
@@ -846,65 +846,65 @@ void fasp_precond_block_SGS_3_amg (REAL *r,
     z0.val = z; z1.val = &(z[N0]); z2.val = &(z[N0+N1]);
     
     // Preconditioning A00 block
-    mgl[0]->b.row=N0; fasp_array_cp(N0, r0.val, mgl[0]->b.val); // residual is an input
+    mgl[0]->b.row=N0; fasp_darray_cp(N0, r0.val, mgl[0]->b.val); // residual is an input
     mgl[0]->x.row=N0; fasp_dvec_set(N0, &mgl[0]->x, 0.0);
     
     for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[0], amgparam);
-    fasp_array_cp(N0, mgl[0]->x.val, z0.val);
+    fasp_darray_cp(N0, mgl[0]->x.val, z0.val);
     
     // r1 = r1 - A3*z0
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[3], z0.val, r1.val);
     
     // Preconditioning A11 block
-    mgl[1]->b.row=N1; fasp_array_cp(N1, r1.val, mgl[1]->b.val); // residual is an input
+    mgl[1]->b.row=N1; fasp_darray_cp(N1, r1.val, mgl[1]->b.val); // residual is an input
     mgl[1]->x.row=N1; fasp_dvec_set(N1, &mgl[1]->x,0.0);
     
     for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[1], amgparam);
-    fasp_array_cp(N1, mgl[1]->x.val, z1.val);
+    fasp_darray_cp(N1, mgl[1]->x.val, z1.val);
     
     // r2 = r2 - A6*z0 - A7*z1
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[6], z0.val, r2.val);
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[7], z1.val, r2.val);
     
     // Preconditioning A22 block
-    mgl[2]->b.row=N2; fasp_array_cp(N2, r2.val, mgl[2]->b.val); // residual is an input
+    mgl[2]->b.row=N2; fasp_darray_cp(N2, r2.val, mgl[2]->b.val); // residual is an input
     mgl[2]->x.row=N2; fasp_dvec_set(N2, &mgl[2]->x,0.0);
     
     for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[2], amgparam);
-    fasp_array_cp(N2, mgl[2]->x.val, z2.val);
+    fasp_darray_cp(N2, mgl[2]->x.val, z2.val);
     
     // Preconditioning A22 block
     /*
-     mgl[2]->b.row=N2; fasp_array_cp(N2, r2.val, mgl[2]->b.val); // residual is an input
+     mgl[2]->b.row=N2; fasp_darray_cp(N2, r2.val, mgl[2]->b.val); // residual is an input
      mgl[2]->x.row=N2; fasp_dvec_set(N2, &mgl[2]->x,0.0);
      
      for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[2], amgparam);
-     fasp_array_cp(N2, mgl[2]->x.val, z2.val);
+     fasp_darray_cp(N2, mgl[2]->x.val, z2.val);
      */
     
     // r1 = r1 - A5*z2
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[5], z2.val, r1.val);
     
     // Preconditioning A11 block
-    mgl[1]->b.row=N1; fasp_array_cp(N1, r1.val, mgl[1]->b.val); // residual is an input
+    mgl[1]->b.row=N1; fasp_darray_cp(N1, r1.val, mgl[1]->b.val); // residual is an input
     mgl[1]->x.row=N1; fasp_dvec_set(N1, &mgl[1]->x,0.0);
     
     for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[1], amgparam);
-    fasp_array_cp(N1, mgl[1]->x.val, z1.val);
+    fasp_darray_cp(N1, mgl[1]->x.val, z1.val);
     
     // r0 = r0 - A1*z1 - A2*z2
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[1], z1.val, r0.val);
     fasp_blas_dcsr_aAxpy(-1.0, A->blocks[2], z2.val, r0.val);
     
     // Preconditioning A00 block
-    mgl[0]->b.row=N0; fasp_array_cp(N0, r0.val, mgl[0]->b.val); // residual is an input
+    mgl[0]->b.row=N0; fasp_darray_cp(N0, r0.val, mgl[0]->b.val); // residual is an input
     mgl[0]->x.row=N0; fasp_dvec_set(N0, &mgl[0]->x, 0.0);
     
     for(i=0;i<1;++i) fasp_solver_mgcycle(mgl[0], amgparam);
-    fasp_array_cp(N0, mgl[0]->x.val, z0.val);
+    fasp_darray_cp(N0, mgl[0]->x.val, z0.val);
     
     // restore r
-    fasp_array_cp(N, tempr->val, r);
+    fasp_darray_cp(N, tempr->val, r);
     
 }
 
@@ -966,8 +966,8 @@ void fasp_precond_sweeping (REAL *r,
     temp_e.val = w+N;
     
     // back up r, setup z;
-    fasp_array_cp(N, r, r_backup->val);
-    fasp_array_cp(N, r, z);
+    fasp_darray_cp(N, r, r_backup->val);
+    fasp_darray_cp(N, r, z);
     
     // L^{-1}r
     for (l=0; l<NumLayers-1; l++){
@@ -1053,7 +1053,7 @@ void fasp_precond_sweeping (REAL *r,
     }
     
     // restore r
-    fasp_array_cp(N, r_backup->val, r);
+    fasp_darray_cp(N, r_backup->val, r);
     
 }
 

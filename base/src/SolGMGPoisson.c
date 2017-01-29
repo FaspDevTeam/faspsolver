@@ -80,15 +80,15 @@ INT fasp_poisson_gmg1d (REAL         *u,
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     
-    fasp_array_set(level[maxlevel], u0, 0.0);
-    fasp_array_set(level[maxlevel], b0, 0.0);
-    fasp_array_set(level[maxlevel], r0, 0.0);
+    fasp_darray_set(level[maxlevel], u0, 0.0);
+    fasp_darray_set(level[maxlevel], b0, 0.0);
+    fasp_darray_set(level[maxlevel], r0, 0.0);
     
-    fasp_array_cp(nx, u, u0);
-    fasp_array_cp(nx, b, b0);
+    fasp_darray_cp(nx, u, u0);
+    fasp_darray_cp(nx, b, b0);
     
     // compute initial l2 norm of residue
-    fasp_array_set(level[1], r0, 0.0);
+    fasp_darray_set(level[1], r0, 0.0);
     residual1d(u0, b0, r0, 0, level);
     norm_r0 = l2norm(r0, level, 0);
     norm_r1 = norm_r0;
@@ -125,7 +125,7 @@ INT fasp_poisson_gmg1d (REAL         *u,
     }
     
     // Update u
-    fasp_array_cp(level[1], u0, u);
+    fasp_darray_cp(level[1], u0, u);
     
     // print out CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
@@ -216,12 +216,12 @@ INT fasp_poisson_gmg2d (REAL         *u,
     b0 = (REAL *)malloc(level[maxlevel+1]*sizeof(REAL));
     r0 = (REAL *)malloc(level[maxlevel+1]*sizeof(REAL));
     
-    fasp_array_set(level[maxlevel], u0, 0.0);
-    fasp_array_set(level[maxlevel], b0, 0.0);
-    fasp_array_set(level[maxlevel], r0, 0.0);
+    fasp_darray_set(level[maxlevel], u0, 0.0);
+    fasp_darray_set(level[maxlevel], b0, 0.0);
+    fasp_darray_set(level[maxlevel], r0, 0.0);
     
-    fasp_array_cp(level[1], u, u0);
-    fasp_array_cp(level[1], b, b0);
+    fasp_darray_cp(level[1], u, u0);
+    fasp_darray_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
     residual2d(u0, b0, r0, 0, level, nxk, nyk);
@@ -260,7 +260,7 @@ INT fasp_poisson_gmg2d (REAL         *u,
     }
     
     // update u
-    fasp_array_cp(level[1], u0, u);
+    fasp_darray_cp(level[1], u0, u);
     
     // print out CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
@@ -357,11 +357,11 @@ INT fasp_poisson_gmg3d (REAL         *u,
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
-    fasp_array_set(level[maxlevel], u0, 0.0);
-    fasp_array_set(level[maxlevel], b0, 0.0);
-    fasp_array_set(level[maxlevel], r0, 0.0);
-    fasp_array_cp(level[1], u, u0);
-    fasp_array_cp(level[1], b, b0);
+    fasp_darray_set(level[maxlevel], u0, 0.0);
+    fasp_darray_set(level[maxlevel], b0, 0.0);
+    fasp_darray_set(level[maxlevel], r0, 0.0);
+    fasp_darray_cp(level[1], u, u0);
+    fasp_darray_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
     residual3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
@@ -400,7 +400,7 @@ INT fasp_poisson_gmg3d (REAL         *u,
     }
     
     // update u
-    fasp_array_cp(level[1], u0, u);
+    fasp_darray_cp(level[1], u0, u);
     
     // print out CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
@@ -477,14 +477,14 @@ void fasp_poisson_fgmg1d (REAL         *u,
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
-    fasp_array_set(level[maxlevel], u0, 0.0);
-    fasp_array_set(level[maxlevel], b0, 0.0);
-    fasp_array_set(level[maxlevel], r0, 0.0);
-    fasp_array_cp(nx, u, u0);
-    fasp_array_cp(nx, b, b0);
+    fasp_darray_set(level[maxlevel], u0, 0.0);
+    fasp_darray_set(level[maxlevel], b0, 0.0);
+    fasp_darray_set(level[maxlevel], r0, 0.0);
+    fasp_darray_cp(nx, u, u0);
+    fasp_darray_cp(nx, b, b0);
     
     // compute initial l2 norm of residue
-    fasp_array_set(level[1], r0, 0.0);
+    fasp_darray_set(level[1], r0, 0.0);
     residual1d(u0, b0, r0, 0, level);
     norm_r0 = l2norm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
@@ -493,7 +493,7 @@ void fasp_poisson_fgmg1d (REAL         *u,
     fmg1d(u0, b0, level, maxlevel, nx);
     
     // update u
-    fasp_array_cp(level[1], u0, u);
+    fasp_darray_cp(level[1], u0, u);
     
     // print out Relative Residual and CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
@@ -583,14 +583,14 @@ void fasp_poisson_fgmg2d (REAL         *u,
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
-    fasp_array_set(level[maxlevel], u0, 0.0);
-    fasp_array_set(level[maxlevel], b0, 0.0);
-    fasp_array_set(level[maxlevel], r0, 0.0);
-    fasp_array_cp(level[1], u, u0);
-    fasp_array_cp(level[1], b, b0);
+    fasp_darray_set(level[maxlevel], u0, 0.0);
+    fasp_darray_set(level[maxlevel], b0, 0.0);
+    fasp_darray_set(level[maxlevel], r0, 0.0);
+    fasp_darray_cp(level[1], u, u0);
+    fasp_darray_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
-    fasp_array_set(level[1], r0, 0.0);
+    fasp_darray_set(level[1], r0, 0.0);
     residual2d(u0, b0, r0, 0, level, nxk, nyk);
     norm_r0 = l2norm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
@@ -599,7 +599,7 @@ void fasp_poisson_fgmg2d (REAL         *u,
     fmg2d(u0, b0, level, maxlevel, nxk, nyk);
     
     // update u
-    fasp_array_cp(level[1], u0, u);
+    fasp_darray_cp(level[1], u0, u);
     
     // print out Relative Residual and CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
@@ -695,11 +695,11 @@ void fasp_poisson_fgmg3d (REAL         *u,
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
-    fasp_array_set(level[maxlevel], u0, 0.0);
-    fasp_array_set(level[maxlevel], b0, 0.0);
-    fasp_array_set(level[maxlevel], r0, 0.0);
-    fasp_array_cp(level[1], u, u0);
-    fasp_array_cp(level[1], b, b0);
+    fasp_darray_set(level[maxlevel], u0, 0.0);
+    fasp_darray_set(level[maxlevel], b0, 0.0);
+    fasp_darray_set(level[maxlevel], r0, 0.0);
+    fasp_darray_cp(level[1], u, u0);
+    fasp_darray_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
     residual3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
@@ -710,7 +710,7 @@ void fasp_poisson_fgmg3d (REAL         *u,
     fmg3d(u0, b0, level, maxlevel, nxk, nyk, nzk);
     
     // update u
-    fasp_array_cp(level[1], u0, u);
+    fasp_darray_cp(level[1], u0, u);
     
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
@@ -793,14 +793,14 @@ INT fasp_poisson_gmgcg1d (REAL         *u,
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
-    fasp_array_set(level[maxlevel], u0, 0.0);
-    fasp_array_set(level[maxlevel], b0, 0.0);
-    fasp_array_set(level[maxlevel], r0, 0.0);
-    fasp_array_cp(nx, u, u0);
-    fasp_array_cp(nx, b, b0);
+    fasp_darray_set(level[maxlevel], u0, 0.0);
+    fasp_darray_set(level[maxlevel], b0, 0.0);
+    fasp_darray_set(level[maxlevel], r0, 0.0);
+    fasp_darray_cp(nx, u, u0);
+    fasp_darray_cp(nx, b, b0);
     
     // compute initial l2 norm of residue
-    fasp_array_set(level[1], r0, 0.0);
+    fasp_darray_set(level[1], r0, 0.0);
     residual1d(u, b, r0, 0, level);
     norm_r0 = l2norm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
@@ -809,7 +809,7 @@ INT fasp_poisson_gmgcg1d (REAL         *u,
     iter = pcg1d(u0, b0, level, maxlevel, nx, rtol, max_itr_num, prtlvl);
     
     // Update u
-    fasp_array_cp(level[1], u0, u);
+    fasp_darray_cp(level[1], u0, u);
     
     // print out CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
@@ -900,14 +900,14 @@ INT fasp_poisson_gmgcg2d (REAL         *u,
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
-    fasp_array_set(level[maxlevel], u0, 0.0);
-    fasp_array_set(level[maxlevel], b0, 0.0);
-    fasp_array_set(level[maxlevel], r0, 0.0);
-    fasp_array_cp(level[1], u, u0);
-    fasp_array_cp(level[1], b, b0);
+    fasp_darray_set(level[maxlevel], u0, 0.0);
+    fasp_darray_set(level[maxlevel], b0, 0.0);
+    fasp_darray_set(level[maxlevel], r0, 0.0);
+    fasp_darray_cp(level[1], u, u0);
+    fasp_darray_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
-    fasp_array_set(level[1], r0, 0.0);
+    fasp_darray_set(level[1], r0, 0.0);
     residual2d(u0, b0, r0, 0, level, nxk, nyk);
     norm_r0 = l2norm(r0, level, 0);
     if (norm_r0 < atol) goto FINISHED;
@@ -917,7 +917,7 @@ INT fasp_poisson_gmgcg2d (REAL         *u,
                  nyk, rtol, max_itr_num, prtlvl);
     
     // update u
-    fasp_array_cp(level[1], u0, u);
+    fasp_darray_cp(level[1], u0, u);
     
     // print out CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
@@ -1016,11 +1016,11 @@ INT fasp_poisson_gmgcg3d (REAL         *u,
     u0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     b0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
     r0 = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
-    fasp_array_set(level[maxlevel], u0, 0.0);
-    fasp_array_set(level[maxlevel], b0, 0.0);
-    fasp_array_set(level[maxlevel], r0, 0.0);
-    fasp_array_cp(level[1], u, u0);
-    fasp_array_cp(level[1], b, b0);
+    fasp_darray_set(level[maxlevel], u0, 0.0);
+    fasp_darray_set(level[maxlevel], b0, 0.0);
+    fasp_darray_set(level[maxlevel], r0, 0.0);
+    fasp_darray_cp(level[1], u, u0);
+    fasp_darray_cp(level[1], b, b0);
     
     // compute initial l2 norm of residue
     residual3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
@@ -1032,7 +1032,7 @@ INT fasp_poisson_gmgcg3d (REAL         *u,
                  nyk, nzk, rtol, max_itr_num, prtlvl);
     
     // update u
-    fasp_array_cp(level[1], u0, u);
+    fasp_darray_cp(level[1], u0, u);
     
     // print out CPU time if needed
     if ( prtlvl > PRINT_NONE ) {

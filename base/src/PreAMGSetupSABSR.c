@@ -48,8 +48,8 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl, AMG_param *param)
  * \author Xiaozhe Hu
  * \date   05/26/2014
  */
-SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr   *mgl,
-                             AMG_param      *param)
+SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr  *mgl,
+                             AMG_param     *param)
 {
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);

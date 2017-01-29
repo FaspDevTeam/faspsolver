@@ -1,5 +1,16 @@
 File Name: CHANGES
 
+01/29/2017 FASP 1.9.6:
+- Modify fasp.h (affect all FASP projects).
+  -- Change itsolver_param ==> ITS_param.
+  -- Change Schwarz_* ==> SWZ_*.
+  -- Change precond_diagstr ==> precond_diag_str.
+  -- Reordering.
+- Change a few inconsistent function names.
+- Move things around.
+- Clean up public functions.
+- Update parameters in ini/*.
+
 01/28/2017 FASP 1.9.5:
 - Happy Chinese New Year!
 - Test GCC 5.4.0.

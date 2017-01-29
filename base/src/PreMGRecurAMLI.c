@@ -3,9 +3,9 @@
  *  \brief Abstract AMLI multilevel iteration -- recursive version
  *
  *  \note This file contains Level-4 (Pre) functions. It requires
- *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxParam.c, AuxVector.c, 
- *        BlaSchwarzSetup.c, BlaArray.c, BlaSpmvBSR.c, BlaSpmvCSR.c, 
- *        ItrSmootherBSR.c, ItrSmootherCSR.c, ItrSmootherCSRpoly.c, KryPcg.c, 
+ *        AuxArray.c, AuxMemory.c, AuxMessage.c, AuxParam.c, AuxVector.c,
+ *        BlaSchwarzSetup.c, BlaArray.c, BlaSpmvBSR.c, BlaSpmvCSR.c,
+ *        ItrSmootherBSR.c, ItrSmootherCSR.c, ItrSmootherCSRpoly.c, KryPcg.c,
  *        KryPvfgmres.c, KrySPcg.c, KrySPvgmres.c, PreBSR.c, and PreCSR.c
  *
  *  \note This file includes AMLI and non-linear AMLI cycles
@@ -82,9 +82,9 @@ void fasp_solver_amli (AMG_data   *mgl,
     REAL     *r1       = mgl[level+1].w.val+m1; // work array for residual
     
     // Schwarz parameters
-    Schwarz_param swzparam;
-    if ( param->Schwarz_levels > 0 ) {
-        swzparam.Schwarz_blksolver = param->Schwarz_blksolver;
+    SWZ_param swzparam;
+    if ( param->SWZ_levels > 0 ) {
+        swzparam.SWZ_blksolver = param->SWZ_blksolver;
     }
     
 #if DEBUG_MODE > 0
@@ -104,9 +104,9 @@ void fasp_solver_amli (AMG_data   *mgl,
             
         }
         
-        else if ( level < mgl->Schwarz_levels ) {
+        else if ( level < mgl->SWZ_levels ) {
             
-            switch (mgl[level].Schwarz.Schwarz_type) {
+            switch (mgl[level].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
                     fasp_dcsr_schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
                                                        &mgl[level].x, &mgl[level].b);
@@ -126,7 +126,7 @@ void fasp_solver_amli (AMG_data   *mgl,
         }
         
         // form residual r = b - A x
-        fasp_array_cp(m0,b0->val,r);
+        fasp_darray_cp(m0,b0->val,r);
         fasp_blas_dcsr_aAxpy(-1.0,A0,e0->val,r);
         
         // restriction r1 = R*r0
@@ -141,7 +141,7 @@ void fasp_solver_amli (AMG_data   *mgl,
         {
             INT i;
             
-            fasp_array_cp(m1,b1->val,r1);
+            fasp_darray_cp(m1,b1->val,r1);
             
             for ( i=1; i<=degree; i++ ) {
                 fasp_dvec_set(m1,e1,0.0);
@@ -151,7 +151,7 @@ void fasp_solver_amli (AMG_data   *mgl,
                 // First, compute b1 = A1*e1
                 fasp_blas_dcsr_mxv(A1, e1->val, b1->val);
                 // Then, compute b1 = b1 + (coef[degree-i]/coef[degree])*r1
-                fasp_blas_array_axpy(m1, coef[degree-i]/coef[degree], r1, b1->val);
+                fasp_blas_darray_axpy(m1, coef[degree-i]/coef[degree], r1, b1->val);
             }
             
             fasp_dvec_set(m1,e1,0.0);
@@ -159,9 +159,9 @@ void fasp_solver_amli (AMG_data   *mgl,
         }
         
         // find the optimal scaling factor alpha
-        fasp_blas_array_ax(m1, coef[degree], e1->val);
+        fasp_blas_darray_ax(m1, coef[degree], e1->val);
         if ( param->coarse_scaling == ON ) {
-            alpha = fasp_blas_array_dotprod(m1, e1->val, r1)
+            alpha = fasp_blas_darray_dotprod(m1, e1->val, r1)
             / fasp_blas_dcsr_vmv(A1, e1->val, e1->val);
             alpha = MIN(alpha, 1.0);
         }
@@ -183,9 +183,9 @@ void fasp_solver_amli (AMG_data   *mgl,
             
         }
         
-        else if (level<mgl->Schwarz_levels) {
+        else if (level<mgl->SWZ_levels) {
             
-            switch (mgl[level].Schwarz.Schwarz_type) {
+            switch (mgl[level].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
                     fasp_dcsr_schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
                                                         &mgl[level].x, &mgl[level].b);
@@ -254,8 +254,8 @@ void fasp_solver_amli (AMG_data   *mgl,
 }
 
 /**
- * \fn void fasp_solver_nl_amli (AMG_data *mgl, AMG_param *param,
- *                               INT level, INT num_levels)
+ * \fn void fasp_solver_namli (AMG_data *mgl, AMG_param *param,
+ *                             INT level, INT num_levels)
  *
  * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
  *
@@ -274,10 +274,10 @@ void fasp_solver_amli (AMG_data   *mgl,
  * Modified by Zheng Li on 11/10/2014: update direct solvers.
  * Modified by Hongxuan Zhang on 12/15/2015: update direct solvers.
  */
-void fasp_solver_nl_amli (AMG_data   *mgl,
-                          AMG_param  *param,
-                          INT         level,
-                          INT         num_levels)
+void fasp_solver_namli (AMG_data   *mgl,
+                        AMG_param  *param,
+                        INT         level,
+                        INT         num_levels)
 {
     const SHORT  amg_type=param->AMG_type;
     const SHORT  prtlvl = param->print_level;
@@ -304,9 +304,9 @@ void fasp_solver_nl_amli (AMG_data   *mgl,
     uH.row = m1; uH.val = mgl[level+1].w.val + m1;
     
     // Schwarz parameters
-    Schwarz_param swzparam;
-    if ( param->Schwarz_levels > 0 ) {
-        swzparam.Schwarz_blksolver = param->Schwarz_blksolver;
+    SWZ_param swzparam;
+    if ( param->SWZ_levels > 0 ) {
+        swzparam.SWZ_blksolver = param->SWZ_blksolver;
     }
     
 #if DEBUG_MODE > 0
@@ -326,9 +326,9 @@ void fasp_solver_nl_amli (AMG_data   *mgl,
             
         }
         
-        else if ( level < mgl->Schwarz_levels ) {
+        else if ( level < mgl->SWZ_levels ) {
             
-            switch (mgl[level].Schwarz.Schwarz_type) {
+            switch (mgl[level].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
                     fasp_dcsr_schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
                                                        &mgl[level].x, &mgl[level].b);
@@ -350,7 +350,7 @@ void fasp_solver_nl_amli (AMG_data   *mgl,
         }
         
         // form residual r = b - A x
-        fasp_array_cp(m0,b0->val,r);
+        fasp_darray_cp(m0,b0->val,r);
         fasp_blas_dcsr_aAxpy(-1.0,A0,e0->val,r);
         
         // restriction r1 = R*r0
@@ -370,7 +370,7 @@ void fasp_solver_nl_amli (AMG_data   *mgl,
             // V-cycle will be enforced when needed !!!
             if ( mgl[level+1].cycle_type <= 1 ) {
                 
-                fasp_solver_nl_amli(&mgl[level+1], param, 0, num_levels-1);
+                fasp_solver_namli(&mgl[level+1], param, 0, num_levels-1);
                 
             }
             
@@ -385,9 +385,9 @@ void fasp_solver_nl_amli (AMG_data   *mgl,
                 
                 precond pc;
                 pc.data = &pcdata;
-                pc.fct = fasp_precond_nl_amli;
+                pc.fct = fasp_precond_namli;
                 
-                fasp_array_cp (m1, e1->val, uH.val);
+                fasp_darray_cp (m1, e1->val, uH.val);
                 
                 switch (param->nl_amli_krylov_type) {
                         
@@ -400,7 +400,7 @@ void fasp_solver_nl_amli (AMG_data   *mgl,
                         break;
                 }
                 
-                fasp_array_cp (m1, uH.val, e1->val);
+                fasp_darray_cp (m1, uH.val, e1->val);
             }
             
         }
@@ -421,9 +421,9 @@ void fasp_solver_nl_amli (AMG_data   *mgl,
             fasp_smoother_dcsr_ilu(A0, b0, e0, LU_level);
             
         }
-        else if ( level < mgl->Schwarz_levels ) {
+        else if ( level < mgl->SWZ_levels ) {
             
-            switch (mgl[level].Schwarz.Schwarz_type) {
+            switch (mgl[level].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
                     fasp_dcsr_schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
                                                         &mgl[level].x, &mgl[level].b);
@@ -493,8 +493,8 @@ void fasp_solver_nl_amli (AMG_data   *mgl,
 }
 
 /**
- * \fn void fasp_solver_nl_amli_bsr (AMG_data_bsr *mgl, AMG_param *param,
- *                                   INT level, INT num_levels)
+ * \fn void fasp_solver_namli_bsr (AMG_data_bsr *mgl, AMG_param *param,
+ *                                 INT level, INT num_levels)
  *
  * \brief Solve Ax=b with recursive nonlinear AMLI-cycle
  *
@@ -513,10 +513,10 @@ void fasp_solver_nl_amli (AMG_data   *mgl,
  * Modified by Chensong Zhang on 02/27/2013: update direct solvers.
  * Modified by Hongxuan Zhang on 12/15/2015: update direct solvers.
  */
-void fasp_solver_nl_amli_bsr (AMG_data_bsr   *mgl,
-                              AMG_param      *param,
-                              INT             level,
-                              INT             num_levels)
+void fasp_solver_namli_bsr (AMG_data_bsr  *mgl,
+                            AMG_param     *param,
+                            INT            level,
+                            INT            num_levels)
 {
     const SHORT  prtlvl = param->print_level;
     const SHORT  smoother = param->smoother;
@@ -578,7 +578,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr   *mgl,
         }
         
         // form residual r = b - A x
-        fasp_array_cp(m0,b0->val,r);
+        fasp_darray_cp(m0,b0->val,r);
         fasp_blas_dbsr_aAxpy(-1.0,A0,e0->val,r);
         
         fasp_blas_dbsr_mxv(&mgl[level].R, r, b1->val);
@@ -590,7 +590,7 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr   *mgl,
             // The coarsest problem is solved exactly.
             // No need to call Krylov method on second coarsest level
             if (level == num_levels-2) {
-                fasp_solver_nl_amli_bsr(&mgl[level+1], param, 0, num_levels-1);
+                fasp_solver_namli_bsr(&mgl[level+1], param, 0, num_levels-1);
             }
             else { // recursively call preconditioned Krylov method on coarse grid
                 precond_data_bsr pcdata;
@@ -602,18 +602,18 @@ void fasp_solver_nl_amli_bsr (AMG_data_bsr   *mgl,
                 
                 precond pc;
                 pc.data = &pcdata;
-                pc.fct = fasp_precond_dbsr_nl_amli;
+                pc.fct = fasp_precond_dbsr_namli;
                 
-                fasp_array_cp (m1, b1->val, bH.val);
-                fasp_array_cp (m1, e1->val, uH.val);
+                fasp_darray_cp (m1, b1->val, bH.val);
+                fasp_darray_cp (m1, e1->val, uH.val);
                 
                 const INT maxit = param->amli_degree+1;
                 
                 fasp_solver_dbsr_pvfgmres(A1,&bH,&uH,&pc,param->tol,
                                           maxit,MIN(maxit,30),1,PRINT_NONE);
                 
-                fasp_array_cp (m1, bH.val, b1->val);
-                fasp_array_cp (m1, uH.val, e1->val);
+                fasp_darray_cp (m1, bH.val, b1->val);
+                fasp_darray_cp (m1, uH.val, e1->val);
             }
             
         }

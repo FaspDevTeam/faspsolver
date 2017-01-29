@@ -37,7 +37,7 @@ void fasp_blas_dbsr_axm (dBSRmat     *A,
     const INT nb  = A->nb;
     
     // A direct calculation can be written as:
-    fasp_blas_array_ax(nnz*nb*nb, alpha, A->val);
+    fasp_blas_darray_ax(nnz*nb*nb, alpha, A->val);
 }
 
 /*!
@@ -96,7 +96,7 @@ void fasp_blas_dbsr_aAxpby (const REAL   alpha,
     //----------------------------------------------
     
     if (alpha == 0.0) {
-        fasp_blas_array_ax(size, beta, y);
+        fasp_blas_darray_ax(size, beta, y);
         return;
     }
     
@@ -111,7 +111,7 @@ void fasp_blas_dbsr_aAxpby (const REAL   alpha,
         }
         else {
             //for (i = size; i--; ) y[i] *= temp; // modified by Xiaozhe, 03/11/2011
-            fasp_blas_array_ax(size, temp, y);
+            fasp_blas_darray_ax(size, temp, y);
         }
     }
     
@@ -318,7 +318,7 @@ void fasp_blas_dbsr_aAxpby (const REAL   alpha,
     //------------------------------------------
     
     if (alpha != 1.0) {
-        fasp_blas_array_ax(size, alpha, y);
+        fasp_blas_darray_ax(size, alpha, y);
     }
 }
 
@@ -386,7 +386,7 @@ void fasp_blas_dbsr_aAxpy (const REAL      alpha,
     
     if (alpha != 1.0){
         temp = 1.0 / alpha;
-        fasp_blas_array_ax(size, temp, y);
+        fasp_blas_darray_ax(size, temp, y);
     }
     
     //-----------------------------------------------------------------
@@ -595,7 +595,7 @@ void fasp_blas_dbsr_aAxpy (const REAL      alpha,
     //------------------------------------------
     
     if (alpha != 1.0){
-        fasp_blas_array_ax(size, alpha, y);
+        fasp_blas_darray_ax(size, alpha, y);
     }
     return;
 }
@@ -657,7 +657,7 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL      alpha,
     
     if (alpha != 1.0){
         temp = 1.0 / alpha;
-        fasp_blas_array_ax(size, temp, y);
+        fasp_blas_darray_ax(size, temp, y);
     }
     
     //-----------------------------------------------------------------
@@ -854,7 +854,7 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL      alpha,
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy(nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy(nb, 1.0, px0, py);
                         }
                         
                     }
@@ -868,7 +868,7 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL      alpha,
                         j = JA[k];
                         px0 = x+j*nb; // &x[j*nb];
                         py = py0;
-                        fasp_blas_array_axpy(nb, 1.0, px0, py);
+                        fasp_blas_darray_axpy(nb, 1.0, px0, py);
                     }
                     
                 }
@@ -881,7 +881,7 @@ void fasp_blas_dbsr_aAxpy_agg (const REAL      alpha,
     //   y = alpha*y
     //------------------------------------------
     
-    if ( alpha != 1.0 ) fasp_blas_array_ax(size, alpha, y);
+    if ( alpha != 1.0 ) fasp_blas_darray_ax(size, alpha, y);
     
     return;
 }
@@ -936,7 +936,7 @@ void fasp_blas_dbsr_mxv (const dBSRmat  *A,
     //-----------------------------------------------------------------
     //  zero out 'y'
     //-----------------------------------------------------------------
-    fasp_array_set(size, y, 0.0);
+    fasp_darray_set(size, y, 0.0);
     
     //-----------------------------------------------------------------
     //   y = A*x (Core Computation)
@@ -2719,7 +2719,7 @@ void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
     //-----------------------------------------------------------------
     //  zero out 'y'
     //-----------------------------------------------------------------
-    fasp_array_set(size, y, 0.0);
+    fasp_darray_set(size, y, 0.0);
     
     //-----------------------------------------------------------------
     //   y = A*x (Core Computation)
@@ -4264,19 +4264,19 @@ void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 break;
                                 
@@ -4285,25 +4285,25 @@ void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 break;
                                 
@@ -4312,31 +4312,31 @@ void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 break;
                                 
@@ -4345,37 +4345,37 @@ void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 break;
                                 
@@ -4384,43 +4384,43 @@ void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 k ++;
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 
                                 break;
                                 
@@ -4429,7 +4429,7 @@ void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
                                     j = JA[k];
                                     px0 = x+j*nb; // &x[j*nb];
                                     py = py0;
-                                    fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                    fasp_blas_darray_axpy (nb, 1.0, px0, py);
                                 }
                                 break;
                         }
@@ -4448,19 +4448,19 @@ void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             break;
                             
@@ -4469,25 +4469,25 @@ void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             break;
                             
@@ -4496,31 +4496,31 @@ void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             break;
                             
@@ -4529,37 +4529,37 @@ void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             break;
                             
@@ -4568,43 +4568,43 @@ void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             k ++;
                             j = JA[k];
                             px0 = x+j*nb; // &x[j*nb];
                             py = py0;
-                            fasp_blas_array_axpy (nb, 1.0, px0, py);
+                            fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             
                             break;
                             
@@ -4613,7 +4613,7 @@ void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
                                 j = JA[k];
                                 px0 = x+j*nb; // &x[j*nb];
                                 py = py0;
-                                fasp_blas_array_axpy (nb, 1.0, px0, py);
+                                fasp_blas_darray_axpy (nb, 1.0, px0, py);
                             }
                             break;
                     }
@@ -4723,13 +4723,13 @@ void fasp_blas_dbsr_mxm (const dBSRmat  *A,
     for (i=0;i<C->ROW;++i) {
         for (j=C->IA[i];j<C->IA[i+1];++j) {
             
-            fasp_array_set(nb2, C->val+(j*nb2), 0x0);
+            fasp_darray_set(nb2, C->val+(j*nb2), 0x0);
             
             for (k=A->IA[i];k<A->IA[i+1];++k) {
                 for (l=B->IA[A->JA[k]];l<B->IA[A->JA[k]+1];l++) {
                     if (B->JA[l]==C->JA[j]) {
                         fasp_blas_smat_mul (A->val+(k*nb2), B->val+(l*nb2), temp, nb);
-                        fasp_blas_array_axpy (nb2, 1.0, temp, C->val+(j*nb2));
+                        fasp_blas_darray_axpy (nb2, 1.0, temp, C->val+(j*nb2));
                     } // end if
                 } // end for l
             } // end for k
@@ -4887,8 +4887,8 @@ void fasp_blas_dbsr_rap1 (const dBSRmat  *R,
                     ++length;
                 }
                 fasp_blas_smat_mul(&rj[jj*nb2],&aj[k*nb2],smat_tmp,nb);
-                //fasp_array_xpy(nb2,&temp[ja[k]*nb2], smat_tmp );
-                fasp_blas_array_axpy (nb2, 1.0, smat_tmp, &temp[ja[k]*nb2]);
+                //fasp_darray_xpy(nb2,&temp[ja[k]*nb2], smat_tmp );
+                fasp_blas_darray_axpy (nb2, 1.0, smat_tmp, &temp[ja[k]*nb2]);
                 
                 //temp[ja[k]]+=rj[jj]*aj[k];
                 // change to   X = X+Y*Z
@@ -4908,13 +4908,13 @@ void fasp_blas_dbsr_rap1 (const dBSRmat  *R,
                 // pull out the appropriate columns of P
                 //acj[BTindex[jp[k]]]+=temp[jj]*pj[k];
                 fasp_blas_smat_mul(&temp[jj*nb2],&pj[k*nb2],smat_tmp,nb);
-                //fasp_array_xpy(nb2,&acj[BTindex[jp[k]]*nb2], smat_tmp );
-                fasp_blas_array_axpy(nb2, 1.0, smat_tmp, &acj[BTindex[jp[k]]*nb2]);
+                //fasp_darray_xpy(nb2,&acj[BTindex[jp[k]]*nb2], smat_tmp );
+                fasp_blas_darray_axpy(nb2, 1.0, smat_tmp, &acj[BTindex[jp[k]]*nb2]);
                 
                 // change to   X = X+Y*Z
             }
             //temp[jj]=0.0; // change to   X[nb,nb] = 0;
-            fasp_array_set(nb2,&temp[jj*nb2],0.0);
+            fasp_darray_set(nb2,&temp[jj*nb2],0.0);
         }
     } // end for i: Second loop
     // setup coarse matrix B
@@ -5105,7 +5105,7 @@ jj3, i3, smat_tmp)
                 P_marker[i] = counter;
                 jj_row_begining = counter;
                 jac[counter] = i;
-                fasp_array_set(nb2, &acj[counter*nb2], 0x0);
+                fasp_darray_set(nb2, &acj[counter*nb2], 0x0);
                 counter ++;
                 
                 for (jj1 = ir[i]; jj1 < ir[i+1]; ++jj1) {
@@ -5120,12 +5120,12 @@ jj3, i3, smat_tmp)
                                 fasp_blas_smat_mul(smat_tmp, &pj[jj3*nb2], smat_tmp+nb2, nb);
                                 if (P_marker[i3] < jj_row_begining) {
                                     P_marker[i3] = counter;
-                                    fasp_array_cp(nb2, smat_tmp+nb2, &acj[counter*nb2]);
+                                    fasp_darray_cp(nb2, smat_tmp+nb2, &acj[counter*nb2]);
                                     jac[counter] = i3;
                                     counter ++;
                                 }
                                 else {
-                                    fasp_blas_array_axpy(nb2, 1.0, smat_tmp+nb2,
+                                    fasp_blas_darray_axpy(nb2, 1.0, smat_tmp+nb2,
                                                          &acj[P_marker[i3]*nb2]);
                                 }
                             }
@@ -5134,7 +5134,7 @@ jj3, i3, smat_tmp)
                             for (jj3 = ip[i2]; jj3 < ip[i2+1]; jj3 ++) {
                                 i3 = jp[jj3];
                                 fasp_blas_smat_mul(smat_tmp, &pj[jj3*nb2], smat_tmp+nb2, nb);
-                                fasp_blas_array_axpy(nb2, 1.0, smat_tmp+nb2,
+                                fasp_blas_darray_axpy(nb2, 1.0, smat_tmp+nb2,
                                                      &acj[P_marker[i3]*nb2]);
                             }
                         }
@@ -5150,7 +5150,7 @@ jj3, i3, smat_tmp)
             Ps_marker[i] = counter;
             jj_row_begining = counter;
             jac[counter] = i;
-            fasp_array_set(nb2, &acj[counter*nb2], 0x0);
+            fasp_darray_set(nb2, &acj[counter*nb2], 0x0);
             counter ++;
             
             for (jj1 = ir[i]; jj1 < ir[i+1]; ++jj1) {
@@ -5165,12 +5165,12 @@ jj3, i3, smat_tmp)
                             fasp_blas_smat_mul(tmp, &pj[jj3*nb2], tmp+nb2, nb);
                             if (Ps_marker[i3] < jj_row_begining) {
                                 Ps_marker[i3] = counter;
-                                fasp_array_cp(nb2, tmp+nb2, &acj[counter*nb2]);
+                                fasp_darray_cp(nb2, tmp+nb2, &acj[counter*nb2]);
                                 jac[counter] = i3;
                                 counter ++;
                             }
                             else {
-                                fasp_blas_array_axpy(nb2, 1.0, tmp+nb2,
+                                fasp_blas_darray_axpy(nb2, 1.0, tmp+nb2,
                                                      &acj[Ps_marker[i3]*nb2]);
                             }
                         }
@@ -5179,7 +5179,7 @@ jj3, i3, smat_tmp)
                         for (jj3 = ip[i2]; jj3 < ip[i2+1]; jj3 ++) {
                             i3 = jp[jj3];
                             fasp_blas_smat_mul(tmp, &pj[jj3*nb2], tmp+nb2, nb);
-                            fasp_blas_array_axpy(nb2, 1.0, tmp+nb2, &acj[Ps_marker[i3]*nb2]);
+                            fasp_blas_darray_axpy(nb2, 1.0, tmp+nb2, &acj[Ps_marker[i3]*nb2]);
                         }
                     }
                 }
@@ -5364,7 +5364,7 @@ counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
                 P_marker[i] = counter;
                 jj_row_begining = counter;
                 jac[counter] = i;
-                fasp_array_set(nb2, &acj[counter*nb2], 0x0);
+                fasp_darray_set(nb2, &acj[counter*nb2], 0x0);
                 counter ++;
                 
                 for (jj1 = ir[i]; jj1 < ir[i+1]; ++jj1) {
@@ -5379,12 +5379,12 @@ counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
                                 
                                 if (P_marker[i3] < jj_row_begining) {
                                     P_marker[i3] = counter;
-                                    fasp_array_cp(nb2, &aj[jj2*nb2], &acj[counter*nb2]);
+                                    fasp_darray_cp(nb2, &aj[jj2*nb2], &acj[counter*nb2]);
                                     jac[counter] = i3;
                                     counter ++;
                                 }
                                 else {
-                                    fasp_blas_array_axpy(nb2, 1.0, &aj[jj2*nb2],
+                                    fasp_blas_darray_axpy(nb2, 1.0, &aj[jj2*nb2],
                                                          &acj[P_marker[i3]*nb2]);
                                 }
                             }
@@ -5392,7 +5392,7 @@ counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
                         else {
                             for (jj3 = ip[i2]; jj3 < ip[i2+1]; jj3 ++) {
                                 i3 = jp[jj3];
-                                fasp_blas_array_axpy(nb2, 1.0, &aj[jj2*nb2],
+                                fasp_blas_darray_axpy(nb2, 1.0, &aj[jj2*nb2],
                                                      &acj[P_marker[i3]*nb2]);
                             }
                         }
@@ -5408,7 +5408,7 @@ counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
             Ps_marker[i] = counter;
             jj_row_begining = counter;
             jac[counter] = i;
-            fasp_array_set(nb2, &acj[counter*nb2], 0x0);
+            fasp_darray_set(nb2, &acj[counter*nb2], 0x0);
             counter ++;
             
             for (jj1 = ir[i]; jj1 < ir[i+1]; ++jj1) {
@@ -5422,12 +5422,12 @@ counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
                             i3 = jp[jj3];
                             if (Ps_marker[i3] < jj_row_begining) {
                                 Ps_marker[i3] = counter;
-                                fasp_array_cp(nb2, &aj[jj2*nb2], &acj[counter*nb2]);
+                                fasp_darray_cp(nb2, &aj[jj2*nb2], &acj[counter*nb2]);
                                 jac[counter] = i3;
                                 counter ++;
                             }
                             else {
-                                fasp_blas_array_axpy(nb2, 1.0, &aj[jj2*nb2],
+                                fasp_blas_darray_axpy(nb2, 1.0, &aj[jj2*nb2],
                                                      &acj[Ps_marker[i3]*nb2]);
                             }
                         }
@@ -5435,7 +5435,7 @@ counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
                     else {
                         for (jj3 = ip[i2]; jj3 < ip[i2+1]; jj3 ++) {
                             i3 = jp[jj3];
-                            fasp_blas_array_axpy(nb2, 1.0, &aj[jj2*nb2],
+                            fasp_blas_darray_axpy(nb2, 1.0, &aj[jj2*nb2],
                                                  &acj[Ps_marker[i3]*nb2]);
                         }
                     }

@@ -54,7 +54,7 @@ void fasp_fwrapper_amg_ (INT  *n,
     fasp_param_amg_init(&amgparam);
     amgparam.tol         = *tol;
     amgparam.print_level = *ptrlvl;
-    amgparam.maxit    = *maxit;
+    amgparam.maxit       = *maxit;
     
     mat.row = *n; mat.col = *n; mat.nnz = *nnz;
     mat.IA  = ia; mat.JA  = ja; mat.val = a;
@@ -97,10 +97,10 @@ void fasp_fwrapper_krylov_amg_ (INT  *n,
                                 INT  *maxit,
                                 INT  *ptrlvl)
 {
-    dCSRmat         mat;      // coefficient matrix
-    dvector         rhs, sol; // right-hand-side, solution
-    AMG_param       amgparam; // parameters for AMG
-    itsolver_param  itparam;  // parameters for itsolver
+    dCSRmat    mat;      // coefficient matrix
+    dvector    rhs, sol; // right-hand-side, solution
+    AMG_param  amgparam; // parameters for AMG
+    ITS_param  itparam;  // parameters for itsolver
     
     fasp_param_amg_init(&amgparam);
     amgparam.AMG_type             = UA_AMG;
@@ -165,12 +165,12 @@ INT fasp_wrapper_dbsr_krylov_amg (INT   n,
                                   INT   maxit,
                                   INT   ptrlvl)
 {
-    dCSRmat         mat;      // coefficient matrix in CSR format
-    dBSRmat         bsrmat;   // coefficient matrix in BSR format
-    dvector         rhs, sol; // right-hand-side, solution
-    AMG_param       amgparam; // parameters for AMG
-    itsolver_param  itparam;  // parameters for itsolver
-    INT             status = FASP_SUCCESS; // return parameter
+    dCSRmat    mat;      // coefficient matrix in CSR format
+    dBSRmat    bsrmat;   // coefficient matrix in BSR format
+    dvector    rhs, sol; // right-hand-side, solution
+    AMG_param  amgparam; // parameters for AMG
+    ITS_param  itparam;  // parameters for itsolver
+    INT        status = FASP_SUCCESS; // return parameter
     
     // setup AMG parameters
     fasp_param_amg_init(&amgparam);
@@ -257,7 +257,7 @@ INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT   n,
     dBSRmat         bsrmat;   // coefficient matrix in BSR format
     dvector         rhs, sol; // right-hand-side, solution
     AMG_param       amgparam; // parameters for AMG
-    itsolver_param  itparam;  // parameters for itsolver
+    ITS_param  itparam;  // parameters for itsolver
     INT             status = FASP_SUCCESS; // return parameter
     
     // setup AMG parameters

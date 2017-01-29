@@ -44,10 +44,10 @@ SHORT fasp_param_check (input_param *inparam)
         || inparam->ILU_droptol<=0
         || inparam->ILU_relax<0
         || inparam->ILU_permtol<0
-        || inparam->Schwarz_mmsize<0
-        || inparam->Schwarz_maxlvl<0
-        || inparam->Schwarz_type<0
-        || inparam->Schwarz_blksolver<0
+        || inparam->SWZ_mmsize<0
+        || inparam->SWZ_maxlvl<0
+        || inparam->SWZ_type<0
+        || inparam->SWZ_blksolver<0
         || inparam->AMG_type<=0
         || inparam->AMG_type>3
         || inparam->AMG_cycle_type<=0
@@ -245,14 +245,14 @@ void fasp_param_input (const char   *fname,
             fgets(buffer,500,fp); // skip rest of line
         }
         
-        else if (strcmp(buffer,"AMG_Schwarz_levels")==0) {
+        else if (strcmp(buffer,"AMG_SWZ_levels")==0) {
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
 				status = ERROR_INPUT_PAR; break;
 			}
 			val = fscanf(fp,"%d",&ibuff);
 			if (val!=1) { status = ERROR_INPUT_PAR; break; }
-			inparam->AMG_Schwarz_levels = ibuff;
+			inparam->AMG_SWZ_levels = ibuff;
 			fgets(buffer,500,fp); // skip rest of line
 		}
     
@@ -722,7 +722,7 @@ void fasp_param_input (const char   *fname,
             fgets(buffer,500,fp); // skip rest of line
         }
         
-        else if (strcmp(buffer,"Schwarz_mmsize")==0)
+        else if (strcmp(buffer,"SWZ_mmsize")==0)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
@@ -730,11 +730,11 @@ void fasp_param_input (const char   *fname,
 			}
 			val = fscanf(fp,"%d",&ibuff);
 			if (val!=1) { status = ERROR_INPUT_PAR; break; }
-			inparam->Schwarz_mmsize = ibuff;
+			inparam->SWZ_mmsize = ibuff;
 			fgets(buffer,500,fp); // skip rest of line
 		}
 		
-		else if (strcmp(buffer,"Schwarz_maxlvl")==0)
+		else if (strcmp(buffer,"SWZ_maxlvl")==0)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
@@ -742,11 +742,11 @@ void fasp_param_input (const char   *fname,
 			}
 			val = fscanf(fp,"%d",&ibuff);
 			if (val!=1) {status = ERROR_INPUT_PAR; break; }
-			inparam->Schwarz_maxlvl = ibuff;
+			inparam->SWZ_maxlvl = ibuff;
 			fgets(buffer,500,fp); // skip rest of line
 		}
 		
-		else if (strcmp(buffer,"Schwarz_type")==0)
+		else if (strcmp(buffer,"SWZ_type")==0)
 		{
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
@@ -754,11 +754,11 @@ void fasp_param_input (const char   *fname,
 			}
 			val = fscanf(fp,"%d",&ibuff);
 			if (val!=1) { status = ERROR_INPUT_PAR; break; }
-			inparam->Schwarz_type = ibuff;
+			inparam->SWZ_type = ibuff;
 			fgets(buffer,500,fp); // skip rest of line
 		}
 
-        else if (strcmp(buffer,"Schwarz_blksolver")==0)
+        else if (strcmp(buffer,"SWZ_blksolver")==0)
         {
             val = fscanf(fp,"%s",buffer);
             if (val!=1 || strcmp(buffer,"=")!=0) {
@@ -766,7 +766,7 @@ void fasp_param_input (const char   *fname,
             }
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
-            inparam->Schwarz_blksolver = ibuff;
+            inparam->SWZ_blksolver = ibuff;
             fgets(buffer,500,fp); // skip rest of line
         }
 

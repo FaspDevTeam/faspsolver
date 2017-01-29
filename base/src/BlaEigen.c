@@ -39,7 +39,7 @@ REAL fasp_dcsr_eig (const dCSRmat  *A,
     dvector x, y;
     fasp_dvec_alloc(A->row, &x); 
     fasp_dvec_rand(A->row,&x); 
-    fasp_blas_array_ax(A->row, 1.0/fasp_blas_dvec_norm2(&x), x.val);
+    fasp_blas_darray_ax(A->row, 1.0/fasp_blas_dvec_norm2(&x), x.val);
     fasp_dvec_alloc(A->row, &y);
     
     for ( i = maxit; i--; ) {
@@ -48,7 +48,7 @@ REAL fasp_dcsr_eig (const dCSRmat  *A,
     
         // y/||y||
         L2_norm_y = fasp_blas_dvec_norm2(&y);
-        fasp_blas_array_ax(A->row, 1.0/L2_norm_y, y.val);
+        fasp_blas_darray_ax(A->row, 1.0/L2_norm_y, y.val);
     
         // eigenvalue = y'Ay;
         eigenvalue = fasp_blas_dcsr_vmv(A, y.val, y.val);

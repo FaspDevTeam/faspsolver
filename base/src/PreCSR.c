@@ -85,7 +85,7 @@ precond *fasp_precond_setup (const SHORT   precond_type,
         case AMLI_CYCLE: // AMLI cycle
             pc->fct = fasp_precond_amli; break;
         case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
-            pc->fct = fasp_precond_nl_amli; break;
+            pc->fct = fasp_precond_namli; break;
         default: // V,W-Cycle AMG
             pc->fct = fasp_precond_amg; break;
         }
@@ -202,7 +202,7 @@ void fasp_precond_ilu (REAL *r,
     
     zz = iludata->work; 
     zr = iludata->work+m;
-    fasp_array_cp(m, r, zr);     
+    fasp_darray_cp(m, r, zr);     
     
     {
         INT i, j, jj, begin_row, end_row, mm2=m-2;
@@ -266,7 +266,7 @@ void fasp_precond_ilu_forward (REAL *r,
     
     zz = iludata->work; 
     zr = iludata->work+m;
-    fasp_array_cp(m, r, zr);     
+    fasp_darray_cp(m, r, zr);     
     
     {
         INT i, j, jj, begin_row, end_row;
@@ -286,7 +286,7 @@ void fasp_precond_ilu_forward (REAL *r,
         }
     }
     
-    fasp_array_cp(m, zz, z); 
+    fasp_darray_cp(m, zz, z); 
     
     return;
     
@@ -318,7 +318,7 @@ void fasp_precond_ilu_backward (REAL *r,
     if (iludata->nwork<memneed) goto MEMERR; 
     
     zz = iludata->work; 
-    fasp_array_cp(m, r, zz);     
+    fasp_darray_cp(m, r, zz);     
     
     {
         INT i, j, jj, begin_row, end_row, mm2=m-2;
@@ -364,16 +364,16 @@ void fasp_precond_schwarz (REAL *r,
                            REAL *z,
                            void *data)
 {
-	Schwarz_data  * swzdata  = (Schwarz_data *)data;
-    Schwarz_param * swzparam = swzdata->swzparam;
-	const INT       swztype  = swzdata->Schwarz_type;
-    const INT       n        = swzdata->A.row;
+	SWZ_data  * swzdata  = (SWZ_data *)data;
+    SWZ_param * swzparam = swzdata->swzparam;
+	const INT   swztype  = swzdata->SWZ_type;
+    const INT   n        = swzdata->A.row;
 	
     dvector x, b;
 
     fasp_dvec_alloc(n, &x);
     fasp_dvec_alloc(n, &b);
-    fasp_array_cp(n, r, b.val);
+    fasp_darray_cp(n, r, b.val);
 
     fasp_dvec_set(n, &x, 0);
 
@@ -390,7 +390,7 @@ void fasp_precond_schwarz (REAL *r,
 			break;
 	}
 
-    fasp_array_cp(n, x.val, z);
+    fasp_darray_cp(n, x.val, z);
 }
 
 /**
@@ -418,12 +418,12 @@ void fasp_precond_amg (REAL *r,
     fasp_param_prec_to_amg(&amgparam,pcdata);
         
     AMG_data *mgl = pcdata->mgl_data;
-    mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
+    mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
     for ( i=maxit; i--; ) fasp_solver_mgcycle(mgl,&amgparam);
     
-    fasp_array_cp(m,mgl->x.val,z);    
+    fasp_darray_cp(m,mgl->x.val,z);    
 }
 
 /**
@@ -451,12 +451,12 @@ void fasp_precond_famg (REAL *r,
     fasp_param_prec_to_amg(&amgparam,pcdata);
     
     AMG_data *mgl = pcdata->mgl_data;
-    mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
+    mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
     for ( i=maxit; i--; ) fasp_solver_fmgcycle(mgl,&amgparam);
     
-    fasp_array_cp(m,mgl->x.val,z);    
+    fasp_darray_cp(m,mgl->x.val,z);    
 }
 
 /**
@@ -484,16 +484,16 @@ void fasp_precond_amli (REAL *r,
     fasp_param_prec_to_amg(&amgparam,pcdata);
     
     AMG_data *mgl = pcdata->mgl_data;
-    mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
+    mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
     for ( i=maxit; i--; ) fasp_solver_amli(mgl,&amgparam,0);
     
-    fasp_array_cp(m,mgl->x.val,z);    
+    fasp_darray_cp(m,mgl->x.val,z);    
 }
 
 /**
- * \fn void fasp_precond_nl_amli(REAL *r, REAL *z, void *data)
+ * \fn void fasp_precond_namli (REAL *r, REAL *z, void *data)
  *
  * \brief Nonlinear AMLI AMG preconditioner
  *
@@ -504,9 +504,9 @@ void fasp_precond_amli (REAL *r,
  * \author Xiaozhe Hu
  * \date   04/25/2011
  */
-void fasp_precond_nl_amli (REAL *r, 
-                           REAL *z, 
-                           void *data)
+void fasp_precond_namli (REAL *r, 
+                         REAL *z,
+                         void *data)
 {
     precond_data *pcdata=(precond_data *)data;
     const INT m=pcdata->mgl_data[0].A.row;
@@ -518,11 +518,11 @@ void fasp_precond_nl_amli (REAL *r,
     fasp_param_prec_to_amg(&amgparam,pcdata);
     
     AMG_data *mgl = pcdata->mgl_data;
-    mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input 
+    mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input 
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
 
-    for ( i=maxit; i--; ) fasp_solver_nl_amli(mgl, &amgparam, 0, num_levels);
-    fasp_array_cp(m,mgl->x.val,z);    
+    for ( i=maxit; i--; ) fasp_solver_namli(mgl, &amgparam, 0, num_levels);
+    fasp_darray_cp(m,mgl->x.val,z);    
 }
     
 /**
@@ -550,7 +550,7 @@ void fasp_precond_amg_nk (REAL *r,
     dCSRmat *P_nk = pcdata->P_nk;
     dCSRmat *R_nk = pcdata->R_nk;
     
-    fasp_array_set(m, z, 0.0);
+    fasp_darray_set(m, z, 0.0);
 
     // local variables
     dvector r_nk, z_nk;
@@ -580,13 +580,13 @@ void fasp_precond_amg_nk (REAL *r,
     fasp_param_prec_to_amg(&amgparam,pcdata);
     
     AMG_data *mgl = pcdata->mgl_data;
-    mgl->b.row=m; fasp_array_cp(m,r,mgl->b.val); // residual is an input
+    mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input
     mgl->x.row=m; //fasp_dvec_set(m,&mgl->x,0.0);
-    fasp_array_cp(m, z, mgl->x.val);
+    fasp_darray_cp(m, z, mgl->x.val);
     
     for ( i=maxit; i--; ) fasp_solver_mgcycle(mgl,&amgparam);
     
-    fasp_array_cp(m,mgl->x.val,z);
+    fasp_darray_cp(m,mgl->x.val,z);
 
     //----------------------
     // extra kernel solve
