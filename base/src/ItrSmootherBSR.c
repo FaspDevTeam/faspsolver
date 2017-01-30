@@ -25,8 +25,8 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-static inline void perm(const INT, const INT, const REAL *, const INT *, REAL *);
-static inline void invperm(const INT, const INT, const REAL *, const INT *, REAL *);
+static inline void perm (const INT, const INT, const REAL *, const INT *, REAL *);
+static inline void invperm (const INT, const INT, const REAL *, const INT *, REAL *);
 
 REAL ilu_solve_omp = 0.0; /**< ILU time for the SOLVE phase */
 

@@ -509,14 +509,14 @@ MEMORY_ERROR:
  * \author Xiaozhe Hu
  * \date   05/26/2012
  */
-INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat        *A,
-                                    dvector        *b,
-                                    dvector        *x,
-                                    ITS_param *itparam,
-                                    AMG_param      *amgparam,
-                                    dCSRmat        *A_nk,
-                                    dCSRmat        *P_nk,
-                                    dCSRmat        *R_nk)
+INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat    *A,
+                                    dvector    *b,
+                                    dvector    *x,
+                                    ITS_param  *itparam,
+                                    AMG_param  *amgparam,
+                                    dCSRmat    *A_nk,
+                                    dCSRmat    *P_nk,
+                                    dCSRmat    *R_nk)
 {
     //--------------------------------------------------------------
     // Part 1: prepare
@@ -668,13 +668,13 @@ MEMORY_ERROR:
  * \author Xiaozhe Hu
  * \date   05/27/2012
  */
-INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat        *A,
-                                    dvector        *b,
-                                    dvector        *x,
-                                    ITS_param *itparam,
-                                    AMG_param      *amgparam,
-                                    const INT       nk_dim,
-                                    dvector        *nk)
+INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat    *A,
+                                    dvector    *b,
+                                    dvector    *x,
+                                    ITS_param  *itparam,
+                                    AMG_param  *amgparam,
+                                    const INT   nk_dim,
+                                    dvector    *nk)
 {
     //--------------------------------------------------------------
     // Part 1: prepare

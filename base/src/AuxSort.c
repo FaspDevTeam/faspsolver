@@ -18,30 +18,30 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-static void dSwapping(REAL *w, const INT i, const INT j);
-static void iSwapping(INT *w, const INT i, const INT j);
+static void dSwapping (REAL *w, const INT i, const INT j);
+static void iSwapping (INT *w, const INT i, const INT j);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_aux_BiSearch (const INT *list, const INT value, const INT nlist)
+ * \fn INT fasp_aux_BiSearch (const INT nlist, const INT *list, const INT value)
  *
  * \brief Binary Search
  *
+ * \param nlist    Length of the array list
  * \param list     Pointer to a set of values
  * \param value    The target
- * \param nlist    Length of the array list
  *
  * \return  The location of value in array list if succeeded; otherwise, return -1.
  *
  * \author Chunsheng Feng
  * \date   03/01/2011
  */
-INT fasp_aux_BiSearch (const INT *list,
-                       const INT  value,
-                       const INT  nlist)
+INT fasp_aux_BiSearch (const INT  nlist,
+                       const INT *list,
+                       const INT  value)
 {
     INT not_found = 1;
     INT low, high, m;

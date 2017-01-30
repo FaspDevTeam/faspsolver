@@ -27,10 +27,10 @@
       48 ./base/src/AuxTiming.c
      452 ./base/src/AuxVector.c
      781 ./base/src/BlaArray.c
-      77 ./base/src/BlaEigen.c
+      79 ./base/src/BlaEigen.c
     1006 ./base/src/BlaFormat.c
     2147 ./base/src/BlaILU.c
-    1479 ./base/src/BlaILUSetupBSR.c
+    1477 ./base/src/BlaILUSetupBSR.c
      172 ./base/src/BlaILUSetupCSR.c
     1271 ./base/src/BlaILUSetupSTR.c
     3278 ./base/src/BlaIO.c
@@ -56,7 +56,7 @@
     1702 ./base/src/ItrSmootherBSR.c
     2322 ./base/src/ItrSmootherCSR.c
       91 ./base/src/ItrSmootherCSRcr.c
-     607 ./base/src/ItrSmootherCSRpoly.c
+     609 ./base/src/ItrSmootherCSRpoly.c
     1903 ./base/src/ItrSmootherSTR.c
     1743 ./base/src/KryPbcgs.c
     1512 ./base/src/KryPcg.c
@@ -83,15 +83,15 @@
      394 ./base/src/PreAMGSetupUA.c
      371 ./base/src/PreAMGSetupUABSR.c
     1067 ./base/src/PreBLC.c
-    1136 ./base/src/PreBSR.c
+    1137 ./base/src/PreBSR.c
      673 ./base/src/PreCSR.c
-     326 ./base/src/PreDataInit.c
+     327 ./base/src/PreDataInit.c
      551 ./base/src/PreMGCycle.c
      364 ./base/src/PreMGCycleFull.c
      167 ./base/src/PreMGRecur.c
      779 ./base/src/PreMGRecurAMLI.c
      339 ./base/src/PreMGSolve.c
-    1740 ./base/src/PreSTR.c
+    1741 ./base/src/PreSTR.c
      147 ./base/src/SolAMG.c
      612 ./base/src/SolBLC.c
      807 ./base/src/SolBSR.c
@@ -101,4 +101,4 @@
      247 ./base/src/SolMatFree.c
      419 ./base/src/SolSTR.c
      320 ./base/src/SolWrapper.c
-   86652 total
+   86657 total

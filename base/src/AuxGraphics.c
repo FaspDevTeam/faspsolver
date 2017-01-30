@@ -21,10 +21,10 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-static void put_byte(FILE *fp, const INT c);
-static void put_word(FILE *fp, const INT w);
-static void put_dword(FILE *fp, const INT d);
-static INT  write_bmp16(const char *fname, INT m, INT n, const char map[]);
+static void put_byte (FILE *fp, const INT c);
+static void put_word (FILE *fp, const INT w);
+static void put_dword (FILE *fp, const INT d);
+static INT write_bmp16 (const char *fname, INT m, INT n, const char map[]);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

@@ -23,9 +23,11 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-static INT numfactor (dBSRmat *A, REAL *luval, INT *jlu, INT *uptr);
-static void topologic_sort_ILU (ILU_data *iludata);
-static void multicolor_independ_set (AMG_data *mgl, INT gslvl);
+static INT numfactor (dBSRmat *, REAL *, INT *, INT *);
+static INT numfactor_mulcol (dBSRmat *, REAL *, INT *, INT *, INT, INT *, INT *);
+static INT numfactor_levsch (dBSRmat *, REAL *, INT *, INT *, INT, INT *, INT *);
+static void topologic_sort_ILU (ILU_data *);
+static void mulcol_independ_set (AMG_data *, INT);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -139,6 +141,303 @@ FINISHED:
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
+    
+    return status;
+}
+
+/**
+ * \fn SHORT fasp_ilu_dbsr_setup_omp (dBSRmat *A, ILU_data *iludata, ILU_param *iluparam)
+ *
+ * \brief Multi-threads parallel ILU decoposition of a BSR matrix A based on graph coloring
+ *
+ * \param A         Pointer to dBSRmat matrix
+ * \param iludata   Pointer to ILU_data
+ * \param iluparam  Pointer to ILU_param
+ *
+ * \return          FASP_SUCCESS if successed; otherwise, error information.
+ *
+ * \author Zheng Li
+ * \date   12/04/2016
+ *
+ * \note Only works for 1, 2, 3 nb (Zheng)
+ */
+SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
+                               ILU_data   *iludata,
+                               ILU_param  *iluparam)
+{
+    
+    const SHORT  prtlvl = iluparam->print_level;
+    const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
+    
+    // local variables
+    INT lfil=iluparam->ILU_lfil;
+    INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
+    
+    REAL    setup_start, setup_end, setup_duration;
+    
+    SHORT   status = FASP_SUCCESS;
+    
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: m=%d, n=%d, nnz=%d\n",A->ROW,n,nnz);
+#endif
+    
+    fasp_gettime(&setup_start);
+    
+    // Expected amount of memory for ILU needed and allocate memory
+    iwk = (lfil+2)*nnz;
+    
+    // setup preconditioner
+    iludata->row = iludata->col=n;
+    iludata->nb  = nb;
+    
+    ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
+    uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
+    
+#if DEBUG_MODE > 1
+    printf("### DEBUG: symbolic factorization ... \n ");
+#endif
+    
+    // ILU decomposition
+    // (1) symbolic factoration
+    fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
+    
+    nwork = 5*A->ROW*A->nb;
+    iludata->nzlu  = nzlu;
+    iludata->nwork = nwork;
+    iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu,sizeof(INT));
+    iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
+    iludata->work = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
+    memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
+    fasp_darray_set(nzlu*nb2, iludata->luval, 0.0);
+    
+    
+#if DEBUG_MODE > 1
+    printf("### DEBUG: numerical factorization ... \n ");
+#endif
+    
+    // (2) numerical factoration
+    numfactor_mulcol(A, iludata->luval, ijlu, uptr, iludata->nlevL,
+                     iludata->ilevL, iludata->jlevL);
+    
+    //printf("numfac time =%f\n", numfac_end-numfac_start);
+    
+#if DEBUG_MODE > 1
+    printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
+    printf("### DEBUG: iwk = %d, nzlu = %d\n",iwk,nzlu);
+#endif
+    
+    if ( ierr != 0 ) {
+        printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
+        status = ERROR_SOLVER_ILUSETUP;
+        goto FINISHED;
+    }
+    
+    if ( iwk < nzlu ) {
+        printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
+        status = ERROR_SOLVER_ILUSETUP;
+        goto FINISHED;
+    }
+    
+    if ( prtlvl > PRINT_NONE ) {
+        fasp_gettime(&setup_end);
+        setup_duration = setup_end - setup_start;
+        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil,setup_duration);
+    }
+    
+FINISHED:
+    fasp_mem_free(ijlu);
+    fasp_mem_free(uptr);
+    
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+    
+    return status;
+}
+
+/**
+ * \fn SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat *A, ILU_data *iludata, 
+ *                                           ILU_param *iluparam)
+ *
+ * \brief Get ILU decoposition of a BSR matrix A based on level schedule strategy
+ *
+ * \param A         Pointer to dBSRmat matrix
+ * \param iludata   Pointer to ILU_data
+ * \param iluparam  Pointer to ILU_param
+ *
+ * \return          FASP_SUCCESS if successed; otherwise, error information.
+ *
+ * \author Zheng Li
+ * \date   12/04/2016
+ *
+ * \note Only works for 1, 2, 3 nb (Zheng)
+ */
+SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
+                                      ILU_data   *iludata,
+                                      ILU_param  *iluparam)
+{
+    const SHORT  prtlvl = iluparam->print_level;
+    const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
+    
+    // local variables
+    INT lfil=iluparam->ILU_lfil;
+    INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
+    
+    REAL    setup_start, setup_end, setup_duration;
+    REAL    symbolic_start, symbolic_end, numfac_start, numfac_end;
+    
+    SHORT   status = FASP_SUCCESS;
+    
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: m=%d, n=%d, nnz=%d\n",A->ROW,n,nnz);
+#endif
+    
+    fasp_gettime(&setup_start);
+    
+    // Expected amount of memory for ILU needed and allocate memory
+    iwk = (lfil+2)*nnz;
+    
+    // setup preconditioner
+    iludata->row = iludata->col=n;
+    iludata->nb  = nb;
+    
+    ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
+    uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
+    
+    
+#if DEBUG_MODE > 1
+    printf("### DEBUG: symbolic factorization ... \n ");
+#endif
+    
+    fasp_gettime(&symbolic_start);
+    
+    // ILU decomposition
+    // (1) symbolic factoration
+    fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
+    
+    fasp_gettime(&symbolic_end);
+    
+    printf("symbolic time=%f\n", symbolic_end-symbolic_start);
+    
+    nwork = 5*A->ROW*A->nb;
+    iludata->nzlu  = nzlu;
+    iludata->nwork = nwork;
+    iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu,sizeof(INT));
+    iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
+    iludata->work = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
+    memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
+    fasp_darray_set(nzlu*nb2, iludata->luval, 0.0);
+    iludata->uptr = NULL,iludata->ic = NULL, iludata->icmap = NULL;
+    
+    topologic_sort_ILU(iludata);
+    
+#if DEBUG_MODE > 1
+    printf("### DEBUG: numerical factorization ... \n ");
+#endif
+    
+    fasp_gettime(&numfac_start);
+    
+    // (2) numerical factoration
+    numfactor_levsch(A, iludata->luval, ijlu, uptr, iludata->nlevL,
+                     iludata->ilevL, iludata->jlevL);
+    
+    fasp_gettime(&numfac_end);
+    
+    printf("numfac time =%f\n", numfac_end-numfac_start);
+    
+#if DEBUG_MODE > 1
+    printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
+    printf("### DEBUG: iwk = %d, nzlu = %d\n",iwk,nzlu);
+#endif
+    
+    if ( ierr != 0 ) {
+        printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
+        status = ERROR_SOLVER_ILUSETUP;
+        goto FINISHED;
+    }
+    
+    if ( iwk < nzlu ) {
+        printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
+        status = ERROR_SOLVER_ILUSETUP;
+        goto FINISHED;
+    }
+    
+    if ( prtlvl > PRINT_NONE ) {
+        fasp_gettime(&setup_end);
+        setup_duration = setup_end - setup_start;
+        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil,setup_duration);
+    }
+    
+FINISHED:
+    fasp_mem_free(ijlu);
+    fasp_mem_free(uptr);
+    
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+    
+    return status;
+}
+
+/**
+ * \fn SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat *A, dCSRmat *Ap, ILU_data *iludata, ILU_param *iluparam)
+ *
+ * \brief Multi-threads parallel ILU decoposition of a BSR matrix A based on graph coloring
+ *
+ * \param A         Pointer to dBSRmat matrix
+ * \param Ap        Pointer to dCSRmat matrix and provide sparsity pattern
+ * \param iludata   Pointer to ILU_data
+ * \param iluparam  Pointer to ILU_param
+ *
+ * \return          FASP_SUCCESS if successed; otherwise, error information.
+ *
+ * \author Zheng Li
+ * \date   12/04/2016
+ *
+ * \note Only works for 1, 2, 3 nb (Zheng)
+ */
+SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
+                                  dCSRmat    *Ap,
+                                  ILU_data   *iludata,
+                                  ILU_param  *iluparam)
+{
+    INT status;
+    AMG_data *mgl=fasp_amg_data_create(1);
+    dCSRmat pp, Ap1;
+    dBSRmat A_LU;
+    
+    if (iluparam->ILU_lfil==0) {
+        mgl[0].A = fasp_dcsr_sympart(Ap);  //for ILU0
+    }
+    else if (iluparam->ILU_lfil==1) {  // for ILU1
+        Ap1 = fasp_dcsr_create(Ap->row,Ap->col, Ap->nnz);
+        fasp_dcsr_cp(Ap, &Ap1);
+        fasp_blas_dcsr_mxm (Ap,&Ap1,&pp);
+        mgl[0].A = fasp_dcsr_sympart(&pp);
+        fasp_dcsr_free(&Ap1);
+        fasp_dcsr_free(&pp);
+    }
+    
+    mgl->num_levels = 20;
+    
+    mulcol_independ_set(mgl, 1);
+    
+    A_LU = fasp_dbsr_perm(A, mgl[0].icmap);
+    
+    // hold color info with nlevl, ilevL and jlevL.
+    iludata->nlevL = mgl[0].colors;
+    iludata->ilevL = mgl[0].ic;
+    iludata->jlevL = mgl[0].icmap;
+    iludata->nlevU = 0;
+    iludata->ilevU = NULL;
+    iludata->jlevU = NULL;
+    
+    status = fasp_ilu_dbsr_setup_omp(&A_LU,iludata,iluparam);
+    
+    fasp_dcsr_free(&mgl[0].A);
+    fasp_dbsr_free(&A_LU);
     
     return status;
 }
@@ -428,11 +727,10 @@ static INT numfactor (dBSRmat   *A,
     return status;
 }
 
-
 /**
- * \fn static INT numfactor_mc_omp (dBSRmat *A, REAL *luval, INT *jlu,
+ * \fn static INT numfactor_mulcol (dBSRmat *A, REAL *luval, INT *jlu,
  *                                  INT *uptr, INT ncolors, INT *ic, INT *icmap)
- * \brief Multi-thread ILU decoposition of a BSR matrix A based on graph coloring
+ * \brief Multi-thread ILU decoposition of a BSR matrix A based on multi-coloring
  *
  * \param A        Pointer to dBSRmat matrix
  * \param luval    Pointer to numerical value of ILU
@@ -447,7 +745,7 @@ static INT numfactor (dBSRmat   *A,
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
  */
-static INT numfactor_mc_omp (dBSRmat   *A,
+static INT numfactor_mulcol (dBSRmat   *A,
                              REAL      *luval,
                              INT       *jlu,
                              INT       *uptr,
@@ -631,8 +929,8 @@ static INT numfactor_mc_omp (dBSRmat   *A,
 }
 
 /**
- * \fn static INT numfactor_levsch_omp (dBSRmat *A, REAL *luval, INT *jlu,
- *                                      INT *uptr, INT ncolors, INT *ic, INT *icmap)
+ * \fn static INT numfactor_levsch (dBSRmat *A, REAL *luval, INT *jlu,
+ *                                  INT *uptr, INT ncolors, INT *ic, INT *icmap)
  * \brief Multi-thread ILU decoposition of a BSR matrix A based on level schedule strategy
  *
  * \param A        Pointer to dBSRmat matrix
@@ -648,13 +946,13 @@ static INT numfactor_mc_omp (dBSRmat   *A,
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
  */
-static INT numfactor_levsch_omp (dBSRmat *A,
-                                 REAL *luval,
-                                 INT *jlu,
-                                 INT *uptr,
-                                 INT ncolors,
-                                 INT *ic,
-                                 INT *icmap)
+static INT numfactor_levsch (dBSRmat *A,
+                             REAL *luval,
+                             INT *jlu,
+                             INT *uptr,
+                             INT ncolors,
+                             INT *ic,
+                             INT *icmap)
 {
     INT status = FASP_SUCCESS;
     
@@ -832,306 +1130,6 @@ static INT numfactor_levsch_omp (dBSRmat *A,
     
     return status;
 }
-
-/**
- * \fn SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat *A, ILU_data *iludata, ILU_param *iluparam)
- *
- * \brief Get ILU decoposition of a BSR matrix A based on level schedule strategy
- *
- * \param A         Pointer to dBSRmat matrix
- * \param iludata   Pointer to ILU_data
- * \param iluparam  Pointer to ILU_param
- *
- * \return          FASP_SUCCESS if successed; otherwise, error information.
- *
- * \author Zheng Li
- * \date   12/04/2016
- *
- * \note Only works for 1, 2, 3 nb (Zheng)
- */
-SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
-                                      ILU_data   *iludata,
-                                      ILU_param  *iluparam)
-{
-    const SHORT  prtlvl = iluparam->print_level;
-    const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
-    
-    // local variables
-    INT lfil=iluparam->ILU_lfil;
-    INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
-    
-    REAL    setup_start, setup_end, setup_duration;
-    REAL    symbolic_start, symbolic_end, numfac_start, numfac_end;
-    
-    SHORT   status = FASP_SUCCESS;
-    
-#if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
-    printf("### DEBUG: m=%d, n=%d, nnz=%d\n",A->ROW,n,nnz);
-#endif
-    
-    fasp_gettime(&setup_start);
-    
-    // Expected amount of memory for ILU needed and allocate memory
-    iwk = (lfil+2)*nnz;
-    
-    // setup preconditioner
-    iludata->row = iludata->col=n;
-    iludata->nb  = nb;
-    
-    ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
-    uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
-    
-    
-#if DEBUG_MODE > 1
-    printf("### DEBUG: symbolic factorization ... \n ");
-#endif
-    
-    fasp_gettime(&symbolic_start);
-    
-    // ILU decomposition
-    // (1) symbolic factoration
-    fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
-    
-    fasp_gettime(&symbolic_end);
-    
-    printf("symbolic time=%f\n", symbolic_end-symbolic_start);
-    
-    nwork = 5*A->ROW*A->nb;
-    iludata->nzlu  = nzlu;
-    iludata->nwork = nwork;
-    iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu,sizeof(INT));
-    iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
-    iludata->work = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
-    memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
-    fasp_darray_set(nzlu*nb2, iludata->luval, 0.0);
-    iludata->uptr = NULL,iludata->ic = NULL, iludata->icmap = NULL;
-    
-    topologic_sort_ILU(iludata);
-    
-#if DEBUG_MODE > 1
-    printf("### DEBUG: numerical factorization ... \n ");
-#endif
-    
-    fasp_gettime(&numfac_start);
-    
-    // (2) numerical factoration
-    numfactor_levsch_omp(A, iludata->luval, ijlu, uptr, iludata->nlevL,
-                         iludata->ilevL, iludata->jlevL);
-    
-    fasp_gettime(&numfac_end);
-    
-    printf("numfac time =%f\n", numfac_end-numfac_start);
-    
-#if DEBUG_MODE > 1
-    printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
-    printf("### DEBUG: iwk = %d, nzlu = %d\n",iwk,nzlu);
-#endif
-    
-    if ( ierr != 0 ) {
-        printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
-        status = ERROR_SOLVER_ILUSETUP;
-        goto FINISHED;
-    }
-    
-    if ( iwk < nzlu ) {
-        printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
-        status = ERROR_SOLVER_ILUSETUP;
-        goto FINISHED;
-    }
-    
-    if ( prtlvl > PRINT_NONE ) {
-        fasp_gettime(&setup_end);
-        setup_duration = setup_end - setup_start;
-        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil,setup_duration);
-    }
-    
-FINISHED:
-    fasp_mem_free(ijlu);
-    fasp_mem_free(uptr);
-    
-#if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
-#endif
-    
-    return status;
-}
-
-/**
- * \fn SHORT fasp_ilu_dbsr_setup_omp (dBSRmat *A, ILU_data *iludata, ILU_param *iluparam)
- *
- * \brief Multi-threads parallel ILU decoposition of a BSR matrix A based on graph coloring
- *
- * \param A         Pointer to dBSRmat matrix
- * \param iludata   Pointer to ILU_data
- * \param iluparam  Pointer to ILU_param
- *
- * \return          FASP_SUCCESS if successed; otherwise, error information.
- *
- * \author Zheng Li
- * \date   12/04/2016
- *
- * \note Only works for 1, 2, 3 nb (Zheng)
- */
-SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
-                               ILU_data   *iludata,
-                               ILU_param  *iluparam)
-{
-    
-    const SHORT  prtlvl = iluparam->print_level;
-    const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
-    
-    // local variables
-    INT lfil=iluparam->ILU_lfil;
-    INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
-    
-    REAL    setup_start, setup_end, setup_duration;
-    
-    SHORT   status = FASP_SUCCESS;
-    
-#if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
-    printf("### DEBUG: m=%d, n=%d, nnz=%d\n",A->ROW,n,nnz);
-#endif
-    
-    fasp_gettime(&setup_start);
-    
-    // Expected amount of memory for ILU needed and allocate memory
-    iwk = (lfil+2)*nnz;
-    
-    // setup preconditioner
-    iludata->row = iludata->col=n;
-    iludata->nb  = nb;
-    
-    ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
-    uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
-    
-#if DEBUG_MODE > 1
-    printf("### DEBUG: symbolic factorization ... \n ");
-#endif
-    
-    // ILU decomposition
-    // (1) symbolic factoration
-    fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
-    
-    nwork = 5*A->ROW*A->nb;
-    iludata->nzlu  = nzlu;
-    iludata->nwork = nwork;
-    iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu,sizeof(INT));
-    iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
-    iludata->work = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
-    memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
-    fasp_darray_set(nzlu*nb2, iludata->luval, 0.0);
-    
-    
-#if DEBUG_MODE > 1
-    printf("### DEBUG: numerical factorization ... \n ");
-#endif
-    
-    // (2) numerical factoration
-    numfactor_mc_omp(A, iludata->luval, ijlu, uptr, iludata->nlevL,
-                     iludata->ilevL, iludata->jlevL);
-    
-    //printf("numfac time =%f\n", numfac_end-numfac_start);
-    
-#if DEBUG_MODE > 1
-    printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
-    printf("### DEBUG: iwk = %d, nzlu = %d\n",iwk,nzlu);
-#endif
-    
-    if ( ierr != 0 ) {
-        printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
-        status = ERROR_SOLVER_ILUSETUP;
-        goto FINISHED;
-    }
-    
-    if ( iwk < nzlu ) {
-        printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
-        status = ERROR_SOLVER_ILUSETUP;
-        goto FINISHED;
-    }
-    
-    if ( prtlvl > PRINT_NONE ) {
-        fasp_gettime(&setup_end);
-        setup_duration = setup_end - setup_start;
-        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil,setup_duration);
-    }
-    
-FINISHED:
-    fasp_mem_free(ijlu);
-    fasp_mem_free(uptr);
-    
-#if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
-#endif
-    
-    return status;
-}
-
-/**
- * \fn SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat *A, dCSRmat *Ap, ILU_data *iludata, ILU_param *iluparam)
- *
- * \brief Multi-threads parallel ILU decoposition of a BSR matrix A based on graph coloring
- *
- * \param A         Pointer to dBSRmat matrix
- * \param Ap        Pointer to dCSRmat matrix and provide sparsity pattern
- * \param iludata   Pointer to ILU_data
- * \param iluparam  Pointer to ILU_param
- *
- * \return          FASP_SUCCESS if successed; otherwise, error information.
- *
- * \author Zheng Li
- * \date   12/04/2016
- *
- * \note Only works for 1, 2, 3 nb (Zheng)
- */
-SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
-                                  dCSRmat    *Ap,
-                                  ILU_data   *iludata,
-                                  ILU_param  *iluparam)
-{
-    INT status;
-    AMG_data *mgl=fasp_amg_data_create(1);
-    dCSRmat pp, Ap1;
-    dBSRmat A_LU;
-    
-    if (iluparam->ILU_lfil==0) {
-        mgl[0].A = fasp_dcsr_sympart(Ap);  //for ILU0
-    }
-    else if (iluparam->ILU_lfil==1) {  // for ILU1
-        Ap1 = fasp_dcsr_create(Ap->row,Ap->col, Ap->nnz);
-        fasp_dcsr_cp(Ap, &Ap1);
-        fasp_blas_dcsr_mxm (Ap,&Ap1,&pp);
-        mgl[0].A = fasp_dcsr_sympart(&pp);
-        fasp_dcsr_free(&Ap1);
-        fasp_dcsr_free(&pp);
-    }
-    
-    mgl->num_levels = 20;
-    
-    multicolor_independ_set(mgl, 1);
-    
-    A_LU = fasp_dbsr_perm(A, mgl[0].icmap);
-    
-    // hold color info with nlevl, ilevL and jlevL.
-    iludata->nlevL = mgl[0].colors;
-    iludata->ilevL = mgl[0].ic;
-    iludata->jlevL = mgl[0].icmap;
-    iludata->nlevU = 0;
-    iludata->ilevU = NULL;
-    iludata->jlevU = NULL;
-    
-    status = fasp_ilu_dbsr_setup_omp(&A_LU,iludata,iluparam);
-    
-    fasp_dcsr_free(&mgl[0].A);
-    fasp_dbsr_free(&A_LU);
-    
-    return status;
-}
-
-/*---------------------------------*/
-/*--      Private Functions      --*/
-/*---------------------------------*/
 
 /**
  * \fn static void generate_S_theta (dCSRmat *A, iCSRmat *S, REAL theta)
@@ -1439,9 +1437,9 @@ static void topologic_sort_ILU (ILU_data *iludata)
 }
 
 /**
- * \fn static void multicolor_independ_set (AMG_data *mgl, INT gslvl)
+ * \fn static void mulcol_independ_set (AMG_data *mgl, INT gslvl)
  *
- * \brief Coloring vertices of adjacency graph of A
+ * \brief Multi-coloring vertices of adjacency graph of A
  *
  * \param mgl      Pointer to input matrix
  * \param gslvl    Used to specify levels of AMG using multicolor smoothing
@@ -1449,8 +1447,8 @@ static void topologic_sort_ILU (ILU_data *iludata)
  * \author Zheng Li, Chunsheng Feng
  * \date   12/04/2016
  */
-static void multicolor_independ_set (AMG_data *mgl,
-                                     INT       gslvl)
+static void mulcol_independ_set (AMG_data *mgl,
+                                 INT       gslvl)
 {
     
     INT Colors, rowmax, level, prtlvl = 0;

@@ -113,14 +113,14 @@ void fasp_solver_amli (AMG_data   *mgl,
             
             switch (mgl[level].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
-                                                       &mgl[level].x, &mgl[level].b);
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
-                                                        &mgl[level].x, &mgl[level].b);
+                    fasp_dcsr_swz_forward_smoother(&mgl[level].Schwarz, &swzparam,
+                                                   &mgl[level].x, &mgl[level].b);
+                    fasp_dcsr_swz_backward_smoother(&mgl[level].Schwarz, &swzparam,
+                                                    &mgl[level].x, &mgl[level].b);
                     break;
                 default:
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
-                                                       &mgl[level].x, &mgl[level].b);
+                    fasp_dcsr_swz_forward_smoother(&mgl[level].Schwarz, &swzparam,
+                                                   &mgl[level].x, &mgl[level].b);
                     break;
             }
         }
@@ -192,14 +192,14 @@ void fasp_solver_amli (AMG_data   *mgl,
             
             switch (mgl[level].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
-                                                        &mgl[level].x, &mgl[level].b);
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
-                                                       &mgl[level].x, &mgl[level].b);
+                    fasp_dcsr_swz_backward_smoother(&mgl[level].Schwarz, &swzparam,
+                                                    &mgl[level].x, &mgl[level].b);
+                    fasp_dcsr_swz_forward_smoother(&mgl[level].Schwarz, &swzparam,
+                                                   &mgl[level].x, &mgl[level].b);
                     break;
                 default:
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
-                                                        &mgl[level].x, &mgl[level].b);
+                    fasp_dcsr_swz_backward_smoother(&mgl[level].Schwarz, &swzparam,
+                                                    &mgl[level].x, &mgl[level].b);
                     break;
             }
         }
@@ -335,14 +335,14 @@ void fasp_solver_namli (AMG_data   *mgl,
             
             switch (mgl[level].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
-                                                       &mgl[level].x, &mgl[level].b);
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
-                                                        &mgl[level].x, &mgl[level].b);
+                    fasp_dcsr_swz_forward_smoother(&mgl[level].Schwarz, &swzparam,
+                                                   &mgl[level].x, &mgl[level].b);
+                    fasp_dcsr_swz_backward_smoother(&mgl[level].Schwarz, &swzparam,
+                                                    &mgl[level].x, &mgl[level].b);
                     break;
                 default:
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
-                                                       &mgl[level].x, &mgl[level].b);
+                    fasp_dcsr_swz_forward_smoother(&mgl[level].Schwarz, &swzparam,
+                                                   &mgl[level].x, &mgl[level].b);
                     break;
             }
         }
@@ -430,14 +430,14 @@ void fasp_solver_namli (AMG_data   *mgl,
             
             switch (mgl[level].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
-                                                        &mgl[level].x, &mgl[level].b);
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[level].Schwarz, &swzparam,
-                                                       &mgl[level].x, &mgl[level].b);
+                    fasp_dcsr_swz_backward_smoother(&mgl[level].Schwarz, &swzparam,
+                                                    &mgl[level].x, &mgl[level].b);
+                    fasp_dcsr_swz_forward_smoother(&mgl[level].Schwarz, &swzparam,
+                                                   &mgl[level].x, &mgl[level].b);
                     break;
                 default:
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[level].Schwarz, &swzparam,
-                                                        &mgl[level].x, &mgl[level].b);
+                    fasp_dcsr_swz_backward_smoother(&mgl[level].Schwarz, &swzparam,
+                                                    &mgl[level].x, &mgl[level].b);
                     break;
             }
             
@@ -600,7 +600,7 @@ void fasp_solver_namli_bsr (AMG_data_bsr  *mgl,
             else { // recursively call preconditioned Krylov method on coarse grid
                 precond_data_bsr pcdata;
                 
-                fasp_param_amg_to_prec_bsr (&pcdata, param);
+                fasp_param_amg_to_precbsr (&pcdata, param);
                 pcdata.maxit = 1;
                 pcdata.max_levels = num_levels-1;
                 pcdata.mgl_data = &mgl[level+1];

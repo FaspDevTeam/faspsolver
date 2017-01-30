@@ -1026,8 +1026,9 @@ void fasp_precond_dbsr_namli (REAL *r,
     const INT m=row*nb;
     unsigned INT i;
     
-    AMG_param amgparam; fasp_param_amg_init(&amgparam);
-    fasp_param_prec_to_amg_bsr(&amgparam,pcdata);
+    AMG_param amgparam;
+    fasp_param_amg_init(&amgparam);
+    fasp_param_precbsr_to_amg(&amgparam,pcdata);
     
     AMG_data_bsr *mgl = pcdata->mgl_data;
     mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input 

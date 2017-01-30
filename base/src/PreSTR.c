@@ -1732,7 +1732,8 @@ void fasp_precond_dstr_blockgs (REAL *r,
     zz.row=rr.row=n; zz.val=z; rr.val=r;
     fasp_dvec_set(n,&zz,0.0);
     
-    for (i=0; i<1; ++i) fasp_smoother_dstr_schwarz(A, &rr, &zz, diaginv, pivot, neigh, order);
+    for (i=0; i<1; ++i)
+        fasp_smoother_dstr_swz(A, &rr, &zz, diaginv, pivot, neigh, order);
 }
 
 /*---------------------------------*/

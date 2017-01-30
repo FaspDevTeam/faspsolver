@@ -56,14 +56,14 @@
  * \author Chensong Zhang
  * \date   03/28/2013
  */
-INT fasp_solver_dcsr_spcg (const dCSRmat      *A,
-                           const dvector      *b,
-                           dvector      *u,
-                           precond      *pc,
-                           const REAL    tol,
-                           const INT     MaxIt,
-                           const SHORT   StopType,
-                           const SHORT   PrtLvl)
+INT fasp_solver_dcsr_spcg (const dCSRmat  *A,
+                           const dvector  *b,
+                           dvector        *u,
+                           precond        *pc,
+                           const REAL      tol,
+                           const INT       MaxIt,
+                           const SHORT     StopType,
+                           const SHORT     PrtLvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -386,14 +386,14 @@ FINISHED:  // finish the iterative method
  * \author Chensong Zhang
  * \date   03/28/2013
  */
-INT fasp_solver_dblc_spcg (const dBLCmat     *A,
-                           const dvector     *b,
-                           dvector     *u,
-                           precond     *pc,
-                           const REAL   tol,
-                           const INT    MaxIt,
-                           const SHORT  StopType,
-                           const SHORT  PrtLvl)
+INT fasp_solver_dblc_spcg (const dBLCmat  *A,
+                           const dvector  *b,
+                           dvector        *u,
+                           precond        *pc,
+                           const REAL      tol,
+                           const INT       MaxIt,
+                           const SHORT     StopType,
+                           const SHORT     PrtLvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -716,14 +716,14 @@ FINISHED:  // finish the iterative method
  * \author Chensong Zhang
  * \date   03/28/2013
  */
-INT fasp_solver_dstr_spcg (const dSTRmat      *A,
-                           const dvector      *b,
-                           dvector      *u,
-                           precond      *pc,
-                           const REAL    tol,
-                           const INT     MaxIt,
-                           const SHORT   StopType,
-                           const SHORT   PrtLvl)
+INT fasp_solver_dstr_spcg (const dSTRmat  *A,
+                           const dvector  *b,
+                           dvector        *u,
+                           precond        *pc,
+                           const REAL      tol,
+                           const INT       MaxIt,
+                           const SHORT     StopType,
+                           const SHORT     PrtLvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;

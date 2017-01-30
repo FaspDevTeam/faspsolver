@@ -1638,9 +1638,9 @@ void fasp_generate_diaginv_block (dSTRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dstr_schwarz (dSTRmat *A, dvector *b, dvector *u,  
- *                                      dvector *diaginv, ivector *pivot, 
- *                                      ivector *neigh, ivector *order)
+ * \fn void fasp_smoother_dstr_swz (dSTRmat *A, dvector *b, dvector *u,  
+ *                                  dvector *diaginv, ivector *pivot,
+ *                                  ivector *neigh, ivector *order)
  *
  * \brief Schwarz method as the smoother
  *
@@ -1655,13 +1655,13 @@ void fasp_generate_diaginv_block (dSTRmat *A,
  * \author Xiaozhe Hu
  * \date   10/01/2011
  */
-void fasp_smoother_dstr_schwarz (dSTRmat *A, 
-                                 dvector *b, 
-                                 dvector *u, 
-                                 dvector *diaginv, 
-                                 ivector *pivot, 
-                                 ivector *neigh, 
-                                 ivector *order)
+void fasp_smoother_dstr_swz (dSTRmat *A, 
+                             dvector *b,
+                             dvector *u,
+                             dvector *diaginv,
+                             ivector *pivot,
+                             ivector *neigh,
+                             ivector *order)
 {
     // information about A
     const INT ngrid = A->ngrid;

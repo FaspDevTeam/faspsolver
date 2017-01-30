@@ -38,9 +38,9 @@
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-void fasp_blas_dvec_axpy (const REAL      a,
-                          const dvector  *x,
-                          dvector        *y)
+void fasp_blas_dvec_axpy (const REAL     a,
+                          const dvector *x,
+                          dvector       *y)
 {
     INT i, m=x->row;
     SHORT use_openmp = FALSE;
@@ -90,10 +90,10 @@ void fasp_blas_dvec_axpy (const REAL      a,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-void fasp_blas_dvec_axpyz (const REAL      a,
-                           const dvector  *x,
-                           const dvector  *y,
-                           dvector        *z)
+void fasp_blas_dvec_axpyz (const REAL     a,
+                           const dvector *x,
+                           const dvector *y,
+                           dvector       *z)
 {
     const INT     m = x->row;
     const REAL *xpt = x->val, *ypt = y->val;
@@ -125,8 +125,8 @@ void fasp_blas_dvec_axpyz (const REAL      a,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-REAL fasp_blas_dvec_dotprod (const dvector  *x,
-                             const dvector  *y)
+REAL fasp_blas_dvec_dotprod (const dvector *x,
+                             const dvector *y)
 {
     const INT   length = x->row;
     const REAL *xpt = x->val, *ypt = y->val;
@@ -167,8 +167,8 @@ REAL fasp_blas_dvec_dotprod (const dvector  *x,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-REAL fasp_blas_dvec_relerr (const dvector  *x,
-                            const dvector  *y)
+REAL fasp_blas_dvec_relerr (const dvector *x,
+                            const dvector *y)
 {
     const INT   length = x->row;
     const REAL *xpt = x->val, *ypt = y->val;
