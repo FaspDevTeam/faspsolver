@@ -231,7 +231,7 @@
 		9FF1DD491E3F192900F013F2 /* SolSTR.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SolSTR.c; path = ../../base/src/SolSTR.c; sourceTree = "<group>"; };
 		9FF1DD4A1E3F192900F013F2 /* SolWrapper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SolWrapper.c; path = ../../base/src/SolWrapper.c; sourceTree = "<group>"; };
 		9FF1DDA41E3F2D7500F013F2 /* faspsolver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = faspsolver; sourceTree = BUILT_PRODUCTS_DIR; };
-		9FF1DDA51E3F2E3900F013F2 /* regression.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = regression.c; path = ../../test/main/regression.c; sourceTree = "<group>"; };
+		9FF1DDA51E3F2E3900F013F2 /* regression.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = regression.c; path = ../../test/main/regression.c; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
