@@ -288,13 +288,13 @@ void fasp_param_init (const input_param  *iniparam,
     if (itsparam) fasp_param_solver_init(itsparam);
     if (amgparam) fasp_param_amg_init(amgparam);
     if (iluparam) fasp_param_ilu_init(iluparam);
-    if (swzparam) fasp_param_schwarz_init(swzparam);
+    if (swzparam) fasp_param_swz_init(swzparam);
 
     if (iniparam) {
         if (itsparam) fasp_param_solver_set(itsparam,iniparam);
         if (amgparam) fasp_param_amg_set(amgparam,iniparam);
         if (iluparam) fasp_param_ilu_set(iluparam,iniparam);
-        if (swzparam) fasp_param_schwarz_set(swzparam,iniparam);
+        if (swzparam) fasp_param_swz_set(swzparam,iniparam);
     }
     else {
         printf("### WARNING: No input specified. Use default values instead!\n");
@@ -488,7 +488,7 @@ void fasp_param_ilu_init (ILU_param *iluparam)
 }
 
 /**
- * \fn void fasp_param_schwarz_init (SWZ_param *swzparam)
+ * \fn void fasp_param_swz_init (SWZ_param *swzparam)
  *
  * \brief Initialize Schwarz parameters
  *
@@ -499,7 +499,7 @@ void fasp_param_ilu_init (ILU_param *iluparam)
  *
  * Modified by Chensong Zhang on 10/10/2014: Add block solver type
  */
-void fasp_param_schwarz_init (SWZ_param *swzparam)
+void fasp_param_swz_init (SWZ_param *swzparam)
 {
     swzparam->print_level   = PRINT_NONE;
     swzparam->SWZ_type      = 3;
@@ -606,8 +606,8 @@ void fasp_param_ilu_set (ILU_param          *iluparam,
 }
 
 /**
- * \fn void fasp_param_schwarz_set (SWZ_param *swzparam, 
- *                                  const input_param *iniparam)
+ * \fn void fasp_param_swz_set (SWZ_param *swzparam, 
+ *                              const input_param *iniparam)
  *
  * \brief Set SWZ_param with INPUT
  *
@@ -617,8 +617,8 @@ void fasp_param_ilu_set (ILU_param          *iluparam,
  * \author Xiaozhe Hu
  * \date   05/22/2012
  */
-void fasp_param_schwarz_set (SWZ_param      *swzparam,
-                             const input_param  *iniparam)
+void fasp_param_swz_set (SWZ_param      *swzparam,
+                         const input_param  *iniparam)
 {
     swzparam->print_level   = iniparam->print_level;
     swzparam->SWZ_type      = iniparam->SWZ_type;
@@ -726,8 +726,8 @@ void fasp_param_prec_to_amg (AMG_param           *amgparam,
 }
 
 /**
- * \fn void fasp_param_amg_to_prec_bsr (precond_data_bsr *pcdata, 
- *                                      const AMG_param *amgparam)
+ * \fn void fasp_param_amg_to_precbsr (precond_data_bsr *pcdata,
+ *                                     const AMG_param *amgparam)
  *
  * \brief Set precond_data_bsr with AMG_param
  *
@@ -737,8 +737,8 @@ void fasp_param_prec_to_amg (AMG_param           *amgparam,
  * \author Xiaozhe Hu
  * \date   02/06/2012
  */
-void fasp_param_amg_to_prec_bsr (precond_data_bsr  *pcdata,
-                                 const AMG_param   *amgparam)
+void fasp_param_amg_to_precbsr (precond_data_bsr  *pcdata,
+                                const AMG_param   *amgparam)
 {
     pcdata->AMG_type            = amgparam->AMG_type;
     pcdata->print_level         = amgparam->print_level;
@@ -761,8 +761,8 @@ void fasp_param_amg_to_prec_bsr (precond_data_bsr  *pcdata,
 }
 
 /**
- * \fn void fasp_param_prec_to_amg_bsr (AMG_param *amgparam, 
- *                                      const precond_data_bsr *pcdata)
+ * \fn void fasp_param_precbsr_to_amg (AMG_param *amgparam,
+ *                                     const precond_data_bsr *pcdata)
  *
  * \brief Set AMG_param with precond_data
  *
@@ -772,8 +772,8 @@ void fasp_param_amg_to_prec_bsr (precond_data_bsr  *pcdata,
  * \author Xiaozhe Hu
  * \date   02/06/2012
  */
-void fasp_param_prec_to_amg_bsr (AMG_param               *amgparam,
-                                 const precond_data_bsr  *pcdata)
+void fasp_param_precbsr_to_amg (AMG_param               *amgparam,
+                                const precond_data_bsr  *pcdata)
 {
     amgparam->AMG_type            = pcdata->AMG_type;
     amgparam->print_level         = pcdata->print_level;
@@ -924,7 +924,7 @@ void fasp_param_ilu_print (const ILU_param *param)
 }
 
 /**
- * \fn void fasp_param_schwarz_print (const SWZ_param *param)
+ * \fn void fasp_param_swz_print (const SWZ_param *param)
  *
  * \brief Print out Schwarz parameters
  *
@@ -933,7 +933,7 @@ void fasp_param_ilu_print (const ILU_param *param)
  * \author Xiaozhe Hu
  * \date   05/22/2012
  */
-void fasp_param_schwarz_print (const SWZ_param *param)
+void fasp_param_swz_print (const SWZ_param *param)
 {
     if ( param ) {
 

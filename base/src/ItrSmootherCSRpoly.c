@@ -14,6 +14,8 @@
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
+ *
+ *  \warning Do NOT use auto-indentation in this file!
  */
 
 #include <math.h>
@@ -34,11 +36,11 @@
 
 #include "ItrAuxiliary.inl"
 
-static void bminax(REAL *,INT *,INT *, REAL *, REAL *,INT *, REAL *);
-static void Diaginv(dCSRmat *, REAL *);
-static REAL DinvAnorminf(dCSRmat *, REAL *);
-static void Diagx(REAL *, INT, REAL *, REAL *);
-static void Rr(dCSRmat *, REAL *, REAL *, REAL *, REAL *, REAL *, REAL *, REAL *, INT);
+static void bminax (REAL *,INT *,INT *, REAL *, REAL *,INT *, REAL *);
+static void Diaginv (dCSRmat *, REAL *);
+static REAL DinvAnorminf (dCSRmat *, REAL *);
+static void Diagx (REAL *, INT, REAL *, REAL *);
+static void Rr (dCSRmat *, REAL *, REAL *, REAL *, REAL *, REAL *, REAL *, REAL *, INT);
 
 /*---------------------------------*/
 /*--      Public Function        --*/

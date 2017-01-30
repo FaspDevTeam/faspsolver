@@ -114,8 +114,8 @@ void fasp_amg_interp (dCSRmat    *A,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012: add OMP support
  * Modified by Chensong Zhang on 05/14/2013: rewritten
  */
-void fasp_amg_interp_trunc (dCSRmat     *P,
-                            AMG_param   *param)
+void fasp_amg_interp_trunc (dCSRmat    *P,
+                            AMG_param  *param)
 {
     const INT   row    = P->row;
     const INT   nnzold = P->nnz;

@@ -262,8 +262,8 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat    *A,
 }
 
 /**
- * \fn INT fasp_solver_dcsr_krylov_schwarz (dCSRmat *A, dvector *b, dvector *x,
- *                                          ITS_param *itparam, SWZ_param *schparam)
+ * \fn INT fasp_solver_dcsr_krylov_swz (dCSRmat *A, dvector *b, dvector *x,
+ *                                      ITS_param *itparam, SWZ_param *schparam)
  *
  * \brief Solve Ax=b by overlapping Schwarz Krylov methods
  *
@@ -280,11 +280,11 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat    *A,
  *
  * Modified by Chensong on 07/02/2012: change interface
  */
-INT fasp_solver_dcsr_krylov_schwarz (dCSRmat    *A,
-                                     dvector    *b,
-                                     dvector    *x,
-                                     ITS_param  *itparam,
-                                     SWZ_param  *schparam)
+INT fasp_solver_dcsr_krylov_swz (dCSRmat    *A,
+                                 dvector    *b,
+                                 dvector    *x,
+                                 ITS_param  *itparam,
+                                 SWZ_param  *schparam)
 {
     SWZ_param swzparam;
     swzparam.SWZ_mmsize    = schparam->SWZ_mmsize;
@@ -314,15 +314,15 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat    *A,
 	
 	// construct Schwarz precondtioner
 	fasp_dcsr_shift (&SWZ_data.A, 1);
-	fasp_schwarz_setup(&SWZ_data, &swzparam);
+	fasp_swz_setup (&SWZ_data, &swzparam);
 	
-	fasp_gettime(&setup_end);
+	fasp_gettime (&setup_end);
 	setup_duration = setup_end - setup_start;
     printf("SWZ_Krylov method setup %f seconds.\n", setup_duration);
 	
 	precond prec;
 	prec.data = &SWZ_data;
-	prec.fct = fasp_precond_schwarz;
+	prec.fct  = fasp_precond_swz;
 	
 	fasp_gettime(&solver_start);
 	
@@ -339,7 +339,7 @@ INT fasp_solver_dcsr_krylov_schwarz (dCSRmat    *A,
 	printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
 	
-	fasp_schwarz_data_free(&SWZ_data);
+	fasp_swz_data_free(&SWZ_data);
 	
 	return status;
 }

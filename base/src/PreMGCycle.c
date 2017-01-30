@@ -100,14 +100,14 @@ ForwardSweep:
         else if ( l < mgl->SWZ_levels ) {
             switch (mgl[l].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam,
-                                                       &mgl[l].x, &mgl[l].b);
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam,
-                                                        &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_forward_smoother(&mgl[l].Schwarz, &swzparam,
+                                                   &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_backward_smoother(&mgl[l].Schwarz, &swzparam,
+                                                    &mgl[l].x, &mgl[l].b);
                     break;
                 default:
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam,
-                                                       &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_forward_smoother(&mgl[l].Schwarz, &swzparam,
+                                                   &mgl[l].x, &mgl[l].b);
                     break;
             }
         }
@@ -223,14 +223,14 @@ ForwardSweep:
         else if ( l < mgl->SWZ_levels ) {
             switch (mgl[l].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam,
-                                                        &mgl[l].x, &mgl[l].b);
-                    fasp_dcsr_schwarz_forward_smoother(&mgl[l].Schwarz, &swzparam,
-                                                       &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_backward_smoother(&mgl[l].Schwarz, &swzparam,
+                                                    &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_forward_smoother(&mgl[l].Schwarz, &swzparam,
+                                                   &mgl[l].x, &mgl[l].b);
                     break;
                 default:
-                    fasp_dcsr_schwarz_backward_smoother(&mgl[l].Schwarz, &swzparam,
-                                                        &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_backward_smoother(&mgl[l].Schwarz, &swzparam,
+                                                    &mgl[l].x, &mgl[l].b);
                     break;
             }
         }

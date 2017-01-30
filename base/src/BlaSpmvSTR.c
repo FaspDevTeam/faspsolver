@@ -28,15 +28,15 @@
 static inline void smat_amxv_nc3(const REAL, const REAL *, const REAL *, REAL *);
 static inline void smat_amxv_nc5(const REAL, const REAL *, const REAL *, REAL *);
 static inline void smat_amxv(const REAL, const REAL *, const REAL *, const INT, REAL *);
-static inline void spaAxpy_str_2D_nc1(const REAL, const dSTRmat *, const REAL *, REAL *);
-static inline void spaAxpy_str_2D_nc3(const REAL, const dSTRmat *, const REAL *, REAL *);
-static inline void spaAxpy_str_2D_nc5(const REAL, const dSTRmat *, const REAL *, REAL *);
-static inline void spaAxpy_str_2D_blk(const REAL, const dSTRmat *, const REAL *, REAL *);
-static inline void spaAxpy_str_3D_nc1(const REAL, const dSTRmat *, const REAL *, REAL *);
-static inline void spaAxpy_str_3D_nc3(const REAL, const dSTRmat *, const REAL *, REAL *);
-static inline void spaAxpy_str_3D_nc5(const REAL, const dSTRmat *, const REAL *, REAL *);
-static inline void spaAxpy_str_3D_blk(const REAL, const dSTRmat *, const REAL *, REAL *);
-static inline void spaAxpy_str(const REAL, const dSTRmat *, const REAL *, REAL *);
+static inline void str_spaAxpy_2D_nc1(const REAL, const dSTRmat *, const REAL *, REAL *);
+static inline void str_spaAxpy_2D_nc3(const REAL, const dSTRmat *, const REAL *, REAL *);
+static inline void str_spaAxpy_2D_nc5(const REAL, const dSTRmat *, const REAL *, REAL *);
+static inline void str_spaAxpy_2D_blk(const REAL, const dSTRmat *, const REAL *, REAL *);
+static inline void str_spaAxpy_3D_nc1(const REAL, const dSTRmat *, const REAL *, REAL *);
+static inline void str_spaAxpy_3D_nc3(const REAL, const dSTRmat *, const REAL *, REAL *);
+static inline void str_spaAxpy_3D_nc5(const REAL, const dSTRmat *, const REAL *, REAL *);
+static inline void str_spaAxpy_3D_blk(const REAL, const dSTRmat *, const REAL *, REAL *);
+static inline void str_spaAxpy(const REAL, const dSTRmat *, const REAL *, REAL *);
 static inline void blkcontr_str(const INT, const INT, const INT, const INT,
                                 const REAL *, const REAL *, REAL *);
 
@@ -70,19 +70,19 @@ void fasp_blas_dstr_aAxpy (const REAL      alpha,
             
             switch (A->nc) {
                 case 1:
-                    spaAxpy_str_2D_nc1(alpha, A, x, y);
+                    str_spaAxpy_2D_nc1(alpha, A, x, y);
                     break;
                     
                 case 3:
-                    spaAxpy_str_2D_nc3(alpha, A, x, y);
+                    str_spaAxpy_2D_nc3(alpha, A, x, y);
                     break;
                     
                 case 5:
-                    spaAxpy_str_2D_nc5(alpha, A, x, y);
+                    str_spaAxpy_2D_nc5(alpha, A, x, y);
                     break;
                     
                 default:
-                    spaAxpy_str_2D_blk(alpha, A, x, y);
+                    str_spaAxpy_2D_blk(alpha, A, x, y);
                     break;
             }
             
@@ -92,25 +92,25 @@ void fasp_blas_dstr_aAxpy (const REAL      alpha,
             
             switch (A->nc) {
                 case 1:
-                    spaAxpy_str_3D_nc1(alpha, A, x, y);
+                    str_spaAxpy_3D_nc1(alpha, A, x, y);
                     break;
                     
                 case 3:
-                    spaAxpy_str_3D_nc3(alpha, A, x, y);
+                    str_spaAxpy_3D_nc3(alpha, A, x, y);
                     break;
                     
                 case 5:
-                    spaAxpy_str_3D_nc5(alpha, A, x, y);
+                    str_spaAxpy_3D_nc5(alpha, A, x, y);
                     break;
                     
                 default:
-                    spaAxpy_str_3D_blk(alpha, A, x, y);
+                    str_spaAxpy_3D_blk(alpha, A, x, y);
                     break;
             }
             break;
             
         default:
-            spaAxpy_str(alpha, A, x, y);
+            str_spaAxpy(alpha, A, x, y);
             break;
     }
     
@@ -398,7 +398,7 @@ static inline void blkcontr_str (const INT   start_data,
 }
 
 /**
- * \fn static inline void spaAxpy_str_2D_nc1 (const REAL alpha, const dSTRmat *A,
+ * \fn static inline void str_spaAxpy_2D_nc1 (const REAL alpha, const dSTRmat *A,
  *                                            const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 5 banded 2D
@@ -417,7 +417,7 @@ static inline void blkcontr_str (const INT   start_data,
  * \note The offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1
  *       and (-1,+1,-ny,+ny) for nx = 1, but the order can be arbitrary.
  */
-static inline void spaAxpy_str_2D_nc1 (const REAL     alpha,
+static inline void str_spaAxpy_2D_nc1 (const REAL     alpha,
                                        const dSTRmat *A,
                                        const REAL    *x,
                                        REAL          *y)
@@ -463,7 +463,7 @@ static inline void spaAxpy_str_2D_nc1 (const REAL     alpha,
         }
         else {
             printf("### WARNING: offsets for 2D scalar is illegal! %s\n", __FUNCTION__);
-            spaAxpy_str(alpha, A, x, y);
+            str_spaAxpy(alpha, A, x, y);
             return;
         }
     }
@@ -559,7 +559,7 @@ static inline void spaAxpy_str_2D_nc1 (const REAL     alpha,
 }
 
 /**
- * \fn static inline void spaAxpy_str_2D_nc3 (const REAL alpha, const dSTRmat *A,
+ * \fn static inline void str_spaAxpy_2D_nc3 (const REAL alpha, const dSTRmat *A,
  *                                            const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 5 banded
@@ -578,7 +578,7 @@ static inline void spaAxpy_str_2D_nc1 (const REAL     alpha,
  * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1
  *       and (-1,+1,-ny,+ny) for nx = 1, but the order can be arbitrary.
  */
-static inline void spaAxpy_str_2D_nc3 (const REAL     alpha,
+static inline void str_spaAxpy_2D_nc3 (const REAL     alpha,
                                        const dSTRmat *A,
                                        const REAL    *x,
                                        REAL          *y)
@@ -628,7 +628,7 @@ static inline void spaAxpy_str_2D_nc3 (const REAL     alpha,
         }
         else {
             printf("### WARNING: offsets for 2D scalar is illegal! %s\n", __FUNCTION__);
-            spaAxpy_str(alpha, A, x, y);
+            str_spaAxpy(alpha, A, x, y);
             return;
         }
         
@@ -767,7 +767,7 @@ static inline void spaAxpy_str_2D_nc3 (const REAL     alpha,
 }
 
 /**
- * \fn static inline void spaAxpy_str_2D_nc5 (const REAL alpha, const dSTRmat *A,
+ * \fn static inline void str_spaAxpy_2D_nc5 (const REAL alpha, const dSTRmat *A,
  *                                            const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 5 banded
@@ -784,7 +784,7 @@ static inline void spaAxpy_str_2D_nc3 (const REAL     alpha,
  * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1
  *       and (-1,+1,-ny,+ny) for nx = 1, but the order can be arbitrary.
  */
-static inline void spaAxpy_str_2D_nc5 (const REAL      alpha,
+static inline void str_spaAxpy_2D_nc5 (const REAL      alpha,
                                        const dSTRmat  *A,
                                        const REAL     *x,
                                        REAL           *y)
@@ -834,7 +834,7 @@ static inline void spaAxpy_str_2D_nc5 (const REAL      alpha,
         }
         else {
             printf("### WARNING: offsets for 2D scalar is illegal! %s\n", __FUNCTION__);
-            spaAxpy_str(alpha, A, x, y);
+            str_spaAxpy(alpha, A, x, y);
             return;
         }
     }
@@ -974,7 +974,7 @@ static inline void spaAxpy_str_2D_nc5 (const REAL      alpha,
 }
 
 /**
- * \fn static inline void spaAxpy_str_2D_blk (const REAL alpha, const dSTRmat *A,
+ * \fn static inline void str_spaAxpy_2D_blk (const REAL alpha, const dSTRmat *A,
  *                                            const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 5 banded
@@ -991,7 +991,7 @@ static inline void spaAxpy_str_2D_nc5 (const REAL      alpha,
  * \note the offsets of the five bands have to be (-1, +1, -nx, +nx) for nx != 1
  *       and (-1,+1,-ny,+ny) for nx = 1, but the order can be arbitrary.
  */
-static inline void spaAxpy_str_2D_blk (const REAL      alpha,
+static inline void str_spaAxpy_2D_blk (const REAL      alpha,
                                        const dSTRmat  *A,
                                        const REAL     *x,
                                        REAL           *y)
@@ -1035,7 +1035,7 @@ static inline void spaAxpy_str_2D_blk (const REAL      alpha,
         }
         else {
             printf("### WARNING: offsets for 2D scalar is illegal! %s\n", __FUNCTION__);
-            spaAxpy_str(alpha, A, x, y);
+            str_spaAxpy(alpha, A, x, y);
             return;
         }
         
@@ -1101,7 +1101,7 @@ static inline void spaAxpy_str_2D_blk (const REAL      alpha,
 }
 
 /**
- * \fn static inline void spaAxpy_str_3D_nc1 (const REAL alpha, const dSTRmat *A,
+ * \fn static inline void str_spaAxpy_3D_nc1 (const REAL alpha, const dSTRmat *A,
  *                                            const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 7 banded
@@ -1118,7 +1118,7 @@ static inline void spaAxpy_str_2D_blk (const REAL      alpha,
  * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxy
  *       and +nxy, but the order can be arbitrary.
  */
-static inline void spaAxpy_str_3D_nc1 (const REAL      alpha,
+static inline void str_spaAxpy_3D_nc1 (const REAL      alpha,
                                        const dSTRmat  *A,
                                        const REAL     *x,
                                        REAL           *y)
@@ -1158,7 +1158,7 @@ static inline void spaAxpy_str_3D_nc1 (const REAL      alpha,
         }
         else {
             printf("### WARNING: offsets for 3D scalar is illegal! %s\n", __FUNCTION__);
-            spaAxpy_str(alpha, A, x, y);
+            str_spaAxpy(alpha, A, x, y);
             return;
         }
     }
@@ -1220,7 +1220,7 @@ static inline void spaAxpy_str_3D_nc1 (const REAL      alpha,
 }
 
 /**
- * \fn static inline void spaAxpy_str_3D_nc3 (const REAL alpha, const dSTRmat *A,
+ * \fn static inline void str_spaAxpy_3D_nc3 (const REAL alpha, const dSTRmat *A,
  *                                            const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 7 banded
@@ -1237,7 +1237,7 @@ static inline void spaAxpy_str_3D_nc1 (const REAL      alpha,
  * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxy
  *       and +nxy, but the order can be arbitrary.
  */
-static inline void spaAxpy_str_3D_nc3 (const REAL      alpha,
+static inline void str_spaAxpy_3D_nc3 (const REAL      alpha,
                                        const dSTRmat  *A,
                                        const REAL     *x,
                                        REAL           *y)
@@ -1281,7 +1281,7 @@ static inline void spaAxpy_str_3D_nc3 (const REAL      alpha,
         }
         else {
             printf("### WARNING: offsets for 2D scalar is illegal! %s\n", __FUNCTION__);
-            spaAxpy_str(alpha, A, x, y);
+            str_spaAxpy(alpha, A, x, y);
             return;
         }
     }
@@ -1393,7 +1393,7 @@ static inline void spaAxpy_str_3D_nc3 (const REAL      alpha,
 }
 
 /**
- * \fn static inline void spaAxpy_str_3D_nc5 (const REAL alpha, const dSTRmat *A,
+ * \fn static inline void str_spaAxpy_3D_nc5 (const REAL alpha, const dSTRmat *A,
  *                                            const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 7 banded
@@ -1410,7 +1410,7 @@ static inline void spaAxpy_str_3D_nc3 (const REAL      alpha,
  * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxy
  *       and +nxy, but the order can be arbitrary.
  */
-static inline void spaAxpy_str_3D_nc5 (const REAL      alpha,
+static inline void str_spaAxpy_3D_nc5 (const REAL      alpha,
                                        const dSTRmat  *A,
                                        const REAL     *x,
                                        REAL           *y)
@@ -1454,7 +1454,7 @@ static inline void spaAxpy_str_3D_nc5 (const REAL      alpha,
         }
         else {
             printf("### WARNING: offsets for 2D scalar is illegal! %s\n", __FUNCTION__);
-            spaAxpy_str(alpha, A, x, y);
+            str_spaAxpy(alpha, A, x, y);
             return;
         }
     }
@@ -1566,7 +1566,7 @@ static inline void spaAxpy_str_3D_nc5 (const REAL      alpha,
 }
 
 /**
- * \fn static inline void spaAxpy_str_3D_blk (const REAL alpha, const dSTRmat *A,
+ * \fn static inline void str_spaAxpy_3D_blk (const REAL alpha, const dSTRmat *A,
  *                                            const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y, where A is a 7 banded
@@ -1583,7 +1583,7 @@ static inline void spaAxpy_str_3D_nc5 (const REAL      alpha,
  * \note the offsetsoffsets of the five bands have to be -1, +1, -nx, +nx, -nxy
  *       and +nxy, but the order can be arbitrary.
  */
-static inline void spaAxpy_str_3D_blk (const REAL      alpha,
+static inline void str_spaAxpy_3D_blk (const REAL      alpha,
                                        const dSTRmat  *A,
                                        const REAL     *x,
                                        REAL           *y)
@@ -1627,7 +1627,7 @@ static inline void spaAxpy_str_3D_blk (const REAL      alpha,
         }
         else {
             printf("### WARNING: offsets for 2D scalar is illegal! %s\n", __FUNCTION__);
-            spaAxpy_str(alpha, A, x, y);
+            str_spaAxpy(alpha, A, x, y);
             return;
         }
     }
@@ -1739,7 +1739,7 @@ static inline void spaAxpy_str_3D_blk (const REAL      alpha,
 }
 
 /**
- * \fn static inline void spaAxpy_str (const REAL alpha, const dSTRmat *A, 
+ * \fn static inline void str_spaAxpy (const REAL alpha, const dSTRmat *A, 
  *                                     const REAL *x, REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y for general cases
@@ -1752,7 +1752,7 @@ static inline void spaAxpy_str_3D_blk (const REAL      alpha,
  * \author Shiquan Zhang, Xiaozhe Hu
  * \date   2010/10/15
  */
-static inline void spaAxpy_str (const REAL      alpha,
+static inline void str_spaAxpy (const REAL      alpha,
                                 const dSTRmat  *A,
                                 const REAL     *x,
                                 REAL           *y)

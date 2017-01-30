@@ -16,14 +16,14 @@ message("${THE_C} and ${REAL_C} is 3")
 		# dragonegg plugin is installed; it is not clear how
 		# to include this dragonegg plugin on Linux in the
 		# CMAKEs, so we will issue a warning at the end if the 
-		#C compiler and fortran compilers are different. 
-		#As compiler gfortran works with clang in many
+		# C compiler and fortran compilers are different. 
+		# As compiler gfortran works with clang in many
 		# cases, so we assume this standard behavior
 		# here as well
 #		if(APPLE)
 #		else(APPLE)
 #		endif(APPLE)
-		  find_program(THE_FC NAMES gfortran gfortran-mp-5 gfortran-mp-4.9 gfortran-mp-4.8  gfortran-mp-4.6 g95 g77)
+		  find_program(THE_FC NAMES $ENV{FC} gfortran gfortran-mp-5 gfortran-mp-4.9 gfortran-mp-4.8 gfortran-mp-4.6 g95 g77)
 	else()       
 	   message("WARNING: ${THE_C} did not match any of the preset C compilers" )
 	   message("Continuing with the default compiler: ${CMAKE_C_COMPILER}" )

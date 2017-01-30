@@ -109,7 +109,7 @@ void fasp_amg_data_free (AMG_data   *mgl,
         fasp_dvec_free(&mgl[i].w);
         fasp_ivec_free(&mgl[i].cfmark);
         fasp_ilu_data_free(&mgl[i].LU);
-        fasp_schwarz_data_free(&mgl[i].Schwarz);
+        fasp_swz_data_free(&mgl[i].Schwarz);
     }
     
     for ( i=0; i<mgl->near_kernel_dim; ++i ) {
@@ -285,11 +285,12 @@ void fasp_ilu_data_free (ILU_data *ILUdata)
     fasp_mem_free(ILUdata->ilevU);  ILUdata->ilevU  = NULL;
     fasp_mem_free(ILUdata->jlevU);  ILUdata->jlevU  = NULL;
 
-    ILUdata->row = ILUdata->col = ILUdata->nzlu = ILUdata ->nwork = ILUdata->nb = ILUdata->nlevL = ILUdata->nlevU = 0;
+    ILUdata->row = ILUdata->col = ILUdata->nzlu = ILUdata ->nwork = \
+    ILUdata->nb = ILUdata->nlevL = ILUdata->nlevU = 0;
 }
 
 /**
- * \fn void fasp_schwarz_data_free (SWZ_data *Schwarz)
+ * \fn void fasp_swz_data_free (SWZ_data *Schwarz)
  * \brief Free SWZ_data data memeory space
  *
  * \param *Schwarz  pointer to the AMG_data data
@@ -297,7 +298,7 @@ void fasp_ilu_data_free (ILU_data *ILUdata)
  * \author Xiaozhe Hu
  * \date   2010/04/06
  */
-void fasp_schwarz_data_free (SWZ_data *Schwarz)
+void fasp_swz_data_free (SWZ_data *Schwarz)
 {
     INT i;
     fasp_dcsr_free(&Schwarz->A);

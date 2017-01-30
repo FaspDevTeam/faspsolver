@@ -62,12 +62,12 @@ void fasp_blas_smat_axm (REAL       *a,
  * \author Xiaozhe Hu, Chensong Zhang
  * \date   05/26/2014
  */
-void fasp_blas_smat_add (const REAL *a,
-                         const REAL *b,
-                         const INT   n,
-                         const REAL  alpha,
-                         const REAL  beta,
-                         REAL       *c)
+void fasp_blas_smat_add (const REAL  *a,
+                         const REAL  *b,
+                         const INT    n,
+                         const REAL   alpha,
+                         const REAL   beta,
+                         REAL        *c)
 {
     const INT  n2 = n*n;
     INT        i;
@@ -190,10 +190,10 @@ void fasp_blas_smat_mxv_nc7 (const REAL  *a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   04/21/2010  
  */
-void fasp_blas_smat_mxv (const REAL      *a,
-                         const REAL      *b,
-                         REAL            *c,
-                         const INT        n)
+void fasp_blas_smat_mxv (const REAL  *a,
+                         const REAL  *b,
+                         REAL        *c,
+                         const INT    n)
 {    
     switch (n) {
     case 2:

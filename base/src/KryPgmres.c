@@ -1567,8 +1567,8 @@ static double estimate_spectral_radius (const double **A, int n, size_t k = 20)
         return fasp_blas_darray_norm2(n,x) / fasp_blas_darray_norm2(n,y) ;
 }
 
-static double fasp_spectral_radius (dCSRmat *A,
-                                    const SHORT restart)
+static double spectral_radius (dCSRmat *A,
+                               const SHORT restart)
 {
     const INT n         = A->row;
     const INT MIN_ITER  = 0;

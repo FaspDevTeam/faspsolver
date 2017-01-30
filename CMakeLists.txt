@@ -26,15 +26,19 @@ endif(DEFINED ENV{CC})
 if( THE_C )
     set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL   "the C compiler" FORCE)
 endif( THE_C )
+
 #######################################################################
 # name the project at this moment and this will set the compiler id:
 project(FASP C )
 #######################################################################
 set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
-########### try to find matching c++ and fortran compilers###############
+
+########### try to find matching c++ and fortran compilers ############
  include(get_cxx_fc_compilers)
-### check the prefix for installation
+
+########### check the prefix for installation #########################
  include(install_prefix)
+ 
 #
 # OpenMP : defined on command line in the top Makefile
 #
@@ -68,7 +72,6 @@ set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
           set (CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE} 
 	  	  "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_FFLAGS}")	 
        endif(ADD_FFLAGS)
-
 #
     set(CMAKE_INSTALL_PREFIX "${FASP_SOURCE_DIR}" )
     set(FASPLIB_BASE_PATH "base" CACHE PATH "base path to FASPLIB")
@@ -78,11 +81,12 @@ set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
 	   set(FASP_LIBRARY_TYPE SHARED)
        else(SHARED)
 	   set(FASP_LIBRARY_TYPE STATIC)
-       endif(SHARED)	   
+       endif(SHARED)   
 #
 if(APPLE)
-cmake_policy(SET "CMP0042" NEW)
+    cmake_policy(SET "CMP0042" NEW)
 endif(APPLE)
+
 # NOT SURE IF WE NEED THIS: 
 ## FOR MAC OS X to find shared libs in install location
         set(CMAKE_INSTALL_NAME_DIR 
@@ -94,13 +98,13 @@ file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR}
 	  		    ${FASP_SOURCE_DIR}/base/src/*.c 
 	  		    ${FASP_SOURCE_DIR}/base/src/*.inl )
 
-## keep here for auto generating headers if needed
-add_custom_target(headers ./fhead.sh "${FASP_SOURCE_DIR}/base"
-         	   DEPENDS ${FASP_C_SOURCES}
-                   WORKING_DIRECTORY "${FASP_SOURCE_DIR}/util"
-                   COMMENT 
-		   "FASP: Autogenerating header file with C functions..."
-                   VERBATIM)
+# keep here for auto generating headers if needed
+add_custom_target(headers ${FASP_SOURCE_DIR}/util/fhead.sh "${FASP_SOURCE_DIR}/base"
+         	  DEPENDS ${FASP_C_SOURCES}
+                  WORKING_DIRECTORY "${FASP_SOURCE_DIR}/util"
+                  COMMENT 
+		  "FASP: Autogenerating header file with C functions..."
+                  VERBATIM)
 
 ##################################################################
 # For UMFPACK
@@ -224,24 +228,13 @@ if(DOXYGEN_FOUND)
 endif(DOXYGEN_FOUND)
 ###############end documentation with doxygen
 
-##############################below are debugs and tries out
-#enable_testing()
-#add_test(headers ${FASP_SOURCE_DIR}/util/fhead.sh ${CMAKE_CURRENT_SOURCE_DIR})
-## add_custom_command(OUTPUT include/fasp_functs.h
-##                   COMMAND ./fhead.sh ARGS ${CMAKE_CURRENT_SOURCE_DIR}
-##		   DEPENDS ${FASP_BASE_SOURCES}
-##                   WORKING_DIRECTORY "${FASP_SOURCE_DIR}/util"
-##                   COMMENT "Autogenerating header files first..."
-##                   VERBATIM)
-
 #MISMATCH CHECK:
 if(NOT (CMAKE_Fortran_COMPILER_ID STREQUAL CMAKE_C_COMPILER_ID))
   message("
-** WARNING: CC and FC mismatch. C compiler=\"${CMAKE_C_COMPILER_ID}${CMAKE_C_COMPILER_VERSION}\" ; Fortran compiler=\"${CMAKE_Fortran_COMPILER_ID}${CMAKE_Fortran_COMPILER_VERSION}\"
+** WARNING: Mismatching CC and FC mismatch. CC=\"${CMAKE_C_COMPILER_ID}${CMAKE_C_COMPILER_VERSION}\"; FC=\"${CMAKE_Fortran_COMPILER_ID}${CMAKE_Fortran_COMPILER_VERSION}\"!
 "
 ) 
 endif(NOT (CMAKE_Fortran_COMPILER_ID STREQUAL CMAKE_C_COMPILER_ID))
-
 
 ########################################
 ##set FASP library name for the library

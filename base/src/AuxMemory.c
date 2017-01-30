@@ -180,7 +180,7 @@ void fasp_mem_free (void *mem)
 void fasp_mem_usage ()
 {
 #if DEBUG_MODE > 2
-    printf("### DEBUG: Number of alloc = %d, allocating memory = %.3fMB.\n",
+    printf("### DEBUG: Number of alloc = %d, allocated memory = %.3fMB.\n",
            total_alloc_count, (REAL)total_alloc_mem/Million);
 #endif
 }

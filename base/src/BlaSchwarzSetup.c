@@ -30,7 +30,7 @@ static void SWZ_block (SWZ_data *, const INT, const INT *, const INT *, INT *);
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_schwarz_setup (SWZ_data *Schwarz, SWZ_param *param)
+ * \fn INT fasp_swz_setup (SWZ_data *Schwarz, SWZ_param *param)
  *
  * \brief Setup phase for the Schwarz methods
  *
@@ -44,8 +44,8 @@ static void SWZ_block (SWZ_data *, const INT, const INT *, const INT *, INT *);
  *
  * Modified by Zheng Li on 10/09/2014
  */
-INT fasp_schwarz_setup (SWZ_data   *Schwarz,
-                        SWZ_param  *param)
+INT fasp_swz_setup (SWZ_data   *Schwarz,
+                    SWZ_param  *param)
 {
     // information about A
     dCSRmat A = Schwarz->A;
@@ -199,8 +199,8 @@ INT fasp_schwarz_setup (SWZ_data   *Schwarz,
 }
 
 /**
- * \fn void fasp_dcsr_schwarz_forward_smoother (SWZ_data  *Schwarz, SWZ_param *param,
- *                                              dvector *x, dvector *b)
+ * \fn void fasp_dcsr_swz_forward_smoother (SWZ_data  *Schwarz, SWZ_param *param,
+ *                                          dvector *x, dvector *b)
  *
  * \brief Schwarz smoother: forward sweep
  *
@@ -212,10 +212,10 @@ INT fasp_schwarz_setup (SWZ_data   *Schwarz,
  * \author Zheng Li, Chensong Zhang
  * \date   2014/10/5
  */
-void fasp_dcsr_schwarz_forward_smoother (SWZ_data   *Schwarz,
-                                         SWZ_param  *param,
-                                         dvector    *x,
-                                         dvector    *b)
+void fasp_dcsr_swz_forward_smoother (SWZ_data   *Schwarz,
+                                     SWZ_param  *param,
+                                     dvector    *x,
+                                     dvector    *b)
 {
     INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     
@@ -308,9 +308,9 @@ void fasp_dcsr_schwarz_forward_smoother (SWZ_data   *Schwarz,
 }
 
 /**
- * \fn void fasp_dcsr_schwarz_backward_smoother (SWZ_data  *Schwarz,
- *                                               SWZ_param *param,
- *                                               dvector *x, dvector *b)
+ * \fn void fasp_dcsr_swz_backward_smoother (SWZ_data  *Schwarz,
+ *                                           SWZ_param *param,
+ *                                           dvector *x, dvector *b)
  *
  * \brief Schwarz smoother: backward sweep
  *
@@ -322,10 +322,10 @@ void fasp_dcsr_schwarz_forward_smoother (SWZ_data   *Schwarz,
  * \author Zheng Li, Chensong Zhang
  * \date   2014/10/5
  */
-void fasp_dcsr_schwarz_backward_smoother (SWZ_data   *Schwarz,
-                                          SWZ_param  *param,
-                                          dvector    *x,
-                                          dvector    *b)
+void fasp_dcsr_swz_backward_smoother (SWZ_data   *Schwarz,
+                                      SWZ_param  *param,
+                                      dvector    *x,
+                                      dvector    *b)
 {
     INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     
