@@ -320,12 +320,12 @@ void fasp_dbsr_subplot (const dBSRmat  *A,
 }
 
 /**
- * \fn void fasp_dbsr_plot (const dBSRmat *A, const char *filename)
+ * \fn void fasp_dbsr_plot (const dBSRmat *A, const char *fname)
  *
  * \brief Write dBSR sparse matrix pattern in BMP file format
  *
- * \param A         Pointer to the dBSRmat matrix
- * \param filename  File name
+ * \param A       Pointer to the dBSRmat matrix
+ * \param fname   File name
  *
  * \author Chunsheng Feng
  * \date   11/16/2013

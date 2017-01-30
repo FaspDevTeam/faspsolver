@@ -38,7 +38,6 @@
  *        finds num of nonzeroes.
  *
  * \param ia   array of row pointers 1st multiplicand
- * \param ia   array of row pointers 1st multiplicand
  * \param ja   array of column indices 1st multiplicand
  * \param ib   array of row pointers 2nd multiplicand
  * \param jb   array of column indices 2nd multiplicand
@@ -346,7 +345,6 @@ void fasp_sparse_aat_ (INT  *ia,
  * \brief Addition of two sparse matrices: calculating the nonzero structure of the result
  *        if jc is not null. if jc is null only finds num of nonzeroes.
  *
- * \param ia   array of row pointers 1st summand
  * \param ia   array of row pointers 1st summand
  * \param ja   array of column indices 1st summand
  * \param ib   array of row pointers 2nd summand

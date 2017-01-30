@@ -329,9 +329,9 @@ static SHORT getinonefull (INT   **mat,
  *
  * \brief Order a cluster of entries in a sequence
  *
- * \param *mat      Pointer to the relative position of the entries
- * \param *matval   Pointer to the values corresponding to the position
- * \param lengths   INT array, to store the number of rows, number of cols and number of nonzero
+ * \param mat       Pointer to the relative position of the entries
+ * \param matval    Pointer to the values corresponding to the position
+ * \param lengths   Pointer to the numbers of rows, cols and nonzeros
  *
  * \return          FASP_SUCCESS or error message
  *

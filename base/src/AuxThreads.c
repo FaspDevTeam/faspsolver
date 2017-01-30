@@ -117,13 +117,13 @@ INT THDs_CPR_lGS=0; /**< reservoir GS smoothing threads     */
 INT THDs_CPR_gGS=0; /**< global matrix GS smoothing threads */
 
 /**
- * \fn void fasp_set_gs_threads (const INT threads, const INT its)
+ * \fn void fasp_set_gs_threads (const INT mythreads, const INT its)
  *
  * \brief  Set threads for CPR. Please add it at the begin of Krylov OpenMP method 
  *         function and after iter++.
  *
- * \param threads  Total threads of solver
- * \param its      Current its of the Krylov methods
+ * \param mythreads  Total threads of solver
+ * \param its        Current iteration number in the Krylov methods
  *
  * \author Feng Chunsheng, Yue Xiaoqiang
  * \date   03/20/2011

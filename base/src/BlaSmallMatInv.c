@@ -483,7 +483,7 @@ void fasp_smat_invp_nc (REAL      *a,
                         const INT  n)
 {
     INT   i, j, k, l, ll, u;
-    INT   icol, irow;
+    INT   icol = 0, irow = 0;
     REAL  vmax, dum, pivinv, temp;
     
     INT *work  = (INT *)fasp_mem_calloc(3*n,sizeof(INT));

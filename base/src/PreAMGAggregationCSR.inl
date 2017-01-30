@@ -119,7 +119,7 @@ static void pair_aggregate_init (const dCSRmat *A,
  */
 static void pair_aggregate_init2 (const dCSRmat *A,
                                   ivector *map,
-                                  ivector *vertice,
+                                  ivector *vertices,
                                   REAL *s1,
                                   REAL *s)
 {
@@ -137,7 +137,7 @@ static void pair_aggregate_init2 (const dCSRmat *A,
         si = si + s1[j];
         for (k=ia[j]; k<ia[j+1]; ++k) {
             col = ja[k];
-            nc = vertice->val[col];
+            nc = vertices->val[col];
             if ((nc==i) && (col != j)) si += val[k];
         }
         j = map->val[2*i+1];
@@ -148,7 +148,7 @@ static void pair_aggregate_init2 (const dCSRmat *A,
         si = si + s1[j];
         for (k=ia[j]; k<ia[j+1]; ++k) {
             col = ja[k];
-            nc = vertice->val[col];
+            nc = vertices->val[col];
             if ((nc==i) && (col != j)) si += val[k];
         }
         s[i] = si;
@@ -334,19 +334,19 @@ static SHORT aggregation_quality (const dCSRmat *A,
                                   const INT dopass,
                                   const REAL quality_bound)
 {
-    const INT *IA = A->IA;
-    const INT *JA = A->JA;
+    const INT  *IA  = A->IA;
+    const INT  *JA  = A->JA;
     const REAL *val = A->val;
-    const INT *map = tentmap->val;
+    const INT  *map = tentmap->val;
     
-    REAL bnd1=2*1.0/quality_bound;
-    REAL bnd2=1.0-bnd1;
+    REAL bnd1       = 2*1.0/quality_bound;
+    REAL bnd2       = 1.0-bnd1;
+    REAL alpha      = 1.0, beta = 1.0;
+    INT  agg_size   = 1;
     
     REAL W[8][8], v[4], sig[4], AG[4];
     INT fnode[4];
-    
-    REAL alpha, beta;
-    INT i, j, l, k, m, status, flag, jj, agg_size;
+    INT i, j, l, k, m, status, flag, jj;
     
     if (dopass == 2) {
         if (map[2*root+1] < -1) {
@@ -626,7 +626,7 @@ static void first_pairwise_unsymm (const dCSRmat * A,
                 ipair = col;
                 val = tent;
             }
-            else if((tent-val) < -0.06){
+            else if ( (tent-val) < -0.06 ) {
                 ipair = col;
                 val = tent;
             }

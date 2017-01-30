@@ -98,12 +98,12 @@ void * fasp_mem_calloc (const LONGLONG  size,
 }
 
 /**
- * \fn void * fasp_mem_realloc (void * oldmem, const LONGLONG type)
+ * \fn void * fasp_mem_realloc (void * oldmem, const LONGLONG tsize)
  *
  * \brief Reallocate, initiate, and check memory
  *
  * \param oldmem  Pointer to the existing mem block
- * \param type    Size of memory blocks
+ * \param tsize   Size of memory blocks
  *
  * \return        Void pointer to the reallocated memory
  *
@@ -146,8 +146,6 @@ void * fasp_mem_realloc (void           *oldmem,
  * \brief Free up previous allocated memory body
  *
  * \param mem   Pointer to the memory body need to be freed
- *
- * \return      NULL pointer
  *
  * \author Chensong Zhang
  * \date   2010/12/24

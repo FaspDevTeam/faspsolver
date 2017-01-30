@@ -36,22 +36,22 @@ static void fasp_sortrow (INT num,INT *q);
  *
  * \brief Get ILU factorization with level of fill-in k (ilu(k)) for a CSR matrix A
  *
- * \param n   row number of A
- * \param a   nonzero entries of A
- * \param ja  integer array of column for A
- * \param ia  integer array of row pointers for A
- * \param lfil  integer. The fill-in parameter. Each row of L and each row
- *              of U will have a maximum of lfil elements (excluding the diagonal
- *              element). lfil must be .ge. 0.
- * \param alu,jlu  matrix stored in Modified Sparse Row (MSR) format containing
- *                 the L and U factors together. The diagonal (stored in
- *                 alu(1:n) ) is inverted. Each i-th row of the alu,jlu matrix
- *                 contains the i-th row of L (excluding the diagonal entry=1)
- *                 followed by the i-th row of U.
+ * \param n    row number of A
+ * \param a    nonzero entries of A
+ * \param ja   integer array of column for A
+ * \param ia   integer array of row pointers for A
+ * \param lfil integer. The fill-in parameter. Each row of L and each row
+ *             of U will have a maximum of lfil elements (excluding the diagonal
+ *             element). lfil must be .ge. 0.
+ * \param alu  matrix stored in Modified Sparse Row (MSR) format containing
+ *             the L and U factors together. The diagonal (stored in
+ *             alu(1:n) ) is inverted. Each i-th row of the alu,jlu matrix
+ *             contains the i-th row of L (excluding the diagonal entry=1)
+ *             followed by the i-th row of U.
  * \param jlu  integer array of length n containing the pointers to
  *             the beginning of each row of U in the matrix alu,jlu.
  * \param iwk  integer. The minimum length of arrays alu, jlu, and levs.
- * \param ierr  integer pointer. Return error message with the following meaning.
+ * \param ierr integer pointer. Return error message with the following meaning.
  *                0  --> successful return.
  *               >0  --> zero pivot encountered at step number ierr.
  *               -1  --> Error. input matrix may be wrong.
@@ -435,11 +435,13 @@ F999:
  *              element). lfil must be .ge. 0.
  * \param droptol  real*8. Sets the threshold for dropping small terms in the
  *                 factorization. See below for details on dropping strategy.
- * \param alu,jlu  matrix stored in Modified Sparse Row (MSR) format containing
- *                 the L and U factors together. The diagonal (stored in
- *                 alu(1:n) ) is inverted. Each i-th row of the alu,jlu matrix
- *                 contains the i-th row of L (excluding the diagonal entry=1)
- *                 followed by the i-th row of U.
+ * \param alu  matrix stored in Modified Sparse Row (MSR) format containing
+ *             the L and U factors together. The diagonal (stored in
+ *             alu(1:n) ) is inverted. Each i-th row of the alu,jlu matrix
+ *             contains the i-th row of L (excluding the diagonal entry=1)
+ *             followed by the i-th row of U.
+ * \param jlu  integer array of length n containing the pointers to
+ *             the beginning of each row of U in the matrix alu,jlu.
  * \param iwk  integer. The lengths of arrays alu and jlu. If the arrays
  *             are not big enough to store the ILU factorizations, ilut
  *             will stop with an error message.
@@ -870,11 +872,13 @@ F998:    // illegal lfil entered.
  * \param mbloc  integer.If desired, permuting can be done only within the diagonal
  *               blocks of size mbloc. Useful for PDE problems with several
  *               degrees of freedom.. If feature not wanted take mbloc=n.
- * \param alu,jlu  matrix stored in Modified Sparse Row (MSR) format containing
- *                 the L and U factors together. The diagonal (stored in
- *                 alu(1:n) ) is inverted. Each i-th row of the alu,jlu matrix
- *                 contains the i-th row of L (excluding the diagonal entry=1)
- *                 followed by the i-th row of U.
+ * \param alu  matrix stored in Modified Sparse Row (MSR) format containing
+ *             the L and U factors together. The diagonal (stored in
+ *             alu(1:n) ) is inverted. Each i-th row of the alu,jlu matrix
+ *             contains the i-th row of L (excluding the diagonal entry=1)
+ *             followed by the i-th row of U.
+ * \param jlu  integer array of length n containing the pointers to
+ *             the beginning of each row of U in the matrix alu,jlu.
  * \param iwk  integer. The lengths of arrays alu and jlu. If the arrays
  *             are not big enough to store the ILU factorizations, ilut
  *             will stop with an error message.

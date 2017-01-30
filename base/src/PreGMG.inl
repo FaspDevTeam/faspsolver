@@ -375,8 +375,8 @@ static REAL innerproductxy (REAL *x,
  *                            INT *nxk, INT *nyk)
  * \brief Restriction function in multigrid of 2D
  *
- * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
+ * \param r            Pointer to the residual
  * \param level        Pointer to the start position of each level
  * \param k            Level k
  * \param nxk          Number of grids in x direction in level k
@@ -425,8 +425,8 @@ static void restriction2d5pt (REAL       *b,
  *                            INT *nxk, INT *nyk, INT *nzk)
  * \brief Restriction function in multigrid of 3D
  *
- * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
+ * \param r            Pointer to the residual
  * \param level        Pointer to the start position of each level
  * \param k            Level k
  * \param nxk          Number of grids in x direction in level k

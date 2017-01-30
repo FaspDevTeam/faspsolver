@@ -19,7 +19,7 @@
       86 ./base/src/AuxGivens.c
      769 ./base/src/AuxGraphics.c
      797 ./base/src/AuxInput.c
-     216 ./base/src/AuxMemory.c
+     214 ./base/src/AuxMemory.c
      295 ./base/src/AuxMessage.c
      994 ./base/src/AuxParam.c
      404 ./base/src/AuxSort.c
@@ -29,11 +29,11 @@
      781 ./base/src/BlaArray.c
       79 ./base/src/BlaEigen.c
     1006 ./base/src/BlaFormat.c
-    2147 ./base/src/BlaILU.c
+    2151 ./base/src/BlaILU.c
     1477 ./base/src/BlaILUSetupBSR.c
      172 ./base/src/BlaILUSetupCSR.c
     1271 ./base/src/BlaILUSetupSTR.c
-    3278 ./base/src/BlaIO.c
+    3265 ./base/src/BlaIO.c
      196 ./base/src/BlaOrderingCSR.c
      601 ./base/src/BlaSchwarzSetup.c
      966 ./base/src/BlaSmallMat.c
@@ -42,11 +42,11 @@
       56 ./base/src/BlaSparseBLC.c
     2079 ./base/src/BlaSparseBSR.c
      161 ./base/src/BlaSparseCOO.c
-    1628 ./base/src/BlaSparseCSR.c
+    1626 ./base/src/BlaSparseCSR.c
       81 ./base/src/BlaSparseCSRL.c
      351 ./base/src/BlaSparseCheck.c
      188 ./base/src/BlaSparseSTR.c
-     966 ./base/src/BlaSparseUtil.c
+     964 ./base/src/BlaSparseUtil.c
      282 ./base/src/BlaSpmvBLC.c
     5465 ./base/src/BlaSpmvBSR.c
     2097 ./base/src/BlaSpmvCSR.c
@@ -73,7 +73,7 @@
     1384 ./base/src/KrySPminres.c
     1560 ./base/src/KrySPvgmres.c
      447 ./base/src/PreAMGCoarsenCR.c
-    2090 ./base/src/PreAMGCoarsenRS.c
+    2086 ./base/src/PreAMGCoarsenRS.c
      877 ./base/src/PreAMGInterp.c
      839 ./base/src/PreAMGInterpEM.c
      134 ./base/src/PreAMGSetupCR.c
@@ -84,7 +84,7 @@
      371 ./base/src/PreAMGSetupUABSR.c
     1067 ./base/src/PreBLC.c
     1137 ./base/src/PreBSR.c
-     673 ./base/src/PreCSR.c
+     671 ./base/src/PreCSR.c
      327 ./base/src/PreDataInit.c
      551 ./base/src/PreMGCycle.c
      364 ./base/src/PreMGCycleFull.c
@@ -101,4 +101,4 @@
      247 ./base/src/SolMatFree.c
      419 ./base/src/SolSTR.c
      320 ./base/src/SolWrapper.c
-   86657 total
+   86636 total

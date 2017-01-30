@@ -828,8 +828,6 @@ void fasp_dcsr_cp (const dCSRmat *A,
  * \param A   Pointer to the iCSRmat matrix A
  * \param AT  Pointer to the iCSRmat matrix A'
  *
- * \return    The transpose of iCSRmat matrix A
- *
  * \author Chensong Zhang
  * \date   04/06/2010
  *
@@ -1307,12 +1305,12 @@ void fasp_dcsr_symdiagscale (dCSRmat       *A,
 }
 
 /**
- * \fn dCSRmat fasp_dcsr_sympart(dCSRmat *A)
+ * \fn dCSRmat fasp_dcsr_sympart (dCSRmat *A)
  * \brief Get symmetric part of a dCSRmat matrix
  *
- * \param *A      pointer to the dCSRmat matrix
+ * \param A   Pointer to the dCSRmat matrix
  *
- * \return symmetrized the dCSRmat matrix
+ * \return    Symmetrized the dCSRmat matrix
  *
  * \author Xiaozhe Hu
  * \date 03/21/2011

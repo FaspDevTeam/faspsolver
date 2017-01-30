@@ -79,11 +79,8 @@ static REAL endian_convert_real(const REAL, const INT, const INT);
  * \param b         Pointer to the dvector
  *
  * \note
- *      This routine reads a dCSRmat matrix and a dvector vector from a single disk file.
- *
- * \note
- *
- *      The difference between this and fasp_dcoovec_read is that this
+ *      This routine reads a dCSRmat matrix and a dvector vector from a single 
+ *      disk file. The difference between this and fasp_dcoovec_read is that this
  *      routine support non-square matrices.
  *
  * \note File format:
@@ -167,9 +164,7 @@ void fasp_dcsrvec1_read (const char  *filename,
  * \param A        Pointer to the dCSR matrix
  * \param b        Pointer to the dvector
  *
- * \note
- *
- *      This routine reads a dCSRmat matrix and a dvector vector from a disk file.
+ * \note  This routine reads a dCSRmat matrix and a dvector vector from a disk file.
  *
  * \note
  * CSR matrix file format:
@@ -263,8 +258,8 @@ void fasp_dcsrvec2_read (const char  *filemat,
  *
  * \brief Read A from matrix disk file in IJ format
  *
- * \param *filename  char for matrix file name
- * \param *A         pointer to the CSR matrix
+ * \param filename  Char for matrix file name
+ * \param A         Pointer to the CSR matrix
  *
  * \author Ziteng Wang
  * \date   12/25/2012
@@ -540,9 +535,7 @@ void fasp_dmtx_read (const char  *filename,
  *   And it converts the matrix to dCSRmat format. For details of mtx format,
  *   please refer to http://math.nist.gov/MatrixMarket/.
  *
- * \note
- *
- *      Indices start from 1, NOT 0!!!
+ * \note Indices start from 1, NOT 0!!!
  *
  * \author Chensong Zhang
  * \date   09/02/2011
@@ -1020,7 +1013,6 @@ void fasp_dcsrvec1_write (const char  *filename,
  * \param b        Pointer to the dvector
  *
  * \note
- *
  *      This routine writes a dCSRmat matrix and a dvector vector to two disk files.
  *
  * \note
@@ -1100,7 +1092,6 @@ void fasp_dcsrvec2_write (const char  *filemat,
  * \param filename  char for vector file name
  *
  * \note
- *
  *      The routine writes the specified REAL vector in COO format.
  *      Refer to the reading subroutine \ref fasp_dcoo_read.
  *
@@ -1144,10 +1135,8 @@ void fasp_dcoo_write (const char  *filename,
  * \param filename  File name for A
  * \param A         Pointer to the dSTRmat matrix A
  *
- * \note
- *
- *      The routine writes the specified REAL vector in STR format.
- *      Refer to the reading subroutine \ref fasp_dstr_read.
+ * \note  The routine writes the specified REAL vector in STR format.
+ *        Refer to the reading subroutine \ref fasp_dstr_read.
  *
  * \author Shiquan Zhang
  * \date   03/29/2010
@@ -1203,10 +1192,8 @@ void fasp_dstr_write (const char  *filename,
  * \param filename  File name for A
  * \param A         Pointer to the dBSRmat matrix A
  *
- * \note
- *
- *      The routine writes the specified REAL vector in BSR format.
- *      Refer to the reading subroutine \ref fasp_dbsr_read.
+ * \note  The routine writes the specified REAL vector in BSR format.
+ *        Refer to the reading subroutine \ref fasp_dbsr_read.
  *
  * \author Shiquan Zhang
  * \date   10/29/2010
@@ -1590,12 +1577,12 @@ void fasp_dstr_print (const dSTRmat *A)
 }
 
 /**
- * \fn fasp_matrix_read (const char *filemat, void *A)
+ * \fn fasp_matrix_read (const char *filename, void *A)
  *
  * \brief Read matrix from different kinds of formats from both ASCII and binary files
  *
- * \param filemat File name of matrix file
- * \param A Pointer to the matrix
+ * \param filename   File name of matrix file
+ * \param A          Pointer to the matrix
  *
  * \note Flags for matrix file format:
  *   - fileflag			 % fileflag = 1: binary, fileflag = 0000: ASCII
@@ -1707,12 +1694,12 @@ void fasp_matrix_read (const char  *filename,
 }
 
 /**
- * \fn void fasp_matrix_read_bin (const char *filemat, void *A)
+ * \fn void fasp_matrix_read_bin (const char *filename, void *A)
  *
  * \brief Read matrix in binary format
  *
- * \param filemat File name of matrix file
- * \param A Pointer to the matrix
+ * \param filename   File name of matrix file
+ * \param A          Pointer to the matrix
  *
  * \author Xiaozhe Hu
  * \date   04/14/2013
@@ -1770,13 +1757,13 @@ void fasp_matrix_read_bin (const char *filename,
 }
 
 /**
- * \fn fasp_matrix_write (const char *filemat, void *A, const INT flag)
+ * \fn fasp_matrix_write (const char *filename, void *A, const INT flag)
  *
  * \brief write matrix from different kinds of formats from both ASCII and binary files
  *
- * \param filemat   File name of matrix file
- * \param A         Pointer to the matrix
- * \param flag      Type of file and matrix, a 3-digit number
+ * \param filename   File name of matrix file
+ * \param A          Pointer to the matrix
+ * \param flag       Type of file and matrix, a 3-digit number
  *
  * \note Meaning of flag:
  *   - fileflag			 % fileflag = 1: binary, fileflag = 0: ASCII
@@ -3239,13 +3226,13 @@ static INT endian_convert_int (const INT   inum,
 }
 
 /**
- * \fn static REAL endian_convert_real (const REAL rnum, const INT ilength,
+ * \fn static REAL endian_convert_real (const REAL rnum, const INT vlength,
  *                                      const SHORT EndianFlag)
  *
  * \brief Swap order of a REAL number
  *
  * \param rnum        An REAL value
- * \param ilength     Length of INT: 2 for short, 4 for int, 8 for long
+ * \param vlength     Length of INT: 2 for short, 4 for int, 8 for long
  * \param EndianFlag  If EndianFlag = 1, it returns rnum itself
  *                    If EndianFlag = 2, it returns the swapped rnum
  *
