@@ -600,16 +600,16 @@ void fasp_dcsr_RCMK_order (const dCSRmat *A,
 
 /*-------- In file: BlaSchwarzSetup.c --------*/
 
-INT fasp_swz_setup (SWZ_data   *Schwarz,
-                    SWZ_param  *param);
+INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
+                         SWZ_param  *swzparam);
 
-void fasp_dcsr_swz_forward_smoother (SWZ_data   *Schwarz,
-                                     SWZ_param  *param,
+void fasp_dcsr_swz_forward_smoother (SWZ_data   *swzdata,
+                                     SWZ_param  *swzparam,
                                      dvector    *x,
                                      dvector    *b);
 
-void fasp_dcsr_swz_backward_smoother (SWZ_data   *Schwarz,
-                                      SWZ_param  *param,
+void fasp_dcsr_swz_backward_smoother (SWZ_data   *swzdata,
+                                      SWZ_param  *swzparam,
                                       dvector    *x,
                                       dvector    *b);
 

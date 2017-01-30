@@ -1,6 +1,6 @@
 /*! \file  AuxConvert.c
  *
- *  \brief Some utilities for encoding format conversion
+ *  \brief Utilities for encoding format conversion
  *
  *  \note  This file contains Level-0 (Aux) functions.
  *

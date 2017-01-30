@@ -140,7 +140,7 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
         if ( lvl < param->SWZ_levels ) {
             mgl[lvl].Schwarz.A = fasp_dcsr_sympart(&mgl[lvl].A);
             fasp_dcsr_shift(&(mgl[lvl].Schwarz.A), 1);
-            status = fasp_swz_setup(&mgl[lvl].Schwarz, &swzparam);
+            status = fasp_swz_dcsr_setup(&mgl[lvl].Schwarz, &swzparam);
             if ( status < 0 ) {
                 if ( prtlvl > PRINT_MIN ) {
                     printf("### WARNING: Schwarz on level-%d failed!\n", lvl);

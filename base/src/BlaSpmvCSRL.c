@@ -1,6 +1,6 @@
 /*! \file  BlaSpmvCSRL.c
  *
- *  \brief BLAS operations for dCSRLmat matrices
+ *  \brief Linear algebraic operations for dCSRLmat matrices
  *
  *  \note  This file contains Level-1 (Bla) functions.
  *

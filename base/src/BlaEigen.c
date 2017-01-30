@@ -1,6 +1,6 @@
 /*! \file  BlaEigen.c
  *
- *  \brief Subroutines for computing the extreme eigenvalues
+ *  \brief Computing the extreme eigenvalues
  *
  *  \note  This file contains Level-1 (Bla) functions. It requires:
  *         AuxVector.c, BlaArray.c, BlaSpmvCSR.c, and BlaVector.c
