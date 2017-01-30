@@ -29,13 +29,20 @@
  * is called Fast Auxiliary Space Preconditioning or FASP for short.
  * 
  * The structure of FASP is designed as follows:
- *      Level 0 (Aux*.c): Auxiliary functions (timing, memory, ...)
- *      Level 1 (Bla*.c): Basic linear algebra subroutines (SpMV, RAP, ILU, ...)
- *      Level 2 (Itr*.c): Iterative methods and smoothers (Jacobi, GS, SOR, ...)
- *      Level 3 (Kry*.c): Krylov iterative methods (CG, GMRES, ...)
- *      Level 4 (Pre*.c): Preconditioners (GMG, AMG, ...)
- *      Level 5 (Sol*.c): User interface for FASP solvers (Solvers, wrappers, ...)
- *      Level x (Xtr*.c): Interface to external packages (Direct solvers, IO, ...)
+ *
+ * - Level 0 (Aux*.c): Auxiliary functions (timing, memory, threading, ...)
+ *
+ * - Level 1 (Bla*.c): Basic linear algebra subroutines (SpMV, RAP, ILU, SWZ, ...)
+ *
+ * - Level 2 (Itr*.c): Iterative methods and smoothers (Jacobi, GS, SOR, Poly, ...)
+ *
+ * - Level 3 (Kry*.c): Krylov iterative methods (CG, BiCGstab, MinRes, GMRES, ...)
+ *
+ * - Level 4 (Pre*.c): Preconditioners (GMG, AMG, FAMG, ...)
+ *
+ * - Level 5 (Sol*.c): User interface for FASP solvers (Solvers, wrappers, ...)
+ *
+ * - Level x (Xtr*.c): Interface to external packages (Mumps, Umfpack, ...)
  *
  * FASP contains the kernel part and several applications (ranging from fluid dynamics  
  * to reservoir simulation). The kernel part is open-source and licensed under GNU 
