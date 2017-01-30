@@ -1,6 +1,6 @@
 /*! \file  AuxSort.c
  *
- *  \brief Subroutines for sorting, merging, removing duplicated integers
+ *  \brief Array sorting/merging and removing duplicated integers
  *
  *  \note  This file contains Level-0 (Aux) functions. It requires:
  *         AuxMemory.c

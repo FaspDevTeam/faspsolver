@@ -314,7 +314,7 @@ INT fasp_solver_dcsr_krylov_swz (dCSRmat    *A,
 	
 	// construct Schwarz precondtioner
 	fasp_dcsr_shift (&SWZ_data.A, 1);
-	fasp_swz_setup (&SWZ_data, &swzparam);
+	fasp_swz_dcsr_setup (&SWZ_data, &swzparam);
 	
 	fasp_gettime (&setup_end);
 	setup_duration = setup_end - setup_start;

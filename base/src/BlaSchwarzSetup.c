@@ -30,12 +30,12 @@ static void SWZ_block (SWZ_data *, const INT, const INT *, const INT *, INT *);
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_swz_setup (SWZ_data *Schwarz, SWZ_param *param)
+ * \fn INT fasp_swz_dcsr_setup (SWZ_data *swzdata, SWZ_param *swzparam)
  *
  * \brief Setup phase for the Schwarz methods
  *
- * \param Schwarz    Pointer to the Schwarz data
- * \param param      Type of the Schwarz method
+ * \param swzdata    Pointer to the Schwarz data
+ * \param swzparam   Type of the Schwarz method
  *
  * \return           FASP_SUCCESS if succeed
  *
@@ -44,16 +44,16 @@ static void SWZ_block (SWZ_data *, const INT, const INT *, const INT *, INT *);
  *
  * Modified by Zheng Li on 10/09/2014
  */
-INT fasp_swz_setup (SWZ_data   *Schwarz,
-                    SWZ_param  *param)
+INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
+                         SWZ_param  *swzparam)
 {
     // information about A
-    dCSRmat A = Schwarz->A;
-    INT n   = A.row;
+    dCSRmat A = swzdata->A;
+    INT     n = A.row;
     
-    INT  block_solver = param->SWZ_blksolver;
-    INT  maxlev = param->SWZ_maxlvl;
-    Schwarz->swzparam = param;
+    INT  blksolver = swzparam->SWZ_blksolver;
+    INT  maxlev = swzparam->SWZ_maxlvl;
+    swzdata->swzparam = swzparam;
     
     // local variables
     INT i;
@@ -104,7 +104,7 @@ INT fasp_swz_setup (SWZ_data   *Schwarz,
     fprintf(stdout,"### DEBUG: nsizeall = %d\n",nsizeall);
 #endif
     
-    /* We only calculated the size of this up to here. So we can reallocate jblock */
+    // calculated the size of jblock up to here
     jblock = (INT *)fasp_mem_realloc(jblock,(nsizeall+n)*sizeof(INT));
     
     // second pass: redo the same again, but this time we store in jblock
@@ -132,21 +132,21 @@ INT fasp_swz_setup (SWZ_data   *Schwarz,
     
     memset(mask, 0, sizeof(INT)*n);
     
-    Schwarz->blk_data = (dCSRmat*)fasp_mem_calloc(nblk, sizeof(dCSRmat));
+    swzdata->blk_data = (dCSRmat*)fasp_mem_calloc(nblk, sizeof(dCSRmat));
     
-    SWZ_block(Schwarz, nblk, iblock, jblock, mask);
+    SWZ_block(swzdata, nblk, iblock, jblock, mask);
     
     // Setup for each block solver
-    switch (block_solver) {
+    switch (blksolver) {
             
 #if WITH_MUMPS
         case SOLVER_MUMPS: {
             /* use MUMPS direct solver on each block */
-            dCSRmat *blk = Schwarz->blk_data;
+            dCSRmat *blk = swzdata->blk_data;
             Mumps_data *mumps = (Mumps_data*)fasp_mem_calloc(nblk, sizeof(Mumps_data));
             for (i=0; i<nblk; ++i)
                 mumps[i] = fasp_mumps_factorize(&blk[i], NULL, NULL, PRINT_NONE);
-            Schwarz->mumps = mumps;
+            swzdata->mumps = mumps;
             
             break;
         }
@@ -155,7 +155,7 @@ INT fasp_swz_setup (SWZ_data   *Schwarz,
 #if WITH_UMFPACK
         case SOLVER_UMFPACK: {
             /* use UMFPACK direct solver on each block */
-            dCSRmat *blk = Schwarz->blk_data;
+            dCSRmat *blk = swzdata->blk_data;
             void **numeric	= (void**)fasp_mem_calloc(nblk, sizeof(void*));
             dCSRmat Ac_tran;
             for (i=0; i<nblk; ++i) {
@@ -164,7 +164,7 @@ INT fasp_swz_setup (SWZ_data   *Schwarz,
                 fasp_dcsr_cp(&Ac_tran, &blk[i]);
                 numeric[i] = fasp_umfpack_factorize(&blk[i], 0);
             }
-            Schwarz->numeric = numeric;
+            swzdata->numeric = numeric;
             fasp_dcsr_free(&Ac_tran);
             
             break;
@@ -178,18 +178,18 @@ INT fasp_swz_setup (SWZ_data   *Schwarz,
     
 #if DEBUG_MODE > 1
     fprintf(stdout, "### DEBUG: n = %d, #blocks = %d, max block size = %d\n",
-            n, nblk, Schwarz->maxbs);
+            n, nblk, swzdata->maxbs);
 #endif
     
     /*-------------------------------------------*/
     //  return
     /*-------------------------------------------*/
-    Schwarz->nblk   = nblk;
-    Schwarz->iblock = iblock;
-    Schwarz->jblock = jblock;
-    Schwarz->mask   = mask;
-    Schwarz->maxa   = maxa;
-    Schwarz->SWZ_type = param->SWZ_type;
+    swzdata->nblk   = nblk;
+    swzdata->iblock = iblock;
+    swzdata->jblock = jblock;
+    swzdata->mask   = mask;
+    swzdata->maxa   = maxa;
+    swzdata->SWZ_type = swzparam->SWZ_type;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
@@ -199,50 +199,50 @@ INT fasp_swz_setup (SWZ_data   *Schwarz,
 }
 
 /**
- * \fn void fasp_dcsr_swz_forward_smoother (SWZ_data  *Schwarz, SWZ_param *param,
+ * \fn void fasp_dcsr_swz_forward_smoother (SWZ_data  *swzdata, SWZ_param *swzparam,
  *                                          dvector *x, dvector *b)
  *
  * \brief Schwarz smoother: forward sweep
  *
- * \param Schwarz Pointer to the Schwarz data
- * \param param   Pointer to the Schwarz parameter
+ * \param swzdata Pointer to the Schwarz data
+ * \param swzparam   Pointer to the Schwarz parameter
  * \param x       Pointer to solution vector
  * \param b       Pointer to right hand
  *
  * \author Zheng Li, Chensong Zhang
  * \date   2014/10/5
  */
-void fasp_dcsr_swz_forward_smoother (SWZ_data   *Schwarz,
-                                     SWZ_param  *param,
+void fasp_dcsr_swz_forward_smoother (SWZ_data   *swzdata,
+                                     SWZ_param  *swzparam,
                                      dvector    *x,
                                      dvector    *b)
 {
     INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     
     // Schwarz partition
-    INT  nblk = Schwarz->nblk;
-    dCSRmat *blk = Schwarz->blk_data;
-    INT  *iblock = Schwarz->iblock;
-    INT  *jblock = Schwarz->jblock;
-    INT  *mask   = Schwarz->mask;
-    INT  block_solver = param->SWZ_blksolver;
+    INT      nblk      = swzdata->nblk;
+    dCSRmat *blk       = swzdata->blk_data;
+    INT     *iblock    = swzdata->iblock;
+    INT     *jblock    = swzdata->jblock;
+    INT     *mask      = swzdata->mask;
+    INT      blksolver = swzparam->SWZ_blksolver;
     
     // Schwarz data
-    dCSRmat A = Schwarz->A;
-    INT *ia = A.IA;
-    INT *ja = A.JA;
-    REAL *val = A.val;
+    dCSRmat   A   = swzdata->A;
+    INT      *ia  = A.IA;
+    INT      *ja  = A.JA;
+    REAL     *val = A.val;
     
     // Local solution and right hand vectors
-    dvector rhs = Schwarz->rhsloc1;
-    dvector u   = Schwarz->xloc1;
+    dvector rhs   = swzdata->rhsloc1;
+    dvector u     = swzdata->xloc1;
     
 #if WITH_UMFPACK
-    void **numeric = Schwarz->numeric;
+    void **numeric = swzdata->numeric;
 #endif
     
 #if WITH_MUMPS
-    Mumps_data *mumps = Schwarz->mumps;
+    Mumps_data *mumps = swzdata->mumps;
 #endif
     
     for (is=0; is<nblk; ++is) {
@@ -272,7 +272,7 @@ void fasp_dcsr_swz_forward_smoother (SWZ_data   *Schwarz,
         }
         
         // Solve each block
-        switch (block_solver) {
+        switch (blksolver) {
                 
 #if WITH_MUMPS
             case SOLVER_MUMPS: {
@@ -308,51 +308,51 @@ void fasp_dcsr_swz_forward_smoother (SWZ_data   *Schwarz,
 }
 
 /**
- * \fn void fasp_dcsr_swz_backward_smoother (SWZ_data  *Schwarz,
- *                                           SWZ_param *param,
+ * \fn void fasp_dcsr_swz_backward_smoother (SWZ_data  *swzdata,
+ *                                           SWZ_param *swzparam,
  *                                           dvector *x, dvector *b)
  *
  * \brief Schwarz smoother: backward sweep
  *
- * \param Schwarz Pointer to the Schwarz data
- * \param param   Pointer to the Schwarz parameter
+ * \param swzdata Pointer to the Schwarz data
+ * \param swzparam   Pointer to the Schwarz parameter
  * \param x       Pointer to solution vector
  * \param b       Pointer to right hand
  *
  * \author Zheng Li, Chensong Zhang
  * \date   2014/10/5
  */
-void fasp_dcsr_swz_backward_smoother (SWZ_data   *Schwarz,
-                                      SWZ_param  *param,
+void fasp_dcsr_swz_backward_smoother (SWZ_data   *swzdata,
+                                      SWZ_param  *swzparam,
                                       dvector    *x,
                                       dvector    *b)
 {
     INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     
     // Schwarz partition
-    INT  nblk = Schwarz->nblk;
-    dCSRmat *blk = Schwarz->blk_data;
-    INT  *iblock = Schwarz->iblock;
-    INT  *jblock = Schwarz->jblock;
-    INT  *mask   = Schwarz->mask;
-    INT  block_solver = param->SWZ_blksolver;
+    INT      nblk      = swzdata->nblk;
+    dCSRmat *blk       = swzdata->blk_data;
+    INT     *iblock    = swzdata->iblock;
+    INT     *jblock    = swzdata->jblock;
+    INT     *mask      = swzdata->mask;
+    INT      blksolver = swzparam->SWZ_blksolver;
     
     // Schwarz data
-    dCSRmat A = Schwarz->A;
-    INT *ia = A.IA;
-    INT *ja = A.JA;
-    REAL *val = A.val;
+    dCSRmat  A   = swzdata->A;
+    INT     *ia  = A.IA;
+    INT     *ja  = A.JA;
+    REAL    *val = A.val;
     
     // Local solution and right hand vectors
-    dvector rhs = Schwarz->rhsloc1;
-    dvector u   = Schwarz->xloc1;
+    dvector rhs  = swzdata->rhsloc1;
+    dvector u    = swzdata->xloc1;
     
 #if WITH_UMFPACK
-    void **numeric = Schwarz->numeric;
+    void **numeric = swzdata->numeric;
 #endif
     
 #if WITH_MUMPS
-    Mumps_data *mumps = Schwarz->mumps;
+    Mumps_data *mumps = swzdata->mumps;
 #endif
     
     for (is=nblk-1; is>=0; --is) {
@@ -382,7 +382,7 @@ void fasp_dcsr_swz_backward_smoother (SWZ_data   *Schwarz,
         }
         
         // Solve each block
-        switch (block_solver) {
+        switch (blksolver) {
                 
 #if WITH_MUMPS
             case SOLVER_MUMPS: {
@@ -506,12 +506,12 @@ static void SWZ_level (const INT   inroot,
 }
 
 /**
- * \fn static void SWZ_block (SWZ_data *Schwarz, const INT nblk,
+ * \fn static void SWZ_block (SWZ_data *swzdata, const INT nblk,
  *                            const INT *iblock, const INT *jblock, INT *mask)
  *
  * \brief Form Schwarz partition data
  *
- * \param Schwarz Pointer to the Schwarz data
+ * \param swzdata Pointer to the Schwarz data
  * \param nblk    Number of partitions
  * \param iblock  Pointer to number of vertices on each level
  * \param jblock  Pointer to vertices of each level
@@ -520,17 +520,17 @@ static void SWZ_level (const INT   inroot,
  * \author Zheng Li, Chensong Zhang
  * \date   2014/09/29
  */
-static void SWZ_block (SWZ_data *Schwarz,
-                       const INT     nblk,
-                       const INT    *iblock,
-                       const INT    *jblock,
-                       INT          *mask)
+static void SWZ_block (SWZ_data   *swzdata,
+                       const INT   nblk,
+                       const INT  *iblock,
+                       const INT  *jblock,
+                       INT        *mask)
 {
     INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     INT maxbs = 0, count, nnz;
     
-    dCSRmat A = Schwarz->A;
-    dCSRmat *blk = Schwarz->blk_data;
+    dCSRmat A = swzdata->A;
+    dCSRmat *blk = swzdata->blk_data;
     
     INT  *ia  = A.IA;
     INT  *ja  = A.JA;
@@ -544,11 +544,11 @@ static void SWZ_block (SWZ_data *Schwarz,
         maxbs = MAX(maxbs, nloc);
     }
     
-    Schwarz->maxbs = maxbs;
+    swzdata->maxbs = maxbs;
     
     // allocate memory for each sub_block's right hand
-    Schwarz->xloc1   = fasp_dvec_create(maxbs);
-    Schwarz->rhsloc1 = fasp_dvec_create(maxbs);
+    swzdata->xloc1   = fasp_dvec_create(maxbs);
+    swzdata->rhsloc1 = fasp_dvec_create(maxbs);
     
     for (is=0; is<nblk; ++is) {
         ibl0 = iblock[is];

@@ -1,6 +1,6 @@
 /*! \file  AuxVector.c
  *
- *  \brief Simple operations for vectors
+ *  \brief Simple vector operations -- init, set, copy, etc
  *
  *  \note  This file contains Level-0 (Aux) functions. It requires:
  *         AuxThreads.c

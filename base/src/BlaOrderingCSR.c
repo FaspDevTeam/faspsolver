@@ -1,6 +1,6 @@
 /*! \file  BlaOrderingCSR.c
  *
- *  \brief Subroutines for generating ordering using algebraic information
+ *  \brief Generating ordering using algebraic information
  *
  *  \note  This file contains Level-1 (Bla) functions.
  *
