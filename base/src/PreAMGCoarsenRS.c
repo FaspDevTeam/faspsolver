@@ -381,8 +381,6 @@ static INT compress_S (iCSRmat *S)
  * \param Stemp        Original strong connection matrix
  * \param vertices     Indicator vector for the C/F splitting of the variables
  *
- * \return Number of cols of P
- *
  * \author Chensong Zhang
  * \date   06/07/2013
  */
@@ -1386,7 +1384,6 @@ static void strong_couplings_agg2 (dCSRmat   *A,
  * \param A                Coefficient matrix, the index starts from zero
  * \param S                Strong connection matrix
  * \param vertices         Indicator vector for the C/F splitting of the variables
- * \param row              Number of rows of P
  * \param aggressive_path  Aggressive path
  *
  * \return Number of cols of P
@@ -2064,14 +2061,11 @@ static void ordering1 (iCSRmat   *S,
 	INT * IS = S->IA;
 	INT * ord = order->val;
 	INT maxind, maxdeg, degree;
-	
 	INT i;
-	for (i = 0; i < n; i++)
-	{
-		ord[i] = i;
-	}
-	maxdeg=0;
-	for (i = 0; i < n; i++)
+
+    for (i = 0; i < n; i++) ord[i] = i;
+
+    for (maxind = maxdeg = i = 0; i < n; i++)
 	{
 		degree = IS[i+1] - IS[i];
 		if (degree > maxdeg)
@@ -2080,8 +2074,10 @@ static void ordering1 (iCSRmat   *S,
 			maxdeg = degree;
 		}
 	}
+    
 	ord[0] = maxind;
 	ord[maxind] = 0;
+    
 	return;
 }
 

@@ -21,10 +21,10 @@
  *
  * \brief A preconditioned GCR method for solving Au=b
  *
- * \param *A    Pointer to the coefficient matrix
- * \param *b    Pointer to the dvector of right hand side
- * \param *u    Pointer to the dvector of DOFs
- * \param *pre  Pointer to the structure of precondition (precond)
+ * \param A    Pointer to the coefficient matrix
+ * \param b    Pointer to the dvector of right hand side
+ * \param u    Pointer to the dvector of DOFs
+ * \param pc   Pointer to the structure of precondition (precond)
  *
  * \author Zheng Li, Chensong Zhang
  * \date   11/09/2014
@@ -126,10 +126,10 @@ static SHORT Kcycle_dcsr_pgcg (dCSRmat   *A,
  *
  * \brief A preconditioned GCR method for solving Au=b
  *
- * \param *A    Pointer to the coefficient matrix
- * \param *b    Pointer to the dvector of right hand side
- * \param *u    Pointer to the dvector of DOFs
- * \param *pre  Pointer to the structure of precondition (precond)
+ * \param A    Pointer to the coefficient matrix
+ * \param b    Pointer to the dvector of right hand side
+ * \param u    Pointer to the dvector of DOFs
+ * \param pc   Pointer to the structure of precondition (precond)
  *
  * \author zheng Li, Chensong Zhang
  * \date   11/09/2014

@@ -487,7 +487,7 @@ static void interp_STD (dCSRmat    *A,
     
     // local variables
     INT    i, j, k, l, m, index;
-    REAL   alpha, factor, alN, alP;
+    REAL   alpha = 1.0, factor, alN, alP;
     REAL   akk, akl, aik, aki;
     
     // indices for coarse neighbor node for every node
@@ -694,7 +694,7 @@ static void interp_EXT (dCSRmat    *A,
     
     // local variables
     INT    i, j, k, l, m, index;
-    REAL   alpha, factor, alN, alP;
+    REAL   alpha = 1.0, factor, alN, alP;
     REAL   akk, akl, aik, aki;
     
     // indices for coarse neighbor node for every node

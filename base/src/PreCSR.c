@@ -356,9 +356,9 @@ MEMERR:
  *
  * \brief get z from r by Schwarz
  *
- * \param *r pointer to residual
- * \param *z pointer to preconditioned residual
- * \param *data pointer to precondition data
+ * \param r     Pointer to residual
+ * \param z     Pointer to preconditioned residual
+ * \param data  Pointer to precondition data
  *
  * \author Xiaozhe Hu
  * \date   03/22/2010
@@ -619,9 +619,7 @@ void fasp_precond_amg_nk (REAL *r,
  * \brief free preconditioner
  *
  * \param precond_type   Preconditioner type
- * \param *pc            precondition data & fct
- *
- * \return               void
+ * \param pc             Preconditioner data & fct
  *
  * \author Feiteng Huang
  * \date   12/24/2012

@@ -29,7 +29,7 @@
  *
  * \brief get dCSRmat block from a dBSRmat matrix
  *
- * \param *A   Pointer to the BSR format matrix
+ * \param A    Pointer to the BSR format matrix
  *
  * \return     dCSRmat matrix if succeed, NULL if fail
  *
@@ -85,7 +85,7 @@ static dCSRmat condenseBSR (const dBSRmat *A)
  *
  * \brief get dCSRmat from a dBSRmat matrix using L_inf norm of each small block
  *
- * \param *A   Pointer to the BSR format matrix
+ * \param A    Pointer to the BSR format matrix
  *
  * \return     dCSRmat matrix if succeed, NULL if fail
  *
@@ -336,12 +336,12 @@ static void form_pairwise (const dCSRmat * A,
 
 /**
  * \fn static SHORT aggregation_pairwise (dCSRmat *A, AMG_param *param,
- *                                        const INT level, ivector *vertice,
+ *                                        const INT level, ivector *vertices,
  *                                        INT *num_aggregations)
  *
  * \brief AMG coarsening based on pairwise matching aggregation
  *
- * \param A                 Pointer to dCSRmat
+ * \param mgl               Pointer to multigrid data
  * \param param             Pointer to AMG parameters
  * \param level             Level number
  * \param vertices          Pointer to the aggregation of vertices
@@ -359,7 +359,7 @@ static void form_pairwise (const dCSRmat * A,
 static SHORT aggregation_pairwise (AMG_data *mgl,
                                    AMG_param *param,
                                    const INT level,
-                                   ivector *vertice,
+                                   ivector *vertices,
                                    INT *num_aggregations)
 {
     const INT  pair_number = param->pair_number;
@@ -389,21 +389,21 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
         
 #if SYMMETRIC_PAIRWISE == 1
         /*-- generate aggregations by pairwise matching --*/
-        form_pairwise(ptrA, i, quality_bound, &vertice[lvl], &num_agg);
+        form_pairwise(ptrA, i, quality_bound, &vertices[lvl], &num_agg);
 #else
         if ( i == 1 ) {
-            first_pairwise_unsymm(ptrA, quality_bound, order, &vertice[lvl], &map1, s, &num_agg);
+            first_pairwise_unsymm(ptrA, quality_bound, order, &vertices[lvl], &map1, s, &num_agg);
         }
         else {
-            second_pairwise_unsymm(&mgl[level].A, ptrA, quality_bound, i, order, &map1, &vertice[lvl-1],
-                                   &vertice[lvl], &map2, s, &num_agg);
+            second_pairwise_unsymm(&mgl[level].A, ptrA, quality_bound, i, order, &map1, &vertices[lvl-1],
+                                   &vertices[lvl], &map2, s, &num_agg);
         }
 #endif
         
         /*-- check number of aggregates in the first pass --*/
         if ( i == 1 && num_agg < MIN_CDOF ) {
             for ( domin=k=0; k<ptrA->row; k++ ) {
-                if ( vertice[lvl].val[k] == G0PT ) domin ++;
+                if ( vertices[lvl].val[k] == G0PT ) domin ++;
             }
             isorate = (REAL)num_agg/domin;
             if ( isorate < 0.1 ) {
@@ -414,7 +414,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
         if ( i < pair_number ) {
             
             /*-- Form Prolongation --*/
-            form_boolean_p(&vertice[lvl], &mgl[lvl].P, lvl+1, num_agg);
+            form_boolean_p(&vertices[lvl], &mgl[lvl].P, lvl+1, num_agg);
             
             /*-- Perform aggressive coarsening only up to the specified level --*/
             if ( mgl[lvl].P.col < MIN_CDOF ) break;
@@ -436,10 +436,10 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
     // Form global aggregation indices
     if ( dopass > 1 ) {
         for ( i = 0; i < mgl[level].A.row; ++i ) {
-            aggindex = vertice[level].val[i];
+            aggindex = vertices[level].val[i];
             if ( aggindex < 0 ) continue;
-            for ( j = 1; j < dopass; ++j ) aggindex = vertice[level+j].val[aggindex];
-            vertice[level].val[i] = aggindex;
+            for ( j = 1; j < dopass; ++j ) aggindex = vertices[level+j].val[aggindex];
+            vertices[level].val[i] = aggindex;
         }
     }
     *num_aggregations = num_agg;
@@ -447,7 +447,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
     /*-- clean memory --*/
     for ( i = 1; i < dopass; ++i ) {
         fasp_dcsr_free(&mgl[level+i].A);
-        fasp_ivec_free(&vertice[level+i]);
+        fasp_ivec_free(&vertices[level+i]);
     }
     
 #if SYMMETRIC_PAIRWISE == 0

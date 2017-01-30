@@ -15,6 +15,8 @@ File Name: CHANGES
 - Remove a few unwanted functions, e.g., fasp_mem_check.
 - Change name of some private functions.
 - Change CMake behavior a little: finding Fortran part.
+- Add xcode project for faspsolver.
+- Fix Doxgyen problems found by xcode.
 
 01/28/2017 FASP 1.9.5:
 - Happy Chinese New Year!
