@@ -49,7 +49,6 @@ proc Help {} {
 	InstallHelper "Can not read help file FASP_GUI_help.txt" 
     } else {
 	while { [gets $in1 line] >=0 } {
-#	    puts $line
 	    $f.text insert end "$line\n"
 	}
 	close $in1
@@ -136,6 +135,7 @@ proc DistClean { } {
 	catch "exec /bin/rm -rf $n" c4	     
     }
 }
+
 proc  Uninstall { } {
 global status
 global build_dir
@@ -143,13 +143,13 @@ global build_dir
     set current_dir [pwd]
     set build_dir "$current_dir/BUILD_FASP"
     if {[file isdirectory $build_dir]} {
-	if {[file exists $build_dir/install_manifest.txt ]} {
-	    catch "exec xargs /bin/rm < $build_dir/install_manifest.txt" c1
-	}
-	catch "exec /bin/rm -rf $build_dir/install_manifest.txt doc/htdocs" c2
+	    if {[file exists $build_dir/install_manifest.txt ]} {
+	        catch "exec xargs /bin/rm < $build_dir/install_manifest.txt" c1
+	    }
+	    catch "exec /bin/rm -rf $build_dir/install_manifest.txt doc/htdocs" c2
     } 
     DistClean
-    InstallHelper "Uninstall DONE"
+    InstallHelper "DONE Uninstalling FASP."
 }
 
 proc Config { f } {
@@ -169,11 +169,6 @@ proc Config { f } {
     }
 #
     InstallHelper "Configuring..."
-#
-#    foreach el { verbose shared doxywizard openmp } {
-#	puts [list $el $c_options($el)]
-#    }
-#    puts [list "BUILD_TYPE=" $build_type]
 
     set cmake_flags [list "-DCMAKE_BUILD_TYPE=$build_type"]
 ##   
@@ -216,7 +211,6 @@ proc Config { f } {
 	    [concat $cmake_flags  " -DADD_FFLAGS=\\\"$compiler_flags(fortran)\\\""]
     }
     
-#    puts $cmake_flags
 #### SHELL command 
 
 ##   This needs to be changed for Windows
@@ -230,8 +224,9 @@ proc Config { f } {
 	$f see end
     }
     $f configure -state disabled 
-    InstallHelper "DONE Configure."
+    InstallHelper "DONE Configuring FASP."
 }
+
 proc RunIt { f command0 } {
     global status
     global build_dir
@@ -247,7 +242,6 @@ proc RunIt { f command0 } {
 	set flag 1
 	if {![file exists $build_dir/Makefile]} {
 	    InstallHelper "File $build_dir/Makefile does not exist. Run Config first!"
-###############	    puts "Run Config first"
 	    update idletasks
 	} else {
 	    InstallHelper "Installing ... please be patient..."
@@ -269,7 +263,7 @@ proc RunIt { f command0 } {
 		$f configure -state disabled 
 	    }
 	}
-	InstallHelper "DONE Installing."
+	InstallHelper "DONE Installing FASP."
     }
 }
 
@@ -284,6 +278,7 @@ proc CheckInpData { x } {
     regsub -all -- "\[ \t\]\[ \t\]*" $y { } y
     return $y
 }
+
 proc InitOpts { } {
 #Initialize options
     global c_options
@@ -313,7 +308,6 @@ proc InitOpts { } {
 	    set maxlen $len
 	}
     }
-#    InstallHelper "Initialization is done."
 }
 
 proc ShowOpts { f } {
@@ -424,8 +418,6 @@ global maxlen
 global status
 global helper
 
-
-
 #set dname [join [list BUILD [eval [list exec uname -m]]-[eval  [list exec uname -s]]] "_"]
 #set build_dir [join [list [pwd] {/} $dname] ""]  
 
@@ -443,10 +435,6 @@ label .f.images.text -text  "FAST AUXILIARY SPACE PRECONDITIONING\nInstallation 
     -background "#00008B" -foreground "#FFFFFF" -font { Helvetica -18 bold } 
 pack .f.images.text 
 
-#frame .f.images.text 
-#    .f.images.text insert end "Whatever Whatever Whatever Whatever\n"
-#pack .f.images.text -side right
-
 pack .f  -expand true -fill both
 update idletasks
 
@@ -463,8 +451,6 @@ pack .f.text  -side right -fill both
     
 #   grab release .f.text
 
-
-
 button .f.buttons.help -text Help -command {Help}
 button .f.buttons.quit -text Quit -command {GentleExit}
 button .f.buttons.config -text "Config" -command {Config .f.text}
@@ -478,7 +464,6 @@ pack .f.buttons.quit .f.buttons.config .f.buttons.install .f.buttons.docs \
 
 pack .f.buttons.help -side right
 
-
 InitOpts 
 
 frame .f.opts -borderwidth 10
@@ -490,13 +475,8 @@ label .f.opts.lhelper -textvar helper -relief flat -width 55 \
 pack .f.opts.lhelper -side bottom -fill both
 ##pack .f.opts.lstatus -side bottom 
 
-
-
 ShowOpts .f.opts
 
 EntryList .f.opts
 
 pack .f.opts -side left -fill y
-
-
-
