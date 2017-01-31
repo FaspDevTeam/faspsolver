@@ -121,11 +121,11 @@ SHORT fasp_smat_lu_decomp (REAL       *A,
  * \author Xuehai Huang
  * \date   04/02/2009
  */
-SHORT fasp_smat_lu_solve (const REAL *A,
-                          REAL        b[],
-                          const INT   pivot[],
-                          REAL        x[],
-                          const INT   n)
+SHORT fasp_smat_lu_solve (const REAL  *A,
+                          REAL         b[],
+                          const INT    pivot[],
+                          REAL         x[],
+                          const INT    n)
 {
     INT         i, k;
     REAL        dum;

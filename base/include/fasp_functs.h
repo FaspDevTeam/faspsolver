@@ -33,15 +33,6 @@ void fasp_iarray_cp (const INT   n,
                      const INT  *x,
                      INT        *y);
 
-void fasp_darray_cp_nc3 (const REAL  *x,
-                         REAL        *y);
-
-void fasp_darray_cp_nc5 (const REAL  *x,
-                         REAL        *y);
-
-void fasp_darray_cp_nc7 (const REAL  *x,
-                         REAL        *y);
-
 
 /*-------- In file: AuxConvert.c --------*/
 
@@ -66,23 +57,23 @@ void fasp_dcsr_subplot (const dCSRmat  *A,
                         const char     *filename,
                         INT             size);
 
-INT fasp_dcsr_plot (const dCSRmat   *A,
-                    const char      *fname);
+INT fasp_dcsr_plot (const dCSRmat  *A,
+                    const char     *fname);
 
 void fasp_dbsr_subplot (const dBSRmat  *A,
                         const char     *filename,
                         INT             size);
 
-INT fasp_dbsr_plot (const dBSRmat   *A,
-                    const char      *fname);
+INT fasp_dbsr_plot (const dBSRmat  *A,
+                    const char     *fname);
 
-void fasp_grid2d_plot (pgrid2d   pg,
-                       INT       level);
+void fasp_grid2d_plot (pgrid2d  pg,
+                       INT      level);
 
 
 /*-------- In file: AuxInput.c --------*/
 
-SHORT fasp_param_check (input_param *inparam);
+SHORT fasp_param_check (input_param  *inparam);
 
 void fasp_param_input (const char   *fname,
                        input_param  *inparam);
@@ -112,8 +103,8 @@ void print_itinfo (const INT   ptrlvl,
                    const REAL  absres,
                    const REAL  factor);
 
-void print_amgcomplexity (const AMG_data *mgl,
-                          const SHORT     prtlvl);
+void print_amgcomplexity (const AMG_data  *mgl,
+                          const SHORT      prtlvl);
 
 void print_amgcomplexity_bsr (const AMG_data_bsr  *mgl,
                               const SHORT          prtlvl);
@@ -130,9 +121,9 @@ void fasp_chkerr (const SHORT  status,
 
 /*-------- In file: AuxParam.c --------*/
 
-void fasp_param_set (const int    argc,
-                     const char  *argv[],
-                     input_param *iniparam);
+void fasp_param_set (const int     argc,
+                     const char   *argv[],
+                     input_param  *iniparam);
 
 void fasp_param_init (const input_param  *iniparam,
                       ITS_param          *itsparam,
@@ -156,7 +147,7 @@ void fasp_param_amg_set (AMG_param          *param,
 void fasp_param_ilu_set (ILU_param          *iluparam,
                          const input_param  *iniparam);
 
-void fasp_param_swz_set (SWZ_param      *swzparam,
+void fasp_param_swz_set (SWZ_param          *swzparam,
                          const input_param  *iniparam);
 
 void fasp_param_solver_set (ITS_param          *itsparam,
@@ -185,41 +176,41 @@ void fasp_param_solver_print (const ITS_param *param);
 
 /*-------- In file: AuxSort.c --------*/
 
-INT fasp_aux_BiSearch (const INT  nlist,
-                       const INT *list,
-                       const INT  value);
+INT fasp_aux_BiSearch (const INT   nlist,
+                       const INT  *list,
+                       const INT   value);
 
 INT fasp_aux_unique (INT        numbers[],
                      const INT  size);
 
-void fasp_aux_merge (INT numbers[],
-                     INT work[],
-                     INT left,
-                     INT mid,
-                     INT right);
+void fasp_aux_merge (INT  numbers[],
+                     INT  work[],
+                     INT  left,
+                     INT  mid,
+                     INT  right);
 
-void fasp_aux_msort (INT numbers[],
-                     INT work[],
-                     INT left,
-                     INT right);
+void fasp_aux_msort (INT  numbers[],
+                     INT  work[],
+                     INT  left,
+                     INT  right);
 
-void fasp_aux_iQuickSort (INT *a,
-                          INT  left,
-                          INT  right);
+void fasp_aux_iQuickSort (INT  *a,
+                          INT   left,
+                          INT   right);
 
-void fasp_aux_dQuickSort (REAL *a,
-                          INT  left,
-                          INT  right);
+void fasp_aux_dQuickSort (REAL  *a,
+                          INT   left,
+                          INT   right);
 
-void fasp_aux_iQuickSortIndex (INT *a,
-                               INT  left,
-                               INT  right,
-                               INT *index);
-
-void fasp_aux_dQuickSortIndex (REAL *a,
+void fasp_aux_iQuickSortIndex (INT  *a,
                                INT   left,
                                INT   right,
                                INT  *index);
+
+void fasp_aux_dQuickSortIndex (REAL  *a,
+                               INT    left,
+                               INT    right,
+                               INT   *index);
 
 
 /*-------- In file: AuxThreads.c --------*/
@@ -465,11 +456,11 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
 
 /*-------- In file: BlaILUSetupSTR.c --------*/
 
-void fasp_ilu_dstr_setup0 (dSTRmat   *A,
-                           dSTRmat   *LU);
+void fasp_ilu_dstr_setup0 (dSTRmat  *A,
+                           dSTRmat  *LU);
 
-void fasp_ilu_dstr_setup1 (dSTRmat   *A,
-                           dSTRmat   *LU);
+void fasp_ilu_dstr_setup1 (dSTRmat  *A,
+                           dSTRmat  *LU);
 
 
 /*-------- In file: BlaIO.c --------*/
@@ -764,11 +755,11 @@ SHORT fasp_smat_lu_decomp (REAL       *A,
                            INT         pivot[],
                            const INT   n);
 
-SHORT fasp_smat_lu_solve (const REAL *A,
-                          REAL        b[],
-                          const INT   pivot[],
-                          REAL        x[],
-                          const INT   n);
+SHORT fasp_smat_lu_solve (const REAL  *A,
+                          REAL         b[],
+                          const INT    pivot[],
+                          REAL         x[],
+                          const INT    n);
 
 
 /*-------- In file: BlaSparseBLC.c --------*/
@@ -2186,11 +2177,11 @@ INT fasp_amg_coarsening_cr (const INT   i_0,
 
 /*-------- In file: PreAMGCoarsenRS.c --------*/
 
-SHORT fasp_amg_coarsening_rs (dCSRmat   *A,
-                              ivector   *vertices,
-                              dCSRmat   *P,
-                              iCSRmat   *S,
-                              AMG_param *param);
+SHORT fasp_amg_coarsening_rs (dCSRmat    *A,
+                              ivector    *vertices,
+                              dCSRmat    *P,
+                              iCSRmat    *S,
+                              AMG_param  *param);
 
 
 /*-------- In file: PreAMGInterp.c --------*/

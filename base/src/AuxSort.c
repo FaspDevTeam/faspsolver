@@ -39,9 +39,9 @@ static void iSwapping (INT *w, const INT i, const INT j);
  * \author Chunsheng Feng
  * \date   03/01/2011
  */
-INT fasp_aux_BiSearch (const INT  nlist,
-                       const INT *list,
-                       const INT  value)
+INT fasp_aux_BiSearch (const INT   nlist,
+                       const INT  *list,
+                       const INT   value)
 {
     INT not_found = 1;
     INT low, high, m;
@@ -117,11 +117,11 @@ INT fasp_aux_unique (INT        numbers[],
  *
  * \note Both arrays are stored in numbers! Arrays should be pre-sorted!
  */
-void fasp_aux_merge (INT numbers[],
-                     INT work[],
-                     INT left,
-                     INT mid,
-                     INT right)
+void fasp_aux_merge (INT  numbers[],
+                     INT  work[],
+                     INT  left,
+                     INT  mid,
+                     INT  right)
 {
     INT i, left_end, num_elements, tmp_pos;
     
@@ -179,10 +179,10 @@ void fasp_aux_merge (INT numbers[],
  *
  * \note 'left' and 'right' are usually set to be 0 and n-1, respectively
  */
-void fasp_aux_msort (INT numbers[],
-                     INT work[],
-                     INT left,
-                     INT right)
+void fasp_aux_msort (INT  numbers[],
+                     INT  work[],
+                     INT  left,
+                     INT  right)
 {
     INT mid;
     
@@ -210,9 +210,9 @@ void fasp_aux_msort (INT numbers[],
  * \note 'left' and 'right' are usually set to be 0 and n-1, respectively
  *        where n is the length of 'a'.
  */
-void fasp_aux_iQuickSort (INT *a,
-                          INT  left,
-                          INT  right)
+void fasp_aux_iQuickSort (INT  *a,
+                          INT   left,
+                          INT   right)
 {
     INT i, last;
     
@@ -248,9 +248,9 @@ void fasp_aux_iQuickSort (INT *a,
  * \note 'left' and 'right' are usually set to be 0 and n-1, respectively
  *        where n is the length of 'a'.
  */
-void fasp_aux_dQuickSort (REAL *a,
-                          INT  left,
-                          INT  right)
+void fasp_aux_dQuickSort (REAL  *a,
+                          INT   left,
+                          INT   right)
 {
     INT i, last;
     
@@ -288,10 +288,10 @@ void fasp_aux_dQuickSort (REAL *a,
  *       length of 'a'. 'index' should be initialized in the nature order and it has the
  *       same length as 'a'.
  */
-void fasp_aux_iQuickSortIndex (INT *a,
-                               INT  left,
-                               INT  right,
-                               INT *index)
+void fasp_aux_iQuickSortIndex (INT  *a,
+                               INT   left,
+                               INT   right,
+                               INT  *index)
 {
     INT i, last;
     
@@ -329,10 +329,10 @@ void fasp_aux_iQuickSortIndex (INT *a,
  *       is the length of 'a'. 'index' should be initialized in the nature order 
  *       and it has the same length as 'a'.
  */
-void fasp_aux_dQuickSortIndex (REAL *a,
-                               INT   left,
-                               INT   right,
-                               INT  *index)
+void fasp_aux_dQuickSortIndex (REAL  *a,
+                               INT    left,
+                               INT    right,
+                               INT   *index)
 {
     INT i, last;
     
@@ -373,9 +373,8 @@ static void iSwapping (INT       *w,
                        const INT  i,
                        const INT  j)
 {
-    INT temp = w[i];
-    w[i] = w[j];
-    w[j] = temp;
+    const INT temp = w[i];
+    w[i] = w[j]; w[j] = temp;
 }
 
 /**
@@ -394,9 +393,8 @@ static void dSwapping (REAL      *w,
                        const INT  i,
                        const INT  j)
 {
-    REAL temp = w[i];
-    w[i] = w[j];
-    w[j] = temp;
+    const REAL temp = w[i];
+    w[i] = w[j]; w[j] = temp;
 }
 
 /*---------------------------------*/

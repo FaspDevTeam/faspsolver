@@ -35,8 +35,8 @@
  * \note Only works for 5 bands 2D and 7 bands 3D matrix with default offsets 
  *       (order can be arbitrary)!
  */
-void fasp_ilu_dstr_setup0 (dSTRmat   *A,
-                           dSTRmat   *LU)
+void fasp_ilu_dstr_setup0 (dSTRmat  *A,
+                           dSTRmat  *LU)
 {
     // local variables 
     INT i,i1,ix,ixy,ii;     
@@ -330,13 +330,10 @@ void fasp_ilu_dstr_setup0 (dSTRmat   *A,
  *
  * \note Only works for 5 bands 2D and 7 bands 3D matrix with default offsets
  */
-void fasp_ilu_dstr_setup1 (dSTRmat   *A,
-                           dSTRmat   *LU)
+void fasp_ilu_dstr_setup1 (dSTRmat  *A,
+                           dSTRmat  *LU)
 {
-    INT LUnband=12;
-    
-    INT i,j,i1,ix,ixy,ixyx,ix1,ixy1,ic,i1c,ixc,ix1c,ixyc,ixy1c,ixyxc;     
-    register REAL *smat,t,*tc;
+    INT LUnband = 12;
     
     const INT nc=A->nc, nc2=nc*nc;
     const INT nx=A->nx;
@@ -346,6 +343,9 @@ void fasp_ilu_dstr_setup1 (dSTRmat   *A,
     const INT nband=A->nband;
     const INT ngrid=A->ngrid;
     INT nline, nplane;
+    
+    INT i,j,i1,ix,ixy,ixyx,ix1,ixy1,ic,i1c,ixc,ix1c,ixyc,ixy1c,ixyxc;
+    register REAL *smat,t,*tc;
     
     if (nx == 1) {
         nline = ny;

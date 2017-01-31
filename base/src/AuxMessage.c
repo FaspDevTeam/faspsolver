@@ -81,8 +81,8 @@ void print_itinfo (const INT   ptrlvl,
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-void print_amgcomplexity (const AMG_data *mgl,
-                          const SHORT     prtlvl)
+void print_amgcomplexity (const AMG_data  *mgl,
+                          const SHORT      prtlvl)
 {
     const SHORT   max_levels=mgl->num_levels;
     SHORT         level;

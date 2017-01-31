@@ -30,7 +30,7 @@
  * \author Chensong Zhang
  * \date   09/29/2013
  */
-SHORT fasp_param_check (input_param *inparam)
+SHORT fasp_param_check (input_param  *inparam)
 {
     SHORT status = FASP_SUCCESS;
 

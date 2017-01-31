@@ -72,11 +72,11 @@ static void ordering1          (iCSRmat *, ivector *);
  * Modified by Chensong Zhang on 04/28/2013: remove linked list
  * Modified by Chensong Zhang on 05/11/2013: restructure the code
  */
-SHORT fasp_amg_coarsening_rs (dCSRmat   *A,
-                              ivector   *vertices,
-                              dCSRmat   *P,
-                              iCSRmat   *S,
-                              AMG_param *param)
+SHORT fasp_amg_coarsening_rs (dCSRmat    *A,
+                              ivector    *vertices,
+                              dCSRmat    *P,
+                              iCSRmat    *S,
+                              AMG_param  *param)
 {
 	const SHORT coarse_type = param->coarsening_type;
 	const INT   agg_path    = param->aggressive_path;

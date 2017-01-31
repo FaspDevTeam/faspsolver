@@ -4,7 +4,8 @@ File Name: CHANGES
 - Clean up *.inl files.
 - Fix more warnings by xcode; some still left: unused functions, doxygen.
 - Change header file auto-generator output.
-- Clean up TCL installation script. 
+- Clean up TCL installation script and help message.
+- Change a few functions from public to private.
 
 01/30/2017 FASP 1.9.6:
 - Modify fasp.h (affect all FASP projects).
