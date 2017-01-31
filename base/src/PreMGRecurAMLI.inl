@@ -30,7 +30,8 @@
  * \date   11/09/2014
  *
  * \note   Specified for unsmoothed aggregation cycle
- *         Refer to YVAN NOTAY, "AN AGGREGATION-BASED ALGEBRAIC MULTIGRID METHOD", 2010
+ *         
+ * Reference: YVAN NOTAY, "AN AGGREGATION-BASED ALGEBRAIC MULTIGRID METHOD", 2010
  */
 static SHORT Kcycle_dcsr_pgcg (dCSRmat   *A,
                                dvector   *b,

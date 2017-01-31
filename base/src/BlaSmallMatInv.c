@@ -592,7 +592,7 @@ INT fasp_smat_inv (REAL      *a,
 }
 
 /**
- * \fn REAL fasp_smat_Linfinity (REAL *A, const INT n )
+ * \fn REAL fasp_smat_Linf (const REAL *A, const INT n )
  *
  * \brief Compute the L infinity norm of A
  *
@@ -602,23 +602,18 @@ INT fasp_smat_inv (REAL      *a,
  * \author Xiaozhe Hu
  * \date   05/26/2014
  */
-REAL fasp_smat_Linfinity (REAL      *A,
-                          const INT  n)
+REAL fasp_smat_Linf (const REAL  *A,
+                     const INT    n)
 {
     
-    REAL norm = 0.0;
-    REAL value = 0.0;
+    REAL norm = 0.0, value;
     
     INT i,j;
     
-    for (i=0; i<n; i++){
-        
-        value = 0.0;
-        
-        for (j=0; j<n; j++){
+    for ( i = 0; i < n; i++ ) {
+        for ( value = 0.0, j = 0; j < n; j++ ) {
             value = value + ABS(A[i*n+j]);
         }
-        
         norm = MAX(norm, value);
     }
     

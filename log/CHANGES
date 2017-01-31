@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+01/31/2017 FASP 1.9.7:
+- Clean up *.inl files.
+
 01/30/2017 FASP 1.9.6:
 - Modify fasp.h (affect all FASP projects).
   -- Change itsolver_param ==> ITS_param.

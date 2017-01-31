@@ -46,18 +46,18 @@
  * Modified by Xiaozhe on 06/04/2012: add ndeg as input
  * Modified by Chensong on 02/16/2013: GS -> SMOOTHER_GS, etc
  */
-static void fasp_dcsr_presmoothing (const SHORT smoother,
-                                    dCSRmat *A,
-                                    dvector *b,
-                                    dvector *x,
-                                    const INT nsweeps,
-                                    const INT istart,
-                                    const INT iend,
-                                    const INT istep,
-                                    const REAL relax,
-                                    const SHORT ndeg,
-                                    const SHORT order,
-                                    INT *ordering)
+static void fasp_dcsr_presmoothing (const SHORT  smoother,
+                                    dCSRmat     *A,
+                                    dvector     *b,
+                                    dvector     *x,
+                                    const INT    nsweeps,
+                                    const INT    istart,
+                                    const INT    iend,
+                                    const INT    istep,
+                                    const REAL   relax,
+                                    const SHORT  ndeg,
+                                    const SHORT  order,
+                                    INT         *ordering)
 {
     switch (smoother) {
 
@@ -110,7 +110,7 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
             break;
 
         default:
-            printf("### ERROR: Wrong smoother type %d!\n", smoother);
+            printf("### ERROR: Unknown smoother type %d!\n", smoother);
             fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
     }
 }
@@ -144,18 +144,18 @@ static void fasp_dcsr_presmoothing (const SHORT smoother,
  * Modified by Xiaozhe Hu on 06/04/2012: add ndeg as input
  * Modified by Chensong on 02/16/2013: GS -> SMOOTHER_GS, etc
  */
-static void fasp_dcsr_postsmoothing (const SHORT smoother,
-                                     dCSRmat *A,
-                                     dvector *b,
-                                     dvector *x,
-                                     const INT nsweeps,
-                                     const INT istart,
-                                     const INT iend,
-                                     const INT istep,
-                                     const REAL relax,
-                                     const SHORT ndeg,
-                                     const SHORT order,
-                                     INT *ordering)
+static void fasp_dcsr_postsmoothing (const SHORT  smoother,
+                                     dCSRmat     *A,
+                                     dvector     *b,
+                                     dvector     *x,
+                                     const INT    nsweeps,
+                                     const INT    istart,
+                                     const INT    iend,
+                                     const INT    istep,
+                                     const REAL   relax,
+                                     const SHORT  ndeg,
+                                     const SHORT  order,
+                                     INT         *ordering)
 {
     switch (smoother) {
 
@@ -209,7 +209,7 @@ static void fasp_dcsr_postsmoothing (const SHORT smoother,
             break;
 
         default:
-            printf("### ERROR: Wrong smoother type %d!\n", smoother);
+            printf("### ERROR: Unknown smoother type %d!\n", smoother);
             fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
     }
 }
