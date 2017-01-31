@@ -18,12 +18,12 @@ foreach( srcfile ${FASP_TUTSRC} )
     endif()
     if(execfile)
       add_executable( ${execfile} main/${srcfile} )
-###      add_dependencies(${execfile} ${FASP_LIBRARY_NAME})
       target_link_libraries( ${execfile} 
       			       ${FASP_LIBRARY_NAME}
 			       ${UMFPACK_LIBRARIES} 
 			       ${SUPERLU_LIBRARIES} 
-			       ${MUMPS_LIBRARIES} 
+			       ${MUMPS_LIBRARIES}
+			       ${MKL_LIBRARIES}
 			       ${ADD_STDLIBS} )      
       install(TARGETS ${execfile} DESTINATION ${FASP_SOURCE_DIR}/tutorial)
     endif(execfile)
