@@ -16,6 +16,8 @@
  *---------------------------------------------------------------------------------
  *
  *  \warning Do NOT use auto-indentation in this file!
+ *
+ *  // TODO: Need to optimize routines here! --Chensong
  */
 
 #include <math.h>

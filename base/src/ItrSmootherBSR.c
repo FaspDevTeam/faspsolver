@@ -10,6 +10,8 @@
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
+ *
+ *  // TODO: Need to optimize routines here! --Chensong
  */
 
 #include <math.h>
@@ -62,20 +64,16 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     const REAL   *val = A->val;
     
     // local variables
-    INT i,k;
-    REAL *diaginv = NULL;
-    
+    INT   i,k;
     SHORT nthreads = 1, use_openmp = FALSE;
-    
+    REAL *diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
+
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = fasp_get_num_threads();
     }
 #endif
-    
-    // allocate memory
-    diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
     // get all the diagonal sub-blocks
     if (use_openmp) {
@@ -441,9 +439,9 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
     const REAL   *val = A->val;
     
     // local variables
-    REAL  *diaginv = NULL;
     INT    i,k;
     SHORT  nthreads = 1, use_openmp = FALSE;
+    REAL  *diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
 #ifdef _OPENMP
     if ( ROW > OPENMP_HOLDS ) {
@@ -451,9 +449,6 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
         nthreads = fasp_get_num_threads();
     }
 #endif
-    
-    // allocate memory
-    diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
     // get all the diagonal sub-blocks
     if (use_openmp) {
@@ -646,7 +641,7 @@ void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
  * \param b  Pointer to dvector: the right hand side
  * \param u  Pointer to dvector: the unknowns (IN: initial guess, OUT: approximation)
  *
- * \author Xiaozhe
+ * \author Xiaozhe Hu
  * \date   01/01/2014
  *
  * \note The only difference between the functions 'fasp_smoother_dbsr_gs_ascend1'
@@ -1192,23 +1187,22 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
                                     REAL     weight)
 {
     // members of A
-    INT     ROW = A->ROW;
-    INT     nb  = A->nb;
-    INT    *IA  = A->IA;
-    INT    *JA  = A->JA;
-    REAL   *val = A->val;
+    const INT     ROW = A->ROW;
+    const INT     nb  = A->nb;
+    const INT    *IA  = A->IA;
+    const INT    *JA  = A->JA;
+    const REAL   *val = A->val;
     
     // values of dvector b and u
-    REAL *b_val = b->val;
+    const REAL *b_val = b->val;
     REAL *u_val = u->val;
     
     // local variables
-    INT nb2 = nb*nb;
+    const INT nb2 = nb*nb;
     INT i,j,k;
     INT pb;
     REAL rhs = 0.0;
     REAL one_minus_weight = 1.0 - weight;
-    
     
 #ifdef _OPENMP
     // variables for OpenMP

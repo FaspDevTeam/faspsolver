@@ -10,6 +10,9 @@
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
+ *
+ *  // TODO: Need to optimize subroutines here! --Chensong
+ *  // TODO: Why should weight be fixed in wJacobi? --Chensong
  */
 
 #include <math.h>
@@ -50,7 +53,7 @@ static void rb0f3d (INT *ia, INT *ja, REAL *aa,REAL *u, REAL *f, INT *mark,
  * \fn void fasp_smoother_dcsr_jacobi (dvector *u, const INT i_1, const INT i_n,
  *                                     const INT s, dCSRmat *A, dvector *b, INT L)
  *
- * \brief Jacobi method as a smoother
+ * \brief Weighted Jacobi method as a smoother
  *
  * \param u      Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
  * \param i_1    Starting index
@@ -73,11 +76,11 @@ void fasp_smoother_dcsr_jacobi (dvector    *u,
                                 dvector    *b,
                                 INT         L)
 {
-    const INT    N = ABS(i_n - i_1)+1;
-    const INT   *ia=A->IA, *ja=A->JA;
-    const REAL  *aj=A->val,*bval=b->val;
-    REAL        *uval=u->val;
-    REAL         w = 0.8;
+    const REAL   w  = 0.8;
+    const INT    N  = ABS(i_n - i_1)+1;
+    const INT   *ia = A->IA, *ja = A->JA;
+    const REAL  *aj = A->val,*bval = b->val;
+    REAL        *uval = u->val;
     
     // local variables
     INT i,j,k,begin_row,end_row;
@@ -129,7 +132,6 @@ void fasp_smoother_dcsr_jacobi (dvector    *u,
 #pragma omp parallel for private (i)
 #endif
             for (i=i_1;i<=i_n;i+=s) {
-                //if (ABS(d[i])>SMALLREAL) uval[i]= w*t[i]/d[i];
                 if (ABS(d[i])>SMALLREAL) uval[i]=(1-w)*uval[i]+ w*t[i]/d[i];
             }
         }
@@ -732,8 +734,9 @@ void fasp_smoother_dcsr_sgs (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_sor (dvector *u, const INT i_1, const INT i_n, const INT s,
- *                                  dCSRmat *A, dvector *b, INT L, const REAL w)
+ * \fn void fasp_smoother_dcsr_sor (dvector *u, const INT i_1, const INT i_n, 
+ *                                  const INT s, dCSRmat *A, dvector *b, INT L,
+ *                                  const REAL w)
  *
  * \brief SOR method as a smoother
  *
@@ -1275,8 +1278,8 @@ void fasp_smoother_dcsr_kaczmarz (dvector    *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_L1diag (dvector *u, const INT i_1, const INT i_n, const INT s,
- *                                     dCSRmat *A, dvector *b, INT L)
+ * \fn void fasp_smoother_dcsr_L1diag (dvector *u, const INT i_1, const INT i_n, 
+ *                                     const INT s, dCSRmat *A, dvector *b, INT L)
  *
  * \brief Diagonal scaling (using L1 norm) as a smoother
  *
@@ -1444,9 +1447,9 @@ void fasp_smoother_dcsr_gs_rb3d (dvector    *u,
                                  const INT   nz)
 {
     const INT   nrow = b->row; // number of rows
-    INT        *ia=A->IA,*ja=A->JA;
-    REAL       *aa=A->val, *bval=b->val;
-    REAL       *uval=u->val;
+    INT        *ia = A->IA,  *ja = A->JA;
+    REAL       *aa = A->val, *bval = b->val;
+    REAL       *uval = u->val;
     
     INT         i,j,k,begin_row,end_row;
     REAL        t,d=0.0;
