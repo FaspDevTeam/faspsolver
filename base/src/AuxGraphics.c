@@ -114,8 +114,8 @@ void fasp_dcsr_subplot (const dCSRmat  *A,
  *  Red      negative element
  *  Brown    nearly zero element
  */
-INT fasp_dcsr_plot (const dCSRmat   *A,
-                    const char      *fname)
+INT fasp_dcsr_plot (const dCSRmat  *A,
+                    const char     *fname)
 {
     FILE *fp;
     INT offset, bmsize, i, j, b, ret = 1;
@@ -343,8 +343,8 @@ void fasp_dbsr_subplot (const dBSRmat  *A,
  *  Red      negative element
  *  Brown    nearly zero element
  */
-INT fasp_dbsr_plot (const dBSRmat   *A,
-                    const char      *fname)
+INT fasp_dbsr_plot (const dBSRmat  *A,
+                    const char     *fname)
 {
     FILE *fp;
     INT offset, bmsize, i, j, b, ret = 1;
@@ -490,8 +490,8 @@ FINISH: if (fp != NULL) fclose(fp);
  * \author Chensong Zhang
  * \date   03/29/2009
  */
-void fasp_grid2d_plot (pgrid2d   pg,
-                       INT       level)
+void fasp_grid2d_plot (pgrid2d  pg,
+                       INT      level)
 {
     FILE *datei;
     char buf[120];

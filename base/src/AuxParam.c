@@ -33,9 +33,9 @@
  * \author Chensong Zhang
  * \date   12/29/2013
  */
-void fasp_param_set (const int    argc,
-                     const char  *argv[],
-                     input_param *iniparam)
+void fasp_param_set (const int     argc,
+                     const char   *argv[],
+                     input_param  *iniparam)
 {
     int      arg_index   = 1;
     int      print_usage = 0;
@@ -606,8 +606,7 @@ void fasp_param_ilu_set (ILU_param          *iluparam,
 }
 
 /**
- * \fn void fasp_param_swz_set (SWZ_param *swzparam, 
- *                              const input_param *iniparam)
+ * \fn void fasp_param_swz_set (SWZ_param *swzparam, const input_param *iniparam)
  *
  * \brief Set SWZ_param with INPUT
  *
@@ -617,7 +616,7 @@ void fasp_param_ilu_set (ILU_param          *iluparam,
  * \author Xiaozhe Hu
  * \date   05/22/2012
  */
-void fasp_param_swz_set (SWZ_param      *swzparam,
+void fasp_param_swz_set (SWZ_param          *swzparam,
                          const input_param  *iniparam)
 {
     swzparam->print_level   = iniparam->print_level;
@@ -628,7 +627,7 @@ void fasp_param_swz_set (SWZ_param      *swzparam,
 }
 
 /**
- * \fn void fasp_param_solver_set (ITS_param *itsparam, 
+ * \fn void fasp_param_solver_set (ITS_param *itsparam,
  *                                 const input_param *iniparam)
  *
  * \brief Set ITS_param with INPUT

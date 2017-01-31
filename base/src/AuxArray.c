@@ -188,57 +188,6 @@ void fasp_iarray_cp (const INT   n,
     memcpy(y, x, n*sizeof(INT));
 }
 
-/**
- * \fn void fasp_darray_cp_nc3 (const REAL *x, REAL *y)
- *
- * \brief Copy an array to the other y=x, the length is 3
- *
- * \param x    Pointer to the original vector
- * \param y    Pointer to the destination vector
- * 
- * \author Xiaozhe Hu, Shiquan Zhang
- * \date   05/01/2010
- */
-void fasp_darray_cp_nc3 (const REAL  *x,
-                         REAL        *y)
-{
-    memcpy(y, x, 3*sizeof(REAL));
-}
-
-/**
- * \fn void fasp_darray_cp_nc5 (const REAL *x, REAL *y)
- *
- * \brief Copy an array to the other y=x, the length is 5
- *
- * \param x    Pointer to the original vector
- * \param y    Pointer to the destination vector
- * 
- * \author Xiaozhe Hu, Shiquan Zhang
- * \date   05/01/2010
- */
-void fasp_darray_cp_nc5 (const REAL  *x,
-                         REAL        *y)
-{
-    memcpy(y, x, 5*sizeof(REAL));
-}
-
-/**
- * \fn void fasp_darray_cp_nc7 (const REAL *x, REAL *y)
- *
- * \brief Copy an array to the other y=x, the length is 7
- *
- * \param x    Pointer to the original vector
- * \param y    Pointer to the destination vector
- * 
- * \author Xiaozhe Hu, Shiquan Zhang
- * \date   05/01/2010
- */
-void fasp_darray_cp_nc7 (const REAL  *x,
-                         REAL        *y)
-{
-    memcpy(y, x, 7*sizeof(REAL));
-}
-
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
