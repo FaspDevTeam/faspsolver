@@ -21,9 +21,8 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-static void blkcontr2_str(INT start_data, INT start_vecx, INT start_vecy, INT nc,
-                          REAL *data, REAL *x, REAL *y);
-static void aAxpby(REAL alpha, REAL beta, INT size, REAL *A, REAL *x, REAL *y);
+static void blkcontr2 (INT, INT, INT, INT, REAL *, REAL *, REAL *);
+static void aAxpby    (REAL, REAL, INT, REAL *, REAL *, REAL *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -165,15 +164,15 @@ void fasp_smoother_dstr_jacobi1 (dSTRmat *A,
                     if (column >= 0) {
                         start_data = nc2*column;
                         start_vecu = nc*column;
-                        blkcontr2_str( start_data, start_vecu, start_vecb,
-                                       nc, offdiag[band], u_val, b_tmp );
+                        blkcontr2( start_data, start_vecu, start_vecb,
+                                   nc, offdiag[band], u_val, b_tmp );
                     }
                 }
                 else {// width > 0
                     if (column < ngrid) {
                         start_vecu = nc*column;
-                        blkcontr2_str( start_DATA, start_vecu, start_vecb,
-                                       nc, offdiag[band], u_val, b_tmp );
+                        blkcontr2( start_DATA, start_vecu, start_vecb,
+                                   nc, offdiag[band], u_val, b_tmp );
                     }
                 }
             } // end for band     
@@ -393,15 +392,15 @@ void fasp_smoother_dstr_gs_ascend (dSTRmat *A,
                     if (column >= 0) {
                         start_data = nc2*column;
                         start_vecu = nc*column;
-                        blkcontr2_str( start_data, start_vecu, 0, nc,
-                                       offdiag[band], u_val, vec_tmp );
+                        blkcontr2( start_data, start_vecu, 0, nc,
+                                   offdiag[band], u_val, vec_tmp );
                     }
                 }
                 else { // width > 0
                     if (column < ngrid) {
                         start_vecu = nc*column;
-                        blkcontr2_str( start_DATA, start_vecu, 0, nc,
-                                       offdiag[band], u_val, vec_tmp );
+                        blkcontr2( start_DATA, start_vecu, 0, nc,
+                                   offdiag[band], u_val, vec_tmp );
                     }
                 }
             } // end for band
@@ -508,15 +507,15 @@ void fasp_smoother_dstr_gs_descend (dSTRmat *A,
                     if (column >= 0) {
                         start_data = nc2*column;
                         start_vecu = nc*column;
-                        blkcontr2_str( start_data, start_vecu, 0, nc,
-                                       offdiag[band], u_val, vec_tmp );
+                        blkcontr2( start_data, start_vecu, 0, nc,
+                                   offdiag[band], u_val, vec_tmp );
                     }
                 }
                 else { // width > 0
                     if (column < ngrid) {
                         start_vecu = nc*column;
-                        blkcontr2_str( start_DATA, start_vecu, 0, nc,
-                                       offdiag[band], u_val, vec_tmp );
+                        blkcontr2( start_DATA, start_vecu, 0, nc,
+                                   offdiag[band], u_val, vec_tmp );
                     }
                 }
             } // end for band
@@ -629,15 +628,15 @@ void fasp_smoother_dstr_gs_order (dSTRmat *A,
                     if (column >= 0) {
                         start_data = nc2*column;
                         start_vecu = nc*column;
-                        blkcontr2_str( start_data, start_vecu, 0, nc,
-                                       offdiag[band], u_val, vec_tmp );
+                        blkcontr2( start_data, start_vecu, 0, nc,
+                                   offdiag[band], u_val, vec_tmp );
                     }
                 }
                 else { // width > 0
                     if (column < ngrid) {
                         start_vecu = nc*column;
-                        blkcontr2_str( start_DATA, start_vecu, 0, nc,
-                                       offdiag[band], u_val, vec_tmp );
+                        blkcontr2( start_DATA, start_vecu, 0, nc,
+                                   offdiag[band], u_val, vec_tmp );
                     }
                 }
             } // end for band
@@ -781,15 +780,15 @@ void fasp_smoother_dstr_gs_cf (dSTRmat    *A,
                         if (column >= 0) {
                             start_data = nc2*column;
                             start_vecu = nc*column;
-                            blkcontr2_str( start_data, start_vecu, 0, nc,
-                                           offdiag[band], u_val, vec_tmp );
+                            blkcontr2( start_data, start_vecu, 0, nc,
+                                       offdiag[band], u_val, vec_tmp );
                         }
                     }
                     else { // width > 0
                         if (column < ngrid) {
                             start_vecu = nc*column;
-                            blkcontr2_str( start_DATA, start_vecu, 0, nc,
-                                           offdiag[band], u_val, vec_tmp );
+                            blkcontr2( start_DATA, start_vecu, 0, nc,
+                                       offdiag[band], u_val, vec_tmp );
                         }
                     }
                 } // end for band
@@ -815,15 +814,15 @@ void fasp_smoother_dstr_gs_cf (dSTRmat    *A,
                         if (column >= 0) {
                             start_data = nc2*column;
                             start_vecu = nc*column;
-                            blkcontr2_str( start_data, start_vecu, 0, nc,
-                                           offdiag[band], u_val, vec_tmp );
+                            blkcontr2( start_data, start_vecu, 0, nc,
+                                       offdiag[band], u_val, vec_tmp );
                         }
                     }
                     else { // width > 0
                         if (column < ngrid) {
                             start_vecu = nc*column;
-                            blkcontr2_str( start_DATA, start_vecu, 0, nc,
-                                           offdiag[band], u_val, vec_tmp );
+                            blkcontr2( start_DATA, start_vecu, 0, nc,
+                                       offdiag[band], u_val, vec_tmp );
                         }
                     }
                 } // end for band
@@ -1051,15 +1050,15 @@ void fasp_smoother_dstr_sor_ascend (dSTRmat *A,
                     if (column >= 0) {
                         start_data = nc2*column;
                         start_vecu = nc*column;
-                        blkcontr2_str( start_data, start_vecu, 0, nc,
-                                       offdiag[band], u_val, vec_tmp );
+                        blkcontr2( start_data, start_vecu, 0, nc,
+                                   offdiag[band], u_val, vec_tmp );
                     }
                 }
                 else { // width > 0
                     if (column < ngrid) {
                         start_vecu = nc*column;
-                        blkcontr2_str( start_DATA, start_vecu, 0, nc,
-                                       offdiag[band], u_val, vec_tmp );
+                        blkcontr2( start_DATA, start_vecu, 0, nc,
+                                   offdiag[band], u_val, vec_tmp );
                     }
                 }
             } // end for band
@@ -1171,15 +1170,15 @@ void fasp_smoother_dstr_sor_descend (dSTRmat *A,
                     if (column >= 0) {
                         start_data = nc2*column;
                         start_vecu = nc*column;
-                        blkcontr2_str( start_data, start_vecu, 0, nc,
-                                       offdiag[band], u_val, vec_tmp );
+                        blkcontr2( start_data, start_vecu, 0, nc,
+                                   offdiag[band], u_val, vec_tmp );
                     }
                 }
                 else { // width > 0
                     if (column < ngrid) {
                         start_vecu = nc*column;
-                        blkcontr2_str( start_DATA, start_vecu, 0, nc,
-                                       offdiag[band], u_val, vec_tmp );
+                        blkcontr2( start_DATA, start_vecu, 0, nc,
+                                   offdiag[band], u_val, vec_tmp );
                     }
                 }
             } // end for band
@@ -1296,15 +1295,15 @@ void fasp_smoother_dstr_sor_order (dSTRmat *A,
                     if (column >= 0) {
                         start_data = nc2*column;
                         start_vecu = nc*column;
-                        blkcontr2_str( start_data, start_vecu, 0, nc,
-                                       offdiag[band], u_val, vec_tmp );
+                        blkcontr2( start_data, start_vecu, 0, nc,
+                                   offdiag[band], u_val, vec_tmp );
                     }
                 }
                 else { // width > 0
                     if (column < ngrid) {
                         start_vecu = nc*column;
-                        blkcontr2_str( start_DATA, start_vecu, 0, nc,
-                                       offdiag[band], u_val, vec_tmp );
+                        blkcontr2( start_DATA, start_vecu, 0, nc,
+                                   offdiag[band], u_val, vec_tmp );
                     }
                 }
             } // end for band
@@ -1456,15 +1455,15 @@ void fasp_smoother_dstr_sor_cf (dSTRmat    *A,
                         if (column >= 0) {
                             start_data = nc2*column;
                             start_vecu = nc*column;
-                            blkcontr2_str( start_data, start_vecu, 0, nc,
-                                           offdiag[band], u_val, vec_tmp );
+                            blkcontr2( start_data, start_vecu, 0, nc,
+                                       offdiag[band], u_val, vec_tmp );
                         }
                     }
                     else { // width > 0
                         if (column < ngrid) {
                             start_vecu = nc*column;
-                            blkcontr2_str( start_DATA, start_vecu, 0, nc,
-                                           offdiag[band], u_val, vec_tmp );
+                            blkcontr2( start_DATA, start_vecu, 0, nc,
+                                       offdiag[band], u_val, vec_tmp );
                         }
                     }
                 } // end for band
@@ -1491,15 +1490,15 @@ void fasp_smoother_dstr_sor_cf (dSTRmat    *A,
                         if (column >= 0) {
                             start_data = nc2*column;
                             start_vecu = nc*column;
-                            blkcontr2_str( start_data, start_vecu, 0, nc,
-                                           offdiag[band], u_val, vec_tmp );
+                            blkcontr2( start_data, start_vecu, 0, nc,
+                                       offdiag[band], u_val, vec_tmp );
                         }
                     }
                     else { // width > 0
                         if (column < ngrid) {
                             start_vecu = nc*column;
-                            blkcontr2_str( start_DATA, start_vecu, 0, nc,
-                                           offdiag[band], u_val, vec_tmp );
+                            blkcontr2( start_DATA, start_vecu, 0, nc,
+                                       offdiag[band], u_val, vec_tmp );
                         }
                     }
                 } // end for band
@@ -1805,8 +1804,8 @@ void fasp_smoother_dstr_swz (dSTRmat *A,
 /*---------------------------------*/
 
 /**
- * \fn static void blkcontr2_str (INT start_data, INT start_vecx, INT start_vecy,  
- *                                INT nc, REAL *data, REAL *x, REAL *y)
+ * \fn static void blkcontr2 (INT start_data, INT start_vecx, INT start_vecy,  
+ *                            INT nc, REAL *data, REAL *x, REAL *y)
  *
  * \brief Subtract the block computation 'P*z' from 'y', where 'P' is a nc*nc  
  *        full matrix stored in 'data' from the address 'start_data', and 'z' 
@@ -1823,13 +1822,13 @@ void fasp_smoother_dstr_swz (dSTRmat *A,
  * \author Xiaozhe Hu
  * \date   04/24/2010
  */
-static void blkcontr2_str (INT   start_data,
-                           INT   start_vecx,
-                           INT   start_vecy,
-                           INT   nc,
-                           REAL *data,
-                           REAL *x,
-                           REAL *y)
+static void blkcontr2 (INT   start_data,
+                       INT   start_vecx,
+                       INT   start_vecy,
+                       INT   nc,
+                       REAL *data,
+                       REAL *x,
+                       REAL *y)
 {
     INT i,j,k,m;
     if (start_vecy == 0) {

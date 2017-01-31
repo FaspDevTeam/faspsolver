@@ -1,7 +1,7 @@
     1195 ./base/include/fasp.h
      404 ./base/include/fasp_block.h
      262 ./base/include/fasp_const.h
-    2922 ./base/include/fasp_functs.h
+    2915 ./base/include/fasp_functs.h
       51 ./base/include/fasp_grid.h
      115 ./base/src/BlaSpmvMatFree.inl
      239 ./base/src/ItrAuxiliary.inl
@@ -14,15 +14,15 @@
      225 ./base/src/PreMGRecurAMLI.inl
      219 ./base/src/PreMGSmoother.inl
       61 ./base/src/PreMGUtil.inl
-     244 ./base/src/AuxArray.c
+     193 ./base/src/AuxArray.c
       99 ./base/src/AuxConvert.c
       86 ./base/src/AuxGivens.c
      769 ./base/src/AuxGraphics.c
      797 ./base/src/AuxInput.c
      214 ./base/src/AuxMemory.c
      295 ./base/src/AuxMessage.c
-     994 ./base/src/AuxParam.c
-     404 ./base/src/AuxSort.c
+     993 ./base/src/AuxParam.c
+     402 ./base/src/AuxSort.c
      177 ./base/src/AuxThreads.c
       48 ./base/src/AuxTiming.c
      452 ./base/src/AuxVector.c
@@ -53,11 +53,11 @@
      133 ./base/src/BlaSpmvCSRL.c
     1859 ./base/src/BlaSpmvSTR.c
      321 ./base/src/BlaVector.c
-    1702 ./base/src/ItrSmootherBSR.c
-    2321 ./base/src/ItrSmootherCSR.c
-      91 ./base/src/ItrSmootherCSRcr.c
-     609 ./base/src/ItrSmootherCSRpoly.c
-    1903 ./base/src/ItrSmootherSTR.c
+    1696 ./base/src/ItrSmootherBSR.c
+    2324 ./base/src/ItrSmootherCSR.c
+      93 ./base/src/ItrSmootherCSRcr.c
+     611 ./base/src/ItrSmootherCSRpoly.c
+    1902 ./base/src/ItrSmootherSTR.c
     1743 ./base/src/KryPbcgs.c
     1512 ./base/src/KryPcg.c
      344 ./base/src/KryPgcg.c
@@ -91,7 +91,7 @@
      167 ./base/src/PreMGRecur.c
      779 ./base/src/PreMGRecurAMLI.c
      339 ./base/src/PreMGSolve.c
-    1741 ./base/src/PreSTR.c
+    1804 ./base/src/PreSTR.c
      147 ./base/src/SolAMG.c
      612 ./base/src/SolBLC.c
      807 ./base/src/SolBSR.c
@@ -101,4 +101,4 @@
      247 ./base/src/SolMatFree.c
      419 ./base/src/SolSTR.c
      320 ./base/src/SolWrapper.c
-   86631 total
+   86633 total
