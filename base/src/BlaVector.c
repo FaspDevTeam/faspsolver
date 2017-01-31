@@ -34,7 +34,7 @@
  * \param y   Pointer to dvector y
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
@@ -42,9 +42,12 @@ void fasp_blas_dvec_axpy (const REAL     a,
                           const dvector *x,
                           dvector       *y)
 {
-    INT i, m=x->row;
+    const INT   m   = x->row;
+    const REAL *xpt = x->val;
+    REAL       *ypt = y->val;
+
     SHORT use_openmp = FALSE;
-    REAL *xpt=x->val, *ypt=y->val;
+    INT   i;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
@@ -64,13 +67,13 @@ void fasp_blas_dvec_axpy (const REAL     a,
 #pragma omp parallel private(myid,mybegin,myend,i) num_threads(nthreads)
         {
             myid = omp_get_thread_num();
-            fasp_get_start_end(myid, nthreads, m, &mybegin, &myend);
-            for ( i=mybegin; i<myend; ++i ) ypt[i] += a*xpt[i];
+            fasp_get_start_end (myid, nthreads, m, &mybegin, &myend);
+            for ( i = mybegin; i < myend; ++i ) ypt[i] += a*xpt[i];
         }
 #endif
     }
     else {
-        for ( i=0; i<m; ++i ) ypt[i] += a*xpt[i];
+        for ( i = 0; i < m; ++i ) ypt[i] += a*xpt[i];
     }
 }
 
@@ -86,7 +89,7 @@ void fasp_blas_dvec_axpy (const REAL     a,
  * \param z   Pointer to dvector z
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
@@ -106,8 +109,113 @@ void fasp_blas_dvec_axpyz (const REAL     a,
     
     z->row = m;
     
-    memcpy(zpt, ypt, m*sizeof(REAL));
-    fasp_blas_darray_axpy(m, a, xpt, zpt);
+    memcpy (zpt, ypt, m*sizeof(REAL));
+    fasp_blas_darray_axpy (m, a, xpt, zpt);
+}
+
+/**
+ * \fn REAL fasp_blas_dvec_norm1 (const dvector *x)
+ *
+ * \brief L1 norm of dvector x
+ *
+ * \param x   Pointer to dvector x
+ *
+ * \return    L1 norm of x
+ *
+ * \author Chensong Zhang
+ * \date   07/01/2009
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
+ */
+REAL fasp_blas_dvec_norm1 (const dvector *x)
+{
+    const INT   length = x->row;
+    const REAL *xpt = x->val;
+    
+    register REAL onenorm = 0.0;
+    SHORT use_openmp = FALSE;
+    INT   i;
+    
+#ifdef _OPENMP
+    if ( length > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
+    }
+#endif
+    
+    if ( use_openmp ) {
+#ifdef _OPENMP
+#pragma omp parallel for reduction(+:onenorm) private(i)
+#endif
+        for ( i = 0; i < length; ++i ) onenorm += ABS(xpt[i]);
+    }
+    else {
+        for ( i = 0; i < length; ++i ) onenorm += ABS(xpt[i]);
+    }
+    
+    return onenorm;
+}
+
+/**
+ * \fn REAL fasp_blas_dvec_norm2 (const dvector *x)
+ *
+ * \brief L2 norm of dvector x
+ *
+ * \param x   Pointer to dvector x
+ *
+ * \return    L2 norm of x
+ *
+ * \author Chensong Zhang
+ * \date   07/01/2009
+ */
+REAL fasp_blas_dvec_norm2 (const dvector *x)
+{
+    const INT   length = x->row;
+    const REAL *xpt = x->val;
+    
+    register REAL twonorm = 0.0;
+    SHORT use_openmp = FALSE;
+    INT   i;
+    
+#ifdef _OPENMP
+    if ( length > OPENMP_HOLDS ) use_openmp = TRUE;
+#endif
+    
+    if ( use_openmp ) {
+#ifdef _OPENMP
+#pragma omp parallel for reduction(+:twonorm) private(i)
+#endif
+        for ( i = 0; i < length; ++i ) twonorm += xpt[i]*xpt[i];
+    }
+    else {
+        for ( i = 0; i < length; ++i ) twonorm += xpt[i]*xpt[i];
+    }
+    
+    return sqrt(twonorm);
+}
+
+/**
+ * \fn REAL fasp_blas_dvec_norminf (const dvector *x)
+ *
+ * \brief Linf norm of dvector x
+ *
+ * \param x   Pointer to dvector x
+ *
+ * \return    L_inf norm of x
+ *
+ * \author Chensong Zhang
+ * \date   07/01/2009
+ */
+REAL fasp_blas_dvec_norminf (const dvector *x)
+{
+    const INT      length=x->row;
+    const REAL    *xpt=x->val;
+    
+    register REAL  infnorm = 0.0;
+    register INT   i;
+    
+    for ( i = 0; i < length; ++i ) infnorm = MAX(infnorm, ABS(xpt[i]));
+    
+    return infnorm;
 }
 
 /**
@@ -118,10 +226,10 @@ void fasp_blas_dvec_axpyz (const REAL     a,
  * \param x   Pointer to dvector x
  * \param y   Pointer to dvector y
  *
- * \return Inner product
+ * \return    Inner product
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
@@ -131,9 +239,9 @@ REAL fasp_blas_dvec_dotprod (const dvector *x,
     const INT   length = x->row;
     const REAL *xpt = x->val, *ypt = y->val;
     
-    INT   i;
-    SHORT use_openmp = FALSE;
     register REAL value = 0.0;
+    SHORT use_openmp = FALSE;
+    INT   i;
     
 #ifdef _OPENMP
     if ( length > OPENMP_HOLDS ) use_openmp = TRUE;
@@ -155,15 +263,15 @@ REAL fasp_blas_dvec_dotprod (const dvector *x,
 /**
  * \fn REAL fasp_blas_dvec_relerr (const dvector *x, const dvector *y)
  *
- * \brief Relative error of two dvector x and y
+ * \brief Relative difference between two dvector x and y
  *
  * \param x   Pointer to dvector x
  * \param y   Pointer to dvector y
  *
- * \return relative error ||x-y||/||x||
+ * \return    Relative difference ||x-y||/||x||
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
@@ -173,9 +281,9 @@ REAL fasp_blas_dvec_relerr (const dvector *x,
     const INT   length = x->row;
     const REAL *xpt = x->val, *ypt = y->val;
     
+    SHORT use_openmp = FALSE;
     REAL diff = 0.0, temp = 0.0;
     INT   i;
-    SHORT use_openmp = FALSE;
     
     if ( length != y->row ) {
         printf("### ERROR: Two vectors have different dimensions!\n");
@@ -183,137 +291,26 @@ REAL fasp_blas_dvec_relerr (const dvector *x,
     }
     
 #ifdef _OPENMP
-    if ( length > OPENMP_HOLDS ) {
-        use_openmp = TRUE;
-    }
+    if ( length > OPENMP_HOLDS ) use_openmp = TRUE;
 #endif
     
     if ( use_openmp ) {
 #ifdef _OPENMP
 #pragma omp parallel for reduction(+:temp,diff) private(i)
 #endif
-        for (i=0;i<length;++i) {
+        for ( i = 0; i < length; ++i ) {
             temp += xpt[i]*xpt[i];
             diff += pow(xpt[i]-ypt[i],2);
         }
     }
     else {
-        for (i=0;i<length;++i) {
+        for ( i = 0; i < length; ++i ) {
             temp += xpt[i]*xpt[i];
             diff += pow(xpt[i]-ypt[i],2);
         }
     }
     
     return sqrt(diff/temp);
-}
-
-/**
- * \fn REAL fasp_blas_dvec_norm1 (const dvector *x)
- *
- * \brief L1 norm of dvector x
- *
- * \param x   Pointer to dvector x
- *
- * \return L1 norm of x
- *
- * \author Chensong Zhang
- * \date   07/01/209
- *
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
- */
-REAL fasp_blas_dvec_norm1 (const dvector *x)
-{
-    const INT   length = x->row;
-    const REAL *xpt = x->val;
-    
-    register REAL onenorm = 0.0;
-    INT   i;
-    SHORT use_openmp = FALSE;
-    
-#ifdef _OPENMP
-    if ( length > OPENMP_HOLDS ) {
-        use_openmp = TRUE;
-    }
-#endif
-    
-    if ( use_openmp ) {
-#ifdef _OPENMP
-#pragma omp parallel for reduction(+:onenorm) private(i)
-#endif
-        for (i=0;i<length;++i) onenorm+=ABS(xpt[i]);
-    }
-    else {
-        for (i=0;i<length;++i) onenorm+=ABS(xpt[i]);
-    }
-    
-    return onenorm;
-}
-
-/**
- * \fn REAL fasp_blas_dvec_norm2 (const dvector *x)
- *
- * \brief L2 norm of dvector x
- *
- * \param x   Pointer to dvector x
- *
- * \return L2 norm of x
- *
- * \author Chensong Zhang
- * \date   07/01/209
- *
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
- */
-REAL fasp_blas_dvec_norm2 (const dvector *x)
-{
-    const INT   length=x->row;
-    const REAL *xpt=x->val;
-    
-    INT   i;
-    SHORT use_openmp = FALSE;
-    register REAL twonorm = 0.0;
-    
-#ifdef _OPENMP
-    if ( length > OPENMP_HOLDS ) {
-        use_openmp = TRUE;
-    }
-#endif
-    
-    if (use_openmp) {
-#ifdef _OPENMP
-#pragma omp parallel for reduction(+:twonorm) private(i)
-#endif
-        for (i=0;i<length;++i) twonorm+=xpt[i]*xpt[i];
-    }
-    else {
-        for (i=0;i<length;++i) twonorm+=xpt[i]*xpt[i];
-    }
-    
-    return sqrt(twonorm);
-}
-
-/**
- * \fn REAL fasp_blas_dvec_norminf (const dvector *x)
- *
- * \brief Linf norm of dvector x
- *
- * \param x   Pointer to dvector x
- *
- * \return L_inf norm of x
- *
- * \author Chensong Zhang
- * \date   07/01/209
- */
-REAL fasp_blas_dvec_norminf (const dvector *x)
-{
-    const INT      length=x->row;
-    const REAL    *xpt=x->val;
-    
-    register REAL  infnorm = 0.0;
-    register INT   i;
-    
-    for ( i = 0; i < length; ++i ) infnorm = MAX(infnorm,ABS(xpt[i]));
-    
-    return infnorm;
 }
 
 /*---------------------------------*/

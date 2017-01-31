@@ -701,15 +701,15 @@ FINISHED:
  *        the restart parameter can be adaptively modified during iteration and
  *        flexible preconditioner can be used.
  *
- * \param *A           pointer to coefficient matrix
- * \param *b           pointer to right hand side vector
- * \param *x           pointer to solution vector
- * \param MaxIt        maximal iteration number allowed
- * \param tol          tolerance
- * \param *pc          pointer to preconditioner data
+ * \param A            Pointer to coefficient matrix
+ * \param b            Pointer to right hand side vector
+ * \param x            Pointer to solution vector
+ * \param MaxIt        Maximal iteration number allowed
+ * \param tol          Tolerance
+ * \param pc           Pointer to preconditioner data
  * \param prtlvl       How much information to print out
- * \param stop_type    default stopping criterion,i.e.||r_k||/||r_0||<tol, is used.
- * \param restart      number of restart for GMRES
+ * \param stop_type    Stopping criterion, i.e.||r_k||/||r_0||<tol
+ * \param restart      Number of restart for GMRES
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *

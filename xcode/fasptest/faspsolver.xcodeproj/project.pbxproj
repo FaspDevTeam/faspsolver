@@ -116,6 +116,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		9F22BCA41E40B451001FC21C /* faspsolver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = faspsolver; path = /Users/zhangcs/Programming/FASP/faspsolver/xcode/fasptest/build/Debug/faspsolver; sourceTree = "<absolute>"; };
 		9FF1DCD01E3F186B00F013F2 /* XtrHBIO.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = XtrHBIO.c; path = ../../base/extra/hb_io/XtrHBIO.c; sourceTree = "<group>"; };
 		9FF1DCD21E3F188000F013F2 /* XtrMumps.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = XtrMumps.c; path = ../../base/extra/interface/XtrMumps.c; sourceTree = "<group>"; };
 		9FF1DCD31E3F188000F013F2 /* XtrPardiso.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = XtrPardiso.c; path = ../../base/extra/interface/XtrPardiso.c; sourceTree = "<group>"; };
@@ -230,7 +231,6 @@
 		9FF1DD481E3F192900F013F2 /* SolMatFree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SolMatFree.c; path = ../../base/src/SolMatFree.c; sourceTree = "<group>"; };
 		9FF1DD491E3F192900F013F2 /* SolSTR.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SolSTR.c; path = ../../base/src/SolSTR.c; sourceTree = "<group>"; };
 		9FF1DD4A1E3F192900F013F2 /* SolWrapper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SolWrapper.c; path = ../../base/src/SolWrapper.c; sourceTree = "<group>"; };
-		9FF1DDA41E3F2D7500F013F2 /* faspsolver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = faspsolver; path = /Users/zhangcs/Programming/FASP/faspsolver/xcode/fasptest/build/Debug/faspsolver; sourceTree = "<absolute>"; };
 		9FF1DDA51E3F2E3900F013F2 /* regression.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = regression.c; path = ../../test/main/regression.c; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -440,7 +440,7 @@
 			);
 			name = faspsolver;
 			productName = fasptest;
-			productReference = 9FF1DDA41E3F2D7500F013F2 /* faspsolver */;
+			productReference = 9F22BCA41E40B451001FC21C /* faspsolver */;
 			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */

@@ -34,7 +34,7 @@
  * \param x    Pointer to x
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  *
@@ -44,27 +44,26 @@ void fasp_blas_darray_ax (const INT    n,
                           const REAL   a,
                           REAL        *x)
 {
-    SHORT use_openmp = FALSE;
-    INT   i;
-    
+    if ( a == 1.0 ) return; // do nothing
+
+    {
+        SHORT use_openmp = FALSE;
+        INT   i;
+        
 #ifdef _OPENMP
-    INT myid, mybegin, myend, nthreads;
-    if ( n > OPENMP_HOLDS ) {
-        use_openmp = TRUE;
-        nthreads = fasp_get_num_threads();
-    }
+        INT myid, mybegin, myend, nthreads;
+        if ( n > OPENMP_HOLDS ) {
+            use_openmp = TRUE;
+            nthreads = fasp_get_num_threads();
+        }
 #endif
     
-    if ( a == 1.0 ) {
-        // do nothing
-    }
-    else {
-        if (use_openmp) {
+        if ( use_openmp ) {
 #ifdef _OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i)
             {
                 myid = omp_get_thread_num();
-                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end (myid, nthreads, n, &mybegin, &myend);
                 for ( i = mybegin; i < myend; ++i ) x[i] *= a;
             }
 #endif
@@ -77,21 +76,19 @@ void fasp_blas_darray_ax (const INT    n,
 
 /**
  * \fn void fasp_blas_darray_axpy (const INT n, const REAL a,
- *                                const REAL *x, REAL *y)
+ *                                 const REAL *x, REAL *y)
  *
  * \brief y = a*x + y
  *
  * \param n    Number of variables
  * \param a    Factor a
  * \param x    Pointer to x
- * \param y    Pointer to y
+ * \param y    Pointer to y, reused to store the resulting array
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
- *
- * \warning y is reused to store the resulting array.
  */
 void fasp_blas_darray_axpy (const INT   n,
                             const REAL  a,
@@ -110,12 +107,12 @@ void fasp_blas_darray_axpy (const INT   n,
 #endif
     
     if ( a == 1.0 ) {
-        if (use_openmp) {
+        if ( use_openmp ) {
 #ifdef _OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
-                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end (myid, nthreads, n, &mybegin, &myend);
                 for ( i = mybegin; i < myend; ++i ) y[i] += x[i];
             }
 #endif
@@ -126,12 +123,12 @@ void fasp_blas_darray_axpy (const INT   n,
     }
     
     else if ( a == -1.0 ) {
-        if (use_openmp) {
+        if ( use_openmp ) {
 #ifdef _OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
-                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end (myid, nthreads, n, &mybegin, &myend);
                 for ( i = mybegin; i < myend; ++i ) y[i] -= x[i];
             }
 #endif
@@ -142,12 +139,12 @@ void fasp_blas_darray_axpy (const INT   n,
     }
     
     else {
-        if (use_openmp) {
+        if ( use_openmp ) {
 #ifdef _OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
             {
                 myid = omp_get_thread_num();
-                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
+                fasp_get_start_end (myid, nthreads, n, &mybegin, &myend);
                 for ( i = mybegin; i < myend; ++i ) y[i] += a*x[i];
             }
 #endif
@@ -159,8 +156,180 @@ void fasp_blas_darray_axpy (const INT   n,
 }
 
 /**
+ * \fn void fasp_blas_darray_axpy_nc2 (const REAL a, const REAL *x, REAL *y)
+ *
+ * \brief y = a*x + y, length of x and y should be 2
+ *
+ * \param a   REAL factor a
+ * \param x   Pointer to the original array
+ * \param y   Pointer to the destination array
+ *
+ * \author Xiaozhe Hu
+ * \date   18/11/2011
+ */
+void fasp_blas_darray_axpy_nc2 (const REAL   a,
+                                const REAL  *x,
+                                REAL        *y)
+{
+    y[0] += a*x[0];
+    y[1] += a*x[1];
+    
+    y[2] += a*x[2];
+    y[3] += a*x[3];
+}
+
+/**
+ * \fn void fasp_blas_darray_axpy_nc3 (const REAL a, const REAL *x, REAL *y)
+ *
+ * \brief y = a*x + y, length of x and y should be 3
+ *
+ * \param a   REAL factor a
+ * \param x   Pointer to the original array
+ * \param y   Pointer to the destination array
+ *
+ * \author Xiaozhe Hu, Shiquan Zhang
+ * \date   05/01/2010
+ */
+void fasp_blas_darray_axpy_nc3 (const REAL   a,
+                                const REAL  *x,
+                                REAL        *y)
+{
+    y[0] += a*x[0];
+    y[1] += a*x[1];
+    y[2] += a*x[2];
+    
+    y[3] += a*x[3];
+    y[4] += a*x[4];
+    y[5] += a*x[5];
+    
+    y[6] += a*x[6];
+    y[7] += a*x[7];
+    y[8] += a*x[8];
+}
+
+/**
+ * \fn void fasp_blas_darray_axpy_nc5 (const REAL a, const REAL *x, REAL *y)
+ *
+ * \brief y = a*x + y, length of x and y should be 5
+ *
+ * \param a   REAL factor a
+ * \param x   Pointer to the original array
+ * \param y   Pointer to the destination array
+ *
+ * \author Xiaozhe Hu, Shiquan Zhang
+ * \date   05/01/2010
+ */
+void fasp_blas_darray_axpy_nc5 (const REAL   a,
+                                const REAL  *x,
+                                REAL        *y)
+{
+    y[0] += a*x[0];
+    y[1] += a*x[1];
+    y[2] += a*x[2];
+    y[3] += a*x[3];
+    y[4] += a*x[4];
+    
+    y[5] += a*x[5];
+    y[6] += a*x[6];
+    y[7] += a*x[7];
+    y[8] += a*x[8];
+    y[9] += a*x[9];
+    
+    y[10] += a*x[10];
+    y[11] += a*x[11];
+    y[12] += a*x[12];
+    y[13] += a*x[13];
+    y[14] += a*x[14];
+    
+    y[15] += a*x[15];
+    y[16] += a*x[16];
+    y[17] += a*x[17];
+    y[18] += a*x[18];
+    y[19] += a*x[19];
+    
+    y[20] += a*x[20];
+    y[21] += a*x[21];
+    y[22] += a*x[22];
+    y[23] += a*x[23];
+    y[24] += a*x[24];
+}
+
+/**
+ * \fn void fasp_blas_darray_axpy_nc7 (const REAL a, const REAL *x, REAL *y)
+ *
+ * \brief y = a*x + y, length of x and y should be 7
+ *
+ * \param a   REAL factor a
+ * \param x   Pointer to the original array
+ * \param y   Pointer to the destination array
+ *
+ * \author Xiaozhe Hu, Shiquan Zhang
+ * \date   05/01/2010
+ */
+void fasp_blas_darray_axpy_nc7 (const REAL   a,
+                                const REAL  *x,
+                                REAL        *y)
+{
+    y[0] += a*x[0];
+    y[1] += a*x[1];
+    y[2] += a*x[2];
+    y[3] += a*x[3];
+    y[4] += a*x[4];
+    y[5] += a*x[5];
+    y[6] += a*x[6];
+    
+    y[7]  += a*x[7];
+    y[8]  += a*x[8];
+    y[9]  += a*x[9];
+    y[10] += a*x[10];
+    y[11] += a*x[11];
+    y[12] += a*x[12];
+    y[13] += a*x[13];
+    
+    y[14] += a*x[14];
+    y[15] += a*x[15];
+    y[16] += a*x[16];
+    y[17] += a*x[17];
+    y[18] += a*x[18];
+    y[19] += a*x[19];
+    y[20] += a*x[20];
+    
+    y[21] += a*x[21];
+    y[22] += a*x[22];
+    y[23] += a*x[23];
+    y[24] += a*x[24];
+    y[25] += a*x[25];
+    y[26] += a*x[26];
+    y[27] += a*x[27];
+    
+    y[28] += a*x[28];
+    y[29] += a*x[29];
+    y[30] += a*x[30];
+    y[31] += a*x[31];
+    y[32] += a*x[32];
+    y[33] += a*x[33];
+    y[34] += a*x[34];
+    
+    y[35] += a*x[35];
+    y[36] += a*x[36];
+    y[37] += a*x[37];
+    y[38] += a*x[38];
+    y[39] += a*x[39];
+    y[40] += a*x[40];
+    y[41] += a*x[41];
+    
+    y[42] += a*x[42];
+    y[43] += a*x[43];
+    y[44] += a*x[44];
+    y[45] += a*x[45];
+    y[46] += a*x[46];
+    y[47] += a*x[47];
+    y[48] += a*x[48];
+}
+
+/**
  * \fn void fasp_blas_darray_axpyz (const INT n, const REAL a, const REAL *x,
- *                                 const REAL *y, REAL *z)
+ *                                  const REAL *y, REAL *z)
  *
  * \brief z = a*x + y
  *
@@ -171,7 +340,7 @@ void fasp_blas_darray_axpy (const INT   n,
  * \param z    Pointer to z
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
@@ -192,12 +361,12 @@ void fasp_blas_darray_axpyz (const INT   n,
     }
 #endif
     
-    if (use_openmp) {
+    if ( use_openmp ) {
 #ifdef _OPENMP
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {
             myid = omp_get_thread_num();
-            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
+            fasp_get_start_end (myid, nthreads, n, &mybegin, &myend);
             for ( i = mybegin; i < myend; ++i ) z[i] = a*x[i] + y[i];
         }
 #endif
@@ -208,62 +377,10 @@ void fasp_blas_darray_axpyz (const INT   n,
 }
 
 /**
- * \fn void fasp_blas_darray_axpby (const INT n, const REAL a, const REAL *x,
- *                                 const REAL b, REAL *y)
- *
- * \brief y = a*x + b*y
- *
- * \param n    Number of variables
- * \param a    Factor a
- * \param x    Pointer to x
- * \param b    Factor b
- * \param y    Pointer to y
- *
- * \author Chensong Zhang
- * \date   07/01/209
- *
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
- *
- * \warning y is reused to store the resulting array.
- */
-void fasp_blas_darray_axpby (const INT   n,
-                             const REAL  a,
-                             const REAL *x,
-                             const REAL  b,
-                             REAL       *y)
-{
-    SHORT use_openmp = FALSE;
-    INT   i;
-    
-#ifdef _OPENMP
-    INT myid, mybegin, myend, nthreads;
-    if ( n > OPENMP_HOLDS ) {
-        use_openmp = TRUE;
-        nthreads = fasp_get_num_threads();
-    }
-#endif
-    
-    if (use_openmp) {
-#ifdef _OPENMP
-#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
-        {
-            myid = omp_get_thread_num();
-            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-            for ( i = mybegin; i < myend; ++i ) y[i] = a*x[i] + b*y[i];
-        }
-#endif
-    }
-    else {
-        for ( i = 0; i < n; ++i ) y[i] = a*x[i] + b*y[i];
-    }
-    
-}
-
-/**
  * \fn void fasp_blas_darray_axpyz_nc2 (const REAL a, const REAL *x,
- *                                     const REAL *y, REAL *z)
+ *                                      const REAL *y, REAL *z)
  *
- * \brief z = a*x + y
+ * \brief z = a*x + y, length of x, y and z should be 2
  *
  * \param a   REAL factor a
  * \param x   Pointer to the original array 1
@@ -272,8 +389,6 @@ void fasp_blas_darray_axpby (const INT   n,
  *
  * \author Xiaozhe Hu
  * \date   18/11/2011
- *
- * \note z is the third array and the length of x, y and z is 2
  */
 void fasp_blas_darray_axpyz_nc2 (const REAL   a,
                                  const REAL  *x,
@@ -288,10 +403,10 @@ void fasp_blas_darray_axpyz_nc2 (const REAL   a,
 }
 
 /**
- * \fn void fasp_blas_darray_axpyz_nc3 (const REAL a, const REAL *x, const REAL *y,
- *                                     REAL *z)
+ * \fn void fasp_blas_darray_axpyz_nc3 (const REAL a, const REAL *x,
+ *                                      const REAL *y, REAL *z)
  *
- * \brief z = a*x + y
+ * \brief z = a*x + y, length of x, y and z should be 3
  *
  * \param a   REAL factor a
  * \param x   Pointer to the original array 1
@@ -300,8 +415,6 @@ void fasp_blas_darray_axpyz_nc2 (const REAL   a,
  *
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
- *
- * \note z is the third array and the length of x, y and z is 3
  */
 void fasp_blas_darray_axpyz_nc3 (const REAL   a,
                                  const REAL  *x,
@@ -322,10 +435,10 @@ void fasp_blas_darray_axpyz_nc3 (const REAL   a,
 }
 
 /**
- * \fn void fasp_blas_darray_axpyz_nc5 (const REAL a, const REAL *x, const REAL *y,
- *                                     REAL *z)
+ * \fn void fasp_blas_darray_axpyz_nc5 (const REAL a, const REAL *x,
+ *                                      const REAL *y, REAL *z)
  *
- * \brief z = a*x + y
+ * \brief z = a*x + y, length of x, y and z should be 5
  *
  * \param a   REAL factor a
  * \param x   Pointer to the original array 1
@@ -334,8 +447,6 @@ void fasp_blas_darray_axpyz_nc3 (const REAL   a,
  *
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
- *
- * \note z is the third array and the length of x, y and z is 5
  */
 void fasp_blas_darray_axpyz_nc5 (const REAL   a,
                                  const REAL  *x,
@@ -374,10 +485,10 @@ void fasp_blas_darray_axpyz_nc5 (const REAL   a,
 }
 
 /**
- * \fn void fasp_blas_darray_axpyz_nc7 (const REAL a, const REAL *x, const REAL *y,
- *                                     REAL *z)
+ * \fn void fasp_blas_darray_axpyz_nc7 (const REAL a, const REAL *x,
+ *                                      const REAL *y, REAL *z)
  *
- * \brief z = a*x + y
+ * \brief z = a*x + y, length of x, y and z should be 7
  *
  * \param a   REAL factor a
  * \param x   Pointer to the original array 1
@@ -386,8 +497,6 @@ void fasp_blas_darray_axpyz_nc5 (const REAL   a,
  *
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   05/01/2010
- *
- * \note z is the third array and the length of x, y and z is 7
  */
 void fasp_blas_darray_axpyz_nc7 (const REAL   a,
                                  const REAL  *x,
@@ -452,217 +561,53 @@ void fasp_blas_darray_axpyz_nc7 (const REAL   a,
 }
 
 /**
- * \fn void fasp_blas_darray_axpy_nc2 (const REAL a, const REAL *x, REAL *y)
+ * \fn void fasp_blas_darray_axpby (const INT n, const REAL a, const REAL *x,
+ *                                  const REAL b, REAL *y)
  *
- * \brief y = a*x + y, the length of x and y is 2
- *
- * \param a   REAL factor a
- * \param x   Pointer to the original array
- * \param y   Pointer to the destination array
- *
- * \author Xiaozhe Hu
- * \date   18/11/2011
- */
-void fasp_blas_darray_axpy_nc2 (const REAL   a,
-                                const REAL  *x,
-                                REAL        *y)
-{
-    y[0] += a*x[0];
-    y[1] += a*x[1];
-    
-    y[2] += a*x[2];
-    y[3] += a*x[3];
-}
-
-/**
- * \fn void fasp_blas_darray_axpy_nc3 (const REAL a, const REAL *x, REAL *y)
- *
- * \brief y = a*x + y, the length of x and y is 3
- *
- * \param a   REAL factor a
- * \param x   Pointer to the original array
- * \param y   Pointer to the destination array
- *
- * \author Xiaozhe Hu, Shiquan Zhang
- * \date   05/01/2010
- */
-void fasp_blas_darray_axpy_nc3 (const REAL   a,
-                                const REAL  *x,
-                                REAL        *y)
-{
-    y[0] += a*x[0];
-    y[1] += a*x[1];
-    y[2] += a*x[2];
-    
-    y[3] += a*x[3];
-    y[4] += a*x[4];
-    y[5] += a*x[5];
-    
-    y[6] += a*x[6];
-    y[7] += a*x[7];
-    y[8] += a*x[8];
-}
-
-/**
- * \fn void fasp_blas_darray_axpy_nc5 (const REAL a, const REAL *x, REAL *y)
- *
- * \brief y = a*x + y, the length of x and y is 5
- *
- * \param a   REAL factor a
- * \param x   Pointer to the original array
- * \param y   Pointer to the destination array
- *
- * \author Xiaozhe Hu, Shiquan Zhang
- * \date   05/01/2010
- */
-void fasp_blas_darray_axpy_nc5 (const REAL   a,
-                                const REAL  *x,
-                                REAL        *y)
-{
-    y[0] += a*x[0];
-    y[1] += a*x[1];
-    y[2] += a*x[2];
-    y[3] += a*x[3];
-    y[4] += a*x[4];
-    
-    y[5] += a*x[5];
-    y[6] += a*x[6];
-    y[7] += a*x[7];
-    y[8] += a*x[8];
-    y[9] += a*x[9];
-    
-    y[10] += a*x[10];
-    y[11] += a*x[11];
-    y[12] += a*x[12];
-    y[13] += a*x[13];
-    y[14] += a*x[14];
-    
-    y[15] += a*x[15];
-    y[16] += a*x[16];
-    y[17] += a*x[17];
-    y[18] += a*x[18];
-    y[19] += a*x[19];
-    
-    y[20] += a*x[20];
-    y[21] += a*x[21];
-    y[22] += a*x[22];
-    y[23] += a*x[23];
-    y[24] += a*x[24];
-}
-
-/**
- * \fn void fasp_blas_darray_axpy_nc7 (const REAL a, const REAL *x, REAL *y)
- *
- * \brief y = a*x + y, the length of x and y is 7
- *
- * \param a   REAL factor a
- * \param x   Pointer to the original array
- * \param y   Pointer to the destination array
- *
- * \author Xiaozhe Hu, Shiquan Zhang
- * \date   05/01/2010
- */
-void fasp_blas_darray_axpy_nc7 (const REAL   a,
-                                const REAL  *x,
-                                REAL        *y)
-{
-    y[0] += a*x[0];
-    y[1] += a*x[1];
-    y[2] += a*x[2];
-    y[3] += a*x[3];
-    y[4] += a*x[4];
-    y[5] += a*x[5];
-    y[6] += a*x[6];
-    
-    y[7] += a*x[7];
-    y[8] += a*x[8];
-    y[9] += a*x[9];
-    y[10] += a*x[10];
-    y[11] += a*x[11];
-    y[12] += a*x[12];
-    y[13] += a*x[13];
-    
-    y[14] += a*x[14];
-    y[15] += a*x[15];
-    y[16] += a*x[16];
-    y[17] += a*x[17];
-    y[18] += a*x[18];
-    y[19] += a*x[19];
-    y[20] += a*x[20];
-    
-    y[21] += a*x[21];
-    y[22] += a*x[22];
-    y[23] += a*x[23];
-    y[24] += a*x[24];
-    y[25] += a*x[25];
-    y[26] += a*x[26];
-    y[27] += a*x[27];
-    
-    y[28] += a*x[28];
-    y[29] += a*x[29];
-    y[30] += a*x[30];
-    y[31] += a*x[31];
-    y[32] += a*x[32];
-    y[33] += a*x[33];
-    y[34] += a*x[34];
-    
-    y[35] += a*x[35];
-    y[36] += a*x[36];
-    y[37] += a*x[37];
-    y[38] += a*x[38];
-    y[39] += a*x[39];
-    y[40] += a*x[40];
-    y[41] += a*x[41];
-    
-    y[42] += a*x[42];
-    y[43] += a*x[43];
-    y[44] += a*x[44];
-    y[45] += a*x[45];
-    y[46] += a*x[46];
-    y[47] += a*x[47];
-    y[48] += a*x[48];
-}
-
-/**
- * \fn REAL fasp_blas_darray_dotprod (const INT n, const REAL *x, const REAL *y)
- *
- * \brief Inner product of two arraies (x,y)
+ * \brief y = a*x + b*y
  *
  * \param n    Number of variables
+ * \param a    Factor a
  * \param x    Pointer to x
- * \param y    Pointer to y
- *
- * \return     Inner product (x,y)
+ * \param b    Factor b
+ * \param y    Pointer to y, reused to store the resulting array
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-REAL fasp_blas_darray_dotprod (const INT    n,
-                               const REAL  *x,
-                               const REAL  *y)
+void fasp_blas_darray_axpby (const INT   n,
+                             const REAL  a,
+                             const REAL *x,
+                             const REAL  b,
+                             REAL       *y)
 {
     SHORT use_openmp = FALSE;
     INT   i;
     
-    register REAL value = 0.0;
-    
 #ifdef _OPENMP
-    if ( n > OPENMP_HOLDS ) use_openmp = TRUE;
+    INT myid, mybegin, myend, nthreads;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
+        nthreads = fasp_get_num_threads();
+    }
 #endif
     
     if (use_openmp) {
 #ifdef _OPENMP
-#pragma omp parallel for reduction(+:value) private(i)
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+        {
+            myid = omp_get_thread_num();
+            fasp_get_start_end (myid, nthreads, n, &mybegin, &myend);
+            for ( i = mybegin; i < myend; ++i ) y[i] = a*x[i] + b*y[i];
+        }
 #endif
-        for ( i = 0; i < n; ++i ) value += x[i]*y[i];
     }
     else {
-        for ( i = 0; i < n; ++i ) value += x[i]*y[i];
+        for ( i = 0; i < n; ++i ) y[i] = a*x[i] + b*y[i];
     }
     
-    return value;
 }
 
 /**
@@ -676,21 +621,20 @@ REAL fasp_blas_darray_dotprod (const INT    n,
  * \return     L1 norm of x
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
 REAL fasp_blas_darray_norm1 (const INT    n,
                              const REAL  *x)
 {
-    INT   i;
-    
     register REAL onenorm = 0.0;
+    INT   i;
     
 #ifdef _OPENMP
 #pragma omp parallel for reduction(+:onenorm) private(i)
 #endif
-    for ( i = 0; i < n; ++i ) onenorm+=ABS(x[i]);
+    for ( i = 0; i < n; ++i ) onenorm += ABS(x[i]);
     
     return onenorm;
 }
@@ -706,20 +650,20 @@ REAL fasp_blas_darray_norm1 (const INT    n,
  * \return     L2 norm of x
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
 REAL fasp_blas_darray_norm2 (const INT    n,
                              const REAL  *x)
 {
+    register REAL twonorm = 0.0;
     INT  i;
-    register REAL twonorm = 0.;
     
 #ifdef _OPENMP
 #pragma omp parallel for reduction(+:twonorm) private(i)
 #endif
-    for ( i = 0; i < n; ++i ) twonorm+=x[i]*x[i];
+    for ( i = 0; i < n; ++i ) twonorm += x[i] * x[i];
     
     return sqrt(twonorm);
 }
@@ -735,7 +679,7 @@ REAL fasp_blas_darray_norm2 (const INT    n,
  * \return     L_inf norm of x
  *
  * \author Chensong Zhang
- * \date   07/01/209
+ * \date   07/01/2009
  *
  * Modified by Chunsheng Feng, Zheng Li on 06/28/2012
  */
@@ -743,8 +687,8 @@ REAL fasp_blas_darray_norminf (const INT    n,
                                const REAL  *x)
 {
     SHORT use_openmp = FALSE;
+    register REAL infnorm = 0.0;
     INT   i;
-    REAL  infnorm = 0.0;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, nthreads;
@@ -754,26 +698,69 @@ REAL fasp_blas_darray_norminf (const INT    n,
     }
 #endif
     
-    if (use_openmp) {
+    if ( use_openmp ) {
 #ifdef _OPENMP
         REAL infnorm_loc = 0.0;
 #pragma omp parallel firstprivate(infnorm_loc) private(myid, mybegin, myend, i)
         {
             myid = omp_get_thread_num();
-            fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-            for (i=mybegin; i<myend; ++i) infnorm_loc = MAX(infnorm_loc, ABS(x[i]));
-            if (infnorm_loc > infnorm) {
+            fasp_get_start_end (myid, nthreads, n, &mybegin, &myend);
+            for ( i = mybegin; i < myend; ++i )
+                infnorm_loc = MAX( infnorm_loc, ABS(x[i]) );
+            
+            if ( infnorm_loc > infnorm ) {
 #pragma omp critical
-                infnorm = MAX(infnorm_loc, infnorm);
+                infnorm = MAX( infnorm_loc, infnorm );
             }
         }
 #endif
     }
     else {
-        for (i=0;i<n;++i) infnorm=MAX(infnorm,ABS(x[i]));
+        for ( i = 0; i < n; ++i ) infnorm = MAX( infnorm, ABS(x[i]) );
     }
     
     return infnorm;
+}
+
+/**
+ * \fn REAL fasp_blas_darray_dotprod (const INT n, const REAL *x, const REAL *y)
+ *
+ * \brief Inner product of two arraies x and y
+ *
+ * \param n    Number of variables
+ * \param x    Pointer to x
+ * \param y    Pointer to y
+ *
+ * \return     Inner product (x,y)
+ *
+ * \author Chensong Zhang
+ * \date   07/01/2009
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
+ */
+REAL fasp_blas_darray_dotprod (const INT    n,
+                               const REAL  *x,
+                               const REAL  *y)
+{
+    SHORT use_openmp = FALSE;
+    register REAL value = 0.0;
+    INT   i;
+    
+#ifdef _OPENMP
+    if ( n > OPENMP_HOLDS ) use_openmp = TRUE;
+#endif
+    
+    if ( use_openmp ) {
+#ifdef _OPENMP
+#pragma omp parallel for reduction(+:value) private(i)
+#endif
+        for ( i = 0; i < n; ++i ) value += x[i]*y[i];
+    }
+    else {
+        for ( i = 0; i < n; ++i ) value += x[i]*y[i];
+    }
+    
+    return value;
 }
 
 /*---------------------------------*/
