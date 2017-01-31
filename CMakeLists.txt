@@ -34,15 +34,15 @@ project(FASP C )
 set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
 
 ########### try to find matching c++ and fortran compilers ############
- include(get_cxx_fc_compilers)
+include(get_cxx_fc_compilers)
 
 ########### check the prefix for installation #########################
- include(install_prefix)
+include(install_prefix)
  
 #
 # OpenMP : defined on command line in the top Makefile
 #
-    if(USE_OPENMP)
+if(USE_OPENMP)
        find_package(OpenMP)
 
        if(OPENMP_FOUND)
@@ -56,32 +56,34 @@ set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
        else(OPENMP_FOUND)
           message(" WARNING: OpenMP was requested but not supported!")
        endif(OPENMP_FOUND)
-    endif(USE_OPENMP)
+endif(USE_OPENMP)
 
 ########## Additional compiler flags (not defined by the build
 
-       if(ADD_CFLAGS)
+if(ADD_CFLAGS)
           set (CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
 	  	  "${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CFLAGS}")	 
-       endif(ADD_CFLAGS)
-       if(ADD_CXXFLAGS)
+endif(ADD_CFLAGS)
+
+if(ADD_CXXFLAGS)
           set (CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE} 
-	  	  "${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CXXFLAGS}")	 
-       endif(ADD_CXXFLAGS)
-       if(ADD_FFLAGS)
+	  	  "${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CXXFLAGS}")
+endif(ADD_CXXFLAGS)
+
+if(ADD_FFLAGS)
           set (CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE} 
 	  	  "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_FFLAGS}")	 
-       endif(ADD_FFLAGS)
+endif(ADD_FFLAGS)
 #
     set(CMAKE_INSTALL_PREFIX "${FASP_SOURCE_DIR}" )
     set(FASPLIB_BASE_PATH "base" CACHE PATH "base path to FASPLIB")
     set(FASP_INSTALL TRUE)
 #
-       if(SHARED) 
+    if(SHARED) 
 	   set(FASP_LIBRARY_TYPE SHARED)
-       else(SHARED)
+    else(SHARED)
 	   set(FASP_LIBRARY_TYPE STATIC)
-       endif(SHARED)   
+    endif(SHARED)   
 #
 if(APPLE)
     cmake_policy(SET "CMP0042" NEW)

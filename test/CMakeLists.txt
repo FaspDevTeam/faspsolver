@@ -5,6 +5,10 @@ set(FASP_TINC_DIR ${FASP_SOURCE_DIR}/test/include)
 
 set(RUNTIME_OUTPUT_DIRECTORY ${FASP_SOURCE_DIR}/test)
 
+if(UNIX OR LINUX)
+	set(${ADD_STDLIBS} m)
+endif()
+
 include_directories(${FASP_TINC_DIR}
 		    ${FASP_INSTALL_PREFIX}/include )
 
@@ -23,15 +27,14 @@ foreach( srcfile ${FASP_TSRC} )
 	 string( REGEX REPLACE "\\.[^\\.]*$" ".ex" execfile ${srcfile} )
 #
 	 add_executable( ${execfile} main/${srcfile} )
-########	 add_dependencies(${execfile} ${FASP_LIBRARY_NAME})
 # 
         target_link_libraries( ${execfile} 
 	 			fasptest 
 	 			${FASP_LIBRARY_NAME}
 				${UMFPACK_LIBRARIES} 
 				${SUPERLU_LIBRARIES} 
-				${MUMPS_LIBRARIES} 
-                ${MKL_LIBRARIES}
+				${MUMPS_LIBRARIES}
+				${MKL_LIBRARIES}
 				${ADD_STDLIBS} ) 
 #
      install(TARGETS ${execfile} 
