@@ -283,17 +283,27 @@ void fasp_blas_darray_axpy (const INT   n,
                             const REAL *x,
                             REAL       *y);
 
+void fasp_blas_darray_axpy_nc2 (const REAL   a,
+                                const REAL  *x,
+                                REAL        *y);
+
+void fasp_blas_darray_axpy_nc3 (const REAL   a,
+                                const REAL  *x,
+                                REAL        *y);
+
+void fasp_blas_darray_axpy_nc5 (const REAL   a,
+                                const REAL  *x,
+                                REAL        *y);
+
+void fasp_blas_darray_axpy_nc7 (const REAL   a,
+                                const REAL  *x,
+                                REAL        *y);
+
 void fasp_blas_darray_axpyz (const INT   n,
                              const REAL  a,
                              const REAL *x,
                              const REAL *y,
                              REAL       *z);
-
-void fasp_blas_darray_axpby (const INT   n,
-                             const REAL  a,
-                             const REAL *x,
-                             const REAL  b,
-                             REAL       *y);
 
 void fasp_blas_darray_axpyz_nc2 (const REAL   a,
                                  const REAL  *x,
@@ -315,25 +325,11 @@ void fasp_blas_darray_axpyz_nc7 (const REAL   a,
                                  const REAL  *y,
                                  REAL        *z);
 
-void fasp_blas_darray_axpy_nc2 (const REAL   a,
-                                const REAL  *x,
-                                REAL        *y);
-
-void fasp_blas_darray_axpy_nc3 (const REAL   a,
-                                const REAL  *x,
-                                REAL        *y);
-
-void fasp_blas_darray_axpy_nc5 (const REAL   a,
-                                const REAL  *x,
-                                REAL        *y);
-
-void fasp_blas_darray_axpy_nc7 (const REAL   a,
-                                const REAL  *x,
-                                REAL        *y);
-
-REAL fasp_blas_darray_dotprod (const INT    n,
-                               const REAL  *x,
-                               const REAL  *y);
+void fasp_blas_darray_axpby (const INT   n,
+                             const REAL  a,
+                             const REAL *x,
+                             const REAL  b,
+                             REAL       *y);
 
 REAL fasp_blas_darray_norm1 (const INT    n,
                              const REAL  *x);
@@ -343,6 +339,10 @@ REAL fasp_blas_darray_norm2 (const INT    n,
 
 REAL fasp_blas_darray_norminf (const INT    n,
                                const REAL  *x);
+
+REAL fasp_blas_darray_dotprod (const INT    n,
+                               const REAL  *x,
+                               const REAL  *y);
 
 
 /*-------- In file: BlaEigen.c --------*/
@@ -1289,17 +1289,17 @@ void fasp_blas_dvec_axpyz (const REAL     a,
                            const dvector *y,
                            dvector       *z);
 
-REAL fasp_blas_dvec_dotprod (const dvector *x,
-                             const dvector *y);
-
-REAL fasp_blas_dvec_relerr (const dvector *x,
-                            const dvector *y);
-
 REAL fasp_blas_dvec_norm1 (const dvector *x);
 
 REAL fasp_blas_dvec_norm2 (const dvector *x);
 
 REAL fasp_blas_dvec_norminf (const dvector *x);
+
+REAL fasp_blas_dvec_dotprod (const dvector *x,
+                             const dvector *y);
+
+REAL fasp_blas_dvec_relerr (const dvector *x,
+                            const dvector *y);
 
 
 /*-------- In file: ItrSmootherBSR.c --------*/

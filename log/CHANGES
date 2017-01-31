@@ -7,6 +7,7 @@ File Name: CHANGES
 - Clean up TCL installation script and help message.
 - Change a few functions from public to private.
 - Mark TODO's in various C files.
+- Update reference manual.
 
 01/30/2017 FASP 1.9.6:
 - Modify fasp.h (affect all FASP projects).
