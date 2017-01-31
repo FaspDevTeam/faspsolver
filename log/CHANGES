@@ -8,6 +8,7 @@ File Name: CHANGES
 - Change a few functions from public to private.
 - Mark TODO's in various C files.
 - Update reference manual.
+- Test CMake on Linux 2.6.18-164.el5.perfctr x86_64.
 
 01/30/2017 FASP 1.9.6:
 - Modify fasp.h (affect all FASP projects).
