@@ -5,8 +5,9 @@ set(FASP_TINC_DIR ${FASP_SOURCE_DIR}/test/include)
 
 set(RUNTIME_OUTPUT_DIRECTORY ${FASP_SOURCE_DIR}/test)
 
+## requires math library
 if(UNIX OR LINUX)
-	set(${ADD_STDLIBS} m)
+	set(ADD_STDLIBS m)
 endif()
 
 include_directories(${FASP_TINC_DIR}

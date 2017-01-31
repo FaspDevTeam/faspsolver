@@ -2,6 +2,11 @@
 
 set(RUNTIME_OUTPUT_DIRECTORY ${FASP_SOURCE_DIR}/tutorial)
 
+## requires math library
+if(UNIX OR LINUX)
+	set(ADD_STDLIBS m)
+endif()
+
 file( GLOB FASP_TUTSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
       main/*.c main/*.f main/*.f90 )
 
