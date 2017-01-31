@@ -128,11 +128,12 @@ static void CMK_ordering (const dCSRmat *A,
                           INT           *oindex,
                           INT           *order)
 {
-    const INT *ia = A->IA;
-    const INT *ja = A->JA;
-    const INT row= A->row;
+    const INT  row = A->row;
+    const INT *ia  = A->IA;
+    const INT *ja  = A->JA;
     
-    INT i, j, sp1, k, flag;
+    INT       i, j, sp1, k;
+    SHORT     flag = 1;
     
     if (s < row) {
         order[s] = jj;

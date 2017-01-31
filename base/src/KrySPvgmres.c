@@ -99,7 +99,7 @@ INT fasp_solver_dcsr_spvgmres (const dCSRmat  *A,
     REAL   r_norm_old  = 0.0;     // save residual norm of previous restart cycle
     INT    d           = 3;       // reduction for restart parameter
     INT    restart_max = restart; // upper bound for restart in each restart cycle
-    INT    restart_min = 3;       // lower bound for restart in each restart cycle (should be small)
+    INT    restart_min = 3;       // lower bound for restart (should be small)
     INT    Restart     = restart; // real restart in some fixed restarted cycle
     
     INT    iter_best = 0;         // initial best known iteration
@@ -477,7 +477,7 @@ INT fasp_solver_dblc_spvgmres (const dBLCmat  *A,
     REAL   r_norm_old  = 0.0;     // save residual norm of previous restart cycle
     INT    d           = 3;       // reduction for restart parameter
     INT    restart_max = restart; // upper bound for restart in each restart cycle
-    INT    restart_min = 3;       // lower bound for restart in each restart cycle (should be small)
+    INT    restart_min = 3;       // lower bound for restart (should be small)
     INT    Restart     = restart; // real restart in some fixed restarted cycle
     
     INT    iter_best = 0;         // initial best known iteration
@@ -856,7 +856,7 @@ INT fasp_solver_dbsr_spvgmres (const dBSRmat  *A,
     REAL   r_norm_old  = 0.0;     // save residual norm of previous restart cycle
     INT    d           = 3;       // reduction for restart parameter
     INT    restart_max = restart; // upper bound for restart in each restart cycle
-    INT    restart_min = 3;       // lower bound for restart in each restart cycle (should be small)
+    INT    restart_min = 3;       // lower bound for restart (should be small)
     INT    Restart     = restart; // real restart in some fixed restarted cycle
     
     INT    iter_best = 0;         // initial best known iteration
@@ -1235,8 +1235,8 @@ INT fasp_solver_dstr_spvgmres (const dSTRmat  *A,
     REAL   r_norm_old  = 0.0;     // save residual norm of previous restart cycle
     INT    d           = 3;       // reduction for restart parameter
     INT    restart_max = restart; // upper bound for restart in each restart cycle
-    INT    restart_min = 3;       // lower bound for restart in each restart cycle (should be small)
-    INT    Restart;               // real restart in some fixed restarted cycle
+    INT    restart_min = 3;       // lower bound for restart (should be small)
+    INT    Restart     = restart; // real restart in some fixed restarted cycle
     
     INT    iter_best = 0;         // initial best known iteration
     REAL   absres_best = BIGREAL; // initial best known residual

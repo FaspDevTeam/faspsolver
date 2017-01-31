@@ -34,7 +34,7 @@
      172 ./base/src/BlaILUSetupCSR.c
     1271 ./base/src/BlaILUSetupSTR.c
     3265 ./base/src/BlaIO.c
-     196 ./base/src/BlaOrderingCSR.c
+     197 ./base/src/BlaOrderingCSR.c
      601 ./base/src/BlaSchwarzSetup.c
      966 ./base/src/BlaSmallMat.c
      783 ./base/src/BlaSmallMatInv.c
@@ -54,7 +54,7 @@
     1859 ./base/src/BlaSpmvSTR.c
      321 ./base/src/BlaVector.c
     1702 ./base/src/ItrSmootherBSR.c
-    2322 ./base/src/ItrSmootherCSR.c
+    2321 ./base/src/ItrSmootherCSR.c
       91 ./base/src/ItrSmootherCSRcr.c
      609 ./base/src/ItrSmootherCSRpoly.c
     1903 ./base/src/ItrSmootherSTR.c
@@ -72,7 +72,7 @@
     1408 ./base/src/KrySPgmres.c
     1384 ./base/src/KrySPminres.c
     1560 ./base/src/KrySPvgmres.c
-     447 ./base/src/PreAMGCoarsenCR.c
+     448 ./base/src/PreAMGCoarsenCR.c
     2086 ./base/src/PreAMGCoarsenRS.c
      877 ./base/src/PreAMGInterp.c
      839 ./base/src/PreAMGInterpEM.c
@@ -101,4 +101,4 @@
      247 ./base/src/SolMatFree.c
      419 ./base/src/SolSTR.c
      320 ./base/src/SolWrapper.c
-   86630 total
+   86631 total

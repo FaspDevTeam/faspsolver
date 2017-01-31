@@ -9,6 +9,9 @@
  *  Copyright (C) 2010--2017 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
+ *
+ *  // TODO: Not completed! --Chensong
+ *  // TODO: Fix Doxygen issues in this file! --Chensong
  */
 
 #include <math.h>
@@ -284,10 +287,8 @@ static INT GraphRemove (Link   *list,
 /**
  * \fn static INT indset (INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, 
  *                        INT *cf, REAL *ma)
- * \brief finds independent set of the graph  
+ * \brief Find independent set of the graph
  *
- * \brief graphadd
- * 
  * \param cand
  * \param cpt
  * \param fpt

@@ -56,7 +56,7 @@ INT fasp_poisson_gmg1d (REAL         *u,
     const INT  max_itr_num = 100;
     
     REAL      *u0, *r0, *b0;
-    REAL       norm_r, norm_r0, norm_r1, error, factor;
+    REAL       norm_r, norm_r0, norm_r1, factor, error = BIGREAL;
     INT        i, *level, count = 0;
     REAL       AMG_start, AMG_end;
     
@@ -181,7 +181,7 @@ INT fasp_poisson_gmg2d (REAL         *u,
     const INT  max_itr_num = 100;
     
     REAL *u0, *b0, *r0;
-    REAL norm_r, norm_r0, norm_r1, error, factor;
+    REAL norm_r, norm_r0, norm_r1, factor, error = BIGREAL;
     INT i, k, count = 0, *nxk, *nyk, *level;
     REAL AMG_start, AMG_end;
     
@@ -318,7 +318,7 @@ INT fasp_poisson_gmg3d (REAL         *u,
     const INT  max_itr_num = 100;
     
     REAL *u0,*r0,*b0;
-    REAL norm_r,norm_r0,norm_r1, error, factor;
+    REAL norm_r,norm_r0,norm_r1, factor, error = BIGREAL;
     INT i, k, count = 0, *nxk, *nyk, *nzk, *level;
     REAL AMG_start, AMG_end;
     
