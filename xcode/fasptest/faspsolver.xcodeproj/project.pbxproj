@@ -230,7 +230,7 @@
 		9FF1DD481E3F192900F013F2 /* SolMatFree.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SolMatFree.c; path = ../../base/src/SolMatFree.c; sourceTree = "<group>"; };
 		9FF1DD491E3F192900F013F2 /* SolSTR.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SolSTR.c; path = ../../base/src/SolSTR.c; sourceTree = "<group>"; };
 		9FF1DD4A1E3F192900F013F2 /* SolWrapper.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = SolWrapper.c; path = ../../base/src/SolWrapper.c; sourceTree = "<group>"; };
-		9FF1DDA41E3F2D7500F013F2 /* faspsolver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = faspsolver; sourceTree = BUILT_PRODUCTS_DIR; };
+		9FF1DDA41E3F2D7500F013F2 /* faspsolver */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = faspsolver; path = /Users/zhangcs/Programming/FASP/faspsolver/xcode/fasptest/build/Debug/faspsolver; sourceTree = "<absolute>"; };
 		9FF1DDA51E3F2E3900F013F2 /* regression.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = regression.c; path = ../../test/main/regression.c; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
@@ -251,7 +251,6 @@
 				9FF1DCC21E3F146800F013F2 /* extra */,
 				9FF1DCC11E3F144700F013F2 /* base */,
 				9FF1DCB91E3F13C200F013F2 /* test */,
-				9FF1DDA41E3F2D7500F013F2 /* faspsolver */,
 			);
 			sourceTree = "<group>";
 		};

@@ -290,35 +290,35 @@ void fasp_ilu_data_free (ILU_data *ILUdata)
 }
 
 /**
- * \fn void fasp_swz_data_free (SWZ_data *Schwarz)
+ * \fn void fasp_swz_data_free (SWZ_data *swzdata)
  * \brief Free SWZ_data data memeory space
  *
- * \param *Schwarz  pointer to the AMG_data data
+ * \param swzdata      Pointer to the SWZ_data for Schwarz methods
  *
  * \author Xiaozhe Hu
  * \date   2010/04/06
  */
-void fasp_swz_data_free (SWZ_data *Schwarz)
+void fasp_swz_data_free (SWZ_data *swzdata)
 {
     INT i;
-    fasp_dcsr_free(&Schwarz->A);
+    fasp_dcsr_free(&swzdata->A);
     
-    for (i=0; i<Schwarz->nblk; ++i) fasp_dcsr_free (&((Schwarz->blk_data)[i]));
+    for (i=0; i<swzdata->nblk; ++i) fasp_dcsr_free (&((swzdata->blk_data)[i]));
     
-    Schwarz->nblk = 0;
-    fasp_mem_free (Schwarz->iblock);
-    fasp_mem_free (Schwarz->jblock);
-    fasp_dvec_free (&Schwarz->rhsloc1);
-    fasp_dvec_free (&Schwarz->xloc1);
+    swzdata->nblk = 0;
+    fasp_mem_free (swzdata->iblock);
+    fasp_mem_free (swzdata->jblock);
+    fasp_dvec_free (&swzdata->rhsloc1);
+    fasp_dvec_free (&swzdata->xloc1);
     
-    Schwarz->memt = 0;
-    fasp_mem_free (Schwarz->mask);
-    fasp_mem_free (Schwarz->maxa);
+    swzdata->memt = 0;
+    fasp_mem_free (swzdata->mask);
+    fasp_mem_free (swzdata->maxa);
     
 #if WITH_MUMPS
-    if (Schwarz->mumps == NULL) return;
+    if (swzdata->mumps == NULL) return;
     
-    for (i=0; i<Schwarz->nblk; ++i) fasp_mumps_free (&((Schwarz->mumps)[i]));
+    for (i=0; i<swzdata->nblk; ++i) fasp_mumps_free (&((swzdata->mumps)[i]));
 #endif
 }
 

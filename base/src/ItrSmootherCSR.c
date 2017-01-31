@@ -1531,7 +1531,7 @@ static void swep2db (INT   *ia,
 {
     INT j, j0, i, i0;
     INT begin_row, end_row, ii, jj;
-    REAL t, d;
+    REAL t, d = 1.0;
     
     nbegx = nx + nbegx;
     nbegy = ny + nbegy;
@@ -1557,7 +1557,6 @@ static void swep2db (INT   *ia,
         }
     }
 }
-
 
 /**
  * \fn static void swep3db (INT *ia, INT *ja, REAL *aa, REAL *u, REAL *f, INT nbegx,
@@ -1599,7 +1598,7 @@ static void swep3db (INT   *ia,
 {
     INT nxy, k, k0, j, j0, i, i0;
     INT begin_row, end_row, ii, jj;
-    REAL t, d;
+    REAL t, d = 1.0;
     
     nxy=nx*ny;
     nbegx = nx + nbegx;
