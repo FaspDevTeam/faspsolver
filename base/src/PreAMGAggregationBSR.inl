@@ -10,7 +10,7 @@
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
- *  // TODO: Get rid of unused functions! --Chensong
+ *  // TODO: Unused functions! --Chensong
  */
 
 /*---------------------------------*/
@@ -20,30 +20,31 @@
 /**
  * \fn static void form_boolean_p_bsr (const ivector *vertices, dBSRmat *tentp,
  *                                     const AMG_data_bsr *mgl,
- *                                     const INT levelNum, const INT num_agg)
+ *                                     const INT NumLevels, const INT NumAggregates)
  *
- * \brief Form boolean prolongations in dBSRmat (only assume constant vector is in the null space)
+ * \brief Form boolean prolongations in dBSRmat (assume constant vector is in 
+ *        the null space)
  *
  * \param vertices           Pointer to the aggregation of vertices
  * \param tentp              Pointer to the prolongation operators
  * \param mgl                Pointer to AMG levels
- * \param levelNum           Level number
- * \param num_agg            Number of aggregations
+ * \param NumLevels          Level number
+ * \param NumAggregates      Number of aggregations
  *
  * \author Xiaozhe Hu
  * \date   05/27/2014
  */
-static void form_boolean_p_bsr (const ivector *vertices,
-                                dBSRmat *tentp,
-                                const AMG_data_bsr *mgl,
-                                const INT levelNum,
-                                const INT num_agg)
+static void form_boolean_p_bsr (const ivector       *vertices,
+                                dBSRmat             *tentp,
+                                const AMG_data_bsr  *mgl,
+                                const INT            NumLevels,
+                                const INT            NumAggregates)
 {
     INT i, j;
     
     /* Form tentative prolongation */
     tentp->ROW = vertices->row;
-    tentp->COL = num_agg;
+    tentp->COL = NumAggregates;
     tentp->nb  = mgl->A.nb;
     INT nb2    = tentp->nb * tentp->nb;
     
@@ -89,30 +90,31 @@ static void form_boolean_p_bsr (const ivector *vertices,
 
 /**
  * \fn static void form_tentative_p_bsr1 (const ivector *vertices, dBSRmat *tentp,
- *                                        const AMG_data_bsr *mgl, const INT levelNum,
- *                                        const INT num_agg, const const INT dim, 
+ *                                        const AMG_data_bsr *mgl, const INT NumLevels,
+ *                                        const INT NumAggregates, const const INT dim, 
  *                                        REAL **basis)
  *
- * \brief Form tentative prolongation for BSR format matrix (use general basis for null space)
+ * \brief Form tentative prolongation for BSR format matrix (use general basis for 
+ *        the null space)
  *
  * \param vertices           Pointer to the aggregation of vertices
  * \param tentp              Pointer to the prolongation operators
  * \param mgl                Pointer to AMG levels
- * \param levelNum           Level number
- * \param num_agg            Number of aggregations
+ * \param NumLevels          Level number
+ * \param NumAggregates      Number of aggregations
  * \param dim                Dimension of the near kernel space
  * \param basis              Pointer to the basis of the near kernel space
  *
  * \author Xiaozhe Hu
  * \date   05/27/2014
  */
-static void form_tentative_p_bsr1 (const ivector *vertices,
-                                   dBSRmat *tentp,
-                                   const AMG_data_bsr *mgl,
-                                   const INT levelNum,
-                                   const INT num_agg,
-                                   const INT dim,
-                                   REAL **basis)
+static void form_tentative_p_bsr1 (const ivector       *vertices,
+                                   dBSRmat             *tentp,
+                                   const AMG_data_bsr  *mgl,
+                                   const INT            NumLevels,
+                                   const INT            NumAggregates,
+                                   const INT            dim,
+                                   REAL               **basis)
 {
     INT i, j, k;
     
@@ -122,7 +124,7 @@ static void form_tentative_p_bsr1 (const ivector *vertices,
     
     /* Form tentative prolongation */
     tentp->ROW = vertices->row;
-    tentp->COL = num_agg*nnz_row;
+    tentp->COL = NumAggregates*nnz_row;
     tentp->nb = mgl->A.nb;
     const INT nb = tentp->nb;
     const INT nb2 = nb * nb;
@@ -182,27 +184,27 @@ static void form_tentative_p_bsr1 (const ivector *vertices,
 
 /**
  * \fn static void smooth_agg_bsr (const dBSRmat *A, dBSRmat *tentp, dBSRmat *P,
- *                                 const AMG_param *param, const INT levelNum, 
+ *                                 const AMG_param *param, const INT NumLevels, 
  *                                 const dCSRmat *N)
  *
  * \brief Smooth the tentative prolongation
  *
- * \param A         Pointer to the coefficient matrices (dBSRmat)
- * \param tentp     Pointer to the tentative prolongation operators (dBSRmat)
- * \param P         Pointer to the prolongation operators (dBSRmat)
- * \param param     Pointer to AMG parameters
- * \param levelNum  Current level number
- * \param N         Pointer to strongly coupled neighbors
+ * \param A           Pointer to the coefficient matrices (dBSRmat)
+ * \param tentp       Pointer to the tentative prolongation operators (dBSRmat)
+ * \param P           Pointer to the prolongation operators (dBSRmat)
+ * \param param       Pointer to AMG parameters
+ * \param NumLevels   Current level number
+ * \param N           Pointer to strongly coupled neighbors
  *
  * \author Xiaozhe Hu
  * \date   05/26/2014
  */
-static void smooth_agg_bsr (const dBSRmat *A,
-                            dBSRmat *tentp,
-                            dBSRmat *P,
-                            const AMG_param *param,
-                            const INT levelNum,
-                            const dCSRmat *N)
+static void smooth_agg_bsr (const dBSRmat    *A,
+                            dBSRmat          *tentp,
+                            dBSRmat          *P,
+                            const AMG_param  *param,
+                            const INT         NumLevels,
+                            const dCSRmat    *N)
 {
     const SHORT filter = param->smooth_filter;
     const INT   row = A->ROW, col= A->COL, nnz = A->NNZ;
@@ -270,27 +272,27 @@ static void smooth_agg_bsr (const dBSRmat *A,
 
 /**
  * \fn static void smooth_agg_bsr1 (const dBSRmat *A, dBSRmat *tentp, dBSRmat *P,
- *                                  const AMG_param *param, const INT levelNum, 
+ *                                  const AMG_param *param, const INT NumLevels, 
  *                                  const dCSRmat *N)
  *
  * \brief Smooth the tentative prolongation (without filter)
  *
- * \param A         Pointer to the coefficient matrices (dBSRmat)
- * \param tentp     Pointer to the tentative prolongation operators (dBSRmat)
- * \param P         Pointer to the prolongation operators (dBSRmat)
- * \param param     Pointer to AMG parameters
- * \param levelNum  Current level number
- * \param N         Pointer to strongly coupled neighbors
+ * \param A            Pointer to the coefficient matrices (dBSRmat)
+ * \param tentp        Pointer to the tentative prolongation operators (dBSRmat)
+ * \param P            Pointer to the prolongation operators (dBSRmat)
+ * \param param        Pointer to AMG parameters
+ * \param NumLevels    Current level number
+ * \param N            Pointer to strongly coupled neighbors
  *
  * \author Xiaozhe Hu
  * \date   05/26/2014
  */
-static void smooth_agg_bsr1 (const dBSRmat *A,
-                             dBSRmat *tentp,
-                             dBSRmat *P,
-                             const AMG_param *param,
-                             const INT levelNum,
-                             const dCSRmat *N)
+static void smooth_agg_bsr1 (const dBSRmat    *A,
+                             dBSRmat          *tentp,
+                             dBSRmat          *P,
+                             const AMG_param  *param,
+                             const INT         NumLevels,
+                             const dCSRmat    *N)
 {
     const INT   row = A->ROW;
     const INT   nb = A->nb;

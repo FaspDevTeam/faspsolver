@@ -740,8 +740,8 @@ void fasp_smat_invp_nc (REAL      *a,
 INT fasp_smat_inv (REAL      *a,
                    const INT  n);
 
-REAL fasp_smat_Linfinity (REAL      *A,
-                          const INT  n);
+REAL fasp_smat_Linf (const REAL  *A,
+                     const INT    n);
 
 void fasp_smat_identity_nc2 (REAL *a);
 

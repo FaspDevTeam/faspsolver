@@ -12,6 +12,8 @@
  *---------------------------------------------------------------------------------
  *
  *  \warning This file is also used in FASP4BLKOIL!!!
+ *
+ *  // TODO: Get rid of unused functions! --Chensong
  */
 
 #ifdef _OPENMP
@@ -27,7 +29,7 @@
 /**
  * \fn static dCSRmat condenseBSR (const dBSRmat *A)
  *
- * \brief get dCSRmat block from a dBSRmat matrix
+ * \brief Form a dCSRmat matrix from a dBSRmat matrix: use the (1,1)-entry
  *
  * \param A    Pointer to the BSR format matrix
  *
@@ -39,42 +41,37 @@
 static dCSRmat condenseBSR (const dBSRmat *A)
 {
     // information about A
-    const INT ROW = A->ROW;
-    const INT COL = A->COL;
-    const INT NNZ = A->NNZ;
-    const SHORT nc = A->nb;
-    const INT nc2 = nc*nc;
-    const REAL TOL = 1e-8;
+    const INT   ROW = A->ROW;
+    const INT   COL = A->COL;
+    const INT   NNZ = A->NNZ;
+    const SHORT  nc = A->nb;
+    const SHORT nc2 = nc*nc;
+    const REAL  TOL = 1e-8;
     
-    REAL *val = A->val;
-    INT *IA = A->IA;
-    INT *JA = A->JA;
+    const REAL *val = A->val;
+    const INT  *IA  = A->IA;
+    const INT  *JA  = A->JA;
     
-    // Pressure block
-    dCSRmat P_csr = fasp_dcsr_create(ROW, COL, NNZ);
-    REAL *Pval=P_csr.val;
-    
-    // get pressure block
-    memcpy(P_csr.JA, JA, NNZ*sizeof(INT));
-    memcpy(P_csr.IA, IA, (ROW+1)*sizeof(INT));
+    // (1,1) block
+    dCSRmat  P_csr = fasp_dcsr_create(ROW, COL, NNZ);
+    REAL    *Pval  = P_csr.val;
+    memcpy (P_csr.JA, JA, NNZ*sizeof(INT));
+    memcpy (P_csr.IA, IA, (ROW+1)*sizeof(INT));
     
 #ifdef _OPENMP
     INT i;
     
 #pragma omp parallel for if(NNZ>OPENMP_HOLDS)
-    for (i=NNZ-1; i>=0; i--) {
-        Pval[i] = val[i*nc2];
-    }
+    for ( i=NNZ-1; i>=0; i-- ) Pval[i] = val[i*nc2];
+
 #else
     INT i, j;
     
-    for (i=NNZ, j=NNZ*nc2-nc2 + (0*nc+0); i--; j-=nc2) {
-        Pval[i] = val[j];
-    }
+    for ( i=NNZ, j=NNZ*nc2-nc2 + (0*nc+0); i--; j-=nc2 ) Pval[i] = val[j];
 #endif
     
     // compress CSR format
-    fasp_dcsr_compress_inplace(&P_csr,TOL);
+    fasp_dcsr_compress_inplace (&P_csr,TOL);
     
     // return P
     return P_csr;
@@ -83,7 +80,7 @@ static dCSRmat condenseBSR (const dBSRmat *A)
 /**
  * \fn static dCSRmat condenseBSRLinf (const dBSRmat *A)
  *
- * \brief get dCSRmat from a dBSRmat matrix using L_inf norm of each small block
+ * \brief Form a dCSRmat matrix from a dBSRmat matrix: use inf-norm of each block
  *
  * \param A    Pointer to the BSR format matrix
  *
@@ -95,43 +92,36 @@ static dCSRmat condenseBSR (const dBSRmat *A)
 static dCSRmat condenseBSRLinf (const dBSRmat *A)
 {
     // information about A
-    const INT ROW = A->ROW;
-    const INT COL = A->COL;
-    const INT NNZ = A->NNZ;
-    const SHORT nc = A->nb;
-    const INT nc2 = nc*nc;
-    const REAL TOL = 1e-8;
+    const INT   ROW = A->ROW;
+    const INT   COL = A->COL;
+    const INT   NNZ = A->NNZ;
+    const SHORT  nc = A->nb;
+    const SHORT nc2 = nc*nc;
+    const REAL  TOL = 1e-8;
     
-    REAL *val = A->val;
-    INT *IA = A->IA;
-    INT *JA = A->JA;
+    const REAL *val = A->val;
+    const INT  *IA  = A->IA;
+    const INT  *JA  = A->JA;
     
     // CSR matrix
-    dCSRmat Acsr = fasp_dcsr_create(ROW, COL, NNZ);
-    REAL *Aval=Acsr.val;
+    dCSRmat  Acsr = fasp_dcsr_create (ROW, COL, NNZ);
+    REAL    *Aval = Acsr.val;
     
     // get structure
-    memcpy(Acsr.JA, JA, NNZ*sizeof(INT));
-    memcpy(Acsr.IA, IA, (ROW+1)*sizeof(INT));
+    memcpy (Acsr.JA, JA, NNZ*sizeof(INT));
+    memcpy (Acsr.IA, IA, (ROW+1)*sizeof(INT));
     
     INT i, j, k;
     INT row_start, row_end;
     
-    for (i=0; i<ROW; i++){
+    for ( i=0; i<ROW; i++ ) {
         
         row_start = A->IA[i]; row_end = A->IA[i+1];
         
-        for (k = row_start; k<row_end; k++) {
-            
+        for ( k = row_start; k < row_end; k++ ) {
             j = A->JA[k];
-            
-            if ( i == j ) {
-                Aval[k] = fasp_smat_Linfinity(val+k*nc2, nc);
-            }
-            else {
-                Aval[k] = (-1)*fasp_smat_Linfinity(val+k*nc2, nc);
-            }
-            
+            Aval[k] = fasp_smat_Linf (val+k*nc2, nc);
+            if ( i != j ) Aval[k] = -Aval[k];
         }
         
     }
@@ -145,36 +135,35 @@ static dCSRmat condenseBSRLinf (const dBSRmat *A)
 
 /**
  * \fn static void form_boolean_p (const ivector *vertices, dCSRmat *tentp, 
- *                                 const INT levelNum, const INT num_aggregations)
+ *                                 const INT NumLevels, const INT NumAggregates)
  *
  * \brief Form aggregation based on strong coupled neighbors
  *
  * \param vertices           Pointer to the aggregation of vertices
  * \param tentp              Pointer to the prolongation operators
- * \param levelNum           Level number
- * \param num_aggregations   Number of aggregations
+ * \param NumLevels          Level number
+ * \param NumAggregates      Number of aggregations
  *
  * \author Xiaozhe Hu
  * \date   09/29/2009
  */
-static void form_boolean_p (const ivector *vertices,
-                            dCSRmat *tentp,
-                            const INT levelNum,
-                            const INT num_aggregations)
+static void form_boolean_p (const ivector  *vertices,
+                            dCSRmat        *tentp,
+                            const INT       NumLevels,
+                            const INT       NumAggregates)
 {
     INT i, j;
     
     /* Form tentative prolongation */
     tentp->row = vertices->row;
-    tentp->col = num_aggregations;
+    tentp->col = NumAggregates;
     tentp->nnz = vertices->row;
-    
     tentp->IA  = (INT *)fasp_mem_calloc(tentp->row+1,sizeof(INT));
     
     // local variables
-    INT  *IA = tentp->IA;
-    INT  *vval = vertices->val;
-    const INT row = tentp->row;
+    INT       *IA   = tentp->IA;
+    INT       *vval = vertices->val;
+    const INT  row  = tentp->row;
     
     // first run
     for ( i = 0, j = 0; i < row; i++ ) {
@@ -205,14 +194,14 @@ static void form_boolean_p (const ivector *vertices,
 /**
  * \fn static void form_pairwise (const dCSRmat *A, const INT pair,
  *                                const REAL k_tg, ivector *vertices,
- *                                INT *num_aggregations)
+ *                                INT *NumAggregates)
  *
  * \brief Form aggregation based on pairwise matching
  *
  * \param A                 Pointer to the coefficient matrices
  * \param pair              Number of pairs in matching
  * \param vertices          Pointer to the aggregation of vertices
- * \param num_aggregations  Pointer to number of aggregations
+ * \param NumAggregates     Pointer to number of aggregations
  *
  * \author Xiaoping Li, Zheng Li, Chensong Zhang
  * \date   04/21/2014
@@ -220,18 +209,17 @@ static void form_boolean_p (const ivector *vertices,
  * \note Refer to Artem Napov and Yvan Notay "An algebraic multigrid
  *       method with guaranteed convergence rate" 2011.
  */
-static void form_pairwise (const dCSRmat * A,
-                           const INT pair,
-                           const REAL k_tg,
-                           ivector *vertices,
-                           INT *num_aggregations)
+static void form_pairwise (const dCSRmat  *A,
+                           const INT       pair,
+                           const REAL      k_tg,
+                           ivector        *vertices,
+                           INT            *NumAggregates)
 {
     const INT row  = A->row;
-    //const REAL k_tg = 8.0;//7.65;
     
-    INT  *AIA  = A->IA;
-    INT  *AJA  = A->JA;
-    REAL *Aval = A->val;
+    const INT  *AIA  = A->IA;
+    const INT  *AJA  = A->JA;
+    const REAL *Aval = A->val;
     
     INT   i, j, row_start, row_end;
     REAL  sum;
@@ -288,7 +276,7 @@ static void form_pairwise (const dCSRmat * A,
     /* Step 3. start the pairwise aggregation                  */
     /*---------------------------------------------------------*/
     
-    *num_aggregations = 0;
+    *NumAggregates = 0;
     
     for ( i = 0; i < row; i++ ) {
         
@@ -324,11 +312,11 @@ static void form_pairwise (const dCSRmat * A,
             }
         }
         
-        vertices->val[i] = *num_aggregations;
+        vertices->val[i] = *NumAggregates;
         
-        if ( min_mu <= k_tg ) vertices->val[index] = *num_aggregations;
+        if ( min_mu <= k_tg ) vertices->val[index] = *NumAggregates;
         
-        *num_aggregations += 1;
+        *NumAggregates += 1;
     }
     
     fasp_mem_free(s);
@@ -337,7 +325,7 @@ static void form_pairwise (const dCSRmat * A,
 /**
  * \fn static SHORT aggregation_pairwise (dCSRmat *A, AMG_param *param,
  *                                        const INT level, ivector *vertices,
- *                                        INT *num_aggregations)
+ *                                        INT *NumAggregates)
  *
  * \brief AMG coarsening based on pairwise matching aggregation
  *
@@ -345,7 +333,7 @@ static void form_pairwise (const dCSRmat * A,
  * \param param             Pointer to AMG parameters
  * \param level             Level number
  * \param vertices          Pointer to the aggregation of vertices
- * \param num_aggregations  Pointer to number of aggregations
+ * \param NumAggregates     Pointer to number of aggregations
  *
  * \author Xiaoping Li, Zheng Li, Chensong Zhang
  * \date   04/21/2014
@@ -356,11 +344,11 @@ static void form_pairwise (const dCSRmat * A,
  *
  * Modified by Chensong Zhang, Zheng Li on 07/29/2014
  */
-static SHORT aggregation_pairwise (AMG_data *mgl,
-                                   AMG_param *param,
-                                   const INT level,
-                                   ivector *vertices,
-                                   INT *num_aggregations)
+static SHORT aggregation_pairwise (AMG_data   *mgl,
+                                   AMG_param  *param,
+                                   const INT   level,
+                                   ivector    *vertices,
+                                   INT        *NumAggregates)
 {
     const INT  pair_number = param->pair_number;
     dCSRmat  * ptrA = &mgl[level].A;
@@ -442,7 +430,7 @@ static SHORT aggregation_pairwise (AMG_data *mgl,
             vertices[level].val[i] = aggindex;
         }
     }
-    *num_aggregations = num_agg;
+    *NumAggregates = num_agg;
     
     /*-- clean memory --*/
     for ( i = 1; i < dopass; ++i ) {
@@ -462,17 +450,17 @@ END:
 
 /**
  * \fn static SHORT aggregation_vmb (dCSRmat *A, ivector *vertices, AMG_param *param,
- *                                   const INT levelNum, dCSRmat *Neigh, 
- *                                   INT *num_aggregations)
+ *                                   const INT NumLevels, dCSRmat *Neigh, 
+ *                                   INT *NumAggregates)
  *
  * \brief Form aggregation based on strong coupled neighbors
  *
  * \param A                 Pointer to the coefficient matrices
  * \param vertices          Pointer to the aggregation of vertices
  * \param param             Pointer to AMG parameters
- * \param levelNum          Level number
+ * \param NumLevels          Level number
  * \param Neigh             Pointer to strongly coupled neighbors
- * \param num_aggregations  Pointer to number of aggregations
+ * \param NumAggregates  Pointer to number of aggregations
  *
  * \author Xiaozhe Hu
  * \date   09/29/2009
@@ -483,12 +471,12 @@ END:
  *
  * Modified by Zheng Li, Chensong Zhang on 07/29/2014
  */
-static SHORT aggregation_vmb (dCSRmat *A,
-                              ivector *vertices,
-                              AMG_param *param,
-                              const INT levelNum,
-                              dCSRmat *Neigh,
-                              INT *num_aggregations)
+static SHORT aggregation_vmb (dCSRmat    *A,
+                              ivector    *vertices,
+                              AMG_param  *param,
+                              const INT   NumLevels,
+                              dCSRmat    *Neigh,
+                              INT        *NumAggregates)
 {
     const INT    row = A->row, col = A->col, nnz = A->IA[row]-A->IA[0];
     const INT  * AIA = A->IA, * AJA = A->JA;
@@ -512,7 +500,7 @@ static SHORT aggregation_vmb (dCSRmat *A,
     fasp_dcsr_getdiag(0, A, &diag);  // get the diagonal entries
     
     if ( GE(param->tentative_smooth, SMALLREAL) ) {
-        strongly_coupled = param->strong_coupled * pow(0.5, levelNum-1);
+        strongly_coupled = param->strong_coupled * pow(0.5, NumLevels-1);
     }
     else {
         strongly_coupled = param->strong_coupled;
@@ -562,7 +550,7 @@ static SHORT aggregation_vmb (dCSRmat *A,
     /*------------------------------------------*/
     fasp_ivec_alloc(row, vertices);
     fasp_iarray_set(row, vertices->val, -2);
-    *num_aggregations = 0;
+    *NumAggregates = 0;
     
     /*-------------*/
     /*   Step 1.   */
@@ -583,18 +571,18 @@ static SHORT aggregation_vmb (dCSRmat *A,
             }
             if ( subset ) {
                 count = 0;
-                vertices->val[i] = *num_aggregations;
+                vertices->val[i] = *NumAggregates;
                 num_left--;
                 count++;
                 row_start = NIA[i]; row_end = NIA[i+1];
                 for ( j = row_start; j < row_end; ++j ) {
                     if ( (NJA[j]!=i) && (count < max_aggregation) ) {
-                        vertices->val[NJA[j]] = *num_aggregations;
+                        vertices->val[NJA[j]] = *NumAggregates;
                         num_left--;
                         count ++;
                     }
                 }
-                (*num_aggregations)++;
+                (*NumAggregates)++;
             }
         }
     }
@@ -604,13 +592,13 @@ static SHORT aggregation_vmb (dCSRmat *A,
     /*-------------*/
     INT *temp_C = (INT*)fasp_mem_calloc(row,sizeof(INT));
     
-    if ( *num_aggregations < MIN_CDOF ) {
+    if ( *NumAggregates < MIN_CDOF ) {
         status = ERROR_AMG_COARSEING; goto END;
     }
     
-    num_each_agg = (INT*)fasp_mem_calloc(*num_aggregations,sizeof(INT));
+    num_each_agg = (INT*)fasp_mem_calloc(*NumAggregates,sizeof(INT));
     
-    //for ( i = 0; i < *num_aggregations; i++ ) num_each_agg[i] = 0; // initialize
+    //for ( i = 0; i < *NumAggregates; i++ ) num_each_agg[i] = 0; // initialize
     
     for ( i = row; i--; ) {
         temp_C[i] = vertices->val[i];
@@ -639,19 +627,19 @@ static SHORT aggregation_vmb (dCSRmat *A,
         for ( i = 0; i < row; ++i ) {
             if ( vertices->val[i] < UNPT ) {
                 count = 0;
-                vertices->val[i] = *num_aggregations;
+                vertices->val[i] = *NumAggregates;
                 num_left--;
                 count++;
                 row_start = NIA[i]; row_end = NIA[i+1];
                 for ( j = row_start; j < row_end; ++j ) {
                     if ( (NJA[j]!=i) && (vertices->val[NJA[j]] < UNPT)
                         && (count<max_aggregation) ) {
-                        vertices->val[NJA[j]] = *num_aggregations;
+                        vertices->val[NJA[j]] = *NumAggregates;
                         num_left--;
                         count++;
                     }
                 }
-                (*num_aggregations)++;
+                (*NumAggregates)++;
             }
         }
     }

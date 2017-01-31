@@ -14,7 +14,7 @@
  *
  *  \warning Do NOT use auto-indentation in this file!!!
  *
- *  // TODO: Get rid of unused functions! --Chensong
+ *  // TODO: Unused functions! --Chensong
  */
 
 #ifdef _OPENMP
@@ -43,12 +43,12 @@
  * \author Zheng Li, Chensong Zhang
  * \date   12/23/2014
  */
-static void pair_aggregate_init (const dCSRmat *A,
-                                 const SHORT checkdd,
-                                 const REAL kaptg,
-                                 INT *iperm,
-                                 ivector *vertices,
-                                 REAL *s)
+static void pair_aggregate_init (const dCSRmat  *A,
+                                 const SHORT     checkdd,
+                                 const REAL      kaptg,
+                                 INT            *iperm,
+                                 ivector        *vertices,
+                                 REAL           *s)
 {
     INT i, j, col;
     INT row = A->row;
@@ -117,11 +117,11 @@ static void pair_aggregate_init (const dCSRmat *A,
  * \author Zheng Li, Chensong Zhang
  * \date   12/23/2014
  */
-static void pair_aggregate_init2 (const dCSRmat *A,
-                                  ivector *map,
-                                  ivector *vertices,
-                                  REAL *s1,
-                                  REAL *s)
+static void pair_aggregate_init2 (const dCSRmat  *A,
+                                  ivector        *map,
+                                  ivector        *vertices,
+                                  REAL           *s1,
+                                  REAL           *s)
 {
     INT i, j, k, col, nc;
     INT *ia = A->IA;
@@ -129,9 +129,9 @@ static void pair_aggregate_init2 (const dCSRmat *A,
     REAL *val = A->val;
     
     REAL si;
-    INT num_agg = map->row/2;
+    const INT NumAggregates = map->row/2;
     
-    for (i=0; i<num_agg; ++i) {
+    for (i=0; i<NumAggregates; ++i) {
         j = map->val[2*i];
         si = 0;
         si = si + s1[j];
@@ -167,7 +167,7 @@ static void pair_aggregate_init2 (const dCSRmat *A,
  * \author Zheng Li, Chensong Zhang
  * \date   12/23/2014
  */
-static SHORT cholesky_factorization_check (REAL W[8][8],
+static SHORT cholesky_factorization_check (REAL      W[8][8],
                                            const INT agg_size)
 {
     REAL T;
@@ -326,13 +326,13 @@ static SHORT cholesky_factorization_check (REAL W[8][8],
  *
  * Use a similar method as in AGMG; refer to Yvan Notay's AGMG-3.2.0.
  */
-static SHORT aggregation_quality (const dCSRmat *A,
-                                  const ivector *tentmap,
-                                  const REAL *s,
-                                  const INT root,
-                                  const INT pair,
-                                  const INT dopass,
-                                  const REAL quality_bound)
+static SHORT aggregation_quality (const dCSRmat  *A,
+                                  const ivector  *tentmap,
+                                  const REAL     *s,
+                                  const INT       root,
+                                  const INT       pair,
+                                  const INT       dopass,
+                                  const REAL      quality_bound)
 {
     const INT  *IA  = A->IA;
     const INT  *JA  = A->JA;
@@ -467,17 +467,17 @@ static SHORT aggregation_quality (const dCSRmat *A,
 /**
  * \fn void first_pairwise_unsymm (const dCSRmat * A, const REAL k_tg, INT *order,
  *                                 ivector *vertices, ivector *map, REAL*s,
- *                                 INT *num_agg)
+ *                                 INT *NumAggregates)
  *
  * \brief Form initial pass aggregation for non-symmetric problem
  *
- * \param A          Pointer to the coefficient matrices
- * \param k_tg       Two-grid convergence parameter
- * \param order      Pointer to the order of nodes
- * \param vertices   Pointer to the aggregation of vertices
- * \param map        Pointer to the map index of fine nodes to coarse nodes
- * \param s          Pointer to off-diagonal row sum
- * \param num_agg    Pointer to number of aggregations
+ * \param A                Pointer to the coefficient matrices
+ * \param k_tg             Two-grid convergence parameter
+ * \param order            Pointer to the order of nodes
+ * \param vertices         Pointer to the aggregation of vertices
+ * \param map              Pointer to the map index of fine nodes to coarse nodes
+ * \param s                Pointer to off-diagonal row sum
+ * \param NumAggregates    Pointer to number of aggregations
  *
  * \author Zheng Li, Chensong Zhang
  * \date   12/23/2014
@@ -491,7 +491,7 @@ static void first_pairwise_unsymm (const dCSRmat * A,
                                    ivector       * vertices,
                                    ivector       * map,
                                    REAL          * s,
-                                   INT           * num_agg)
+                                   INT           * NumAggregates)
 {
     const INT row  = A->row;
     const INT  *AIA  = A->IA;
@@ -648,7 +648,7 @@ static void first_pairwise_unsymm (const dCSRmat * A,
     map->row = 2*nc;
     map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*map->row);
     
-    *num_agg = nc;
+    *NumAggregates = nc;
     
     fasp_mem_free(iperm);
 }
@@ -664,7 +664,7 @@ static void first_pairwise_unsymm (const dCSRmat * A,
  *                                  ivector *vertices,
  *                                  ivector *map,
  *                                  REAL *s1,
- *                                  INT *num_agg)
+ *                                  INT *NumAggregates)
  *
  * \brief Form second pass aggregation for non-symmetric problem
  *
@@ -679,7 +679,7 @@ static void first_pairwise_unsymm (const dCSRmat * A,
  * \param map        Pointer to the map index of fine nodes to coarse nodes in
  *                   the second pass
  * \param s1         Pointer to off-diagonal row sum of matrix
- * \param num_agg    Pointer to number of aggregations
+ * \param NumAggregates    Pointer to number of aggregations
  *
  * \author Zheng Li, Chensong Zhang
  * \date   12/23/2014
@@ -687,17 +687,17 @@ static void first_pairwise_unsymm (const dCSRmat * A,
  * \note  Refer to Yvan Notay "Aggregation-based algebraic multigrid
  *        for convection-diffusion equations" 2011.
  */
-static void second_pairwise_unsymm (const dCSRmat *A,
-                                    dCSRmat *tmpA,
-                                    const REAL k_tg,
-                                    INT dopass,
-                                    INT *order,
-                                    ivector *map1,
-                                    ivector *vertices1,
-                                    ivector *vertices,
-                                    ivector *map,
-                                    REAL *s1,
-                                    INT *num_agg)
+static void second_pairwise_unsymm (const dCSRmat  *A,
+                                    dCSRmat        *tmpA,
+                                    const REAL      k_tg,
+                                    INT             dopass,
+                                    INT            *order,
+                                    ivector        *map1,
+                                    ivector        *vertices1,
+                                    ivector        *vertices,
+                                    ivector        *map,
+                                    REAL           *s1,
+                                    INT            *NumAggregates)
 {
     INT i, j, k, l, m, ijtent;
     const INT row = tmpA->row;
@@ -893,7 +893,7 @@ static void second_pairwise_unsymm (const dCSRmat *A,
     map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*2*nc);
     map->row = 2*nc;
     
-    *num_agg = nc;
+    *NumAggregates = nc;
     
     fasp_mem_free(s);
     fasp_mem_free(Tnode);
@@ -902,7 +902,7 @@ static void second_pairwise_unsymm (const dCSRmat *A,
 
 /**
  * \fn static void form_tentative_p (ivector *vertices, dCSRmat *tentp, REAL **basis, 
- *                                   INT levelNum, INT num_aggregations)
+ *                                   INT levelNum, INT NumAggregates)
  *
  * \brief Form aggregation based on strong coupled neighbors
  *
@@ -910,24 +910,24 @@ static void second_pairwise_unsymm (const dCSRmat *A,
  * \param tentp              Pointer to the prolongation operators
  * \param basis              Pointer to the near kernel
  * \param levelNum           Level number
- * \param num_aggregations   Number of aggregations
+ * \param NumAggregates      Number of aggregations
  *
  * \author Xiaozhe Hu
  * \date   09/29/2009
  *
  * Modified by Xiaozhe Hu on 05/25/2014
  */
-static void form_tentative_p (ivector *vertices,
-                              dCSRmat *tentp,
-                              REAL **basis,
-                              INT levelNum,
-                              INT num_aggregations)
+static void form_tentative_p (ivector  *vertices,
+                              dCSRmat  *tentp,
+                              REAL    **basis,
+                              INT       levelNum,
+                              INT       NumAggregates)
 {
     INT i, j;
     
     /* Form tentative prolongation */
     tentp->row = vertices->row;
-    tentp->col = num_aggregations;
+    tentp->col = NumAggregates;
     tentp->nnz = vertices->row;
     
     tentp->IA  = (INT *)fasp_mem_calloc(tentp->row+1,sizeof(INT));
@@ -981,12 +981,12 @@ static void form_tentative_p (ivector *vertices,
  *
  * Modified by Chensong on 04/29/2014: Fix a sign problem
  */
-static void smooth_agg (dCSRmat *A,
-                        dCSRmat *tentp,
-                        dCSRmat *P,
-                        AMG_param *param,
-                        INT levelNum,
-                        dCSRmat *N)
+static void smooth_agg (dCSRmat    *A,
+                        dCSRmat    *tentp,
+                        dCSRmat    *P,
+                        AMG_param  *param,
+                        INT         levelNum,
+                        dCSRmat    *N)
 {
     const SHORT filter = param->smooth_filter;
     const INT   row = A->row, col= A->col;
