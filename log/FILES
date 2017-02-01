@@ -1,7 +1,7 @@
     1195 ./base/include/fasp.h
      404 ./base/include/fasp_block.h
      262 ./base/include/fasp_const.h
-    2915 ./base/include/fasp_functs.h
+    2925 ./base/include/fasp_functs.h
       51 ./base/include/fasp_grid.h
      115 ./base/src/BlaSpmvMatFree.inl
      239 ./base/src/ItrAuxiliary.inl
@@ -61,7 +61,7 @@
     1743 ./base/src/KryPbcgs.c
     1512 ./base/src/KryPcg.c
      344 ./base/src/KryPgcg.c
-     263 ./base/src/KryPgcr.c
+     454 ./base/src/KryPgcr.c
     1654 ./base/src/KryPgmres.c
     1646 ./base/src/KryPminres.c
     1702 ./base/src/KryPvbcgs.c
@@ -101,4 +101,4 @@
      247 ./base/src/SolMatFree.c
      419 ./base/src/SolSTR.c
      320 ./base/src/SolWrapper.c
-   86617 total
+   86818 total
