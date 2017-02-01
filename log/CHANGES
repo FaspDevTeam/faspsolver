@@ -1,6 +1,6 @@
 File Name: CHANGES
 
-01/31/2017 FASP 1.9.7:
+02/01/2017 FASP 1.9.7:
 - Clean up *.inl files.
 - Fix more warnings by xcode; some still left: unused functions, doxygen.
 - Change header file auto-generator output.
@@ -9,6 +9,7 @@ File Name: CHANGES
 - Mark TODO's in various C files.
 - Update reference manual.
 - Test CMake on Linux 2.6.18-164.el5.perfctr x86_64.
+- Add PGCR for BLC matrices.
 
 01/30/2017 FASP 1.9.6:
 - Modify fasp.h (affect all FASP projects).

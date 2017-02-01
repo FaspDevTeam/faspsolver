@@ -1744,6 +1744,16 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
                            const SHORT  stop_type,
                            const SHORT  prtlvl);
 
+INT fasp_solver_dblc_pgcr (dBLCmat     *A,
+                           dvector     *b,
+                           dvector     *x,
+                           precond     *pc,
+                           const REAL   tol,
+                           const INT    MaxIt,
+                           const SHORT  restart,
+                           const SHORT  stop_type,
+                           const SHORT  prtlvl);
+
 
 /*-------- In file: KryPgmres.c --------*/
 
