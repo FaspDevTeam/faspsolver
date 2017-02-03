@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+02/03/2017 FASP 1.9.8:
+- Add and test BitBucket Pipelines automatic test tool.
+
 02/01/2017 FASP 1.9.7:
 - Clean up *.inl files.
 - Fix more warnings by xcode; some still left: unused functions, doxygen.

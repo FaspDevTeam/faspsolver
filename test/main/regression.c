@@ -61,7 +61,7 @@ int main (int argc, const char * argv[])
     dCSRmat    A;            // coefficient matrix
     dvector    b, x, sol;    // rhs, numerical sol, exact sol
     INT        indp;         // index for test problems
-    
+    int        status = FASP_SUCCESS;
     time_t     lt = time(NULL);
     
     printf("\n\n");
@@ -851,7 +851,7 @@ int main (int argc, const char * argv[])
     printf("%s",asctime(localtime(&lt))); // output ending local time
     printf("------------------------------------------------------------------\n");
     
-    return 0;
+    return status;
 }
 
 /*---------------------------------*/
