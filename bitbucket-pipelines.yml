@@ -14,5 +14,15 @@ pipelines:
           - make test
           - make tutorial
           - cd test
+          - ./test.ex
           - ./regression.ex
-          - echo "Everything is awesome!"
+          - echo "RELEASE build works!"
+  debug:
+    - step:
+        script:
+          - make config debug=yes
+          - make install
+          - make test
+          - cd test
+          - ./regression.ex
+          - echo "DEBUG build works!"
