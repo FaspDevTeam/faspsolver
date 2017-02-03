@@ -1694,7 +1694,7 @@ void fasp_matrix_read (const char  *filename,
             case 6:
                 fasp_dmtxsym_read_s(fp, (dCSRmat *)A); break;
             default:
-                printf("### ERROR: Unknown file flag %d", flag);
+                printf("### ERROR: Unknown file flag %d\n", flag);
         }
         
         fclose(fp);
@@ -1733,7 +1733,7 @@ void fasp_matrix_read (const char  *filename,
             fasp_dmtxsym_read_b(fp, (dCSRmat *)A, EndianFlag);
             break;
         default:
-            printf("### ERROR: Unknown file flag %d", flag);
+            printf("### ERROR: Unknown file flag %d\n", flag);
     }
     
     fclose(fp);
@@ -1797,7 +1797,7 @@ void fasp_matrix_read_bin (const char *filename,
             fasp_dmtxsym_read_b(fp, (dCSRmat *)A, EndianFlag);
             break;
         default:
-            printf("### ERROR: Unknown file flag %d", flag);
+            printf("### ERROR: Unknown file flag %d\n", flag);
     }
     
     fclose(fp);

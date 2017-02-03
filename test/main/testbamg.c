@@ -50,7 +50,8 @@ int main (int argc, const char * argv[])
     if (output_type) {
         char *outputfile = "out/test.out";
         printf("Redirecting outputs to file: %s ...\n", outputfile);
-        freopen(outputfile,"w",stdout); // open a file for stdout
+        if ( freopen(outputfile,"w",stdout) == NULL ) // open a file for stdout
+            fprintf(stderr, "Output redirecting stdout\n");
     }
     
     printf("Test Problem %d\n", problem_num);

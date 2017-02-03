@@ -23,7 +23,7 @@ int main (int argc, const char * argv[])
 {
     dCSRmat A;
     dvector b, x;
-    int status=FASP_SUCCESS;
+    int status = FASP_SUCCESS;
     
     //------------------------//
     // Step 0. Set parameters //
@@ -49,7 +49,8 @@ int main (int argc, const char * argv[])
     if (output_type) {
         char *outputfile = "out/test.out";
         printf("Redirecting outputs to file: %s ...\n", outputfile);
-        freopen(outputfile,"w",stdout); // open a file for stdout
+        if ( freopen(outputfile,"w",stdout) == NULL ) // open a file for stdout
+            fprintf(stderr, "Output redirecting stdout\n");
     }
     
     printf("Test Problem %d\n", problem_num);
@@ -111,11 +112,11 @@ int main (int argc, const char * argv[])
             printf("### ERROR: Opening file ...\n");
         }
         
-        fread(&A.row, sizeof(int), 1, fid);
+        status = fread(&A.row, sizeof(int), 1, fid);
         A.col = A.row;
         b.row = A.row;
         
-        fread(&A.nnz, sizeof(int), 1, fid);
+        status = fread(&A.nnz, sizeof(int), 1, fid);
         
         A.val = (double *)fasp_mem_calloc(A.nnz, sizeof(double));
         for (i=0;i<A.nnz; i++){
@@ -124,18 +125,18 @@ int main (int argc, const char * argv[])
         
         b.val = (double *)fasp_mem_calloc(b.row, sizeof(double));
         for (i=0;i<b.row; i++){
-            fread(&b.val[i], sizeof(double), 1, fid);
+            status = fread(&b.val[i], sizeof(double), 1, fid);
         }
         
         A.IA = (int *)fasp_mem_calloc(A.row+1, sizeof(int));
         for (i=0; i<A.row+1; i++){
-            fread(&A.IA[i], sizeof(int), 1, fid);
+            status = fread(&A.IA[i], sizeof(int), 1, fid);
             A.IA[i] = A.IA[i] - 1;
         }
         
         A.JA = (int *)fasp_mem_calloc(A.nnz, sizeof(int));
         for (i=0; i<A.nnz; i++){
-            fread(&A.JA[i], sizeof(int), 1, fid);
+            status = fread(&A.JA[i], sizeof(int), 1, fid);
             A.JA[i] = A.JA[i] - 1;
         }
         
