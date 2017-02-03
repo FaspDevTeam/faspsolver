@@ -93,7 +93,10 @@ int main (int argc, const char *argv[])
     
     // Step 0. Set number of levels for GMG
     printf("Enter the desired number of levels:   ");
-    scanf("%d", &maxlevel);
+    if ( scanf("%d", &maxlevel) > 1 ) {
+        printf("### ERROR: Did not get a valid input !!!\n");
+        return ERROR_INPUT_PAR;
+    }
     
     // Step 1. Compute right-hand side b and set approximate solution u
     nx = (int) pow(2.0, maxlevel);
