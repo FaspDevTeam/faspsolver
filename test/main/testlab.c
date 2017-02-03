@@ -120,7 +120,7 @@ int main (int argc, const char * argv[])
         
         A.val = (double *)fasp_mem_calloc(A.nnz, sizeof(double));
         for (i=0;i<A.nnz; i++){
-            fread(&A.val[i], sizeof(double), 1, fid);
+            status = fread(&A.val[i], sizeof(double), 1, fid);
         }
         
         b.val = (double *)fasp_mem_calloc(b.row, sizeof(double));
