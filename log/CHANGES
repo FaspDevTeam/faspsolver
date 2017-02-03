@@ -1,7 +1,9 @@
 File Name: CHANGES
 
 02/03/2017 FASP 1.9.8:
+- Now automatic build test works.
 - Add and test BitBucket Pipelines automatic test tool.
+- Fix warnings about fgets, fread, fscanf, scanf, etc in Ubuntu.
 
 02/01/2017 FASP 1.9.7:
 - Clean up *.inl files.
