@@ -152,6 +152,7 @@ Test and Debug
 [ 0.6.0 ] build upon regression.c to make a regression test suite
 [ 1.6.1 ] compare regression results automatically
 [ 1.6.9 ] finish the debug environment construction
+[ 1.9.8 ] add automatic build and test tool on BitBucket
 [       ] look for possible memory leaks and divide-by-zero (Chensong)
 [       ] add a unit test tool for FASP, e.g. CHECK (Chensong)
 

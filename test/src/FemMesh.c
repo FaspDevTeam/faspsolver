@@ -29,7 +29,7 @@
 int mesh_init (Mesh *mesh, const char *filename)
 {
     int num_node, dim_node, num_elem, dim_elem;
-    int i,j;
+    int i, j, status = FASP_SUCCESS;
     
     FILE *inputFile=fopen(filename, "r");
     if (inputFile==NULL) {
@@ -38,36 +38,48 @@ int mesh_init (Mesh *mesh, const char *filename)
     }
     
     // get the node' coordinates
-    fscanf(inputFile, "%d %d", &num_node, &dim_node);
-    mesh->node.row=num_node;
-    mesh->node.col=dim_node;
+    if ( fscanf(inputFile, "%d %d", &num_node, &dim_node) > 0 ) {
+        mesh->node.row = num_node;
+        mesh->node.col = dim_node;
+    }
+    else {
+        printf("### ERROR: Invalid mesh file!\n");
+        exit(ERROR_WRONG_FILE);
+    }
     
     // alloc mem we need,
-    mesh->node.val=(double **)fasp_mem_calloc(num_node, sizeof(double*));
-    mesh->node.val[0]=(double *)fasp_mem_calloc(num_node*dim_node, sizeof(double));
-    double *tmp_node = mesh->node.val[0];
+    mesh->node.val    = (double **)fasp_mem_calloc(num_node, sizeof(double*));
+    mesh->node.val[0] = (double *)fasp_mem_calloc(num_node*dim_node, sizeof(double));
+    double *tmp_node  = mesh->node.val[0];
     
     for (i=0;i<num_node;++i) {
         // re-point to the val
         mesh->node.val[i]=&tmp_node[dim_node*i];
-        for (j=0;j<dim_node;++j) fscanf(inputFile, "%lf", &mesh->node.val[i][j]);
+        for (j=0;j<dim_node;++j) {
+            status = fscanf(inputFile, "%lf", &mesh->node.val[i][j]);
+        }
     }
     
     // get triangular grid
-    fscanf(inputFile, "%d %d", &num_elem, &dim_elem);
-    mesh->elem.row=num_elem;
-    mesh->elem.col=dim_elem;
+    if ( fscanf(inputFile, "%d %d", &num_elem, &dim_elem) > 0 ) {
+        mesh->elem.row = num_elem;
+        mesh->elem.col = dim_elem;
+    }
+    else {
+        printf("### ERROR: Invalid mesh file!\n");
+        exit(ERROR_WRONG_FILE);
+    }
     
     // alloc mem we need,
-    mesh->elem.val=(int **)fasp_mem_calloc(num_elem, sizeof(int*));
-    mesh->elem.val[0]=(int *)fasp_mem_calloc(num_elem*dim_elem, sizeof(int));
-    int *tmp_elem = mesh->elem.val[0];
+    mesh->elem.val    = (int **)fasp_mem_calloc(num_elem, sizeof(int*));
+    mesh->elem.val[0] = (int *)fasp_mem_calloc(num_elem*dim_elem, sizeof(int));
+    int *tmp_elem     = mesh->elem.val[0];
     
     for (i=0;i<num_elem;++i) {
         // re-point to the val
-        mesh->elem.val[i]=&tmp_elem[dim_elem*i];
+        mesh->elem.val[i] = &tmp_elem[dim_elem*i];
         for (j=0;j<dim_elem;++j) {
-            fscanf(inputFile, "%d", &mesh->elem.val[i][j]);
+            status = fscanf(inputFile, "%d", &mesh->elem.val[i][j]);
             mesh->elem.val[i][j]--;
         }
     }
@@ -83,7 +95,7 @@ int mesh_init (Mesh *mesh, const char *filename)
     }
     
     fclose(inputFile);
-    return FASP_SUCCESS;
+    return status;
 }
 
 /**
@@ -102,7 +114,7 @@ int mesh_init (Mesh *mesh, const char *filename)
 int mesh_init_pro (Mesh *mesh, const char *filename)
 {
     int num_node, dim_node, num_elem, dim_elem;
-    int i,j;
+    int i, j, status = FASP_SUCCESS;
     
     FILE *inputFile=fopen(filename, "r");
     if (inputFile==NULL) {
@@ -111,50 +123,68 @@ int mesh_init_pro (Mesh *mesh, const char *filename)
     }
     
     // get the node' coordinates
-    fscanf(inputFile, "%d %d", &num_node, &dim_node);
-    mesh->node.row=num_node;
-    mesh->node.col=dim_node;
+    if ( fscanf(inputFile, "%d %d", &num_node, &dim_node) > 0 ) {
+        mesh->node.row = num_node;
+        mesh->node.col = dim_node;
+    }
+    else {
+        printf("### ERROR: Invalid mesh file!\n");
+        exit(ERROR_WRONG_FILE);
+    }
     
     // alloc mem we need,
-    mesh->node.val=(double **)fasp_mem_calloc(num_node, sizeof(double*));
-    mesh->node.val[0]=(double *)fasp_mem_calloc(num_node*dim_node, sizeof(double));
-    double *tmp_node = mesh->node.val[0];
+    mesh->node.val    = (double **)fasp_mem_calloc(num_node, sizeof(double*));
+    mesh->node.val[0] = (double *)fasp_mem_calloc(num_node*dim_node, sizeof(double));
+    double *tmp_node  = mesh->node.val[0];
     
     for (i=0;i<num_node;++i) {
         // re-point to the val
         mesh->node.val[i]=&tmp_node[dim_node*i];
-        for (j=0;j<dim_node;++j) fscanf(inputFile, "%lf", &mesh->node.val[i][j]);
+        for (j=0;j<dim_node;++j) {
+            status = fscanf(inputFile, "%lf", &mesh->node.val[i][j]);
+        }
     }
     
     // get triangular grid
-    fscanf(inputFile, "%d %d", &num_elem, &dim_elem);
-    mesh->elem.row=num_elem;
-    mesh->elem.col=dim_elem;
+    if ( fscanf(inputFile, "%d %d", &num_elem, &dim_elem) > 0 ) {
+        mesh->elem.row = num_elem;
+        mesh->elem.col = dim_elem;
+    }
+    else {
+        printf("### ERROR: Invalid mesh file!\n");
+        exit(ERROR_WRONG_FILE);
+    }
     
     // alloc mem we need,
-    mesh->elem.val=(int **)fasp_mem_calloc(num_elem, sizeof(int*));
-    mesh->elem.val[0]=(int *)fasp_mem_calloc(num_elem*dim_elem, sizeof(int));
-    int *tmp_elem = mesh->elem.val[0];
+    mesh->elem.val    = (int **)fasp_mem_calloc(num_elem, sizeof(int*));
+    mesh->elem.val[0] = (int *)fasp_mem_calloc(num_elem*dim_elem, sizeof(int));
+    int *tmp_elem     = mesh->elem.val[0];
     
     for (i=0;i<num_elem;++i) {
         // re-point to the val
         mesh->elem.val[i]=&tmp_elem[dim_elem*i];
         for (j=0;j<dim_elem;++j) {
-            fscanf(inputFile, "%d", &mesh->elem.val[i][j]);
+            status = fscanf(inputFile, "%d", &mesh->elem.val[i][j]);
             mesh->elem.val[i][j]--;
         }
     }
     
     // get node boundary flag
-    fscanf(inputFile, "%d", &num_elem);
-    mesh->node_bd.row = num_node;
+    if ( fscanf(inputFile, "%d", &num_elem) > 0 ) {
+        mesh->node_bd.row = num_node;
+    }
+    else {
+        printf("### ERROR: Invalid mesh file!\n");
+        exit(ERROR_WRONG_FILE);
+    }
+    
     mesh->node_bd.val = (int *)fasp_mem_calloc(num_node, sizeof(int));
     for (i=0;i<num_node;++i) {
-        fscanf(inputFile, "%d", &mesh->node_bd.val[i]);
+        status = fscanf(inputFile, "%d", &mesh->node_bd.val[i]);
     }
     
     fclose(inputFile);
-    return FASP_SUCCESS;
+    return status;
 }
 
 /**
@@ -174,7 +204,7 @@ int mesh_init_pro (Mesh *mesh, const char *filename)
 int mesh_aux_init (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
 {
     int num_edge, dim_edge, num_elem2edge, dim_elem2edge;
-    int i,j;
+    int i, j, status = FASP_SUCCESS;
     
     FILE *inputFile=fopen(filename, "r");
     if (inputFile==NULL) {
@@ -183,39 +213,49 @@ int mesh_aux_init (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
     }
     
     // get the edge info
-    fscanf(inputFile, "%d %d", &num_edge, &dim_edge);
-    mesh_aux->edge.row=num_edge;
-    mesh_aux->edge.col=dim_edge;
+    if ( fscanf(inputFile, "%d %d", &num_edge, &dim_edge) > 0 ) {
+        mesh_aux->edge.row = num_edge;
+        mesh_aux->edge.col = dim_edge;
+    }
+    else {
+        printf("### ERROR: Invalid mesh file!\n");
+        exit(ERROR_WRONG_FILE);
+    }
     
     // alloc mem we need,
-    mesh_aux->edge.val=(int **)fasp_mem_calloc(num_edge, sizeof(int *));
-    mesh_aux->edge.val[0]=(int *)fasp_mem_calloc(num_edge*dim_edge, sizeof(int));
-    int *tmp_edge = mesh_aux->edge.val[0];
+    mesh_aux->edge.val    = (int **)fasp_mem_calloc(num_edge, sizeof(int *));
+    mesh_aux->edge.val[0] = (int *)fasp_mem_calloc(num_edge*dim_edge, sizeof(int));
+    int *tmp_edge         = mesh_aux->edge.val[0];
     
     for (i=0;i<num_edge;++i) {
         // re-point to the val
         mesh_aux->edge.val[i]=&tmp_edge[dim_edge*i];
         for (j=0;j<dim_edge;++j) {
-            fscanf(inputFile, "%d", &mesh_aux->edge.val[i][j]);
+            status = fscanf(inputFile, "%d", &mesh_aux->edge.val[i][j]);
             mesh_aux->edge.val[i][j]--;
         }
     }
     
     // get elem's edge info
-    fscanf(inputFile, "%d %d", &num_elem2edge, &dim_elem2edge);
-    mesh_aux->elem2edge.row=num_elem2edge;
-    mesh_aux->elem2edge.col=dim_elem2edge;
+    if ( fscanf(inputFile, "%d %d", &num_elem2edge, &dim_elem2edge) > 0 ) {
+        mesh_aux->elem2edge.row=num_elem2edge;
+        mesh_aux->elem2edge.col=dim_elem2edge;
+    }
+    else {
+        printf("### ERROR: Invalid mesh file!\n");
+        exit(ERROR_WRONG_FILE);
+    }
     
     // alloc mem we need,
-    mesh_aux->elem2edge.val=(int **)fasp_mem_calloc(num_elem2edge, sizeof(int*));
-    mesh_aux->elem2edge.val[0]=(int *)fasp_mem_calloc(num_elem2edge*dim_elem2edge, sizeof(int));
-    int *tmp_elem = mesh_aux->elem2edge.val[0];
+    mesh_aux->elem2edge.val    = (int **)fasp_mem_calloc(num_elem2edge, sizeof(int*));
+    mesh_aux->elem2edge.val[0] = (int *)fasp_mem_calloc(num_elem2edge*dim_elem2edge, sizeof(int));
+    int *tmp_elem              = mesh_aux->elem2edge.val[0];
     
     for (i=0;i<num_elem2edge;++i) {
         // re-point to the val
-        mesh_aux->elem2edge.val[i]=&tmp_elem[dim_elem2edge*i];
+        mesh_aux->elem2edge.val[i] = &tmp_elem[dim_elem2edge*i];
         for (j=0;j<dim_elem2edge;++j) {
-            fscanf(inputFile, "%d", &mesh_aux->elem2edge.val[i][j]);
+            status = fscanf(inputFile, "%d", &mesh_aux->elem2edge.val[i][j]);
             mesh_aux->elem2edge.val[i][j]--;
         }
     }
@@ -239,7 +279,7 @@ int mesh_aux_init (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
     }
     
     fclose(inputFile);
-    return FASP_SUCCESS;
+    return status;
 }
 
 /**
@@ -259,7 +299,7 @@ int mesh_aux_init (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
 int mesh_aux_init_pro (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
 {
     int num_edge, dim_edge, num_elem2edge, dim_elem2edge;
-    int i,j;
+    int i, j, status = FASP_SUCCESS;
     
     FILE *inputFile=fopen(filename, "r");
     if (inputFile==NULL) {
@@ -268,54 +308,69 @@ int mesh_aux_init_pro (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
     }
     
     // get the edge info
-    fscanf(inputFile, "%d %d", &num_edge, &dim_edge);
-    mesh_aux->edge.row=num_edge;
-    mesh_aux->edge.col=dim_edge;
+    if ( fscanf(inputFile, "%d %d", &num_edge, &dim_edge) > 0 ) {
+        mesh_aux->edge.row=num_edge;
+        mesh_aux->edge.col=dim_edge;
+    }
+    else {
+        printf("### ERROR: Invalid mesh file!\n");
+        exit(ERROR_WRONG_FILE);
+    }
     
     // alloc mem we need,
-    mesh_aux->edge.val=(int **)fasp_mem_calloc(num_edge, sizeof(int *));
-    mesh_aux->edge.val[0]=(int *)fasp_mem_calloc(num_edge*dim_edge, sizeof(int));
-    int *tmp_edge = mesh_aux->edge.val[0];
+    mesh_aux->edge.val    = (int **)fasp_mem_calloc(num_edge, sizeof(int *));
+    mesh_aux->edge.val[0] = (int *)fasp_mem_calloc(num_edge*dim_edge, sizeof(int));
+    int *tmp_edge         = mesh_aux->edge.val[0];
     
     for (i=0;i<num_edge;++i) {
         // re-point to the val
         mesh_aux->edge.val[i]=&tmp_edge[dim_edge*i];
         for (j=0;j<dim_edge;++j) {
-            fscanf(inputFile, "%d", &mesh_aux->edge.val[i][j]);
+            status = fscanf(inputFile, "%d", &mesh_aux->edge.val[i][j]);
             mesh_aux->edge.val[i][j]--;
         }
     }
     
     // get elem's edge info
-    fscanf(inputFile, "%d %d", &num_elem2edge, &dim_elem2edge);
-    mesh_aux->elem2edge.row=num_elem2edge;
-    mesh_aux->elem2edge.col=dim_elem2edge;
+    if ( fscanf(inputFile, "%d %d", &num_elem2edge, &dim_elem2edge) > 0 ) {
+        mesh_aux->elem2edge.row=num_elem2edge;
+        mesh_aux->elem2edge.col=dim_elem2edge;
+    }
+    else {
+        printf("### ERROR: Invalid mesh file!\n");
+        exit(ERROR_WRONG_FILE);
+    }
     
     // alloc mem we need,
-    mesh_aux->elem2edge.val=(int **)fasp_mem_calloc(num_elem2edge, sizeof(int*));
-    mesh_aux->elem2edge.val[0]=(int *)fasp_mem_calloc(num_elem2edge*dim_elem2edge, sizeof(int));
-    int *tmp_elem = mesh_aux->elem2edge.val[0];
+    mesh_aux->elem2edge.val    = (int **)fasp_mem_calloc(num_elem2edge, sizeof(int*));
+    mesh_aux->elem2edge.val[0] = (int *)fasp_mem_calloc(num_elem2edge*dim_elem2edge, sizeof(int));
+    int *tmp_elem              = mesh_aux->elem2edge.val[0];
     
     for (i=0;i<num_elem2edge;++i) {
         // re-point to the val
         mesh_aux->elem2edge.val[i]=&tmp_elem[dim_elem2edge*i];
         for (j=0;j<dim_elem2edge;++j) {
-            fscanf(inputFile, "%d", &mesh_aux->elem2edge.val[i][j]);
+            status = fscanf(inputFile, "%d", &mesh_aux->elem2edge.val[i][j]);
             mesh_aux->elem2edge.val[i][j]--;
         }
     }
     
     // get edge boundary flag
-    fscanf(inputFile, "%d", &num_edge);
-    mesh_aux->edge_bd.row = num_edge;
-    mesh_aux->edge_bd.val = (int *)fasp_mem_calloc(num_edge, sizeof(int));
+    if ( fscanf(inputFile, "%d", &num_edge) > 0 ) {
+        mesh_aux->edge_bd.row = num_edge;
+        mesh_aux->edge_bd.val = (int *)fasp_mem_calloc(num_edge, sizeof(int));
+    }
+    else {
+        printf("### ERROR: Invalid mesh file!\n");
+        exit(ERROR_WRONG_FILE);
+    }
     
     for (i=0;i<num_edge;++i) {
-        fscanf(inputFile, "%d", &mesh_aux->edge_bd.val[i]);
+        status = fscanf(inputFile, "%d", &mesh_aux->edge_bd.val[i]);
     }
     
     fclose(inputFile);
-    return FASP_SUCCESS;
+    return status;
 }
 
 /**

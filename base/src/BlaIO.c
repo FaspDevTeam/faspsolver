@@ -13,6 +13,8 @@
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
+ *
+ *  // TODO: Quit and throw an error info if file format is wrong!!! --Chensong
  */
 
 #include "fasp.h"

@@ -208,23 +208,34 @@ int main (int argc, const char *argv[])
     REAL      *u, *b, h, error0;
     
     printf("Enter spatial dimension (1, 2 or 3):   ");
-    scanf("%d", &dim);
+    
+    if ( scanf("%d", &dim) > 1 ) {
+        printf("### ERROR: Did not get a valid input !!!\n");
+        return ERROR_INPUT_PAR;
+    }
     
     if ( dim > 3 || dim < 1) {
         printf("### ERROR: Wrong dimension number !!!\n");
-        return 0;
+        return ERROR_INPUT_PAR;
     }
     
     printf("Choosing solver (V-cycle=1, FMG=2, PCG=3):   ");
-    scanf("%d", &method);
+    
+    if ( scanf("%d", &method) > 1 ) {
+        printf("### ERROR: Did not get a valid input !!!\n");
+        return ERROR_INPUT_PAR;
+    }
     
     if ( method > 3 || method < 1) {
         printf("### ERROR: Wrong solver type !!!\n");
-        return 0;
+        return ERROR_INPUT_PAR;
     }
     
     printf("Enter the desired number of levels:   ");
-    scanf("%d", &maxlevel);
+    if ( scanf("%d", &maxlevel) > 1 ) {
+        printf("### ERROR: Did not get a valid input !!!\n");
+        return ERROR_INPUT_PAR;
+    }
     
     nx = (int) pow(2.0, maxlevel);
     if ( dim > 1 ) ny = (int) pow(2.0, maxlevel);
