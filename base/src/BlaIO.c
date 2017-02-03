@@ -114,8 +114,9 @@ void fasp_dcsrvec1_read (const char  *filename,
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     // Read CSR matrix
-    fscanf(fp, "%d %d", &m, &n);
-    A->row = m; A->col = n;
+    if (fscanf(fp, "%d %d", &m, &n) > 0 ) {
+        A->row = m; A->col = n;
+    }
     
     A->IA = (INT *)fasp_mem_calloc(m+1, sizeof(INT));
     for ( i = 0; i <= m; ++i ) {
