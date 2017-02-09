@@ -1837,7 +1837,7 @@ void fasp_blas_dcsr_rap4 (dCSRmat   *R,
         
         INT *iindexs = (INT *)fasp_mem_calloc(minus_one_length+minus_one_length_P, sizeof(INT));
         
-#if CHMEM_MODE
+#if DEBUG_MODE > 1
         total_alloc_mem += minus_one_length*sizeof(INT);
 #endif
         INT *indexs = iindexs + minus_one_length_P;
@@ -1845,13 +1845,13 @@ void fasp_blas_dcsr_rap4 (dCSRmat   *R,
         
         INT *iac=(INT*)fasp_mem_calloc(row+1,sizeof(INT));
         
-#if CHMEM_MODE
+#if DEBUG_MODE > 1
         total_alloc_mem += (row+1)*sizeof(INT);
 #endif
         
         INT *part_end=(INT*)fasp_mem_calloc(2*nthreads+row,sizeof(INT));
         
-#if CHMEM_MODE
+#if DEBUG_MODE > 1
         total_alloc_mem += (2*nthreads+row)*sizeof(INT);
 #endif
         
@@ -1927,7 +1927,7 @@ end_row, jj3, i3)
             }
         }
         INT *jac=(INT*)fasp_mem_calloc(iac[row],sizeof(INT));
-#if CHMEM_MODE
+#if DEBUG_MODE > 1
         total_alloc_mem += iac[row]*sizeof(INT);
 #endif
         fasp_iarray_set(minus_one_length, iindexs, -2);
@@ -1999,11 +1999,11 @@ length, i1, end_rowR, jj, j, end_rowA, k, iistart, end_row)
         }
         // Third loop: compute entries of R*A*P
         REAL *acj=(REAL*)fasp_mem_calloc(iac[row],sizeof(REAL));
-#if CHMEM_MODE
+#if DEBUG_MODE > 1
         total_alloc_mem += iac[row]*sizeof(REAL);
 #endif
         REAL *temps=(REAL*)fasp_mem_calloc(minus_one_length_A,sizeof(REAL));
-#if CHMEM_MODE
+#if DEBUG_MODE > 1
         total_alloc_mem += minus_one_length_A*sizeof(REAL);
 #endif
         

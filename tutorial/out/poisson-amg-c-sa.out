@@ -38,7 +38,7 @@ Calling SA AMG ...
 -----------------------------------------------------------
   Grid complexity = 1.147  |  Operator complexity = 1.255
 -----------------------------------------------------------
-Smoothed aggregation setup costs 0.0028 seconds.
+Smoothed aggregation setup costs 0.0032 seconds.
 -----------------------------------------------------------
 It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
 -----------------------------------------------------------
@@ -65,5 +65,5 @@ It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
     20 |  1.978978e-08   |  1.487075e-07  |     0.5014
     21 |  9.931176e-09   |  7.462641e-08  |     0.5018
 Number of iterations = 21 with relative residual 9.931176e-09.
-AMG solve costs 0.0053 seconds.
-AMG totally costs 0.0083 seconds.
+AMG solve costs 0.0061 seconds.
+AMG totally costs 0.0098 seconds.

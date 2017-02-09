@@ -70,7 +70,7 @@ void * fasp_mem_calloc (const LONGLONG  size,
     
     void * mem = NULL;
     
-#if DEBUG_MODE > 2
+#if DEBUG_MODE > 1
     printf("### DEBUG: Trying to allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
 #endif
     
@@ -84,7 +84,7 @@ void * fasp_mem_calloc (const LONGLONG  size,
         mem = calloc(size,type);
 #endif
         
-#if CHMEM_MODE
+#if DEBUG_MODE > 1
         total_alloc_mem += tsize;
         total_alloc_count++;
 #endif
@@ -117,7 +117,7 @@ void * fasp_mem_realloc (void           *oldmem,
 {
     void * mem = NULL;
 
-#if DEBUG_MODE > 2
+#if DEBUG_MODE > 1
     printf("### DEBUG: Trying to allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
 #endif
     
@@ -161,7 +161,7 @@ void fasp_mem_free (void *mem)
         free(mem);
 #endif
         
-#if CHMEM_MODE
+#if DEBUG_MODE > 1
         total_alloc_count--;
 #endif
     }
@@ -177,7 +177,7 @@ void fasp_mem_free (void *mem)
  */
 void fasp_mem_usage ()
 {
-#if DEBUG_MODE > 2
+#if DEBUG_MODE > 1
     printf("### DEBUG: Number of alloc = %d, allocated memory = %.3fMB.\n",
            total_alloc_count, (REAL)total_alloc_mem/Million);
 #endif

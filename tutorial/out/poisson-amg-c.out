@@ -11,7 +11,7 @@ b: n = 3969
        Parameters in AMG_param
 -----------------------------------------------
 AMG print level:                   2
-AMG max num of iter:               1
+AMG max num of iter:               100
 AMG type:                          1
 AMG tolerance:                     1.00e-06
 AMG max levels:                    20
@@ -44,7 +44,7 @@ Calling classical AMG ...
 -----------------------------------------------------------
   Grid complexity = 1.672  |  Operator complexity = 2.403
 -----------------------------------------------------------
-Classical AMG setup costs 0.0068 seconds.
+Classical AMG setup costs 0.0047 seconds.
 -----------------------------------------------------------
 It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
 -----------------------------------------------------------
@@ -54,5 +54,5 @@ It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
      3 |  1.764023e-05   |  1.325550e-04  |     0.0503
      4 |  8.820794e-07   |  6.628261e-06  |     0.0500
 Number of iterations = 4 with relative residual 8.820794e-07.
-AMG solve costs 0.0017 seconds.
-AMG totally costs 0.0091 seconds.
+AMG solve costs 0.0015 seconds.
+AMG totally costs 0.0066 seconds.

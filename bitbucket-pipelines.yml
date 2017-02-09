@@ -4,6 +4,7 @@
 # -----
 # You can specify a custom docker image from Docker Hub as your build environment.
 image: zhangcs/faspsolver
+# This Docker image contains Ubuntu 16.04 + gcc/g++/gfortran 5.4.0
 
 pipelines:
   default:
