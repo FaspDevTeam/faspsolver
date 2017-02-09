@@ -28,7 +28,7 @@
  * to construct efficient linear solvers. Due to this reason, this software package
  * is called Fast Auxiliary Space Preconditioning or FASP for short.
  * 
- * The structure of FASP is designed as follows:
+ * The levels of abstraction are designed as follows:
  *
  * - Level 0 (Aux*.c): Auxiliary functions (timing, memory, threading, ...)
  *

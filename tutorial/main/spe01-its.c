@@ -54,13 +54,13 @@ int main (int argc, const char * argv[])
     char filename2[512], *datafile2;
     
     // Read the stiffness matrix from bsrmat_SPE01.dat
-    strncpy(filename1,inparam.workdir,128);    
-    datafile1="bsrmat_SPE01.dat"; strcat(filename1,datafile1);
+    strncpy(filename1, inparam.workdir, 128);
+    datafile1="bsrmat_SPE01.dat"; strcat(filename1, datafile1);
     fasp_dbsr_read(filename1, &A);
     
     // Read the RHS from rhs_SPE01.dat
-    strncpy(filename2,inparam.workdir,128);
-    datafile2="rhs_SPE01.dat"; strcat(filename2,datafile2);
+    strncpy(filename2, inparam.workdir, 128);
+    datafile2="rhs_SPE01.dat"; strcat(filename2, datafile2);
     fasp_dvec_read(filename2, &b);
     
     // Step 2. Print problem size and ITS_bsr parameters
@@ -75,7 +75,7 @@ int main (int argc, const char * argv[])
     // Set the initial guess to be zero and then solve it using standard
     // iterative methods, without applying any preconditioners
     fasp_dvec_alloc(b.row, &x);
-    fasp_dvec_set(b.row,&x,0.0);
+    fasp_dvec_set(b.row, &x, 0.0);
     
     itparam.itsolver_type = SOLVER_GMRES;
     fasp_solver_dbsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);

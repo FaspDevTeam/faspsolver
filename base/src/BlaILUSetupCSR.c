@@ -88,7 +88,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
     
     fasp_ilu_data_create(iwk, nwork, iludata);
     
-#if CHMEM_MODE
+#if DEBUG_MODE > 1
     printf("### DEBUG: memory usage after %s: \n", __FUNCTION__);
     fasp_mem_usage();
 #endif
@@ -117,7 +117,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
     
     fasp_dcsr_shift(A, -1);
     
-#if CHMEM_MODE
+#if DEBUG_MODE > 1
     printf("### DEBUG: memory usage after ILU setup: \n");
     fasp_mem_usage();
 #endif

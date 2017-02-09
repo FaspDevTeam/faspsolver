@@ -8,7 +8,7 @@ fasp_dvec_read: reading file ../data/rhs_SPE01.dat...
 A: m = 302, n = 302, nnz = 1788
 b: n = 906
 
-       Parameters in itsolver_param
+       Parameters in ITS_param
 -----------------------------------------------
 Solver print level:                2
 Solver type:                       1
@@ -29,7 +29,7 @@ ILU drop tolerance:                1.00e-03
 ILU permutation tolerance:         0.00e+00
 -----------------------------------------------
 
-BSR ILU(0) setup costs 0.000202 seconds.
+BSR ILU(0) setup costs 0.000228 seconds.
 
 Calling GMRES solver (BSR) ...
 -----------------------------------------------------------

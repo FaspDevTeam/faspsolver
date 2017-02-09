@@ -402,7 +402,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat    *A,
             
     }
     
-#if CHMEM_MODE
+#if DEBUG_MODE > 1
     fasp_mem_usage();
 #endif
     
@@ -488,7 +488,7 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat    *A,
     
     // ILU setup for whole matrix
     ILU_data LU;
-    if ( (status = fasp_ilu_dcsr_setup(A,&LU,iluparam)) < 0 ) goto FINISHED;
+    if ( (status = fasp_ilu_dcsr_setup(A, &LU, iluparam)) < 0 ) goto FINISHED;
     
     // check iludata
     if ( (status = fasp_mem_iludata_check(&LU)) < 0 ) goto FINISHED;
@@ -499,7 +499,7 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat    *A,
     pc.fct  = fasp_precond_ilu;
     
     // call iterative solver
-    status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
+    status = fasp_solver_dcsr_itsolver(A, b, x, &pc, itparam);
     
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
@@ -678,7 +678,7 @@ INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat    *A,
             
     }
     
-#if CHMEM_MODE
+#if DEBUG_MODE > 1
     fasp_mem_usage();
 #endif
     

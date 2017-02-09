@@ -280,7 +280,7 @@ void fasp_param_init (const input_param  *iniparam,
                       ILU_param          *iluparam,
                       SWZ_param          *swzparam)
 {
-#if CHMEM_MODE
+#if DEBUG_MODE > 1
     total_alloc_mem   = 0; // initialize total memeory amount
     total_alloc_count = 0; // initialize alloc count
 #endif
@@ -298,6 +298,11 @@ void fasp_param_init (const input_param  *iniparam,
     }
     else {
         printf("### WARNING: No input specified. Use default values instead!\n");
+    }
+    
+    // if use AMG as an iterative method, set max num of iterations
+    if ( (itsparam == NULL) && (amgparam != NULL) ) {
+        amgparam->maxit = 100;
     }
 }
 

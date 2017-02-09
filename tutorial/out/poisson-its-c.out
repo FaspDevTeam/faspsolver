@@ -8,7 +8,7 @@ fasp_dcsrvec2_read: reading file ../data/rhs_FE.dat...
 A: m = 3969, n = 3969, nnz = 27281
 b: n = 3969
 
-       Parameters in itsolver_param
+       Parameters in ITS_param
 -----------------------------------------------
 Solver print level:                2
 Solver type:                       1
@@ -19,7 +19,7 @@ Solver stopping type:              1
 -----------------------------------------------
 
 
-Calling PCG solver (CSR) ...
+Calling CG solver (CSR) ...
 -----------------------------------------------------------
 It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
 -----------------------------------------------------------
@@ -187,4 +187,4 @@ It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
    161 |  1.056025e-06   |  7.935353e-06  |     0.8383
    162 |  9.075274e-07   |  6.819486e-06  |     0.8594
 Number of iterations = 162 with relative residual 9.075274e-07.
-Iterative method costs 0.0093 seconds.
+Iterative method costs 0.0083 seconds.

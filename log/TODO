@@ -7,7 +7,8 @@ Milestones
 [ 1.1.6 ] Release an alpha version by the end of 2012!
 [ 1.8.2 ] Release a beta version by Oct 2015!
 [ 1.9.0 ] Release a stable version by Dec 2016!
-[       ] Prepare for code optimization!
+[ 1.9.8 ] Clean up and prepare for code optimization by Feb 2017!
+[       ] Code optimization by Dec 2017!
 
 ========================
 Documentation
@@ -22,7 +23,7 @@ Documentation
 [ 1.1.5 ] add details for building and installation using SCons and VS
 [ 1.2.4 ] add details for building and installation using cmake and VS
 [ 1.8.1 ] update all the sample codes with the new version
-[   *   ] add pairwise aggregation AMG methods as a tutorial example
+[ 1.9.8 ] add pairwise aggregation AMG methods as a tutorial example
 [   *   ] add details for the OMP version
 [   *   ] generate a sequence of FASP courses
 
@@ -46,22 +47,22 @@ Structure
 [ 1.7.6 ] fix problem with UMFPACK when it is installed without CHOLMOD
 [ 1.8.4 ] add Intel MKL PARDISO as a direct solver
 [ 1.9.2 ] change filenames according to	package	structure
-[ 1.9.6 ] add xcode support for faspsolver
+[ 1.9.6 ] add Xcode support for faspsolver
+[   *   ] format debug messages: DEBUG_MODE
 [   *   ] add the new sparse matrix data structure: TCSR
-[       ] add support for symmetric TCSR format
+[   *   ] add support for symmetric TCSR format
 [       ] add subrouties for general purpose tests on matrices and vectors
 [       ] format output messages: error, warning, message
-[       ] format debug messages: debug, chmem
-[       ] change the way for allocating memory in I/O functions (Ludmil)
+[       ] change the way for allocating memory in I/O functions
 
 ========================
 GMG 	
 ========================
 
 [ 1.3.3 ] add matrix-free Poisson GMG solver -- n = 2^L
-[       ] add semi-structured grid GMG for Poisson (Lu)
-[       ] add support for general n (Lu)
-[       ] tabulate convergence rate of V-cycle (Ludmil)
+[       ] add semi-structured grid GMG for Poisson
+[       ] add support for general n
+[       ] tabulate convergence rate of V-cycle
 [       ] add GMG for linear elasticity 
 
 ========================
@@ -74,7 +75,7 @@ AMG
 [ 1.7.6 ] replace Schwarz smoother by a C version
 [   *   ] AMG based on mesh information (Hongxuan)
 [       ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
-[       ] Tarjan algorithm and other orderings (Xiaozhe and Ludmil)
+[       ] Tarjan algorithm and other orderings (Xiaozhe)
 [       ] strength matrix based on (polynomial) smoothers (Xiaozhe)
 
 [ 0.9.0 ] aggressive coarsening strategies
@@ -102,8 +103,8 @@ Iterative Methods
 [ 0.8.1 ] different options for stopping criteria: rel res, abs res, etc
 [ 1.3.5 ] add safer Krylov iterative methods and improve efficiency
 [   *   ] update KSMs with safe-guard
-[       ] unify KSMs for different data formats
-[       ] options to replace the standard BLAS (Ludmil)
+[   *   ] unify KSMs for different data formats
+[       ] options to replace the standard BLAS
 
 [ 1.1.2 ] add matrix-free iterative methods
 [   *   ] fix stagnation in GCG and check other methods as well
@@ -122,13 +123,13 @@ Performance
 ========================
 
 [ 0.5.0 ] profile and optimize a few core functions: RS, EM
-[   *   ] profile and optimize a few core functions: SA, UA (Zheng)
+[   *   ] profile and optimize a few core functions: SA, UA
 
 [ 1.4.6 ] compare performance with hypre
 [ 1.4.6 ] compare performance with SAMG
 [ 1.4.6 ] compare performance with AGMG
-[       ] compare performance with various of compilers on different systems (Zheng)
-[       ] compare performance for different compiler options (Zheng)
+[       ] compare performance with various of compilers on different systems
+[       ] compare performance for different compiler options
 
 ========================
 OpenMP Support
@@ -154,7 +155,6 @@ Test and Debug
 [ 1.6.9 ] finish the debug environment construction
 [ 1.9.8 ] add automatic build and test tool on BitBucket
 [       ] look for possible memory leaks and divide-by-zero (Chensong)
-[       ] add a unit test tool for FASP, e.g. CHECK (Chensong)
 
 ========================
 Examples
@@ -172,7 +172,6 @@ Examples
 [       ] add hierachical basis for Poisson (Chensong)
 [       ] add P2-P0 for Stokes (Xiaozhe)
 [       ] add MAC for Stokes (Xiaozhe)
-[       ] add FEM for Stokes from Adler and Ludmil (Ludmil)
 [       ] add linear elasticity
 
 ========================

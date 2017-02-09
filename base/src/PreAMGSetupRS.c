@@ -119,7 +119,7 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
     // Main AMG setup loop
     while ( (mgl[lvl].A.row > min_cdof) && (lvl < max_lvls-1) ) {
 
-#if DEBUG_MODE > 2
+#if DEBUG_MODE > 1
         printf("### DEBUG: level = %d, row = %d, nnz = %d\n",
                lvl, mgl[lvl].A.row, mgl[lvl].A.nnz);
 #endif

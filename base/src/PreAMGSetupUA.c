@@ -185,7 +185,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
     // Main AMG setup loop
     while ( (mgl[lvl].A.row > min_cdof) && (lvl < max_levels-1) ) {
 
-#if DEBUG_MODE > 2
+#if DEBUG_MODE > 1
         printf("### DEBUG: level = %d, row = %d, nnz = %d\n",
                lvl, mgl[lvl].A.row, mgl[lvl].A.nnz);
 #endif
