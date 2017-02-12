@@ -341,7 +341,7 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat    *A,
     }
     
 FINISHED:
-    fasp_ilu_data_free(&LU);
+    fasp_ilu_data_free(&LU, NULL);
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);

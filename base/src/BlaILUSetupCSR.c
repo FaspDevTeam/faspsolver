@@ -34,6 +34,8 @@
  *
  * \author Shiquan Zhang Xiaozhe Hu
  * \date   12/27/2009
+ *
+ * Modified by Chunsheng Feng on 02/12/2017: add iperm array for ILUTp
  */
 SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
                            ILU_data   *iludata,
@@ -46,7 +48,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
     
     // local variable
     INT    lfil=iluparam->ILU_lfil, lfilt=iluparam->ILU_lfil;
-    INT    ierr, iwk, nzlu, nwork, *ijlu;
+    INT    ierr, iwk, nzlu, nwork, *ijlu, *iperm;
     REAL  *luval;
     
     REAL   setup_start, setup_end, setup_duration;
@@ -85,6 +87,8 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
     iludata->row=iludata->col=n;    
     iludata->ilevL=iludata->jlevL=NULL;    
     iludata->ilevU=iludata->jlevU=NULL;    
+    iludata->iperm=NULL;
+    iludata->type = type;
     
     fasp_ilu_data_create(iwk, nwork, iludata);
     
@@ -96,7 +100,6 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
     // ILU decomposition
     ijlu=iludata->ijlu;
     luval=iludata->luval;
-    
     switch (type) {
 
         case ILUt:
@@ -105,8 +108,9 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
             break;
             
         case ILUtp:
+            iperm = iludata->iperm;
             fasp_ilutp(n,A->val,A->JA,A->IA, lfilt, ILU_droptol, permtol,
-                       mbloc,luval,ijlu,iwk,&ierr,&nzlu);
+                       mbloc,luval,ijlu, iperm, iwk,&ierr,&nzlu);
             break;
             
         default: // ILUk
