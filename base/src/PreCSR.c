@@ -647,7 +647,7 @@ void fasp_precond_free (const SHORT   precond_type,
             
     case PREC_ILU: // ILU preconditioner
             
-        fasp_ilu_data_free((ILU_data*)(pc->data));
+        fasp_ilu_data_free((ILU_data*)(pc->data), NULL);
         fasp_mem_free(pc);
             
         break;

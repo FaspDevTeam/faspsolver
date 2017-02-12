@@ -909,6 +909,7 @@ void fasp_ilutp (INT    n,
                  INT    mbloc,
                  REAL  *alu,
                  INT   *jlu,
+                 INT   *iperm,
                  INT    iwk,
                  INT   *ierr,
                  INT   *nz)
@@ -1007,14 +1008,14 @@ void fasp_ilutp (INT    n,
     REAL s, tmp, tnorm, xmax, xmax0, fact, t;
     SHORT cinindex=0;
     REAL  *w;
-    INT  *ju, *jw, *iperm;
+    INT  *ju, *jw; //, *iperm;
     
     if (lfil  <  0) goto F998;
     
     
     ju = (INT *)fasp_mem_calloc(n, sizeof(INT));
     jw = (INT *)fasp_mem_calloc(2*n, sizeof(INT));
-    iperm = (INT *)fasp_mem_calloc(2*n, sizeof(INT));
+//    iperm = (INT *)fasp_mem_calloc(2*n, sizeof(INT));
     w = (REAL *)fasp_mem_calloc(n+1, sizeof(REAL));
     
     --ju;
@@ -1303,7 +1304,7 @@ F100:
     
     fasp_mem_free(ju);
     fasp_mem_free(jw);
-    fasp_mem_free(iperm);
+//   fasp_mem_free(iperm);
     fasp_mem_free(w);
     
 #if DEBUG_MODE > 0

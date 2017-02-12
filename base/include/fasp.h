@@ -706,6 +706,9 @@ typedef struct {
  */
 typedef struct {
     
+    //! type of ILUdata
+    INT type;
+    
     //! row number of matrix LU, m
     INT row;
     
@@ -729,6 +732,9 @@ typedef struct {
     
     //! work space
     REAL *work;
+   
+    //! contains the permutation arrays for ILUtp, iperm[0:n-1] = old numbers of unknowns,iperm[n:2*n-1] = reverse permutation = new unknowns.
+    INT  *iperm; 
     
     //! number of colors for multi-threading
     INT ncolors;

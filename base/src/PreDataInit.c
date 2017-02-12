@@ -92,6 +92,8 @@ AMG_data * fasp_amg_data_create (SHORT max_levels)
  *
  * Modified by Chensong Zhang on 05/05/2013: Clean up param as well!
  * Modified by Hongxuan Zhang on 12/15/2015: free memory for Intel MKL PARDISO.
+ * Modified by Chunsheng Feng on 02/12/2017: To permute the matrix A back to its original state for ILUtp
+ *
  */
 void fasp_amg_data_free (AMG_data   *mgl,
                          AMG_param  *param)
@@ -101,6 +103,8 @@ void fasp_amg_data_free (AMG_data   *mgl,
     INT i;
     
     for ( i=0; i<max_levels; ++i ) {
+        fasp_ilu_data_free(&mgl[i].LU, &mgl[i].A);
+        //fasp_ilu_data_free(&mgl[i].LU, NULL);
         fasp_dcsr_free(&mgl[i].A);
         fasp_dcsr_free(&mgl[i].P);
         fasp_dcsr_free(&mgl[i].R);
@@ -108,7 +112,6 @@ void fasp_amg_data_free (AMG_data   *mgl,
         fasp_dvec_free(&mgl[i].x);
         fasp_dvec_free(&mgl[i].w);
         fasp_ivec_free(&mgl[i].cfmark);
-        fasp_ilu_data_free(&mgl[i].LU);
         fasp_swz_data_free(&mgl[i].Schwarz);
     }
     
@@ -196,6 +199,8 @@ AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
  *
  * \author Xiaozhe Hu
  * \date   2013/02/13
+ *
+ * Modified by Chunsheng Feng on 02/12/2017: To permute the matrix A back to its original state for ILUtp
  */
 void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
 {
@@ -203,6 +208,8 @@ void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
     INT i;
     
     for (i=0; i<max_levels; ++i) {
+        
+	fasp_ilu_data_free(&mgl[i].LU, NULL);
         fasp_dbsr_free(&mgl[i].A);
         fasp_dbsr_free(&mgl[i].P);
         fasp_dbsr_free(&mgl[i].R);
@@ -211,15 +218,15 @@ void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
         fasp_dvec_free(&mgl[i].diaginv);
         fasp_dvec_free(&mgl[i].diaginv_SS);
         fasp_dcsr_free(&mgl[i].Ac);
+        fasp_ilu_data_free(&mgl[i].PP_LU, &mgl[i].PP);
+        //fasp_ilu_data_free(&mgl[i].PP_LU, NULL);
         fasp_dcsr_free(&mgl[i].PP);
         fasp_mem_free(mgl[i].pw);
         fasp_dbsr_free(&mgl[i].SS);
         fasp_mem_free(mgl[i].sw);
         fasp_dvec_free(&mgl[i].diaginv_SS);
-        fasp_ilu_data_free(&mgl[i].PP_LU);
         fasp_dvec_free(&mgl[i].w);
         fasp_ivec_free(&mgl[i].cfmark);
-        fasp_ilu_data_free(&mgl[i].LU);
     }
     
     for (i=0; i<mgl->near_kernel_dim; ++i) {
@@ -242,6 +249,8 @@ void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
  *
  * \author Chensong Zhang
  * \date   2010/04/06
+ *
+ * Modified by Chunsheng Feng on 02/12/2017: add iperm array for ILUtp
  */
 void fasp_ilu_data_create (const INT   iwk,
                            const INT   nwork,
@@ -252,6 +261,8 @@ void fasp_ilu_data_create (const INT   iwk,
     printf("### DEBUG: iwk=%d, nwork=%d \n",iwk,nwork);
 #endif
     iludata->ijlu=(INT*)fasp_mem_calloc(iwk, sizeof(INT));
+
+    if (iludata->type == ILUtp) iludata->iperm=(INT*)fasp_mem_calloc(iludata->row*2, sizeof(INT));
 
     iludata->luval=(REAL*)fasp_mem_calloc(iwk, sizeof(REAL));
 
@@ -270,10 +281,15 @@ void fasp_ilu_data_create (const INT   iwk,
  *
  * \param ILUdata   Pointer to ILU_data
  *
+ * \param A   Pointer to dSCRmat
+ *
  * \author Chensong Zhang
  * \date   2010/04/03
+ *
+ * Modified by Chunsheng Feng on 02/12/2017: add iperm array for ILUtp, and permute the matrix A back to its original state
+ *
  */
-void fasp_ilu_data_free (ILU_data *ILUdata)
+void fasp_ilu_data_free (ILU_data *ILUdata, dCSRmat *A)
 {
     if (ILUdata==NULL) return;
 
@@ -284,6 +300,19 @@ void fasp_ilu_data_free (ILU_data *ILUdata)
     fasp_mem_free(ILUdata->jlevL);  ILUdata->jlevL  = NULL;
     fasp_mem_free(ILUdata->ilevU);  ILUdata->ilevU  = NULL;
     fasp_mem_free(ILUdata->jlevU);  ILUdata->jlevU  = NULL;
+
+    if (ILUdata->type == ILUtp) {
+     
+     if (A != NULL ) {	    
+       // To permute the matrix back to its original state use the loop:
+       INT k,nnz;
+       nnz = A->nnz;
+       INT *iperm = ILUdata->iperm;
+       for (k=0; k < nnz; k++)  A->JA[k] = iperm[ A->JA[k] ] -1;   //iperm fortran array format
+     }
+
+     fasp_mem_free(ILUdata->iperm);  ILUdata->iperm  = NULL;
+    }
 
     ILUdata->row = ILUdata->col = ILUdata->nzlu = ILUdata ->nwork = \
     ILUdata->nb = ILUdata->nlevL = ILUdata->nlevU = 0;

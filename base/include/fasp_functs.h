@@ -412,6 +412,7 @@ void fasp_ilutp (INT    n,
                  INT    mbloc,
                  REAL  *alu,
                  INT   *jlu,
+                 INT   *iperm,
                  INT    iwk,
                  INT   *ierr,
                  INT   *nz);
@@ -828,6 +829,21 @@ dBSRmat fasp_dbsr_perm (const dBSRmat *A,
                         const INT     *P);
 
 
+/*-------- In file: BlaSparseCheck.c --------*/
+
+INT fasp_check_diagpos (const dCSRmat *A);
+
+SHORT fasp_check_diagzero (const dCSRmat *A);
+
+INT fasp_check_diagdom (const dCSRmat *A);
+
+INT fasp_check_symm (const dCSRmat *A);
+
+void fasp_check_dCSRmat (const dCSRmat *A);
+
+SHORT fasp_check_iCSRmat (const iCSRmat *A);
+
+
 /*-------- In file: BlaSparseCOO.c --------*/
 
 dCOOmat fasp_dcoo_create (const INT  m,
@@ -946,21 +962,6 @@ dCSRLmat * fasp_dcsrl_create (const INT num_rows,
                               const INT num_nonzeros);
 
 void fasp_dcsrl_free (dCSRLmat *A);
-
-
-/*-------- In file: BlaSparseCheck.c --------*/
-
-INT fasp_check_diagpos (const dCSRmat *A);
-
-SHORT fasp_check_diagzero (const dCSRmat *A);
-
-INT fasp_check_diagdom (const dCSRmat *A);
-
-INT fasp_check_symm (const dCSRmat *A);
-
-void fasp_check_dCSRmat (const dCSRmat *A);
-
-SHORT fasp_check_iCSRmat (const iCSRmat *A);
 
 
 /*-------- In file: BlaSparseSTR.c --------*/
@@ -2226,21 +2227,15 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
                          AMG_param  *param);
 
 
-/*-------- In file: PreAMGSetupSA.c --------*/
-
-SHORT fasp_amg_setup_sa (AMG_data   *mgl,
-                         AMG_param  *param);
-
-
 /*-------- In file: PreAMGSetupSABSR.c --------*/
 
 SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr  *mgl,
                              AMG_param     *param);
 
 
-/*-------- In file: PreAMGSetupUA.c --------*/
+/*-------- In file: PreAMGSetupSA.c --------*/
 
-SHORT fasp_amg_setup_ua (AMG_data   *mgl,
+SHORT fasp_amg_setup_sa (AMG_data   *mgl,
                          AMG_param  *param);
 
 
@@ -2248,6 +2243,12 @@ SHORT fasp_amg_setup_ua (AMG_data   *mgl,
 
 SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr  *mgl,
                              AMG_param     *param);
+
+
+/*-------- In file: PreAMGSetupUA.c --------*/
+
+SHORT fasp_amg_setup_ua (AMG_data   *mgl,
+                         AMG_param  *param);
 
 
 /*-------- In file: PreBLC.c --------*/
@@ -2412,7 +2413,7 @@ void fasp_ilu_data_create (const INT   iwk,
                            const INT   nwork,
                            ILU_data   *iludata);
 
-void fasp_ilu_data_free (ILU_data *ILUdata);
+void fasp_ilu_data_free (ILU_data *ILUdata, dCSRmat    *A);
 
 void fasp_swz_data_free (SWZ_data *swzdata);
 
@@ -2430,13 +2431,6 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr  *mgl,
 
 void fasp_solver_fmgcycle (AMG_data   *mgl,
                            AMG_param  *param);
-
-
-/*-------- In file: PreMGRecur.c --------*/
-
-void fasp_solver_mgrecur (AMG_data   *mgl,
-                          AMG_param  *param,
-                          INT         level);
 
 
 /*-------- In file: PreMGRecurAMLI.c --------*/
@@ -2459,6 +2453,13 @@ void fasp_amg_amli_coef (const REAL  lambda_max,
                          const REAL  lambda_min,
                          const INT   degree,
                          REAL       *coef);
+
+
+/*-------- In file: PreMGRecur.c --------*/
+
+void fasp_solver_mgrecur (AMG_data   *mgl,
+                          AMG_param  *param,
+                          INT         level);
 
 
 /*-------- In file: PreMGSolve.c --------*/

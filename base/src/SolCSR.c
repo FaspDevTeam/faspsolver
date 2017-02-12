@@ -519,7 +519,7 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat    *A,
     }
     
 FINISHED:
-    fasp_ilu_data_free(&LU);
+    fasp_ilu_data_free(&LU, A);
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
@@ -604,7 +604,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat    *A,
     }
     
 FINISHED:
-    fasp_ilu_data_free(&LU);
+    fasp_ilu_data_free(&LU, M);
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
