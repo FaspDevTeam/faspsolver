@@ -319,8 +319,10 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat    *A,
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
+    fasp_gettime(&solver_start);
+    
     // ILU setup for whole matrix
-    if ( (status = fasp_ilu_dbsr_setup(A,&LU,iluparam)) < 0 ) goto FINISHED;
+    if ( (status = fasp_ilu_dbsr_setup(A, &LU, iluparam)) < 0 ) goto FINISHED;
     
     // check iludata
     if ( (status = fasp_mem_iludata_check(&LU)) < 0 ) goto FINISHED;
@@ -329,19 +331,17 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat    *A,
     pc.data = &LU; pc.fct = fasp_precond_dbsr_ilu;
     
     // solve
-    fasp_gettime(&solver_start);
-    
-    status=fasp_solver_dbsr_itsolver(A,b,x,&pc,itparam);
+    status = fasp_solver_dbsr_itsolver(A, b, x, &pc, itparam);
     
     fasp_gettime(&solver_end);
-    
+
     if ( prtlvl > PRINT_NONE ) {
         REAL solver_duration = solver_end - solver_start;
         print_cputime("ILUk_Krylov method totally", solver_duration);
     }
     
 FINISHED:
-    fasp_ilu_data_free(&LU, NULL);
+    fasp_ilu_data_free(&LU);
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);

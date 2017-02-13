@@ -115,9 +115,7 @@ static SHORT Kcycle_dcsr_pgcg (dCSRmat   *A,
     
     fasp_blas_darray_axpy(m, beta4, x1, x);
     
-    // free
     fasp_mem_free(work);
-    
     return FASP_SUCCESS;
 }
 

@@ -143,7 +143,7 @@ void * fasp_mem_realloc (void           *oldmem,
 /**
  * \fn void fasp_mem_free (void *mem)
  *
- * \brief Free up previous allocated memory body
+ * \brief Free up previous allocated memory body and set pointer to NULL
  *
  * \param mem   Pointer to the memory body need to be freed
  *
@@ -160,6 +160,8 @@ void fasp_mem_free (void *mem)
 #else
         free(mem);
 #endif
+        
+        mem = NULL;
         
 #if DEBUG_MODE > 1
         total_alloc_count--;

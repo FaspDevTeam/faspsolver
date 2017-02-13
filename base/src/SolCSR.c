@@ -519,7 +519,7 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat    *A,
     }
     
 FINISHED:
-    fasp_ilu_data_free(&LU, A);
+    fasp_ilu_data_free(&LU);
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
@@ -573,7 +573,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat    *A,
     
     // ILU setup for M
     ILU_data LU;
-    if ( (status = fasp_ilu_dcsr_setup(M,&LU,iluparam))<0 ) goto FINISHED;
+    if ( (status = fasp_ilu_dcsr_setup(M, &LU, iluparam))<0 ) goto FINISHED;
     
     // check iludata
     if ( (status = fasp_mem_iludata_check(&LU))<0 ) goto FINISHED;
@@ -584,7 +584,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat    *A,
     pc.fct  = fasp_precond_ilu;
     
     // call iterative solver
-    status = fasp_solver_dcsr_itsolver(A,b,x,&pc,itparam);
+    status = fasp_solver_dcsr_itsolver(A, b, x, &pc, itparam);
     
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
@@ -604,7 +604,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat    *A,
     }
     
 FINISHED:
-    fasp_ilu_data_free(&LU, M);
+    fasp_ilu_data_free(&LU);
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);

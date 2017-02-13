@@ -103,8 +103,7 @@ void fasp_amg_data_free (AMG_data   *mgl,
     INT i;
     
     for ( i=0; i<max_levels; ++i ) {
-        fasp_ilu_data_free(&mgl[i].LU, &mgl[i].A);
-        //fasp_ilu_data_free(&mgl[i].LU, NULL);
+        fasp_ilu_data_free(&mgl[i].LU);
         fasp_dcsr_free(&mgl[i].A);
         fasp_dcsr_free(&mgl[i].P);
         fasp_dcsr_free(&mgl[i].R);
@@ -117,7 +116,6 @@ void fasp_amg_data_free (AMG_data   *mgl,
     
     for ( i=0; i<mgl->near_kernel_dim; ++i ) {
         if (mgl->near_kernel_basis[i]) fasp_mem_free(mgl->near_kernel_basis[i]);
-        mgl->near_kernel_basis[i] = NULL;
     }
     
     // Clean direct solver data in necessary
@@ -149,9 +147,8 @@ void fasp_amg_data_free (AMG_data   *mgl,
             break;
     }
     
-    fasp_mem_free(mgl->near_kernel_basis); mgl->near_kernel_basis = NULL;
-    
-    fasp_mem_free(mgl); mgl = NULL;
+    fasp_mem_free(mgl->near_kernel_basis);
+    fasp_mem_free(mgl);
     
     if (param != NULL) {
         if ( param->cycle_type == AMLI_CYCLE ) fasp_mem_free(param->amli_coef);
@@ -197,10 +194,8 @@ AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
  *
  * \param mgl  Pointer to the AMG_data_bsr
  *
- * \author Xiaozhe Hu
+ * \author Xiaozhe Hu, Chensong Zhang
  * \date   2013/02/13
- *
- * Modified by Chunsheng Feng on 02/12/2017: To permute the matrix A back to its original state for ILUtp
  */
 void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
 {
@@ -209,7 +204,7 @@ void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
     
     for (i=0; i<max_levels; ++i) {
         
-	fasp_ilu_data_free(&mgl[i].LU, NULL);
+        fasp_ilu_data_free(&mgl[i].LU);
         fasp_dbsr_free(&mgl[i].A);
         fasp_dbsr_free(&mgl[i].P);
         fasp_dbsr_free(&mgl[i].R);
@@ -218,24 +213,22 @@ void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
         fasp_dvec_free(&mgl[i].diaginv);
         fasp_dvec_free(&mgl[i].diaginv_SS);
         fasp_dcsr_free(&mgl[i].Ac);
-        fasp_ilu_data_free(&mgl[i].PP_LU, &mgl[i].PP);
-        //fasp_ilu_data_free(&mgl[i].PP_LU, NULL);
+        
+        fasp_ilu_data_free(&mgl[i].PP_LU);
         fasp_dcsr_free(&mgl[i].PP);
-        fasp_mem_free(mgl[i].pw);
         fasp_dbsr_free(&mgl[i].SS);
-        fasp_mem_free(mgl[i].sw);
         fasp_dvec_free(&mgl[i].diaginv_SS);
         fasp_dvec_free(&mgl[i].w);
         fasp_ivec_free(&mgl[i].cfmark);
+        fasp_mem_free(mgl[i].pw);
+        fasp_mem_free(mgl[i].sw);
     }
     
     for (i=0; i<mgl->near_kernel_dim; ++i) {
         if (mgl->near_kernel_basis[i]) fasp_mem_free(mgl->near_kernel_basis[i]);
-        mgl->near_kernel_basis[i] = NULL;
     }
-    
-    fasp_mem_free(mgl->near_kernel_basis); mgl->near_kernel_basis = NULL;
-    fasp_mem_free(mgl); mgl = NULL;
+    fasp_mem_free(mgl->near_kernel_basis);
+    fasp_mem_free(mgl);
 }
 
 /**
@@ -275,47 +268,49 @@ void fasp_ilu_data_create (const INT   iwk,
 }
 
 /**
- * \fn void fasp_ilu_data_free (ILU_data *ILUdata)
+ * \fn void fasp_ilu_data_free (ILU_data *iludata)
  *
  * \brief Create ILU_data sturcture
  *
- * \param ILUdata   Pointer to ILU_data
+ * \param iludata   Pointer to ILU_data
  *
  * \param A   Pointer to dSCRmat
  *
  * \author Chensong Zhang
  * \date   2010/04/03
  *
- * Modified by Chunsheng Feng on 02/12/2017: add iperm array for ILUtp, and permute the matrix A back to its original state
- *
+ * Modified by Chunsheng Feng on 02/12/2017: add iperm array for ILUtp
  */
-void fasp_ilu_data_free (ILU_data *ILUdata, dCSRmat *A)
+void fasp_ilu_data_free (ILU_data *iludata)
 {
-    if (ILUdata==NULL) return;
-
-    fasp_mem_free(ILUdata->ijlu);  ILUdata->ijlu  = NULL;
-    fasp_mem_free(ILUdata->luval); ILUdata->luval = NULL;
-    fasp_mem_free(ILUdata->work);  ILUdata->work  = NULL;
-    fasp_mem_free(ILUdata->ilevL);  ILUdata->ilevL  = NULL;
-    fasp_mem_free(ILUdata->jlevL);  ILUdata->jlevL  = NULL;
-    fasp_mem_free(ILUdata->ilevU);  ILUdata->ilevU  = NULL;
-    fasp_mem_free(ILUdata->jlevU);  ILUdata->jlevU  = NULL;
-
-    if (ILUdata->type == ILUtp) {
-     
-     if (A != NULL ) {	    
-       // To permute the matrix back to its original state use the loop:
-       INT k,nnz;
-       nnz = A->nnz;
-       INT *iperm = ILUdata->iperm;
-       for (k=0; k < nnz; k++)  A->JA[k] = iperm[ A->JA[k] ] -1;   //iperm fortran array format
-     }
-
-     fasp_mem_free(ILUdata->iperm);  ILUdata->iperm  = NULL;
+    if ( iludata == NULL ) return; // There is nothing to do!
+    
+    fasp_mem_free(iludata->ijlu);
+    fasp_mem_free(iludata->luval);
+    fasp_mem_free(iludata->work);
+    fasp_mem_free(iludata->ilevL);
+    fasp_mem_free(iludata->jlevL);
+    fasp_mem_free(iludata->ilevU);
+    fasp_mem_free(iludata->jlevU);
+    
+    if ( iludata->type == ILUtp ) {
+        
+        if ( iludata->A != NULL ) {
+            // To permute the matrix back to its original state use the loop:
+            INT k;
+            const INT  nnz   = iludata->A->nnz;
+            const INT *iperm = iludata->iperm;
+            for ( k = 0; k < nnz; k++ ) {
+                // iperm is in Fortran array format
+                iludata->A->JA[k] = iperm[ iludata->A->JA[k] ] -1;
+            }
+        }
+        
+        fasp_mem_free(iludata->iperm);
     }
-
-    ILUdata->row = ILUdata->col = ILUdata->nzlu = ILUdata ->nwork = \
-    ILUdata->nb = ILUdata->nlevL = ILUdata->nlevU = 0;
+    
+    iludata->row = iludata->col   = iludata->nzlu  = iludata->nwork = \
+    iludata->nb  = iludata->nlevL = iludata->nlevU = 0;
 }
 
 /**
@@ -330,13 +325,16 @@ void fasp_ilu_data_free (ILU_data *ILUdata, dCSRmat *A)
 void fasp_swz_data_free (SWZ_data *swzdata)
 {
     INT i;
+
+    if ( swzdata == NULL ) return; // There is nothing to do!
+
     fasp_dcsr_free(&swzdata->A);
     
     for (i=0; i<swzdata->nblk; ++i) fasp_dcsr_free (&((swzdata->blk_data)[i]));
     
     swzdata->nblk = 0;
-    fasp_mem_free (swzdata->iblock);
-    fasp_mem_free (swzdata->jblock);
+    fasp_mem_free  (swzdata->iblock);
+    fasp_mem_free  (swzdata->jblock);
     fasp_dvec_free (&swzdata->rhsloc1);
     fasp_dvec_free (&swzdata->xloc1);
     

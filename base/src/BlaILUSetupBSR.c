@@ -76,10 +76,11 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     iwk = (lfil+2)*nnz;
     
     // setup preconditioner
-    iludata->row = iludata->col=n;
+    iludata->A   = NULL; // No need for BSR matrix
+    iludata->row = iludata->col = n;
     iludata->nb  = nb;
-    iludata->ilevL = iludata->jlevL=NULL;
-    iludata->ilevU = iludata->jlevU=NULL;
+    iludata->ilevL = iludata->jlevL = NULL;
+    iludata->ilevU = iludata->jlevU = NULL;
     
     ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
     uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
@@ -188,6 +189,7 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     iwk = (lfil+2)*nnz;
     
     // setup preconditioner
+    iludata->A   = NULL; // No need for BSR matrix
     iludata->row = iludata->col=n;
     iludata->nb  = nb;
     
@@ -210,7 +212,6 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     iludata->work = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
     memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
     fasp_darray_set(nzlu*nb2, iludata->luval, 0.0);
-    
     
 #if DEBUG_MODE > 1
     printf("### DEBUG: numerical factorization ... \n ");
@@ -300,6 +301,7 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     iwk = (lfil+2)*nnz;
     
     // setup preconditioner
+    iludata->A   = NULL; // No need for BSR matrix
     iludata->row = iludata->col=n;
     iludata->nb  = nb;
     
@@ -382,12 +384,13 @@ FINISHED:
 }
 
 /**
- * \fn SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat *A, dCSRmat *Ap, ILU_data *iludata, ILU_param *iluparam)
+ * \fn SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat *A, dCSRmat *Ap, 
+ *                                       ILU_data *iludata, ILU_param *iluparam)
  *
- * \brief Multi-threads parallel ILU decoposition of a BSR matrix A based on graph coloring
+ * \brief Multi-thread ILU decoposition of a BSR matrix A based on graph coloring
  *
  * \param A         Pointer to dBSRmat matrix
- * \param Ap        Pointer to dCSRmat matrix and provide sparsity pattern
+ * \param Ap        Pointer to dCSRmat matrix which provides sparsity pattern
  * \param iludata   Pointer to ILU_data
  * \param iluparam  Pointer to ILU_param
  *
@@ -433,6 +436,7 @@ SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
     iludata->nlevU = 0;
     iludata->ilevU = NULL;
     iludata->jlevU = NULL;
+    iludata->A     = NULL; // No need for BSR matrix
     
     status = fasp_ilu_dbsr_setup_omp(&A_LU,iludata,iluparam);
     
@@ -456,7 +460,7 @@ SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
  * \param uptr     Pointer to the diagnal position of ILU
  *
  * \author Shiquan Zhang
- * \date 11/08/2010
+ * \date   11/08/2010
  *
  * \note Works for general nb (Xiaozhe)
  */
@@ -741,7 +745,7 @@ static INT numfactor (dBSRmat   *A,
  * \param icmap    Mapping
  *
  * \author Zheng Li
- * \date 12/04/2016
+ * \date   12/04/2016
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
  */
@@ -942,7 +946,7 @@ static INT numfactor_mulcol (dBSRmat   *A,
  * \param icmap    Mapping
  *
  * \author Zheng Li
- * \date 12/04/2016
+ * \date   12/04/2016
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
  */

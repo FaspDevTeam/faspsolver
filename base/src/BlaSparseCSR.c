@@ -176,9 +176,9 @@ void fasp_dcsr_free (dCSRmat *A)
 {
     if ( A == NULL ) return;
     
-    fasp_mem_free(A->IA);  A->IA  = NULL;
-    fasp_mem_free(A->JA);  A->JA  = NULL;
-    fasp_mem_free(A->val); A->val = NULL;
+    fasp_mem_free(A->IA);
+    fasp_mem_free(A->JA);
+    fasp_mem_free(A->val);
 }
 
 /**
@@ -195,9 +195,9 @@ void fasp_icsr_free (iCSRmat *A)
 {
     if ( A == NULL ) return;
     
-    fasp_mem_free(A->IA);  A->IA  = NULL;
-    fasp_mem_free(A->JA);  A->JA  = NULL;
-    fasp_mem_free(A->val); A->val = NULL;
+    fasp_mem_free(A->IA);
+    fasp_mem_free(A->JA);
+    fasp_mem_free(A->val);
 }
 
 /**

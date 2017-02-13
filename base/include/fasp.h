@@ -623,6 +623,79 @@ typedef struct {
 } Pardiso_data; /**< Parameters for PARDISO */
 
 /**
+ * \struct ILU_data
+ * \brief Data for ILU setup
+ */
+typedef struct {
+    
+    //! pointer to the original coefficient matrix
+    dCSRmat *A;
+
+    //! type of ILUdata
+    INT type;
+    
+    //! row number of matrix LU, m
+    INT row;
+    
+    //! column of matrix LU, n
+    INT col;
+    
+    //! number of nonzero entries
+    INT nzlu;
+    
+    //! integer array of row pointers and column indexes, the size is nzlu
+    INT *ijlu;
+    
+    //! nonzero entries of LU
+    REAL *luval;
+    
+    //! block size for BSR type only
+    INT nb;
+    
+    //! work space size
+    INT nwork;
+    
+    //! work space
+    REAL *work;
+   
+    //! permutation arrays for ILUtp
+    INT *iperm;
+    // iperm[0:n-1]   = old indices of unknowns
+    // iperm[n:2*n-1] = reverse permutation = new indices.
+    
+    //! number of colors for multi-threading
+    INT ncolors;
+    
+    //! indices for different colors
+    INT *ic;
+    
+    //! mapping from vertex to color
+    INT *icmap;
+    
+    //! temporary work space
+    INT *uptr;
+    
+    //! number of colors for lower triangle
+    INT nlevL;
+    
+    //! number of colors for upper triangle
+    INT nlevU;
+    
+    //! number of vertices in each color for lower triangle
+    INT *ilevL;
+    
+    //! number of vertices in each color for upper triangle
+    INT *ilevU;
+    
+    //! mapping from row to color for lower triangle
+    INT *jlevL;
+    
+    //! mapping from row to color for upper triangle
+    INT *jlevU;
+    
+} ILU_data; /**< Data for ILU */
+
+/**
  * \struct SWZ_data
  * \brief Data for Schwarz methods
  *
@@ -632,8 +705,8 @@ typedef struct {
     
     /* matrix information */
     
-    //! pointer to the matrix
-    dCSRmat A;  // note: has to be start from 1!! Change later
+    //! pointer to the original coefficient matrix
+    dCSRmat A;  // note: must start from 1!! Change later
     
     /* blocks information */
     
@@ -646,7 +719,7 @@ typedef struct {
     //! column index of blocks
     INT *jblock;
     
-    //! temp work space???
+    //! temp work space ???
     REAL *rhsloc;
     
     //! local right hand side
@@ -699,74 +772,6 @@ typedef struct {
     SWZ_param *swzparam;
     
 } SWZ_data;
-
-/**
- * \struct ILU_data
- * \brief Data for ILU setup
- */
-typedef struct {
-    
-    //! type of ILUdata
-    INT type;
-    
-    //! row number of matrix LU, m
-    INT row;
-    
-    //! column of matrix LU, n
-    INT col;
-    
-    //! number of nonzero entries
-    INT nzlu;
-    
-    //! integer array of row pointers and column indexes, the size is nzlu
-    INT *ijlu;
-    
-    //! nonzero entries of LU
-    REAL *luval;
-    
-    //! block size for BSR type only
-    INT nb;
-    
-    //! work space size
-    INT nwork;
-    
-    //! work space
-    REAL *work;
-   
-    //! contains the permutation arrays for ILUtp, iperm[0:n-1] = old numbers of unknowns,iperm[n:2*n-1] = reverse permutation = new unknowns.
-    INT  *iperm; 
-    
-    //! number of colors for multi-threading
-    INT ncolors;
-    
-    //! indices for different colors
-    INT *ic;
-    
-    //! mapping from vertex to color
-    INT *icmap;
-    
-    //! temporary work space
-    INT *uptr;
-    
-    //! number of colors for lower triangle
-    INT nlevL;
-    
-    //! number of colors for upper triangle
-    INT nlevU;
-    
-    //! number of vertices in each color for lower triangle
-    INT *ilevL;
-    
-    //! number of vertices in each color for upper triangle
-    INT *ilevU;
-    
-    //! mapping from row to color for lower triangle
-    INT *jlevL;
-    
-    //! mapping from row to color for upper triangle
-    INT *jlevU;
-    
-} ILU_data; /**< Data for ILU */
 
 /**
  * \struct AMG_data
