@@ -142,13 +142,8 @@ void fasp_dstr_free (dSTRmat *A)
     
     for (i=0;i<A->nband;++i) fasp_mem_free(A->offdiag[i]);
     
-    A->nx=0;
-    A->ny=0;
-    A->nz=0;
-    A->nxy=0;
-    A->ngrid=0;
-    A->nband=0;
-    A->nc=0;    
+    A->nx = A->ny = A->nz = A->nxy=0;
+    A->ngrid = A->nband = A->nc=0;
 }
 
 /**
@@ -168,19 +163,20 @@ void fasp_dstr_cp (const dSTRmat *A,
     const INT nc2 = (A->nc)*(A->nc);
 
     INT i;
-    B->nx=A->nx;
-    B->ny=A->ny;
-    B->nz=A->nz;
-    B->nxy=A->nxy;
-    B->ngrid=A->ngrid;
-    B->nc=A->nc;
-    B->nband=A->nband;
+    B->nx    = A->nx;
+    B->ny    = A->ny;
+    B->nz    = A->nz;
+    B->nxy   = A->nxy;
+    B->ngrid = A->ngrid;
+    B->nc    = A->nc;
+    B->nband = A->nband;
     
     memcpy(B->offsets,A->offsets,(A->nband)*sizeof(INT));
     memcpy(B->diag,A->diag,(A->ngrid*nc2)*sizeof(REAL));
-    for (i=0;i<A->nband;++i)
-        memcpy(B->offdiag[i],A->offdiag[i],((A->ngrid - ABS(A->offsets[i]))*nc2)*sizeof(REAL)); 
-    
+    for (i=0;i<A->nband;++i) {
+        memcpy(B->offdiag[i],A->offdiag[i],
+               ((A->ngrid - ABS(A->offsets[i]))*nc2)*sizeof(REAL));
+    }
 }
 
 /*---------------------------------*/

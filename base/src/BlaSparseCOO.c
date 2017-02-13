@@ -103,9 +103,9 @@ void fasp_dcoo_free (dCOOmat *A)
 {
     if (A==NULL) return;
     
-    fasp_mem_free(A->rowind); A->rowind= NULL;
-    fasp_mem_free(A->colind); A->colind = NULL;
-    fasp_mem_free(A->val);    A->val = NULL;
+    fasp_mem_free(A->rowind);
+    fasp_mem_free(A->colind);
+    fasp_mem_free(A->val);
 }
 
 /**

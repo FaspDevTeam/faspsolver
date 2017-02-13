@@ -1,7 +1,6 @@
 /*! \file  ItrAuxiliary.inl
  *
- *  \brief Read, write, and other auxiliary routines. Also routines to convert
- *         matrix formats
+ *  \brief Read, write, and other auxiliary routines for iterative methods.
  *
  *  \note  This file contains Level-2 (Itr) functions, which are used in:
  *         ItrSmootherCSR.c

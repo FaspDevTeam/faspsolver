@@ -144,10 +144,9 @@ void fasp_ivec_alloc (const INT  m,
  */
 void fasp_dvec_free (dvector *u)
 {    
-    if (u==NULL) return;
+    if ( u == NULL ) return;
     
-    fasp_mem_free(u->val);
-    u->row = 0; u->val = NULL; 
+    fasp_mem_free(u->val); u->row = 0;
 }
 
 /**
@@ -164,10 +163,9 @@ void fasp_dvec_free (dvector *u)
  */
 void fasp_ivec_free (ivector *u)
 {    
-    if (u==NULL) return;
+    if ( u == NULL ) return;
     
-    fasp_mem_free(u->val);
-    u->row = 0; u->val = NULL; 
+    fasp_mem_free(u->val); u->row = 0;
 }
 
 /**

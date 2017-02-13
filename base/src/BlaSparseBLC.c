@@ -48,7 +48,6 @@ void fasp_dblc_free (dBLCmat *A)
     }
     
     fasp_mem_free(A->blocks);
-    A->blocks = NULL;
 }
 
 /*---------------------------------*/

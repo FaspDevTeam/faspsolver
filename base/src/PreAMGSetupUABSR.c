@@ -346,7 +346,6 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr   *mgl,
         }
 
     }
-    
 
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
@@ -354,7 +353,6 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr   *mgl,
         print_cputime("Unsmoothed aggregation (BSR) setup", setup_end - setup_start);
     }
     
-
     fasp_mem_free(vertices);
     fasp_mem_free(num_aggs);
     fasp_mem_free(Neighbor);

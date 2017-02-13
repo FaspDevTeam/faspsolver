@@ -41,13 +41,13 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
                            ILU_data   *iludata,
                            ILU_param  *iluparam)
 {
-    const INT   type=iluparam->ILU_type, print_level=iluparam->print_level;
-    const INT   n=A->col, nnz=A->nnz, mbloc=n;
-    const REAL  ILU_droptol=iluparam->ILU_droptol;
-    const REAL  permtol=iluparam->ILU_permtol;
+    const INT   type = iluparam->ILU_type, print_level = iluparam->print_level;
+    const INT   n = A->col, nnz = A->nnz, mbloc = n;
+    const REAL  ILU_droptol = iluparam->ILU_droptol;
+    const REAL  permtol = iluparam->ILU_permtol;
     
     // local variable
-    INT    lfil=iluparam->ILU_lfil, lfilt=iluparam->ILU_lfil;
+    INT    lfil = iluparam->ILU_lfil, lfilt = iluparam->ILU_lfil;
     INT    ierr, iwk, nzlu, nwork, *ijlu, *iperm;
     REAL  *luval;
     
@@ -77,18 +77,19 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
             break;
     } 
     
-    nwork  = 4*n;
+    nwork = 4*n;
     
 #if DEBUG_MODE > 1
     printf("### DEBUG: fill-in = %d, iwk = %d, nwork = %d\n", lfil, iwk, nwork);
 #endif
     
     // setup ILU preconditioner
-    iludata->row=iludata->col=n;    
-    iludata->ilevL=iludata->jlevL=NULL;    
-    iludata->ilevU=iludata->jlevU=NULL;    
-    iludata->iperm=NULL;
-    iludata->type = type;
+    iludata->A     = A; // save a pointer to the coeff matrix for ILUtp
+    iludata->row   = iludata->col   = n;
+    iludata->ilevL = iludata->jlevL = NULL;
+    iludata->ilevU = iludata->jlevU = NULL;
+    iludata->iperm = NULL;
+    iludata->type  = type;
     
     fasp_ilu_data_create(iwk, nwork, iludata);
     
@@ -98,23 +99,25 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
 #endif
     
     // ILU decomposition
-    ijlu=iludata->ijlu;
-    luval=iludata->luval;
+    ijlu  = iludata->ijlu;
+    luval = iludata->luval;
+    
     switch (type) {
 
         case ILUt:
-            fasp_ilut(n,A->val,A->JA,A->IA,lfilt,ILU_droptol,luval,ijlu,
-                      iwk,&ierr,&nzlu);
+            fasp_ilut (n, A->val, A->JA, A->IA, lfilt, ILU_droptol, luval, ijlu,
+                       iwk, &ierr, &nzlu);
             break;
             
         case ILUtp:
             iperm = iludata->iperm;
-            fasp_ilutp(n,A->val,A->JA,A->IA, lfilt, ILU_droptol, permtol,
-                       mbloc,luval,ijlu, iperm, iwk,&ierr,&nzlu);
+            fasp_ilutp (n, A->val, A->JA, A->IA, lfilt, ILU_droptol, permtol,
+                        mbloc, luval, ijlu, iperm, iwk, &ierr, &nzlu);
             break;
             
         default: // ILUk
-            fasp_iluk(n,A->val,A->JA,A->IA,lfil,luval,ijlu,iwk,&ierr,&nzlu);
+            fasp_iluk (n, A->val, A->JA, A->IA, lfil, luval, ijlu, iwk,
+                       &ierr, &nzlu);
             break;
 
     } 
@@ -126,8 +129,8 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
     fasp_mem_usage();
 #endif
     
-    iludata->nzlu=nzlu;
-    iludata->nwork=nwork;
+    iludata->nzlu  = nzlu;
+    iludata->nwork = nwork;
     
 #if DEBUG_MODE > 1
     printf("### DEBUG: iwk = %d, nzlu = %d\n",iwk,nzlu);

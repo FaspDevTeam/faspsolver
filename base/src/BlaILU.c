@@ -850,8 +850,8 @@ F998:    // illegal lfil entered.
 
 /**
  * \fn void fasp_ilutp (INT n, REAL *a, INT *ja, INT *ia, INT lfil, REAL droptol,
- *                      REAL permtol, INT mbloc, REAL *alu, INT *jlu, INT iwk,
- *                      INT *ierr, INT *nz)
+ *                      REAL permtol, INT mbloc, REAL *alu, INT *jlu, INT *iperm,
+ *                      INT iwk, INT *ierr, INT *nz)
  *
  * \brief Get incomplete LU factorization with pivoting dual truncations of
  *        a CSR matrix A
@@ -879,6 +879,7 @@ F998:    // illegal lfil entered.
  *             followed by the i-th row of U.
  * \param jlu  integer array of length n containing the pointers to
  *             the beginning of each row of U in the matrix alu,jlu.
+ * \param iperm permutation arrays
  * \param iwk  integer. The lengths of arrays alu and jlu. If the arrays
  *             are not big enough to store the ILU factorizations, ilut
  *             will stop with an error message.
@@ -1008,15 +1009,13 @@ void fasp_ilutp (INT    n,
     REAL s, tmp, tnorm, xmax, xmax0, fact, t;
     SHORT cinindex=0;
     REAL  *w;
-    INT  *ju, *jw; //, *iperm;
+    INT  *ju, *jw;
     
     if (lfil  <  0) goto F998;
     
-    
-    ju = (INT *)fasp_mem_calloc(n, sizeof(INT));
-    jw = (INT *)fasp_mem_calloc(2*n, sizeof(INT));
-//    iperm = (INT *)fasp_mem_calloc(2*n, sizeof(INT));
-    w = (REAL *)fasp_mem_calloc(n+1, sizeof(REAL));
+    ju = (INT *) fasp_mem_calloc(n, sizeof(INT));
+    jw = (INT *) fasp_mem_calloc(2*n, sizeof(INT));
+    w  = (REAL *)fasp_mem_calloc(n+1, sizeof(REAL));
     
     --ju;
     --jw;
@@ -1304,7 +1303,6 @@ F100:
     
     fasp_mem_free(ju);
     fasp_mem_free(jw);
-//   fasp_mem_free(iperm);
     fasp_mem_free(w);
     
 #if DEBUG_MODE > 0

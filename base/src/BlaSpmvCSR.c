@@ -2077,8 +2077,8 @@ j, istart, length, end_rowR, jj, end_rowA, k)
         // setup coarse matrix B
         B->row = row;
         B->col = col;
-        B->IA = iac;
-        B->JA = jac;
+        B->IA  = iac;
+        B->JA  = jac;
         B->val = acj;
         B->nnz = B->IA[B->row] - B->IA[0];
         fasp_mem_free(temps);

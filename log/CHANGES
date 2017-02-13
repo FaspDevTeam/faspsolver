@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+02/13/2017 FASP 1.9.9:
+- Fix ILUtp problem with permutation.
+- Separate BlaIOUtil.inl from BlaIO.c.
+- Set pointer to NULL after fasp_mem_free().
+
 02/10/2017 FASP 1.9.8:
 - Now automatic build test works.
 - Add and test BitBucket Pipelines automatic test tool.

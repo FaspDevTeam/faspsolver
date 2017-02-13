@@ -347,7 +347,7 @@ int main (int argc, const char * argv[])
         /*****************************/
         fasp_dvec_alloc(b.row, &x);  // allocate mem for numerical solution
         
-        if (1) {
+        if (TRUE) {
             /* Using no preconditioner for Krylov methods */
             printf("\n------------------------------------------------------------------\n");
             printf("Krylov solver ...\n");
@@ -364,7 +364,7 @@ int main (int argc, const char * argv[])
             }
         }
 
-        if (1) {
+        if (TRUE) {
             /* Using diagonal preconditioner for Krylov methods */
             printf("\n------------------------------------------------------------------\n");
             printf("Diagonal preconditioned Krylov solver ...\n");
@@ -381,39 +381,7 @@ int main (int argc, const char * argv[])
             }
         }
         
-        if (1) {
-            /* Using classical AMG as preconditioner for Krylov methods */
-            printf("\n------------------------------------------------------------------\n");
-            printf("AMG preconditioned Krylov solver ...\n");
-            
-            fasp_param_solver_init(&itparam);
-            fasp_param_amg_init(&amgparam);
-            itparam.maxit         = 100;
-            itparam.tol           = 1e-15;
-            itparam.print_level   = print_level;
-            for (indm = 0; indm<num_solvers; indm++) {
-                fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-                itparam.itsolver_type = indm+1;
-                fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
-                check_solu(&x, &sol, tolerance, &(ntest_amg[indm]), &(nfail_amg[indm]));
-            }
-        }
-        
-        if (1) {
-            /* Using classical AMG as a solver */
-            /* Using classical AMG as preconditioner for Krylov methods */
-            printf("\n------------------------------------------------------------------\n");
-            printf("AMG as iterative solver ...\n");
-            
-            amgparam.maxit        = 20;
-            amgparam.tol          = 1e-10;
-            amgparam.print_level  = print_level;
-            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-            fasp_solver_amg(&A, &b, &x,&amgparam);
-            check_solu(&x, &sol, tolerance, &ntest_amg_solver, &nfail_amg_solver);
-        }
-        
-        if (1) {
+        if (TRUE) {
             /* Using ILUk as preconditioner for Krylov methods */
             printf("\n------------------------------------------------------------------\n");
             printf("ILUk preconditioned Krylov solver ...\n");
@@ -432,7 +400,7 @@ int main (int argc, const char * argv[])
             }
         }
         
-        if (1) {
+        if (TRUE) {
             /* Using ILUt as preconditioner for Krylov methods */
             printf("\n------------------------------------------------------------------\n");
             printf("ILUt preconditioned Krylov solver ...\n");
@@ -451,7 +419,7 @@ int main (int argc, const char * argv[])
             }
         }
 
-        if (1) {
+        if (TRUE) {
             /* Using ILUtp as preconditioner for Krylov methods */
             printf("\n------------------------------------------------------------------\n");
             printf("ILUtp preconditioned Krylov solver ...\n");
@@ -470,6 +438,38 @@ int main (int argc, const char * argv[])
             }
         }
 
+        if (TRUE) {
+            /* Using classical AMG as preconditioner for Krylov methods */
+            printf("\n------------------------------------------------------------------\n");
+            printf("AMG preconditioned Krylov solver ...\n");
+            
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            itparam.maxit         = 100;
+            itparam.tol           = 1e-15;
+            itparam.print_level   = print_level;
+            for (indm = 0; indm<num_solvers; indm++) {
+                fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+                itparam.itsolver_type = indm+1;
+                fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+                check_solu(&x, &sol, tolerance, &(ntest_amg[indm]), &(nfail_amg[indm]));
+            }
+        }
+        
+        if (TRUE) {
+            /* Using classical AMG as a solver */
+            /* Using classical AMG as preconditioner for Krylov methods */
+            printf("\n------------------------------------------------------------------\n");
+            printf("AMG as iterative solver ...\n");
+            
+            amgparam.maxit        = 20;
+            amgparam.tol          = 1e-10;
+            amgparam.print_level  = print_level;
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_solver_amg(&A, &b, &x,&amgparam);
+            check_solu(&x, &sol, tolerance, &ntest_amg_solver, &nfail_amg_solver);
+        }
+        
         /* clean up memory */
         fasp_dcsr_free(&A);
         fasp_dvec_free(&b);
