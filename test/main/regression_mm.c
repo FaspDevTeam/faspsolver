@@ -61,6 +61,8 @@ static void check_solu(dvector *x, dvector *sol, double tol, unsigned int *nt, u
  *
  * \author Feiteng Huang
  * \date   06/12/2012
+ *
+ * Modified by Chunsheng Feng on 02/16/2017: changed the reading format for matrix 9
  */
 int main (int argc, const char * argv[])
 {
@@ -294,7 +296,8 @@ int main (int argc, const char * argv[])
                 // Black oil simulation, shale barriers(NX = NY = NZ = 10, NC = 1)
                 
                 // Read A in MatrixMarket COO format.
-                fasp_dmtxsym_read("../data/sherman1.mtx", &A);
+//               fasp_dmtxsym_read("../data/sherman1.mtx", &A);
+               fasp_dmtx_read("../data/sherman1.mtx", &A); // modify by Chunsheng Feng on 02/16/2017
                 
                 printf("MatrixMarket Oil reservoir simulation challenge matrics\n");
                 printf("||  Condition Number:      2.3e+4   ||\n");
@@ -454,7 +457,11 @@ int main (int argc, const char * argv[])
             /* Using ILUtp as preconditioner for Krylov methods */
             printf("\n------------------------------------------------------------------\n");
             printf("ILUtp preconditioned Krylov solver ...\n");
-            
+/*
+           char filename[80];
+           sprintf(filename,"beforeILUtp_%03d.dat",indp);  
+           fasp_dcsr_write_coo (filename,&A);
+*/
             fasp_param_solver_init(&itparam);
             fasp_param_ilu_init(&iluparam);
             itparam.maxit         = 100;
@@ -467,6 +474,10 @@ int main (int argc, const char * argv[])
                 fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
                 check_solu(&x, &sol, tolerance, &(ntest_ilutp[indm]), &(nfail_ilutp[indm]));
             }
+/*
+           sprintf(filename,"afterILUtp_%03d.dat",indp); 
+           fasp_dcsr_write_coo (filename,&A);
+*/
         }
 
         /* clean up memory */
