@@ -229,61 +229,6 @@ int main (int argc, const char * argv[])
         }
         
         if ( indp==1 || indp==2 || indp==3 ) {
-            /* VBiCGstab */
-            printf("------------------------------------------------------------------\n");
-            printf("VBiCGstab solver ...\n");
-            
-            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-            fasp_param_solver_init(&itparam);
-            itparam.precond_type  = PREC_NULL;
-            itparam.itsolver_type = SOLVER_VBiCGstab;
-            itparam.maxit         = 5000;
-            itparam.tol           = 1e-12;
-            itparam.print_level   = print_level;
-            fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
-            
-            check_solu(&x, &sol, tolerance);
-        }
-        
-        if ( indp==1 || indp==2 || indp==3 ) {
-            /* Matrix-free VBiCGstab */
-            printf("------------------------------------------------------------------\n");
-            printf("Matrix-free VBiCGstab solver ...\n");
-            
-            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-            fasp_param_solver_init(&itparam);
-            itparam.precond_type  = PREC_NULL;
-            itparam.itsolver_type = SOLVER_VBiCGstab;
-            itparam.maxit         = 5000;
-            itparam.tol           = 1e-12;
-            itparam.print_level   = print_level;
-            mxv_matfree mf;
-            fasp_solver_matfree_init(MAT_CSR, &mf, &A);
-            fasp_solver_krylov(&mf, &b, &x, &itparam);
-            
-            check_solu(&x, &sol, tolerance);
-        }
-        
-        if ( indp==1 || indp==2 || indp==3 ) {
-            /* Matrix-free VBiCGstab for BSR */
-            printf("------------------------------------------------------------------\n");
-            printf("Matrix-free VBiCGstab solver for BSR ...\n");
-            
-            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-            fasp_param_solver_init(&itparam);
-            itparam.precond_type  = PREC_NULL;
-            itparam.itsolver_type = SOLVER_VBiCGstab;
-            itparam.maxit         = 5000;
-            itparam.tol           = 1e-12;
-            itparam.print_level   = print_level;
-            mxv_matfree mf;
-            fasp_solver_matfree_init(MAT_BSR, &mf, &A_bsr);
-            fasp_solver_krylov(&mf, &b, &x, &itparam);
-            
-            check_solu(&x, &sol, tolerance);
-        }
-        
-        if ( indp==1 || indp==2 || indp==3 ) {
             /* MinRes */
             printf("------------------------------------------------------------------\n");
             printf("MinRes solver ...\n");

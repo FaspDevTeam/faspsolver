@@ -94,11 +94,6 @@ INT fasp_solver_itsolver (mxv_matfree  *mf,
             iter = fasp_solver_pbcgs(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
             break;
             
-        case SOLVER_VBiCGstab:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling VBiCGstab solver (MatFree) ...\n");
-            iter = fasp_solver_pvbcgs(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl);
-            break;
-
         case SOLVER_MinRes:
             if ( prtlvl > PRINT_NONE ) printf("\nCalling MinRes solver (MatFree) ...\n");
             iter = fasp_solver_pminres(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 

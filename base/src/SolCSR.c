@@ -6,8 +6,8 @@
  *         AuxMemory.c, AuxMessage.c, AuxParam.c, AuxTiming.c, AuxVector.c,
  *         BlaILUSetupCSR.c, BlaSchwarzSetup.c, BlaSparseCheck.c, BlaSparseCSR.c, 
  *         KryPbcgs.c, KryPcg.c, KryPgcg.c, KryPgcr.c, KryPgmres.c, KryPminres.c,
- *         KryPvbcgs.c, KryPvfgmres.c, KryPvgmres.c, PreAMGSetupRS.c,
- *         PreAMGSetupSA.c, PreAMGSetupUA.c, PreCSR.c, and PreDataInit.c
+ *         KryPvfgmres.c, KryPvgmres.c, PreAMGSetupRS.c, PreAMGSetupSA.c,
+ *         PreAMGSetupUA.c, PreCSR.c, and PreDataInit.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
@@ -95,11 +95,6 @@ INT fasp_solver_dcsr_itsolver (dCSRmat    *A,
         case SOLVER_BiCGstab:
             if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (CSR) ...\n");
             iter = fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
-            break;
-            
-        case SOLVER_VBiCGstab:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling VBiCGstab solver (CSR) ...\n");
-            iter = fasp_solver_dcsr_pvbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_MinRes:
@@ -398,7 +393,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat    *A,
             status = fasp_amg_setup_ua(mgl, amgparam); break;
             
         default: // Classical AMG
-            status = fasp_amg_setup_rs(mgl, amgparam); break;
+            status = fasp_amg_setup_rs(mgl, amgparam);
             
     }
     
@@ -426,7 +421,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat    *A,
             case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
                 pc.fct = fasp_precond_namli; break;
             default: // V,W-Cycle AMG
-                pc.fct = fasp_precond_amg; break;
+                pc.fct = fasp_precond_amg;
         }
     }
     
@@ -514,7 +509,6 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat    *A,
                 break;
             default: // ILUk
                 print_cputime("ILUk_Krylov method totally", solver_duration);
-                break;
         }
     }
     
@@ -599,7 +593,6 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat    *A,
                 break;
             default: // ILUk
                 print_cputime("ILUk_Krylov method", solver_duration);
-                break;
         }
     }
     
@@ -674,7 +667,7 @@ INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat    *A,
             status = fasp_amg_setup_ua(mgl, amgparam); break;
             
         default: // Classical AMG
-            status = fasp_amg_setup_rs(mgl, amgparam); break;
+            status = fasp_amg_setup_rs(mgl, amgparam);
             
     }
     

@@ -5,6 +5,9 @@ File Name: CHANGES
 - Separate BlaIOUtil.inl from BlaIO.c.
 - Set pointer to NULL after fasp_mem_free().
 - Update user's guide.
+- Remove the old BiCGstab code.
+- Test ILUtp: still have problem some times.
+- Update regression test results. 
 
 02/10/2017 FASP 1.9.8:
 - Now automatic build test works.

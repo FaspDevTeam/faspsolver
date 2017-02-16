@@ -5,8 +5,7 @@
  *  \note  This file contains Level-5 (Sol) functions. It requires:
  *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c,
  *         BlaSmallMatInv.c, BlaILUSetupSTR.c, BlaSparseSTR.c, ItrSmootherSTR.c,
- *         KryPbcgs.c, KryPcg.c, KryPgmres.c, KryPvbcgs.c, KryPvgmres.c,
- *         and PreSTR.c
+ *         KryPbcgs.c, KryPcg.c, KryPgmres.c, KryPvgmres.c, and PreSTR.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
@@ -86,11 +85,6 @@ INT fasp_solver_dstr_itsolver (dSTRmat    *A,
     case SOLVER_BiCGstab:
         if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (STR) ...\n");
         iter=fasp_solver_dstr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
-        break;
-    
-    case SOLVER_VBiCGstab:
-        if ( prtlvl > PRINT_NONE ) printf("\nCalling VBiCGstab solver (STR) ...\n");
-        iter=fasp_solver_dstr_pvbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
         break;
     
     case SOLVER_GMRES:
