@@ -4,9 +4,9 @@
  *
  *  \note  This file contains Level-5 (Sol) functions. It requires:
  *         AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c, BlaSparseCSR.c,
- *         KryPbcgs.c, KryPgmres.c, KryPminres.c, KryPvbcgs.c, KryPvfgmres.c,
- *         KryPvgmres.c, PreAMGSetupRS.c, PreAMGSetupSA.c, PreAMGSetupUA.c,
- *         PreBLC.c, and PreDataInit.c
+ *         KryPbcgs.c, KryPgmres.c, KryPminres.c, KryPvfgmres.c, KryPvgmres.c,
+ *         PreAMGSetupRS.c, PreAMGSetupSA.c, PreAMGSetupUA.c, PreBLC.c, 
+ *         and PreDataInit.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
@@ -82,11 +82,6 @@ INT fasp_solver_dblc_itsolver (dBLCmat    *A,
         case SOLVER_BiCGstab:
             if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (BLC) ...\n");
             iter=fasp_solver_dblc_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
-            break;
-            
-        case SOLVER_VBiCGstab:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling VBiCGstab solver (BLC) ...\n");
-            iter=fasp_solver_dblc_pvbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_MinRes:

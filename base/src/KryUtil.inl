@@ -3,11 +3,10 @@
  *  \brief Routines for Krylov subspace iterative solvers
  *
  *  \note  This file contains Level-3 (Kry) functions, which are used in:
- *         KryPbcgs.c, KryPcg.c, KryPgcg.c, KryPgcr.c, KryPgmres.c,
- *         KryPminres.c, KryPvbcgs.c, KryPvfgmres.c, KryPvgmres.c,
- *         KrySPbcgs.c, KrySPcg.c, KrySPgmres.c, KrySPminres.c,
- *         KrySPvgmres.c, PreMGSolve.c, SolBLC.c, SolBSR.c, SolCSR.c,
- *         SolMatFree.c, and SolSTR.c
+ *         KryPbcgs.c, KryPcg.c, KryPgcg.c, KryPgcr.c, KryPgmres.c, KryPminres.c, 
+ *         KryPvfgmres.c, KryPvgmres.c, KrySPbcgs.c, KrySPcg.c, KrySPgmres.c, 
+ *         KrySPminres.c, KrySPvgmres.c, PreMGSolve.c, SolBLC.c, SolBSR.c,
+ *         SolCSR.c, SolMatFree.c, and SolSTR.c
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
