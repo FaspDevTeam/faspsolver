@@ -296,8 +296,7 @@ int main (int argc, const char * argv[])
                 // Black oil simulation, shale barriers(NX = NY = NZ = 10, NC = 1)
                 
                 // Read A in MatrixMarket COO format.
-//               fasp_dmtxsym_read("../data/sherman1.mtx", &A);
-               fasp_dmtx_read("../data/sherman1.mtx", &A); // modify by Chunsheng Feng on 02/16/2017
+               fasp_dmtx_read("../data/sherman1.mtx", &A); // Chunsheng, 02/16/2017
                 
                 printf("MatrixMarket Oil reservoir simulation challenge matrics\n");
                 printf("||  Condition Number:      2.3e+4   ||\n");
@@ -385,37 +384,6 @@ int main (int argc, const char * argv[])
         }
         
         if (TRUE) {
-            /* Using classical AMG as preconditioner for Krylov methods */
-            printf("\n------------------------------------------------------------------\n");
-            printf("AMG preconditioned Krylov solver ...\n");
-            
-            fasp_param_solver_init(&itparam);
-            fasp_param_amg_init(&amgparam);
-            itparam.maxit         = 100;
-            itparam.tol           = 1e-15;
-            itparam.print_level   = print_level;
-            for (indm = 0; indm<num_solvers; indm++) {
-                fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-                itparam.itsolver_type = indm+1;
-                fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
-                check_solu(&x, &sol, tolerance, &(ntest_amg[indm]), &(nfail_amg[indm]));
-            }
-        }
-        
-        if (TRUE) {
-            /* Using classical AMG as a solver */
-            printf("\n------------------------------------------------------------------\n");
-            printf("AMG as iterative solver ...\n");
-            
-            amgparam.maxit        = 20;
-            amgparam.tol          = 1e-10;
-            amgparam.print_level  = print_level;
-            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
-            fasp_solver_amg(&A, &b, &x,&amgparam);
-            check_solu(&x, &sol, tolerance, &ntest_amg_solver, &nfail_amg_solver);
-        }
-        
-        if (TRUE) {
             /* Using ILUk as preconditioner for Krylov methods */
             printf("\n------------------------------------------------------------------\n");
             printf("ILUk preconditioned Krylov solver ...\n");
@@ -457,11 +425,7 @@ int main (int argc, const char * argv[])
             /* Using ILUtp as preconditioner for Krylov methods */
             printf("\n------------------------------------------------------------------\n");
             printf("ILUtp preconditioned Krylov solver ...\n");
-/*
-           char filename[80];
-           sprintf(filename,"beforeILUtp_%03d.dat",indp);  
-           fasp_dcsr_write_coo (filename,&A);
-*/
+
             fasp_param_solver_init(&itparam);
             fasp_param_ilu_init(&iluparam);
             itparam.maxit         = 100;
@@ -474,12 +438,39 @@ int main (int argc, const char * argv[])
                 fasp_solver_dcsr_krylov_ilu(&A, &b, &x, &itparam, &iluparam);
                 check_solu(&x, &sol, tolerance, &(ntest_ilutp[indm]), &(nfail_ilutp[indm]));
             }
-/*
-           sprintf(filename,"afterILUtp_%03d.dat",indp); 
-           fasp_dcsr_write_coo (filename,&A);
-*/
         }
 
+        if (TRUE) {
+            /* Using classical AMG as preconditioner for Krylov methods */
+            printf("\n------------------------------------------------------------------\n");
+            printf("AMG preconditioned Krylov solver ...\n");
+            
+            fasp_param_solver_init(&itparam);
+            fasp_param_amg_init(&amgparam);
+            itparam.maxit         = 100;
+            itparam.tol           = 1e-15;
+            itparam.print_level   = print_level;
+            for (indm = 0; indm<num_solvers; indm++) {
+                fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+                itparam.itsolver_type = indm+1;
+                fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itparam, &amgparam);
+                check_solu(&x, &sol, tolerance, &(ntest_amg[indm]), &(nfail_amg[indm]));
+            }
+        }
+        
+        if (TRUE) {
+            /* Using classical AMG as a solver */
+            printf("\n------------------------------------------------------------------\n");
+            printf("AMG as iterative solver ...\n");
+            
+            amgparam.maxit        = 20;
+            amgparam.tol          = 1e-10;
+            amgparam.print_level  = print_level;
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_solver_amg(&A, &b, &x,&amgparam);
+            check_solu(&x, &sol, tolerance, &ntest_amg_solver, &nfail_amg_solver);
+        }
+        
         /* clean up memory */
         fasp_dcsr_free(&A);
         fasp_dvec_free(&b);
@@ -496,36 +487,36 @@ int main (int argc, const char * argv[])
     
     printf("========================No preconditioner=========================\n");
     for (indm=0; indm<num_solvers; indm++) {
-        printf("Solver %10s:  %d tests finished: %d failed, %d succeeded!\n",
+        printf("Solver %10s:  %2d tests finished: %2d failed, %2d succeeded!\n",
                solvers[indm], ntest[indm], nfail[indm], ntest[indm]-nfail[indm]);
     }
     printf("=======================Diagonal preconditioner====================\n");
     for (indm=0; indm<num_solvers; indm++) {
-        printf("Solver %10s:  %d tests finished: %d failed, %d succeeded!\n",
+        printf("Solver %10s:  %2d tests finished: %2d failed, %2d succeeded!\n",
                solvers[indm], ntest_diag[indm], nfail_diag[indm], ntest_diag[indm]-nfail_diag[indm]);
     }
     printf("========================ILUk preconditioner======================\n");
     for (indm=0; indm<num_solvers; indm++) {
-        printf("Solver %10s:  %d tests finished: %d failed, %d succeeded!\n",
+        printf("Solver %10s:  %2d tests finished: %2d failed, %2d succeeded!\n",
                solvers[indm], ntest_iluk[indm], nfail_iluk[indm], ntest_iluk[indm]-nfail_iluk[indm]);
     }
     printf("========================ILUt preconditioner======================\n");
     for (indm=0; indm<num_solvers; indm++) {
-        printf("Solver %10s:  %d tests finished: %d failed, %d succeeded!\n",
+        printf("Solver %10s:  %2d tests finished: %2d failed, %2d succeeded!\n",
                solvers[indm], ntest_ilut[indm], nfail_ilut[indm], ntest_ilut[indm]-nfail_ilut[indm]);
     }
     printf("========================ILUtp preconditioner=====================\n");
     for (indm=0; indm<num_solvers; indm++) {
-        printf("Solver %10s:  %d tests finished: %d failed, %d succeeded!\n",
+        printf("Solver %10s:  %2d tests finished: %2d failed, %2d succeeded!\n",
                solvers[indm], ntest_ilutp[indm], nfail_ilutp[indm], ntest_ilutp[indm]-nfail_ilutp[indm]);
     }
     printf("=========================AMG preconditioner======================\n");
     for (indm=0; indm<num_solvers; indm++) {
-        printf("Solver %10s:  %d tests finished: %d failed, %d succeeded!\n",
+        printf("Solver %10s:  %2d tests finished: %2d failed, %2d succeeded!\n",
                solvers[indm], ntest_amg[indm], nfail_amg[indm], ntest_amg[indm]-nfail_amg[indm]);
     }
     printf("=============================AMG==================================\n");
-    printf("Solver %10s:  %d tests finished: %d failed, %d succeeded!\n", "AMG",
+    printf("Solver %10s:  %2d tests finished: %2d failed, %2d succeeded!\n", "AMG",
            ntest_amg_solver, nfail_amg_solver, ntest_amg_solver-nfail_amg_solver);
     printf("==================================================================\n");
     

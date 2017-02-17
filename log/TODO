@@ -198,4 +198,5 @@ Important Bug Fixes
 [ 1.8.1 ] check convergence for problems from MM: see regression_mm.c
 [ 1.8.9 ] memory leaks in AMG setup
 [ 1.9.9 ] ILUtp setup fails for Matrix-Market Prob 9
-[       ] AMG does not pass Matrix-Market Prob 7
+[ 1.9.9 ] fix matrix format problem for Matrix-Market Prob 9
+[ 1.9.9 ] AMG does not pass Matrix-Market Prob 7
