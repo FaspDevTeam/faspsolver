@@ -9,12 +9,12 @@ there and then type "make config; make install".
 More options:
 ===============================================================================
 $ make config             # Configure the building environment
-$ make config CC=gcc      # Configure with a specific C compiler 
+$ make config CC=gcc      # Configure with a specific C compiler
+$ make config shared=yes  # Configure to build shared library instead of static
 $ make config debug=yes   # Configure with compiler debug options ON
 $ make config debug=all   # Configure with FASP internal debug options ON
 $ make config openmp=yes  # Configure with OpenMP support
-$ make config prefix=/dir # Configure installation of FASP library and header 
-                            files in "/dir/lib" and "/dir/include"
+$ make config prefix=/dir # Configure installation directory
 ===============================================================================
 $ make                    # Compile the library (after "make config")
 $ make install            # Install FASP library and header files
