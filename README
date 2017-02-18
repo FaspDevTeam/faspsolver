@@ -1,6 +1,6 @@
 Fast Auxiliary Space Preconditioning (FASP) Solver Library: README
 
-Last modified on 06/10/2015
+Last modified on 02/18/2017
 
 ================================================================================
 
@@ -35,38 +35,37 @@ The command to configure is:
 
     $ make config 
 
-or
+or, for example,
 
     $ make config CC=clang   // to choose a C compiler
+    $ make config shared=yes // to compile shared library
     $ make config openmp=yes // to enable OpenMP
     $ make config debug=yes  // to enable DEBUG mode
 
-After successfully configing the environment, just type:
+After successfully configing the environment, just run:
 
-    $ make                   // to compile the shared library and examples
+    $ make                   // to compile the FASP static or shared library
     
-To install the FASP library and executables, type:
+To install the FASP library and executables, run:
 
     $ make install
 
+To try out test and tutorial examples, run:
+
+    $ make test
+    $ make tutorial
+	
 Note: The default prefix is the FASP source directory.
 
 ================================================================================
 
 This package has been tested with on the following platforms: 
 
---Linux
-    GNU gcc/gfortran:   4.4.x, 4.5.x, 4.6.x, 4.8.x, 4.9.x, 5.0.x
-    Intel icc/ifort:    11.x
+--Linux: GNU gcc/gfortran, Intel icc/ifort
 
---Mac OS X
-    GNU gcc/gfortran:   4.4.x, 4.5.x, 4.6.x, 4.8.x, 4.9.x, 5.0.x
-    Intel icc/ifort:    11.x
-    Apple clang:        6.x, 7.x
+--Mac OS X: GNU gcc/gfortran, Intel icc/ifort, Apple clang
     
---Windows XP and Windows 7
-    Intel icc/ifort:    11.1, 12.x, 13.x, 14.x
-    MS VC++:            9.0
+--Windows XP and Windows 7: Intel icc/ifort, MS VC++
 
 ================================================================================
     
