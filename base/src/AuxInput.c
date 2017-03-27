@@ -101,9 +101,10 @@ SHORT fasp_param_check (input_param  *inparam)
  * \author Chensong Zhang
  * \date   03/20/2010 
  *
- * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle
- * Modified by Chensong Zhang on 05/10/2013: add a new input.
- * Modified by Chensong Zhang on 03/23/2015: skip unknown keyword.
+ * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle;
+ * Modified by Chensong Zhang on 05/10/2013: add a new input;
+ * Modified by Chensong Zhang on 03/23/2015: skip unknown keyword;
+ * Modified by Chensong Zhang on 03/27/2017: check unexpected error;
  */
 void fasp_param_input (const char   *fname,
                        input_param  *inparam)
@@ -781,6 +782,9 @@ void fasp_param_input (const char   *fname,
     
     fclose(fp);
     
+    // if meet unexpected input, stop the program
+    fasp_chkerr(status, __FUNCTION__);
+
     // sanity checks
     status = fasp_param_check(inparam);
     
@@ -788,7 +792,6 @@ void fasp_param_input (const char   *fname,
     printf("### DEBUG: Reading input status = %d\n", status);
 #endif
     
-    // if meet unexpected input, stop the program
     fasp_chkerr(status,"fasp_param_input");
 }
 
