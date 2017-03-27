@@ -38,9 +38,9 @@
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-void fasp_darray_set (const INT    n,
-                      REAL        *x,
-                      const REAL   val)
+void fasp_darray_set (const INT   n,
+                      REAL       *x,
+                      const REAL  val)
 {
     SHORT use_openmp = FALSE;
     
@@ -181,9 +181,9 @@ void fasp_darray_cp (const INT    n,
  * \author Chunsheng Feng, Xiaoqiang Yue
  * \date   05/23/2012  
  */
-void fasp_iarray_cp (const INT   n,
-                     const INT  *x,
-                     INT        *y)
+void fasp_iarray_cp (const INT    n,
+                     const INT   *x,
+                     INT         *y)
 {
     memcpy(y, x, n*sizeof(INT));
 }

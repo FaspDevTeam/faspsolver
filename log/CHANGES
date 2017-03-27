@@ -1,6 +1,6 @@
 File Name: CHANGES
 
-02/16/2017 FASP 1.9.9:
+03/27/2017 FASP 1.9.9:
 - Fix ILUtp problem with permutation.
 - Separate BlaIOUtil.inl from BlaIO.c.
 - Set pointer to NULL after fasp_mem_free().
@@ -9,6 +9,7 @@ File Name: CHANGES
 - Fix problem 9 in regression_mm: results are OK now.
 - Fix problem 7 in regression_mm for AMG as well.
 - Update regression test results.
+- Fix a bug in AuxInput.c: exit with an error message if parameter is unknown.
 
 02/10/2017 FASP 1.9.8:
 - Now automatic build test works.
