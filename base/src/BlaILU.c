@@ -1329,7 +1329,8 @@ F997:    // insufficient storage in U.
 F998:    // illegal lfil entered.
     printf("### ERROR: illegal lfil entered\n");
     *ierr = -4;
-    return;
+   // goto F100;
+   return;
     
 F999:    // zero row encountered
     printf("### ERROR: zero row encountered\n");
@@ -1675,6 +1676,11 @@ void fasp_symbfactor (INT   n,
             //  array rowll with the column numbers for the original entries
             //  from row i:
             //  ------------------------------------------------------------
+/*
+#if DEBUG_MODE > 0
+			printf(" ### DEBUG %s  %d row (",__FUNCTION__, i);
+#endif
+			*/
             for ( j = ibegin; j <= iend; ++j) {
                 icolindj = colind[j];
                 lastcol[icolindj] = i;
@@ -1683,7 +1689,17 @@ void fasp_symbfactor (INT   n,
                     rowct = rowct + 1;
                     rowll[rowct] = icolindj;
                 }
+/*				
+#if DEBUG_MODE > 0
+		          	printf(" %d", icolindj);
+#endif
+*/					
             }
+/*			
+#if DEBUG_MODE > 0
+		          	printf(" ) DEBUG ## \n");
+#endif
+*/					
             
             //  ---------------------------------------------------------
             //  Sort the entries in rowll, so that the row has its column
@@ -1691,6 +1707,8 @@ void fasp_symbfactor (INT   n,
             //  ---------------------------------------------------------
             fasp_sortrow(nzi - 1, &rowll[1]);
             
+			//check col index
+            fasp_check_col_index(i, nzi, rowll); 
             //  ---------------------------------------------------------
             //  Now set up rowll as a linked list containing the original
             //  nonzero column numbers, as described in the methods section:
@@ -2137,6 +2155,44 @@ static void fasp_sortrow (INT   num,
     } // 40
     
     ++q;
+    
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+#endif
+    return;
+    //----------------end-of-srtr-------------------------------------------
+}
+
+/**
+ * \fn static void fasp_Check_Colindex (INT,row,INT num,INT *q)
+ *
+ * \brief Check the same col index in row.
+ *
+ * \param num  size of q
+ * \param q  integer array.
+ *
+ *
+ * \author Chunsheng Feng
+ * \date   07/30/2017
+ */
+void fasp_check_col_index (INT row,
+                           INT num,
+                           INT  *q)
+{
+#if DEBUG_MODE > 0
+    printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
+#endif
+    
+    INT ii;
+    INT num_1 = num - 1;
+    
+    for(ii = 0; ii < num_1; ++ii) { 
+		if (q[ii] == q[ii+1]) {
+            printf("### Warning! Matrix error! \n### There are same col index in the matrix (row: %d, col: %d %d), solver will stop!\n",row,q[ii],q[ii+1]);
+            printf("### %s (ILUk) ...... [Stoped]\n", __FUNCTION__);
+			exit(0);
+			}
+    } 
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
