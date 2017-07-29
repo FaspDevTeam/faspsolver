@@ -121,7 +121,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
             break;
 
     } 
-    
+   if (ierr != -4) 
     fasp_dcsr_shift(A, -1);
     
 #if DEBUG_MODE > 1
