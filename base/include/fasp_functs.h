@@ -832,6 +832,8 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
 dBSRmat fasp_dbsr_perm (const dBSRmat *A,
                         const INT     *P);
 
+INT fasp_dbsr_merge_col (dBSRmat *A);
+
 
 /*-------- In file: BlaSparseCheck.c --------*/
 
