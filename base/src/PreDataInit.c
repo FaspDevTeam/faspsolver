@@ -253,6 +253,7 @@ void fasp_ilu_data_create (const INT   iwk,
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: iwk=%d, nwork=%d \n",iwk,nwork);
 #endif
+    
     iludata->ijlu=(INT*)fasp_mem_calloc(iwk, sizeof(INT));
 
     if (iludata->type == ILUtp) iludata->iperm=(INT*)fasp_mem_calloc(iludata->row*2, sizeof(INT));
