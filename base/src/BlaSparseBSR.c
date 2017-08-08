@@ -3,7 +3,7 @@
  *  \brief Sparse matrix operations for dBSRmat matrices
  *
  *  \note  This file contains Level-1 (Bla) functions. It requires:
- *         AuxArray.c, AuxMemory.c, AuxThreads.c, BlaSmallMat.c, 
+ *         AuxArray.c, AuxMemory.c, AuxThreads.c, BlaSmallMat.c,
  *         and BlaSmallMatInv.c
  *
  *---------------------------------------------------------------------------------
@@ -1510,7 +1510,7 @@ void fasp_dbsr_getdiag (INT            n,
     INT i,k;
     
     if ( n==0 || n>A->ROW || n>A->COL ) n = MIN(A->ROW,A->COL);
-
+    
 #ifdef _OPENMP
 #pragma omp parallel for private(i,k) if(n>OPENMP_HOLDS)
 #endif
@@ -1915,8 +1915,8 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
                         valb[j*nb2+1] = 0.0;
                         valb[j*nb2+2] = 0.0;
                         if (ABS(valb[j*nb2+3]) < SMALLREAL)  valb[j*nb2+3] = SMALLREAL;
-                    } 
-                } 
+                    }
+                }
             }
             
             break;
@@ -1978,9 +1978,9 @@ dBSRmat fasp_dbsr_perm (const dBSRmat *A,
     const INT   nb = A->nb, nb2 = nb*nb;
     const INT   manner = A->storage_manner;
     SHORT       nthreads = 1, use_openmp = FALSE;
-
+    
     INT i,j,k,jaj,i1,i2,start,jj;
-
+    
 #ifdef _OPENMP
     if ( MIN(n, nnz) > OPENMP_HOLDS ) {
         use_openmp = 0;//TRUE;
@@ -2081,9 +2081,9 @@ dBSRmat fasp_dbsr_perm (const dBSRmat *A,
  * \brief Check and merge some same col index in one row.
  *
  * \param A  Pointer to the original dCSRmat matrix
- * 
  *
- * \return   The new merged dCSRmat matrix 
+ *
+ * \return   The new merged dCSRmat matrix
  *
  * \author Chunsheng Feng
  * \date   30/07/2017
@@ -2091,16 +2091,15 @@ dBSRmat fasp_dbsr_perm (const dBSRmat *A,
  */
 INT fasp_dbsr_merge_col (dBSRmat *A)
 {
-    INT         count = 0;
+    INT           count = 0;
     const INT     num_rowsA = A -> ROW;
-    const INT     num_colsA = A -> COL;
     const INT     nb = A->nb;
     const INT     nb2 = nb*nb;
-    INT    *A_i    = A -> IA;
+    INT          *A_i    = A -> IA;
     INT          *A_j    = A -> JA;
     REAL         *A_data = A -> val;
     
-    INT   i,ii, j,jj, tempi, row_size,ibegin, iend,iend1;
+    INT   i, ii, j, jj, ibegin, iend, iend1;
     
 #ifdef _OPENMP
     // variables for OpenMP
@@ -2114,68 +2113,69 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
         for (myid = 0; myid < nthreads; myid++) {
             fasp_get_start_end(myid, nthreads, num_rowsA, &mybegin, &myend);
             for (i = mybegin; i < myend; i++) {
-                ibegin = A_i[i]; iend = A_i[i+1]; iend1 =  iend-1; 
+                ibegin = A_i[i]; iend = A_i[i+1]; iend1 =  iend-1;
                 for (j = ibegin; j < iend1; j ++) {
-				   if (A_j[j] > -1) {
-                    for (jj = j+1; jj < iend; jj ++) {
-                        if (A_j[j] == A_j[jj]) {
-                            // add jj col to j
-                            for (ii=0; ii <nb2; ii++)  A_data[j*nb2 +ii] += A_data[ jj*nb2+ii];
-                            // add jj col to j
-						     A_j[jj] = -1;
-						     count ++; 
+                    if (A_j[j] > -1) {
+                        for (jj = j+1; jj < iend; jj ++) {
+                            if (A_j[j] == A_j[jj]) {
+                                // add jj col to j
+                                for (ii=0; ii <nb2; ii++) A_data[j*nb2 +ii] += A_data[ jj*nb2+ii];
+                                // add jj col to j
+                                A_j[jj] = -1;
+                                count ++;
+                            }
                         }
-                  }
+                    }
                 }
-			  }
             }
         }
     }
     else {
 #endif
         for (i = 0; i < num_rowsA; i ++) {
-            ibegin = A_i[i]; iend = A_i[i+1]; iend1 =  iend-1; 
+            ibegin = A_i[i]; iend = A_i[i+1]; iend1 =  iend-1;
             for (j = ibegin; j < iend1; j ++) {
-				if (A_j[j] > -1) {
-                for (jj = j+1; jj < iend; jj ++) {
-                   if (A_j[j] == A_j[jj]) {
-                       // add jj col to j
-                      for (ii=0; ii <nb2; ii++)  A_data[j*nb2 +ii] += A_data[ jj*nb2+ii];
-                      // add jj col to j
-					  printf("### There are same col index in row %d, col %d (%d %d) \n", i, A_j[j],j,jj );
-			     	  A_j[jj] = -1;
-					  count ++; 
-                      }
+                if (A_j[j] > -1) {
+                    for (jj = j+1; jj < iend; jj ++) {
+                        if (A_j[j] == A_j[jj]) {
+                            // add jj col to j
+                            for (ii=0; ii <nb2; ii++) A_data[j*nb2 +ii] += A_data[ jj*nb2+ii];
+                            // add jj col to j
+                            printf("### WARNING: same col indices in row %d, col %d (%d %d)\n",
+                                   i, A_j[j],j,jj );
+                            A_j[jj] = -1;
+                            count ++;
+                        }
                     }
-                  }
-			   }
+                }
             }
+        }
 #ifdef _OPENMP
-       }
+    }
 #endif
-
-      if (count >0 ) {
+    
+    if (count >0 ) {
         INT *tempA_i = (INT*)fasp_mem_calloc(num_rowsA+1, sizeof(INT));
         memcpy(tempA_i, A_i, (num_rowsA+1 )*sizeof(INT));
         jj = 0; 	A_i[0] = jj;
-		for (i = 0; i < num_rowsA; i ++) {
-           ibegin = tempA_i[i]; iend = tempA_i[i+1]; 
-           for (j = ibegin; j < iend; j ++) {
-               if (A_j[j] > -1 ) {
-                   memcpy(A_data +jj*nb2, A_data+j*nb2, (nb2)*sizeof(REAL));
-				   A_j[jj] = A_j[j];
-                   jj++;
-                  }
+        for (i = 0; i < num_rowsA; i ++) {
+            ibegin = tempA_i[i]; iend = tempA_i[i+1];
+            for (j = ibegin; j < iend; j ++) {
+                if (A_j[j] > -1 ) {
+                    memcpy(A_data +jj*nb2, A_data+j*nb2, (nb2)*sizeof(REAL));
+                    A_j[jj] = A_j[j];
+                    jj++;
                 }
-		    A_i[i+1]	= jj;
-         }
-       A-> NNZ = jj; 
-       fasp_mem_free(tempA_i);
-      }
+            }
+            A_i[i+1]	= jj;
+        }
+        A-> NNZ = jj;
+        fasp_mem_free(tempA_i);
+    }
     
-     printf("### Warning! There are %d same col index have been merged\n", count );
-
-     return count;
+    printf("### WARNING: %d same col indices have been merged\n", count);
+    
+    return count;
 }
 
 /*---------------------------------*/
