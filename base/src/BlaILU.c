@@ -1708,7 +1708,7 @@ void fasp_symbfactor (INT   n,
             fasp_sortrow(nzi - 1, &rowll[1]);
             
 			//check col index
-            fasp_check_col_index(i, nzi, rowll); 
+            fasp_check_col_index(i, nzi-1, &rowll[1]); 
             //  ---------------------------------------------------------
             //  Now set up rowll as a linked list containing the original
             //  nonzero column numbers, as described in the methods section:
