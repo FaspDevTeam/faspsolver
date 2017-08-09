@@ -2093,14 +2093,14 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
 {
     INT         count = 0;
     const INT     num_rowsA = A -> ROW;
-    const INT     num_colsA = A -> COL;
+//    const INT     num_colsA = A -> COL;
     const INT     nb = A->nb;
     const INT     nb2 = nb*nb;
     INT    *A_i    = A -> IA;
     INT          *A_j    = A -> JA;
     REAL         *A_data = A -> val;
     
-    INT   i,ii, j,jj, tempi, row_size,ibegin, iend,iend1;
+    INT   i,ii, j,jj,  ibegin, iend,iend1;
     
 #ifdef _OPENMP
     // variables for OpenMP
@@ -2171,9 +2171,9 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
          }
        A-> NNZ = jj; 
        fasp_mem_free(tempA_i);
+     printf("### Warning! There are %d same col index have been merged\n", count );
       }
     
-     printf("### Warning! There are %d same col index have been merged\n", count );
 
      return count;
 }
