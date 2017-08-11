@@ -171,6 +171,7 @@ int fasp_solver_mumps (dCSRmat *ptrA,
  *
  * Modified by Chensong Zhang on 02/27/2013 for new FASP function names.
  * Modified by Zheng Li on 10/10/2014 to adjust input parameters.
+ * Modified by Chunsheng Feng on 08/11/2017 for debug information.
  */
 int fasp_solver_mumps_steps (dCSRmat *ptrA,
                              dvector *b,
@@ -191,16 +192,12 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
     double *a;
     double *rhs;
     
-#if DEBUG_MODE
-    printf("### DEBUG: %s job_stat = %d\n", __FUNCTION__, job_stat);
-#endif
-    
     switch ( job ) {
             
         case 1:
         {
 #if DEBUG_MODE
-            printf("### DEBUG: %s Step 1 ... [Start]\n", __FUNCTION__);
+            printf("### DEBUG: %s Step %d job_stat %d... [Start]\n", __FUNCTION__,job,job_stat);
 #endif
             int begin_row, end_row;
             const int n  = ptrA->row;
@@ -261,7 +258,7 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
             mumps->id = id;
             
 #if DEBUG_MODE
-            printf("### DEBUG: %s, Step 1 ... [Finish]\n", __FUNCTION__);
+            printf("### DEBUG: %s, Step %d job_stat %d ... [Finish]\n", __FUNCTION__,job,job_stat);
 #endif
             break;
         }
@@ -269,7 +266,7 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
         case 2:
         {
 #if DEBUG_MODE
-            printf("### DEBUG: %s, Step 2 ... [Start]\n", __FUNCTION__);
+            printf("### DEBUG: %s Step %d job_stat %d... [Start]\n", __FUNCTION__,job,job_stat);
 #endif
             id = mumps->id;
             
@@ -284,13 +281,16 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
             for(i=0; i<id.n; i++) u->val[i] = id.rhs[i];
             
 #if DEBUG_MODE
-            printf("### DEBUG: %s, Step 2 ... [Finish]\n", __FUNCTION__);
+            printf("### DEBUG: %s, Step %d job_stat %d ... [Finish]\n", __FUNCTION__,job,job_stat);
 #endif
             break;
         }
             
         case 3:
         {
+#if DEBUG_MODE
+            printf("### DEBUG: %s Step %d job_stat %d... [Start]\n", __FUNCTION__,job,job_stat);
+#endif
             id = mumps->id;
             
             if ( job_stat !=1 )
@@ -302,6 +302,9 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
             free(id.rhs);
             id.job = -2;
             dmumps_c(&id); /* Terminate instance */
+#if DEBUG_MODE
+            printf("### DEBUG: %s, Step %d job_stat %d ... [Finish]\n", __FUNCTION__,job,job_stat);
+#endif
 
             break;
         }

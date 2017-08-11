@@ -1959,10 +1959,10 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
  *
  * \brief Apply permutation of A, i.e. Aperm=PAP' by the orders given in P
  *
- * \param A  Pointer to the original dCSRmat matrix
+ * \param A  Pointer to the original dBSRmat matrix
  * \param P  Pointer to the given ordering
  *
- * \return   The new ordered dCSRmat matrix if succeed, NULL if fail
+ * \return   The new ordered dBSRmat matrix if succeed, NULL if fail
  *
  * \author Zheng Li
  * \date   24/9/2015
@@ -2080,10 +2080,10 @@ dBSRmat fasp_dbsr_perm (const dBSRmat *A,
  *
  * \brief Check and merge some same col index in one row.
  *
- * \param A  Pointer to the original dCSRmat matrix
+ * \param A  Pointer to the original dBSRmat matrix
  * 
  *
- * \return   The new merged dCSRmat matrix 
+ * \return   The new merged dBSRmat matrix 
  *
  * \author Chunsheng Feng
  * \date   30/07/2017
@@ -2093,7 +2093,6 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
 {
     INT         count = 0;
     const INT     num_rowsA = A -> ROW;
-//    const INT     num_colsA = A -> COL;
     const INT     nb = A->nb;
     const INT     nb2 = nb*nb;
     INT    *A_i    = A -> IA;
@@ -2116,18 +2115,18 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
             for (i = mybegin; i < myend; i++) {
                 ibegin = A_i[i]; iend = A_i[i+1]; iend1 =  iend-1; 
                 for (j = ibegin; j < iend1; j ++) {
-				   if (A_j[j] > -1) {
+                  if (A_j[j] > -1) {
                     for (jj = j+1; jj < iend; jj ++) {
                         if (A_j[j] == A_j[jj]) {
                             // add jj col to j
                             for (ii=0; ii <nb2; ii++)  A_data[j*nb2 +ii] += A_data[ jj*nb2+ii];
                             // add jj col to j
-						     A_j[jj] = -1;
-						     count ++; 
+                            A_j[jj] = -1;
+                            count ++; 
                         }
                   }
                 }
-			  }
+              }
             }
         }
     }
@@ -2136,19 +2135,19 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
         for (i = 0; i < num_rowsA; i ++) {
             ibegin = A_i[i]; iend = A_i[i+1]; iend1 =  iend-1; 
             for (j = ibegin; j < iend1; j ++) {
-				if (A_j[j] > -1) {
+                if (A_j[j] > -1) {
                 for (jj = j+1; jj < iend; jj ++) {
                    if (A_j[j] == A_j[jj]) {
                        // add jj col to j
                       for (ii=0; ii <nb2; ii++)  A_data[j*nb2 +ii] += A_data[ jj*nb2+ii];
                       // add jj col to j
-					  printf("### There are same col index in row %d, col %d (%d %d) \n", i, A_j[j],j,jj );
-			     	  A_j[jj] = -1;
-					  count ++; 
+                      printf("### There are same col index in row %d, col %d (%d %d) \n", i, A_j[j],j,jj );
+                      A_j[jj] = -1;
+		      count ++; 
                       }
                     }
                   }
-			   }
+               }
             }
 #ifdef _OPENMP
        }
@@ -2158,22 +2157,21 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
         INT *tempA_i = (INT*)fasp_mem_calloc(num_rowsA+1, sizeof(INT));
         memcpy(tempA_i, A_i, (num_rowsA+1 )*sizeof(INT));
         jj = 0; 	A_i[0] = jj;
-		for (i = 0; i < num_rowsA; i ++) {
+        for (i = 0; i < num_rowsA; i ++) {
            ibegin = tempA_i[i]; iend = tempA_i[i+1]; 
            for (j = ibegin; j < iend; j ++) {
                if (A_j[j] > -1 ) {
-                   memcpy(A_data +jj*nb2, A_data+j*nb2, (nb2)*sizeof(REAL));
-				   A_j[jj] = A_j[j];
-                   jj++;
+                  memcpy(A_data +jj*nb2, A_data+j*nb2, (nb2)*sizeof(REAL));
+	          A_j[jj] = A_j[j];
+                  jj++;
                   }
                 }
-		    A_i[i+1]	= jj;
+	  A_i[i+1] = jj;
          }
        A-> NNZ = jj; 
        fasp_mem_free(tempA_i);
-     printf("### Warning! There are %d same col index have been merged\n", count );
+       printf("### Warning! There are %d same col index have been merged\n", count );
       }
-    
 
      return count;
 }

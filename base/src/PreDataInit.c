@@ -93,7 +93,7 @@ AMG_data * fasp_amg_data_create (SHORT max_levels)
  * Modified by Chensong Zhang on 05/05/2013: Clean up param as well!
  * Modified by Hongxuan Zhang on 12/15/2015: free memory for Intel MKL PARDISO.
  * Modified by Chunsheng Feng on 02/12/2017: To permute the matrix A back to its original state for ILUtp
- *
+ * Modified by Chunsheng Feng on 08/11/2017 for max_levels == 1.
  */
 void fasp_amg_data_free (AMG_data   *mgl,
                          AMG_param  *param)
@@ -105,8 +105,10 @@ void fasp_amg_data_free (AMG_data   *mgl,
     for ( i=0; i<max_levels; ++i ) {
         fasp_ilu_data_free(&mgl[i].LU);
         fasp_dcsr_free(&mgl[i].A);
-        fasp_dcsr_free(&mgl[i].P);
-        fasp_dcsr_free(&mgl[i].R);
+	if (max_levels>1){
+           fasp_dcsr_free(&mgl[i].P);
+           fasp_dcsr_free(&mgl[i].R);
+	}
         fasp_dvec_free(&mgl[i].b);
         fasp_dvec_free(&mgl[i].x);
         fasp_dvec_free(&mgl[i].w);
