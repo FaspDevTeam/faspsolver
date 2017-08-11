@@ -171,6 +171,7 @@ void fasp_dcsr_alloc (const INT  m,
  *
  * \author Chensong Zhang
  * \date   2010/04/06
+ *  Modified by Chunsheng Feng on 08/11/2017: init A to NULL
  */
 void fasp_dcsr_free (dCSRmat *A)
 {
@@ -179,6 +180,10 @@ void fasp_dcsr_free (dCSRmat *A)
     fasp_mem_free(A->IA);
     fasp_mem_free(A->JA);
     fasp_mem_free(A->val);
+    A->col = 0;
+    A->row = 0;
+    A->nnz = 0;
+    A = NULL;	
 }
 
 /**
@@ -190,6 +195,7 @@ void fasp_dcsr_free (dCSRmat *A)
  *
  * \author Chensong Zhang
  * \date   2010/04/06
+ *  Modified by Chunsheng Feng on 08/11/2017: init A to NULL
  */
 void fasp_icsr_free (iCSRmat *A)
 {
@@ -198,6 +204,10 @@ void fasp_icsr_free (iCSRmat *A)
     fasp_mem_free(A->IA);
     fasp_mem_free(A->JA);
     fasp_mem_free(A->val);
+    A->col = 0;
+    A->row = 0;
+    A->nnz = 0;
+    A = NULL;	
 }
 
 /**

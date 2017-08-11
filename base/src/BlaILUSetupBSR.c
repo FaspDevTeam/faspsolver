@@ -49,6 +49,7 @@ static void mulcol_independ_set (AMG_data *, INT);
  *
  * \note Works for general nb (Xiaozhe)
  * \note Change the size of work space by Zheng Li 04/26/2015.
+ * \note Modified by Chunsheng Feng on 08/11/2017 for iludata->type not inited.
  */
 SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
                            ILU_data   *iludata,
@@ -76,6 +77,11 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     iwk = (lfil+2)*nnz;
     
     // setup preconditioner
+    iludata->type  = 0; //need inited 
+    iludata->iperm = NULL;
+    if (iluparam->ILU_type == ILUtp) 
+      printf("### Wanring: BSR iludata->type=%d Wrong !\n", iluparam->ILU_type);
+
     iludata->A   = NULL; // No need for BSR matrix
     iludata->row = iludata->col = n;
     iludata->nb  = nb;
