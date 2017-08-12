@@ -64,9 +64,9 @@ void fasp_precond_data_init (precond_data *pcdata)
 AMG_data * fasp_amg_data_create (SHORT max_levels)
 {
     max_levels = MAX(1, max_levels); // at least allocate one level
-
+    
     AMG_data *mgl = (AMG_data *)fasp_mem_calloc(max_levels,sizeof(AMG_data));
-
+    
     INT i;
     for ( i=0; i<max_levels; ++i ) {
         mgl[i].max_levels = max_levels;
@@ -75,7 +75,7 @@ AMG_data * fasp_amg_data_create (SHORT max_levels)
         mgl[i].near_kernel_basis = NULL;
         mgl[i].cycle_type = 0;
     }
-
+    
     return(mgl);
 }
 
@@ -105,10 +105,10 @@ void fasp_amg_data_free (AMG_data   *mgl,
     for ( i=0; i<max_levels; ++i ) {
         fasp_ilu_data_free(&mgl[i].LU);
         fasp_dcsr_free(&mgl[i].A);
-	if (max_levels>1){
-           fasp_dcsr_free(&mgl[i].P);
-           fasp_dcsr_free(&mgl[i].R);
-	}
+        if (max_levels>1){
+            fasp_dcsr_free(&mgl[i].P);
+            fasp_dcsr_free(&mgl[i].R);
+        }
         fasp_dvec_free(&mgl[i].b);
         fasp_dvec_free(&mgl[i].x);
         fasp_dvec_free(&mgl[i].w);
@@ -172,9 +172,9 @@ void fasp_amg_data_free (AMG_data   *mgl,
 AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
 {
     max_levels = MAX(1, max_levels); // at least allocate one level
-
+    
     AMG_data_bsr *mgl = (AMG_data_bsr *)fasp_mem_calloc(max_levels,sizeof(AMG_data_bsr));
-
+    
     INT i;
     for (i=0; i<max_levels; ++i) {
         mgl[i].max_levels = max_levels;
@@ -185,7 +185,7 @@ AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
         mgl[i].P_nk = NULL;
         mgl[i].R_nk = NULL;
     }
-
+    
     return(mgl);
 }
 
@@ -257,16 +257,16 @@ void fasp_ilu_data_create (const INT   iwk,
 #endif
     
     iludata->ijlu=(INT*)fasp_mem_calloc(iwk, sizeof(INT));
-
+    
     if (iludata->type == ILUtp) iludata->iperm=(INT*)fasp_mem_calloc(iludata->row*2, sizeof(INT));
-
+    
     iludata->luval=(REAL*)fasp_mem_calloc(iwk, sizeof(REAL));
-
+    
     iludata->work=(REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... %d [End]\n", __FUNCTION__,__LINE__);
 #endif
-
+    
     return;
 }
 
@@ -328,9 +328,9 @@ void fasp_ilu_data_free (ILU_data *iludata)
 void fasp_swz_data_free (SWZ_data *swzdata)
 {
     INT i;
-
+    
     if ( swzdata == NULL ) return; // There is nothing to do!
-
+    
     fasp_dcsr_free(&swzdata->A);
     
     for (i=0; i<swzdata->nblk; ++i) fasp_dcsr_free (&((swzdata->blk_data)[i]));

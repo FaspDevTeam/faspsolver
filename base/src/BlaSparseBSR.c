@@ -2074,7 +2074,6 @@ dBSRmat fasp_dbsr_perm (const dBSRmat *A,
     return(Aperm);
 }
 
-
 /**
  * \fn INT fasp_dbsr_merge_col (const dBSRmat *A)
  *
@@ -2082,12 +2081,10 @@ dBSRmat fasp_dbsr_perm (const dBSRmat *A,
  *
  * \param A  Pointer to the original dCSRmat matrix
  *
- *
  * \return   The new merged dCSRmat matrix
  *
  * \author Chunsheng Feng
  * \date   30/07/2017
- *
  */
 INT fasp_dbsr_merge_col (dBSRmat *A)
 {
@@ -2142,7 +2139,7 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
                             for (ii=0; ii <nb2; ii++) A_data[j*nb2 +ii] += A_data[ jj*nb2+ii];
                             // add jj col to j
                             printf("### WARNING: same col indices in row %d, col %d (%d %d)\n",
-                                   i, A_j[j],j,jj );
+                                   i, A_j[j], j, jj );
                             A_j[jj] = -1;
                             count ++;
                         }
@@ -2154,7 +2151,7 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
     }
 #endif
     
-    if (count >0 ) {
+    if ( count > 0 ) {
         INT *tempA_i = (INT*)fasp_mem_calloc(num_rowsA+1, sizeof(INT));
         memcpy(tempA_i, A_i, (num_rowsA+1 )*sizeof(INT));
         jj = 0; 	A_i[0] = jj;
@@ -2171,9 +2168,9 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
         }
         A-> NNZ = jj;
         fasp_mem_free(tempA_i);
+        
+        printf("### WARNING: %d col indices have been merged!\n", count);
     }
-    
-    printf("### WARNING: %d same col indices have been merged\n", count);
     
     return count;
 }

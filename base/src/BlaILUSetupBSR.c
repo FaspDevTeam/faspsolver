@@ -76,12 +76,16 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     // Expected amount of memory for ILU needed and allocate memory
     iwk = (lfil+2)*nnz;
     
+#if DEBUG_MODE > 1
+    if (iluparam->ILU_type == ILUtp) {
+        printf("### WARNING: iludata->type = %d not supported!\n",
+               iluparam->ILU_type);
+    }
+#endif
+
     // setup preconditioner
     iludata->type  = 0; //need inited 
     iludata->iperm = NULL;
-    if (iluparam->ILU_type == ILUtp) 
-      printf("### Wanring: BSR iludata->type=%d Wrong !\n", iluparam->ILU_type);
-
     iludata->A   = NULL; // No need for BSR matrix
     iludata->row = iludata->col = n;
     iludata->nb  = nb;
@@ -153,9 +157,10 @@ FINISHED:
 }
 
 /**
- * \fn SHORT fasp_ilu_dbsr_setup_omp (dBSRmat *A, ILU_data *iludata, ILU_param *iluparam)
+ * \fn SHORT fasp_ilu_dbsr_setup_omp (dBSRmat *A, ILU_data *iludata, 
+ *                                    ILU_param *iluparam)
  *
- * \brief Multi-threads parallel ILU decoposition of a BSR matrix A based on graph coloring
+ * \brief Multi-thread ILU decoposition of a BSR matrix A based on graph coloring
  *
  * \param A         Pointer to dBSRmat matrix
  * \param iludata   Pointer to ILU_data
