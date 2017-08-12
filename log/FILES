@@ -1,7 +1,7 @@
     1206 ./base/include/fasp.h
      404 ./base/include/fasp_block.h
      261 ./base/include/fasp_const.h
-    2878 ./base/include/fasp_functs.h
+    2880 ./base/include/fasp_functs.h
       51 ./base/include/fasp_grid.h
     1017 ./base/src/BlaIOUtil.inl
      115 ./base/src/BlaSpmvMatFree.inl
@@ -30,8 +30,8 @@
      768 ./base/src/BlaArray.c
       79 ./base/src/BlaEigen.c
     1006 ./base/src/BlaFormat.c
-    2150 ./base/src/BlaILU.c
-    1481 ./base/src/BlaILUSetupBSR.c
+    2207 ./base/src/BlaILU.c
+    1492 ./base/src/BlaILUSetupBSR.c
      179 ./base/src/BlaILUSetupCSR.c
     1271 ./base/src/BlaILUSetupSTR.c
     2295 ./base/src/BlaIO.c
@@ -41,9 +41,9 @@
      783 ./base/src/BlaSmallMatInv.c
      178 ./base/src/BlaSmallMatLU.c
       55 ./base/src/BlaSparseBLC.c
-    2079 ./base/src/BlaSparseBSR.c
+    2180 ./base/src/BlaSparseBSR.c
      161 ./base/src/BlaSparseCOO.c
-    1626 ./base/src/BlaSparseCSR.c
+    1636 ./base/src/BlaSparseCSR.c
       81 ./base/src/BlaSparseCSRL.c
      351 ./base/src/BlaSparseCheck.c
      184 ./base/src/BlaSparseSTR.c
@@ -85,7 +85,7 @@
     1067 ./base/src/PreBLC.c
     1137 ./base/src/PreBSR.c
      671 ./base/src/PreCSR.c
-     354 ./base/src/PreDataInit.c
+     357 ./base/src/PreDataInit.c
      551 ./base/src/PreMGCycle.c
      364 ./base/src/PreMGCycleFull.c
      167 ./base/src/PreMGRecur.c
@@ -101,4 +101,4 @@
      242 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      320 ./base/src/SolWrapper.c
-   85060 total
+   85244 total

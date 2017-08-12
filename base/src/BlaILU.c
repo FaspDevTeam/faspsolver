@@ -25,6 +25,7 @@
 
 static void fasp_qsplit  (REAL *a, INT *ind, INT n, INT ncut);
 static void fasp_sortrow (INT num,INT *q);
+static void fasp_check_col_index (INT row, INT num, INT  *q);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -1329,8 +1330,8 @@ F997:    // insufficient storage in U.
 F998:    // illegal lfil entered.
     printf("### ERROR: illegal lfil entered\n");
     *ierr = -4;
-   // goto F100;
-   return;
+    // goto F100;
+    return;
     
 F999:    // zero row encountered
     printf("### ERROR: zero row encountered\n");
@@ -1340,7 +1341,7 @@ F999:    // zero row encountered
 }
 
 /**
- * \fn void fasp_symbfactor (INT n, INT *colind, INT *rwptr, INT levfill, 
+ * \fn void fasp_symbfactor (INT n, INT *colind, INT *rwptr, INT levfill,
  *                           INT nzmax, INT *nzlu, INT *ijlu, INT *uptr, INT *ierr)
  *
  * \brief Symbolic factorization of a CSR matrix A in compressed sparse row format,
@@ -1676,11 +1677,11 @@ void fasp_symbfactor (INT   n,
             //  array rowll with the column numbers for the original entries
             //  from row i:
             //  ------------------------------------------------------------
-/*
-#if DEBUG_MODE > 0
-			printf(" ### DEBUG %s  %d row (",__FUNCTION__, i);
-#endif
-			*/
+            /*
+             #if DEBUG_MODE > 0
+             printf(" ### DEBUG %s  %d row (",__FUNCTION__, i);
+             #endif
+             */
             for ( j = ibegin; j <= iend; ++j) {
                 icolindj = colind[j];
                 lastcol[icolindj] = i;
@@ -1689,17 +1690,17 @@ void fasp_symbfactor (INT   n,
                     rowct = rowct + 1;
                     rowll[rowct] = icolindj;
                 }
-/*				
-#if DEBUG_MODE > 0
-		          	printf(" %d", icolindj);
-#endif
-*/					
+                /*
+                 #if DEBUG_MODE > 0
+                 printf(" %d", icolindj);
+                 #endif
+                 */
             }
-/*			
-#if DEBUG_MODE > 0
+            /*
+             #if DEBUG_MODE > 0
 		          	printf(" ) DEBUG ## \n");
-#endif
-*/					
+             #endif
+             */
             
             //  ---------------------------------------------------------
             //  Sort the entries in rowll, so that the row has its column
@@ -1707,8 +1708,8 @@ void fasp_symbfactor (INT   n,
             //  ---------------------------------------------------------
             fasp_sortrow(nzi - 1, &rowll[1]);
             
-			//check col index
-            fasp_check_col_index(i, nzi-1, &rowll[1]); 
+            //check col index
+            fasp_check_col_index(i, nzi-1, &rowll[1]);
             //  ---------------------------------------------------------
             //  Now set up rowll as a linked list containing the original
             //  nonzero column numbers, as described in the methods section:
@@ -1962,7 +1963,7 @@ void fasp_symbfactor (INT   n,
 F100:
     ++rowll;
     ++lastcol;
-    ++levels;	
+    ++levels;
     ++colind;
     ++rwptr;
     ++ijlu;
@@ -2174,9 +2175,9 @@ static void fasp_sortrow (INT   num,
  * \author Chunsheng Feng
  * \date   07/30/2017
  */
-void fasp_check_col_index (INT row,
-                           INT num,
-                           INT  *q)
+static void fasp_check_col_index (INT row,
+                                  INT num,
+                                  INT  *q)
 {
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -2186,13 +2187,13 @@ void fasp_check_col_index (INT row,
     INT num_1 = num - 1;
     
     for ( ii = 0; ii < num_1; ++ii ) {
-		if ( q[ii] == q[ii+1] ) {
+        if ( q[ii] == q[ii+1] ) {
             printf("### ERROR: Multiple entries with same col indices (row: %d, col: %d %d)!\n",
                    row, q[ii], q[ii+1]);
             printf("### ERROR: %s ...... [Stoped]\n", __FUNCTION__);
-			exit(0);
+            exit(0);
         }
-    } 
+    }
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
