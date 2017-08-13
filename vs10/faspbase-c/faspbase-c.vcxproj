@@ -82,7 +82,6 @@
     <ClCompile Include="..\..\base\src\KryPgcr.c" />
     <ClCompile Include="..\..\base\src\KryPgmres.c" />
     <ClCompile Include="..\..\base\src\KryPminres.c" />
-    <ClCompile Include="..\..\base\src\KryPvbcgs.c" />
     <ClCompile Include="..\..\base\src\KryPvfgmres.c" />
     <ClCompile Include="..\..\base\src\KryPvgmres.c" />
     <ClCompile Include="..\..\base\src\KrySPbcgs.c" />
