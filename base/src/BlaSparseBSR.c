@@ -2106,7 +2106,7 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
     
 #ifdef _OPENMP
     if (num_rowsA > OPENMP_HOLDS) {
-#pragma omp parallel for private (myid,mybegin,myend,i,ii,j, jj,tempi,ibegin,iend,iend1)
+#pragma omp parallel for private (myid,mybegin,myend,i,ii,j,jj,ibegin,iend,iend1)
         for (myid = 0; myid < nthreads; myid++) {
             fasp_get_start_end(myid, nthreads, num_rowsA, &mybegin, &myend);
             for (i = mybegin; i < myend; i++) {
