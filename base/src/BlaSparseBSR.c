@@ -205,39 +205,38 @@ INT fasp_dbsr_trans (const dBSRmat *A,
     AT->nb  = nb;
     AT->storage_manner = A->storage_manner;
     
-    AT->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
-    nb2 =  A->nb*A->nb;
-    
-    AT->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
-    
+    AT->IA  = (INT*)fasp_mem_calloc(m+1,sizeof(INT));
+    AT->JA  = (INT*)fasp_mem_calloc(nnz,sizeof(INT));
+    nb2     = nb*nb;
+
     if (A->val) {
-        AT->val=(REAL*)fasp_mem_calloc(nnz*nb*nb,sizeof(REAL));
+        AT->val = (REAL*)fasp_mem_calloc(nnz*nb2,sizeof(REAL));
     }
     else {
-        AT->val=NULL;
+        AT->val = NULL;
     }
     
     // first pass: find the number of nonzeros in the first m-1 columns of A
     // Note: these numbers are stored in the array AT.IA from 1 to m-1
     fasp_iarray_set(m+1, AT->IA, 0);
     
-    for (j=0;j<nnz;++j) {
+    for ( j=0; j<nnz; ++j ) {
         i=A->JA[j]; // column number of A = row number of A'
         if (i<m-1) AT->IA[i+2]++;
     }
     
-    for (i=2;i<=m;++i) AT->IA[i]+=AT->IA[i-1];
+    for ( i=2; i<=m; ++i ) AT->IA[i]+=AT->IA[i-1];
     
     // second pass: form A'
-    if (A->val) {
-        for (i=0;i<n;++i) {
+    if ( A->val ) {
+        for ( i=0; i<n; ++i ) {
             INT ibegin=A->IA[i], iend1=A->IA[i+1];
-            for (p=ibegin;p<iend1;p++) {
+            for ( p=ibegin; p<iend1; p++ ) {
                 j=A->JA[p]+1;
                 k=AT->IA[j];
                 AT->JA[k]=i;
-                for (inb=0;inb<nb;inb++)
-                    for (jnb=0;jnb<nb;jnb++)
+                for ( inb=0; inb<nb; inb++ )
+                    for ( jnb=0; jnb<nb; jnb++ )
                         AT->val[nb2*k + inb*nb + jnb] = A->val[nb2*p + jnb*nb + inb];
                 AT->IA[j]=k+1;
             } // end for p
@@ -245,9 +244,9 @@ INT fasp_dbsr_trans (const dBSRmat *A,
         
     }
     else {
-        for (i=0;i<n;++i) {
+        for ( i=0; i<n; ++i ) {
             INT ibegin=A->IA[i], iend1=A->IA[i+1];
-            for (p=ibegin;p<iend1;p++) {
+            for ( p=ibegin; p<iend1; p++ ) {
                 j=A->JA[p]+1;
                 k=AT->IA[j];
                 AT->JA[k]=i;
@@ -304,11 +303,11 @@ SHORT fasp_dbsr_getblk (const dBSRmat  *A,
 #endif
     
     // create colum flags
-    col_flag=(INT*)fasp_mem_calloc(A->COL,sizeof(INT));
+    col_flag = (INT*)fasp_mem_calloc(A->COL,sizeof(INT));
     
     B->ROW=m; B->COL=n; B->nb=nb; B->storage_manner=A->storage_manner;
     
-    B->IA=(INT*)fasp_mem_calloc(m+1,sizeof(INT));
+    B->IA = (INT*)fasp_mem_calloc(m+1,sizeof(INT));
     
     if (use_openmp) {
 #ifdef _OPENMP
