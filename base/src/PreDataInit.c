@@ -91,9 +91,9 @@ AMG_data * fasp_amg_data_create (SHORT max_levels)
  * \date   2010/04/06
  *
  * Modified by Chensong Zhang on 05/05/2013: Clean up param as well!
- * Modified by Hongxuan Zhang on 12/15/2015: free memory for Intel MKL PARDISO.
- * Modified by Chunsheng Feng on 02/12/2017: To permute the matrix A back to its original state for ILUtp
- * Modified by Chunsheng Feng on 08/11/2017 for max_levels == 1.
+ * Modified by Hongxuan Zhang on 12/15/2015: Free memory for Intel MKL PARDISO
+ * Modified by Chunsheng Feng on 02/12/2017: Permute A back to its origin for ILUtp
+ * Modified by Chunsheng Feng on 08/11/2017: Check for max_levels == 1
  */
 void fasp_amg_data_free (AMG_data   *mgl,
                          AMG_param  *param)
@@ -105,7 +105,7 @@ void fasp_amg_data_free (AMG_data   *mgl,
     for ( i=0; i<max_levels; ++i ) {
         fasp_ilu_data_free(&mgl[i].LU);
         fasp_dcsr_free(&mgl[i].A);
-        if (max_levels>1){
+        if ( max_levels > 1 ) {
             fasp_dcsr_free(&mgl[i].P);
             fasp_dcsr_free(&mgl[i].R);
         }
@@ -198,18 +198,23 @@ AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels)
  *
  * \author Xiaozhe Hu, Chensong Zhang
  * \date   2013/02/13
+ *
+ * Modified by Chensong Zhang on 08/14/2017: Check for max_levels == 1
  */
 void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
 {
-    const INT max_levels = mgl[0].max_levels;
+    const INT max_levels = MAX(1,mgl[0].num_levels);
+    
     INT i;
     
-    for (i=0; i<max_levels; ++i) {
+    for ( i = 0; i < max_levels; ++i ) {
         
         fasp_ilu_data_free(&mgl[i].LU);
         fasp_dbsr_free(&mgl[i].A);
-        fasp_dbsr_free(&mgl[i].P);
-        fasp_dbsr_free(&mgl[i].R);
+        if ( max_levels > 1 ) {
+            fasp_dbsr_free(&mgl[i].P);
+            fasp_dbsr_free(&mgl[i].R);
+        }
         fasp_dvec_free(&mgl[i].b);
         fasp_dvec_free(&mgl[i].x);
         fasp_dvec_free(&mgl[i].diaginv);
@@ -226,8 +231,8 @@ void fasp_amg_data_bsr_free (AMG_data_bsr *mgl)
         fasp_mem_free(mgl[i].sw);
     }
     
-    for (i=0; i<mgl->near_kernel_dim; ++i) {
-        if (mgl->near_kernel_basis[i]) fasp_mem_free(mgl->near_kernel_basis[i]);
+    for ( i = 0; i < mgl->near_kernel_dim; ++i ) {
+        if ( mgl->near_kernel_basis[i] ) fasp_mem_free(mgl->near_kernel_basis[i]);
     }
     fasp_mem_free(mgl->near_kernel_basis);
     fasp_mem_free(mgl);
@@ -333,7 +338,7 @@ void fasp_swz_data_free (SWZ_data *swzdata)
     
     fasp_dcsr_free(&swzdata->A);
     
-    for (i=0; i<swzdata->nblk; ++i) fasp_dcsr_free (&((swzdata->blk_data)[i]));
+    for ( i=0; i<swzdata->nblk; ++i ) fasp_dcsr_free (&((swzdata->blk_data)[i]));
     
     swzdata->nblk = 0;
     fasp_mem_free  (swzdata->iblock);
@@ -346,9 +351,9 @@ void fasp_swz_data_free (SWZ_data *swzdata)
     fasp_mem_free (swzdata->maxa);
     
 #if WITH_MUMPS
-    if (swzdata->mumps == NULL) return;
+    if ( swzdata->mumps == NULL ) return;
     
-    for (i=0; i<swzdata->nblk; ++i) fasp_mumps_free (&((swzdata->mumps)[i]));
+    for ( i=0; i<swzdata->nblk; ++i ) fasp_mumps_free (&((swzdata->mumps)[i]));
 #endif
 }
 

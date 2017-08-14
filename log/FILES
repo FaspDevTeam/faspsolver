@@ -41,7 +41,7 @@
      783 ./base/src/BlaSmallMatInv.c
      178 ./base/src/BlaSmallMatLU.c
       55 ./base/src/BlaSparseBLC.c
-    2180 ./base/src/BlaSparseBSR.c
+    2179 ./base/src/BlaSparseBSR.c
      161 ./base/src/BlaSparseCOO.c
     1636 ./base/src/BlaSparseCSR.c
       81 ./base/src/BlaSparseCSRL.c
@@ -85,7 +85,7 @@
     1067 ./base/src/PreBLC.c
     1137 ./base/src/PreBSR.c
      671 ./base/src/PreCSR.c
-     357 ./base/src/PreDataInit.c
+     359 ./base/src/PreDataInit.c
      551 ./base/src/PreMGCycle.c
      364 ./base/src/PreMGCycleFull.c
      167 ./base/src/PreMGRecur.c
@@ -101,4 +101,4 @@
      242 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      320 ./base/src/SolWrapper.c
-   85244 total
+   85245 total

@@ -197,7 +197,8 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
         case 1:
         {
 #if DEBUG_MODE
-            printf("### DEBUG: %s Step %d job_stat %d... [Start]\n", __FUNCTION__,job,job_stat);
+            printf("### DEBUG: %s, step %d, job_stat = %d... [Start]\n",
+                   __FUNCTION__, job, job_stat);
 #endif
             int begin_row, end_row;
             const int n  = ptrA->row;
@@ -213,7 +214,7 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
             
             // First check the matrix format
             if ( IA[0] != 0 && IA[0] != 1 ) {
-                printf("### ERROR: Matrix format is wrong -- IA[0] = %d\n", IA[0]);
+                printf("### ERROR: Matrix format is wrong, IA[0] = %d!\n", IA[0]);
                 return ERROR_SOLVER_EXIT;
             }
             
@@ -258,7 +259,8 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
             mumps->id = id;
             
 #if DEBUG_MODE
-            printf("### DEBUG: %s, Step %d job_stat %d ... [Finish]\n", __FUNCTION__,job,job_stat);
+            printf("### DEBUG: %s, step %d, job_stat = %d... [Finish]\n",
+                   __FUNCTION__, job, job_stat);
 #endif
             break;
         }
@@ -266,12 +268,13 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
         case 2:
         {
 #if DEBUG_MODE
-            printf("### DEBUG: %s Step %d job_stat %d... [Start]\n", __FUNCTION__,job,job_stat);
+            printf("### DEBUG: %s, step %d, job_stat = %d... [Start]\n",
+                   __FUNCTION__, job, job_stat);
 #endif
             id = mumps->id;
             
             if ( job_stat != 1 )
-                printf("### ERROR: %s setup not finished!\n", __FUNCTION__);
+                printf("### ERROR: %s setup failed!\n", __FUNCTION__);
             
             /* Call the MUMPS package. */
             for(i=0; i<id.n; i++) id.rhs[i] = b->val[i];
@@ -281,7 +284,8 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
             for(i=0; i<id.n; i++) u->val[i] = id.rhs[i];
             
 #if DEBUG_MODE
-            printf("### DEBUG: %s, Step %d job_stat %d ... [Finish]\n", __FUNCTION__,job,job_stat);
+            printf("### DEBUG: %s, step %d, job_stat = %d... [Finish]\n",
+                   __FUNCTION__, job, job_stat);
 #endif
             break;
         }
@@ -289,12 +293,13 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
         case 3:
         {
 #if DEBUG_MODE
-            printf("### DEBUG: %s Step %d job_stat %d... [Start]\n", __FUNCTION__,job,job_stat);
+            printf("### DEBUG: %s, step %d, job_stat = %d... [Start]\n",
+                   __FUNCTION__, job, job_stat);
 #endif
             id = mumps->id;
             
             if ( job_stat !=1 )
-                printf("### ERROR: %s setup not finished!\n", __FUNCTION__);
+                printf("### ERROR: %s setup failed!\n", __FUNCTION__);
             
             free(id.irn);
             free(id.jcn);
@@ -302,15 +307,17 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
             free(id.rhs);
             id.job = -2;
             dmumps_c(&id); /* Terminate instance */
+            
 #if DEBUG_MODE
-            printf("### DEBUG: %s, Step %d job_stat %d ... [Finish]\n", __FUNCTION__,job,job_stat);
+            printf("### DEBUG: %s, step %d, job_stat = %d... [Finish]\n",
+                   __FUNCTION__, job, job_stat);
 #endif
 
             break;
         }
             
         default:
-            printf("### ERROR: Parameter job must be 1, 2, or 3!\n");
+            printf("### ERROR: Parameter job = %d. Should be 1, 2, or 3!\n", job);
             return ERROR_SOLVER_EXIT;
             
     }
@@ -408,7 +415,7 @@ Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
     if ( prtlvl > PRINT_MIN ) {
         clock_t end_time = clock();
         double fac_time = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
-        printf("UMFPACK factorize costs %f seconds.\n", fac_time);
+        printf("MUMPS factorize costs %f seconds.\n", fac_time);
     }
     
 #if DEBUG_MODE
@@ -478,7 +485,7 @@ void fasp_mumps_solve (dCSRmat *ptrA,
     if ( prtlvl > PRINT_NONE ) {
         clock_t end_time = clock();
         double solve_time = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
-        printf("UMFPACK costs %f seconds.\n", solve_time);
+        printf("MUMPS costs %f seconds.\n", solve_time);
     }
     
 #if DEBUG_MODE
