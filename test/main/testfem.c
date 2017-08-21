@@ -173,7 +173,7 @@ int main (int argc, const char * argv[])
             }
 
             else {
-                printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);
+                printf("### ERROR: Unknown preconditioner type %d!!!\n", precond_type);
                 exit(ERROR_SOLVER_PRECTYPE);
             }
 
@@ -192,7 +192,7 @@ int main (int argc, const char * argv[])
         }
 
         else {
-            printf("### ERROR: Wrong solver type %d!!!\n", solver_type);
+            printf("### ERROR: Unknown solver type %d!!!\n", solver_type);
             status = ERROR_SOLVER_TYPE;
         }
 

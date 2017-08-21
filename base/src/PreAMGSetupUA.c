@@ -374,8 +374,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
 
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
-        print_amgcomplexity(mgl,prtlvl);
-        print_cputime("Unsmoothed aggregation setup", setup_end - setup_start);
+        fasp_amgcomplexity(mgl,prtlvl);
+        fasp_cputime("Unsmoothed aggregation setup", setup_end - setup_start);
     }
 
     fasp_mem_free(Neighbor);

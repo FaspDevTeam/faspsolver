@@ -116,7 +116,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
     }
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
+    fasp_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
     
     // shadow residual rt = r* := r
     fasp_darray_cp(m,r,rt);
@@ -199,7 +199,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
         // compute reduction factor of residual ||r||
         absres = normr_act;
         factor = absres/absres0;
-        print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
         
         // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
@@ -439,7 +439,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
     }
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
+    fasp_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
     
     // shadow residual rt = r* := r
     fasp_darray_cp(m,r,rt);
@@ -522,7 +522,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
         // compute reduction factor of residual ||r||
         absres = normr_act;
         factor = absres/absres0;
-        print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
         
         // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
@@ -762,7 +762,7 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
     }
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
+    fasp_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
     
     // shadow residual rt = r* := r
     fasp_darray_cp(m,r,rt);
@@ -845,7 +845,7 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
         // compute reduction factor of residual ||r||
         absres = normr_act;
         factor = absres/absres0;
-        print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
         
         // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
@@ -1086,7 +1086,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
     }
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
+    fasp_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
     
     // shadow residual rt = r* := r
     fasp_darray_cp(m,r,rt);
@@ -1169,7 +1169,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
         // compute reduction factor of residual ||r||
         absres = normr_act;
         factor = absres/absres0;
-        print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
         
         // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
@@ -1412,7 +1412,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
     
     // output iteration information if needed
     
-    print_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
+    fasp_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
     
     // shadow residual rt = r* := r
     fasp_darray_cp(m,r,rt);
@@ -1485,8 +1485,8 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
         else
             stag = 0;
         
-        //       xhalf = x + alpha * ph;        // form the "half" iterate
-        //       s = r - alpha * v;             // residual associated with xhalf
+        // xhalf = x + alpha * ph;        // form the "half" iterate
+        // s = r - alpha * v;             // residual associated with xhalf
         fasp_blas_darray_axpyz(m, alpha, ph, x , xhalf);  //       z= ax + y
         fasp_blas_darray_axpyz(m, -alpha, v, r, s);
         normr = fasp_blas_darray_norm2(m,s);  //       normr = norm(s);
@@ -1495,7 +1495,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
         // compute reduction factor of residual ||r||
         absres = normr_act;
         factor = absres/absres0;
-        print_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
         
         // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)

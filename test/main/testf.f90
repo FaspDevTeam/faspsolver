@@ -67,7 +67,7 @@ program test
   else if (stype == 2) then 
      call fasp_fwrapper_krylov_amg(n,nnz,ia,ja,a,b,u,tol,maxit,prt_lvl);
   else
-     write(*,*) '### ERROR: Wrong solver type!'
+     write(*,*) '### ERROR: Unknown solver type!'
   end if
 
   ! Step 3: Clean up memory

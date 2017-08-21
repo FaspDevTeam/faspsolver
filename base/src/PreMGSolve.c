@@ -71,7 +71,7 @@ INT fasp_amg_solve (AMG_data   *mgl,
     fasp_gettime(&solve_start);
     
     // Print iteration information if needed
-    print_itinfo(prtlvl, STOP_REL_RES, iter, 1.0, sumb, 0.0);
+    fasp_itinfo(prtlvl, STOP_REL_RES, iter, 1.0, sumb, 0.0);
     
     // MG solver here
     while ( (++iter <= MaxIt) & (sumb > SMALLREAL) ) {
@@ -95,7 +95,7 @@ INT fasp_amg_solve (AMG_data   *mgl,
         absres0 = absres;                  // prepare for next iteration
         
         // Print iteration information if needed
-        print_itinfo(prtlvl, STOP_REL_RES, iter, relres1, absres, factor);
+        fasp_itinfo(prtlvl, STOP_REL_RES, iter, relres1, absres, factor);
         
         // Check convergence
         if ( relres1 < tol ) break;
@@ -104,7 +104,7 @@ INT fasp_amg_solve (AMG_data   *mgl,
     if ( prtlvl > PRINT_NONE ) {
         ITS_FINAL(iter, MaxIt, relres1);
         fasp_gettime(&solve_end);
-        print_cputime("AMG solve",solve_end - solve_start);
+        fasp_cputime("AMG solve",solve_end - solve_start);
     }
     
 #if DEBUG_MODE > 0
@@ -159,7 +159,7 @@ INT fasp_amg_solve_amli (AMG_data   *mgl,
     fasp_gettime(&solve_start);
 
     // Print iteration information if needed
-    print_itinfo(prtlvl, STOP_REL_RES, iter, 1.0, sumb, 0.0);
+    fasp_itinfo(prtlvl, STOP_REL_RES, iter, 1.0, sumb, 0.0);
     
     // MG solver here
     while ( (++iter <= MaxIt) & (sumb > SMALLREAL) ) {
@@ -178,7 +178,7 @@ INT fasp_amg_solve_amli (AMG_data   *mgl,
         absres0 = absres;                  // prepare for next iteration
         
         // Print iteration information if needed
-        print_itinfo(prtlvl, STOP_REL_RES, iter, relres1, absres, factor);
+        fasp_itinfo(prtlvl, STOP_REL_RES, iter, relres1, absres, factor);
         
         // Check convergence
         if ( relres1 < tol ) break;
@@ -188,7 +188,7 @@ INT fasp_amg_solve_amli (AMG_data   *mgl,
         ITS_FINAL(iter, MaxIt, relres1);
         fasp_gettime(&solve_end);
         solve_time = solve_end - solve_start;
-        print_cputime("AMLI solve", solve_time);
+        fasp_cputime("AMLI solve", solve_time);
     }
     
 #if DEBUG_MODE > 0
@@ -242,7 +242,7 @@ INT fasp_amg_solve_namli (AMG_data   *mgl,
     fasp_gettime(&solve_start);
     
     // Print iteration information if needed
-    print_itinfo(prtlvl, STOP_REL_RES, iter, 1.0, sumb, 0.0);
+    fasp_itinfo(prtlvl, STOP_REL_RES, iter, 1.0, sumb, 0.0);
     
     while ( (++iter <= MaxIt) & (sumb > SMALLREAL) ) // MG solver here
     {
@@ -258,7 +258,7 @@ INT fasp_amg_solve_namli (AMG_data   *mgl,
         factor  = absres/absres0;    // contraction factor
         
         // output iteration information if needed
-        print_itinfo(prtlvl, STOP_REL_RES, iter, relres1, absres, factor);
+        fasp_itinfo(prtlvl, STOP_REL_RES, iter, relres1, absres, factor);
         
         if ( relres1 < tol ) break; // early exit condition
         
@@ -268,7 +268,7 @@ INT fasp_amg_solve_namli (AMG_data   *mgl,
     if ( prtlvl > PRINT_NONE ) {
         ITS_FINAL(iter, MaxIt, relres1);
         fasp_gettime(&solve_end);
-        print_cputime("Nonlinear AMLI solve", solve_end - solve_start);
+        fasp_cputime("Nonlinear AMLI solve", solve_end - solve_start);
     }
     
 #if DEBUG_MODE > 0
@@ -324,7 +324,7 @@ void fasp_famg_solve (AMG_data   *mgl,
     if ( prtlvl > PRINT_NONE ) {
         printf("FMG finishes with relative residual %e.\n", relres1);
         fasp_gettime(&solve_end);
-        print_cputime("FMG solve",solve_end - solve_start);
+        fasp_cputime("FMG solve",solve_end - solve_start);
     }
     
 #if DEBUG_MODE > 0

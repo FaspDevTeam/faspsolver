@@ -123,7 +123,7 @@ INT fasp_solver_dcsr_spcg (const dCSRmat  *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
     
     fasp_darray_cp(m,z,p);
     temp1 = fasp_blas_darray_dotprod(m,z,r);
@@ -174,7 +174,7 @@ INT fasp_solver_dcsr_spcg (const dCSRmat  *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         // If the solution is NAN, restrore the best solution
         if ( fasp_dvec_isnan(u) ) {
@@ -453,7 +453,7 @@ INT fasp_solver_dblc_spcg (const dBLCmat  *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
     
     fasp_darray_cp(m,z,p);
     temp1 = fasp_blas_darray_dotprod(m,z,r);
@@ -504,7 +504,7 @@ INT fasp_solver_dblc_spcg (const dBLCmat  *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         // If the solution is NAN, restrore the best solution
         if ( fasp_dvec_isnan(u) ) {
@@ -783,7 +783,7 @@ INT fasp_solver_dstr_spcg (const dSTRmat  *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
     
     fasp_darray_cp(m,z,p);
     temp1 = fasp_blas_darray_dotprod(m,z,r);
@@ -834,7 +834,7 @@ INT fasp_solver_dstr_spcg (const dSTRmat  *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         // If the solution is NAN, restrore the best solution
         if ( fasp_dvec_isnan(u) ) {

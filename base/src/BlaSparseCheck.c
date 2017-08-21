@@ -338,7 +338,7 @@ SHORT fasp_check_iCSRmat (const iCSRmat *A)
     
     for (i=0;i<A->nnz;++i) {
         if ( (A->JA[i]<0) || (A->JA[i]-A->col>=0) ) {
-            printf("### ERROR: Wrong CSR matrix!\n");
+            printf("### ERROR: Wrong CSR matrix format!\n");
             fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
         }
     }

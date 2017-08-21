@@ -2291,7 +2291,7 @@ static dCSRmat form_contractor (dCSRmat    *A,
                 fasp_smoother_dcsr_sor(&x, n-1, 0,-1, A, &b, steps, relax);
                 break;
             default:
-                printf("### ERROR: Wrong smoother type!\n");
+                printf("### ERROR: Unknown smoother type!\n");
                 fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
         }
         

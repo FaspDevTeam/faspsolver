@@ -116,8 +116,8 @@ SHORT fasp_amg_setup_cr (AMG_data   *mgl,
     
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
-        print_amgcomplexity(mgl,prtlvl);
-        print_cputime("Compatible relaxation setup", setup_end - setup_start);
+        fasp_amgcomplexity(mgl,prtlvl);
+        fasp_cputime("Compatible relaxation setup", setup_end - setup_start);
     }
     
     fasp_ivec_free(&vertices); 

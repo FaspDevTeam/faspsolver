@@ -299,8 +299,8 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
 
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
-        print_amgcomplexity(mgl, prtlvl);
-        print_cputime("Classical AMG setup", setup_end - setup_start);
+        fasp_amgcomplexity(mgl, prtlvl);
+        fasp_cputime("Classical AMG setup", setup_end - setup_start);
     }
 
 #if DEBUG_MODE > 0

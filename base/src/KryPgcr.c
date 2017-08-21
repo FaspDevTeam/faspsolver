@@ -122,7 +122,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
     relres  = absres/absres0;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,0,relres,sqrt(absres0),0.0);
+    fasp_itinfo(prtlvl,stop_type,0,relres,sqrt(absres0),0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -179,8 +179,8 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
             
             norms[iter] = relres;
             
-            print_itinfo(prtlvl, stop_type, iter, sqrt(relres), sqrt(absres),
-                         sqrt(norms[iter]/norms[iter-1]));
+            fasp_itinfo(prtlvl, stop_type, iter, sqrt(relres), sqrt(absres),
+                        sqrt(norms[iter]/norms[iter-1]));
             
             if (sqrt(relres) < tol)  break;
         }
@@ -311,7 +311,7 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
     relres  = absres/absres0;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,0,relres,sqrt(absres0),0.0);
+    fasp_itinfo(prtlvl,stop_type,0,relres,sqrt(absres0),0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -368,8 +368,8 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
             
             norms[iter] = relres;
             
-            print_itinfo(prtlvl, stop_type, iter, sqrt(relres), sqrt(absres),
-                         sqrt(norms[iter]/norms[iter-1]));
+            fasp_itinfo(prtlvl, stop_type, iter, sqrt(relres), sqrt(absres),
+                        sqrt(norms[iter]/norms[iter-1]));
             
             if (sqrt(relres) < tol)  break;
         }
@@ -426,7 +426,7 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
  * \author zheng Li, Chensong Zhang
  * \date   12/23/2014
  *
- * \warning This is a special function. Move it to blas_smat.c if needed else where. 
+ * \warning This is a special function. Move it to blas_smat.c if needed else where.
  */
 static void dense_aAtxpby (INT   n,
                            INT   m,

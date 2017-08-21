@@ -168,7 +168,7 @@ int main (int argc, const char * argv[])
         }
         
         else {
-            printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);       
+            printf("### ERROR: Unknown preconditioner type %d!!!\n", precond_type);       
             status = ERROR_SOLVER_PRECTYPE;
         }
         
@@ -178,7 +178,6 @@ int main (int argc, const char * argv[])
     else if (solver_type == SOLVER_AMG) {
         if (print_level>PRINT_NONE) fasp_param_amg_print(&amgpar);
         fasp_solver_amg(&A, &b, &x, &amgpar); 
-        
     }
 
     // Full AMG as the iterative solver 
@@ -211,7 +210,7 @@ int main (int argc, const char * argv[])
 #endif
     
     else {
-        printf("### ERROR: Wrong solver type %d!!!\n", solver_type);        
+        printf("### ERROR: Unknown solver type %d!!!\n", solver_type);        
         status = ERROR_SOLVER_TYPE;
     }
     

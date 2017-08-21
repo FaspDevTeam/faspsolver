@@ -71,15 +71,18 @@ dBSRmat fasp_dbsr_create (const INT  ROW,
         A.val = NULL;
     }
     
-    A.ROW = ROW; A.COL = COL; A.NNZ = NNZ;
-    A.nb = nb; A.storage_manner = storage_manner;
+    A.storage_manner = storage_manner;
+    A.ROW = ROW;
+    A.COL = COL;
+    A.NNZ = NNZ;
+    A.nb  = nb;
     
     return A;
 }
 
 /**
- * \fn void fasp_dbsr_alloc (const INT ROW, const INT COL, const INT NNZ, const INT nb,
- *                           const INT storage_manner, dBSRmat *A)
+ * \fn void fasp_dbsr_alloc (const INT ROW, const INT COL, const INT NNZ,
+ *                           const INT nb, const INT storage_manner, dBSRmat *A)
  *
  * \brief Allocate memory space for BSR format sparse matrix
  *
@@ -116,14 +119,16 @@ void fasp_dbsr_alloc (const INT  ROW,
     
     if ( nb > 0 ) {
         A->val = (REAL*)fasp_mem_calloc(NNZ*nb*nb, sizeof(REAL));
-        // A->val = (REAL*)malloc(NNZ*nb*nb*sizeof(REAL));
     }
     else {
         A->val = NULL;
     }
     
-    A->ROW = ROW; A->COL = COL; A->NNZ = NNZ;
-    A->nb = nb; A->storage_manner = storage_manner;
+    A->storage_manner = storage_manner;
+    A->ROW = ROW;
+    A->COL = COL;
+    A->NNZ = NNZ;
+    A->nb  = nb;
     
     return;
 }
@@ -150,7 +155,7 @@ void fasp_dbsr_free (dBSRmat *A)
     A->ROW = 0;
     A->COL = 0;
     A->NNZ = 0;
-    A->nb = 0;
+    A->nb  = 0;
     A->storage_manner = 0;
 }
 
@@ -195,9 +200,10 @@ void fasp_dbsr_cp (const dBSRmat *A,
 INT fasp_dbsr_trans (const dBSRmat *A,
                      dBSRmat       *AT)
 {
-    const INT n=A->ROW, m=A->COL, nnz=A->NNZ, nb=A->nb;
-    INT i,j,k,p,inb,jnb,nb2;
+    const INT n = A->ROW, m = A->COL, nnz = A->NNZ, nb = A->nb;
+    
     INT status = FASP_SUCCESS;
+    INT i,j,k,p,inb,jnb,nb2;
     
     AT->ROW = m;
     AT->COL = n;
@@ -208,7 +214,7 @@ INT fasp_dbsr_trans (const dBSRmat *A,
     AT->IA  = (INT*)fasp_mem_calloc(m+1,sizeof(INT));
     AT->JA  = (INT*)fasp_mem_calloc(nnz,sizeof(INT));
     nb2     = nb*nb;
-
+    
     if (A->val) {
         AT->val = (REAL*)fasp_mem_calloc(nnz*nb2,sizeof(REAL));
     }
@@ -309,48 +315,47 @@ SHORT fasp_dbsr_getblk (const dBSRmat  *A,
     
     B->IA = (INT*)fasp_mem_calloc(m+1,sizeof(INT));
     
-    if (use_openmp) {
+    if ( use_openmp ) {
 #ifdef _OPENMP
         stride_i = n/nthreads;
 #pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
         {
             myid = omp_get_thread_num();
             mybegin = myid*stride_i;
-            if (myid < nthreads-1)  myend = mybegin+stride_i;
+            if ( myid < nthreads-1 )  myend = mybegin+stride_i;
             else myend = n;
-            for (i=mybegin; i < myend; ++i) {
+            for ( i = mybegin; i < myend; ++i ) {
                 col_flag[Js[i]]=i+1;
             }
         }
 #endif
     }
     else {
-        for (i=0;i<n;++i) col_flag[Js[i]]=i+1;
+        for ( i=0; i<n; ++i ) col_flag[Js[i]]=i+1;
     }
     
     // first pass: count nonzeros for sub matrix
-    B->IA[0]=0;
-    for (i=0;i<m;++i) {
-        for (k=A->IA[Is[i]];k<A->IA[Is[i]+1];++k) {
+    B->IA[0] = 0;
+    for ( i=0; i<m; ++i ) {
+        for ( k=A->IA[Is[i]]; k<A->IA[Is[i]+1]; ++k ) {
             j=A->JA[k];
             if (col_flag[j]>0) nnz++;
         } /* end for k */
-        B->IA[i+1]=nnz;
+        B->IA[i+1] = nnz;
     } /* end for i */
-    B->NNZ=nnz;
+    B->NNZ = nnz;
     
     // allocate
-    B->JA=(INT*)fasp_mem_calloc(nnz,sizeof(INT));
-    
-    B->val=(REAL*)fasp_mem_calloc(nnz*nb2,sizeof(REAL));
+    B->JA  = (INT*)fasp_mem_calloc(nnz,sizeof(INT));
+    B->val = (REAL*)fasp_mem_calloc(nnz*nb2,sizeof(REAL));
     
     // second pass: copy data to B
     // TODO: No need to do the following loop, need to be modified!!  --Xiaozhe
     nnz = 0;
-    for (i=0;i<m;++i) {
-        for (k=A->IA[Is[i]];k<A->IA[Is[i]+1];++k) {
-            j=A->JA[k];
-            if (col_flag[j]>0) {
+    for ( i=0; i<m; ++i)  {
+        for ( k=A->IA[Is[i]]; k<A->IA[Is[i]+1]; ++k ) {
+            j = A->JA[k];
+            if ( col_flag[j] > 0 ) {
                 B->JA[nnz]=col_flag[j]-1;
                 memcpy(B->val+nnz*nb2, A->val+k*nb2, nb2*sizeof(REAL));
                 nnz++;
@@ -364,7 +369,7 @@ SHORT fasp_dbsr_getblk (const dBSRmat  *A,
 }
 
 /*!
- * \fn SHORT fasp_dbsr_diagpref ( dBSRmat *A )
+ * \fn SHORT fasp_dbsr_diagpref (dBSRmat *A)
  *
  * \brief Reorder the column and data arrays of a square BSR matrix,
  *        so that the first entry in each row is the diagonal one.
@@ -384,11 +389,12 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
     SHORT         status = FASP_SUCCESS;
     const INT     num_rowsA = A -> ROW;
     const INT     num_colsA = A -> COL;
-    const INT     nb = A->nb;
-    const INT     nb2 = nb*nb;
-    const INT    *A_i    = A -> IA;
-    INT          *A_j    = A -> JA;
-    REAL         *A_data = A -> val;
+    const INT     nb        = A->nb;
+    const INT     nb2       = nb*nb;
+    
+    const INT    *A_i       = A -> IA;
+    INT          *A_j       = A -> JA;
+    REAL         *A_data    = A -> val;
     
     INT   i, j, tempi, row_size;
     
@@ -496,10 +502,10 @@ dvector fasp_dbsr_getdiaginv (const dBSRmat *A)
     
     // Variables for OpenMP
     SHORT nthreads = 1, use_openmp = FALSE;
-    INT myid, mybegin, myend;
+    INT   myid, mybegin, myend;
     
 #ifdef _OPENMP
-    if (ROW > OPENMP_HOLDS) {
+    if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = fasp_get_num_threads();
     }
@@ -863,16 +869,16 @@ dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A,
     INT     nb  = A->nb;
     INT    *IA  = A->IA;
     INT    *JA  = A->JA;
-    REAL *val = A->val;
+    REAL   *val = A->val;
     
     INT    *IAb  = NULL;
     INT    *JAb  = NULL;
-    REAL *valb = NULL;
+    REAL   *valb = NULL;
     
-    INT nb2  = nb*nb;
-    INT i,j,k,m;
+    INT     nb2  = nb*nb;
+    INT     i,j,k,m;
     
-    SHORT use_openmp = FALSE;
+    SHORT   use_openmp = FALSE;
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, stride_i, nthreads;
@@ -1913,7 +1919,7 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
                     if (JA[j] == i){
                         valb[j*nb2+1] = 0.0;
                         valb[j*nb2+2] = 0.0;
-                        if (ABS(valb[j*nb2+3]) < SMALLREAL)  valb[j*nb2+3] = SMALLREAL;
+                        if (ABS(valb[j*nb2+3]) < SMALLREAL) valb[j*nb2+3] = SMALLREAL;
                     }
                 }
             }
@@ -1936,8 +1942,8 @@ dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
                         valb[j*nb2+5] = 0.0;
                         valb[j*nb2+6] = 0.0;
                         valb[j*nb2+7] = 0.0;
-                        if (ABS(valb[j*nb2+4]) < SMALLREAL)  valb[j*nb2+4] = SMALLREAL;
-                        if (ABS(valb[j*nb2+8]) < SMALLREAL)  valb[j*nb2+8] = SMALLREAL;
+                        if (ABS(valb[j*nb2+4]) < SMALLREAL) valb[j*nb2+4] = SMALLREAL;
+                        if (ABS(valb[j*nb2+8]) < SMALLREAL) valb[j*nb2+8] = SMALLREAL;
                     }
                 }
             }
@@ -2028,7 +2034,8 @@ dBSRmat fasp_dbsr_perm (const dBSRmat *A,
                 for (j=i1; j<=i2; ++j) {
                     jaj = start+j-i1;
                     Aperm.JA[j] = ja[jaj];
-                    for (jj=0; jj<nb2;++jj) Aperm.val[j*nb2+jj] = Aval[jaj*nb2+jj];
+                    for (jj=0; jj<nb2;++jj)
+                        Aperm.val[j*nb2+jj] = Aval[jaj*nb2+jj];
                 }
             }
         }
@@ -2041,8 +2048,8 @@ dBSRmat fasp_dbsr_perm (const dBSRmat *A,
             for (j=i1; j<=i2; ++j) {
                 jaj = start+j-i1;
                 Aperm.JA[j] = ja[jaj];
-                for (jj=0; jj<nb2;++jj) Aperm.val[j*nb2+jj] = Aval[jaj*nb2+jj];
-                //Aperm.val[j] = Aval[jaj];
+                for (jj=0; jj<nb2;++jj)
+                    Aperm.val[j*nb2+jj] = Aval[jaj*nb2+jj];
             }
         }
     }
@@ -2115,8 +2122,8 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
                         for (jj = j+1; jj < iend; jj ++) {
                             if (A_j[j] == A_j[jj]) {
                                 // add jj col to j
-                                for (ii=0; ii <nb2; ii++) A_data[j*nb2 +ii] += A_data[ jj*nb2+ii];
-                                // add jj col to j
+                                for ( ii=0; ii <nb2; ii++ )
+                                    A_data[j*nb2 +ii] += A_data[ jj*nb2+ii];
                                 A_j[jj] = -1;
                                 count ++;
                             }
@@ -2135,9 +2142,9 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
                     for (jj = j+1; jj < iend; jj ++) {
                         if (A_j[j] == A_j[jj]) {
                             // add jj col to j
-                            for (ii=0; ii <nb2; ii++) A_data[j*nb2 +ii] += A_data[ jj*nb2+ii];
-                            // add jj col to j
-                            printf("### WARNING: same col indices in row %d, col %d (%d %d)\n",
+                            for ( ii=0; ii <nb2; ii++ )
+                                A_data[j*nb2 +ii] += A_data[ jj*nb2+ii];
+                            printf("### WARNING: Same col indices at %d, col %d (%d %d)\n",
                                    i, A_j[j], j, jj );
                             A_j[jj] = -1;
                             count ++;

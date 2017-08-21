@@ -356,8 +356,8 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data   *mgl,
 
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
-        print_amgcomplexity(mgl,prtlvl);
-        print_cputime("Smoothed aggregation setup", setup_end - setup_start);
+        fasp_amgcomplexity(mgl,prtlvl);
+        fasp_cputime("Smoothed aggregation setup", setup_end - setup_start);
     }
 
     fasp_mem_free(vertices);
@@ -609,8 +609,8 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data   *mgl,
 
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
-        print_amgcomplexity(mgl,prtlvl);
-        print_cputime("Smoothed aggregation 1/2 setup", setup_end - setup_start);
+        fasp_amgcomplexity(mgl,prtlvl);
+        fasp_cputime("Smoothed aggregation 1/2 setup", setup_end - setup_start);
     }
 
     fasp_mem_free(vertices);

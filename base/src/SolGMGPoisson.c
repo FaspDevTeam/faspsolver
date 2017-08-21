@@ -133,7 +133,7 @@ INT fasp_poisson_gmg1d (REAL         *u,
     // print out CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
-        print_cputime("GMG totally", AMG_end - AMG_start);
+        fasp_cputime("GMG totally", AMG_end - AMG_start);
     }
     
 #if DEBUG_MODE > 0
@@ -266,7 +266,7 @@ INT fasp_poisson_gmg2d (REAL         *u,
     // print out CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
-        print_cputime("GMG totally", AMG_end - AMG_start);
+        fasp_cputime("GMG totally", AMG_end - AMG_start);
     }
     
 #if DEBUG_MODE > 0
@@ -404,7 +404,7 @@ INT fasp_poisson_gmg3d (REAL         *u,
     // print out CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
-        print_cputime("GMG totally", AMG_end - AMG_start);
+        fasp_cputime("GMG totally", AMG_end - AMG_start);
     }
     
 FINISHED:
@@ -495,7 +495,7 @@ void fasp_poisson_fgmg1d (REAL         *u,
     // print out Relative Residual and CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
-        print_cputime("FGMG totally", AMG_end - AMG_start);
+        fasp_cputime("FGMG totally", AMG_end - AMG_start);
         residual1d(u0, b0, r0, 0, level);
         norm_r = l2norm(r0, level, 0);
         printf("Relative Residual = %e.\n", norm_r/norm_r0);
@@ -599,7 +599,7 @@ void fasp_poisson_fgmg2d (REAL         *u,
     // print out Relative Residual and CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
-        print_cputime("FGMG totally", AMG_end - AMG_start);
+        fasp_cputime("FGMG totally", AMG_end - AMG_start);
         residual2d(u0, b0, r0, 0, level, nxk, nyk);
         norm_r = l2norm(r0, level, 0);
         printf("Relative Residual = %e.\n", norm_r/norm_r0);
@@ -707,7 +707,7 @@ void fasp_poisson_fgmg3d (REAL         *u,
     
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
-        print_cputime("FGMG totally", AMG_end - AMG_start);
+        fasp_cputime("FGMG totally", AMG_end - AMG_start);
         residual3d(u0, b0, r0, 0, level, nxk, nyk, nzk);
         norm_r = l2norm(r0, level, 0);
         printf("Relative Residual = %e.\n", norm_r/norm_r0);
@@ -805,7 +805,7 @@ INT fasp_poisson_gmgcg1d (REAL         *u,
     // print out CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
-        print_cputime("GMG_PCG totally", AMG_end - AMG_start);
+        fasp_cputime("GMG_PCG totally", AMG_end - AMG_start);
     }
     
 FINISHED:
@@ -911,7 +911,7 @@ INT fasp_poisson_gmgcg2d (REAL         *u,
     // print out CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
-        print_cputime("GMG_PCG totally", AMG_end - AMG_start);
+        fasp_cputime("GMG_PCG totally", AMG_end - AMG_start);
     }
     
 FINISHED:
@@ -1024,7 +1024,7 @@ INT fasp_poisson_gmgcg3d (REAL         *u,
     // print out CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
-        print_cputime("GMG_PCG totally", AMG_end - AMG_start);
+        fasp_cputime("GMG_PCG totally", AMG_end - AMG_start);
     }
     
 FINISHED:

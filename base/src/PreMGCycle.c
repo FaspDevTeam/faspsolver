@@ -352,7 +352,7 @@ ForwardSweep:
                                                         mgl[l].diaginv.val, relax);
                         break;
                     default:
-                        printf("### ERROR: Wrong smoother type %d!\n", smoother);
+                        printf("### ERROR: Unknown smoother type %d!\n", smoother);
                         fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
                 }
             }
@@ -528,7 +528,7 @@ ForwardSweep:
                                                         mgl[l].diaginv.val, relax);
                         break;
                     default:
-                        printf("### ERROR: Wrong smoother type %d!\n", smoother);
+                        printf("### ERROR: Unknown smoother type %d!\n", smoother);
                         fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
                 }
             }

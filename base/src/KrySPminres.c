@@ -128,7 +128,7 @@ INT fasp_solver_dcsr_spminres (const dCSRmat  *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
     
     // tp = A*p1
     fasp_blas_dcsr_mxv(A,p1,tp);
@@ -238,7 +238,7 @@ INT fasp_solver_dcsr_spminres (const dCSRmat  *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(u) ) {
@@ -576,7 +576,7 @@ INT fasp_solver_dblc_spminres (const dBLCmat  *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
     
     // tp = A*p1
     fasp_blas_dblc_mxv(A,p1,tp);
@@ -686,7 +686,7 @@ INT fasp_solver_dblc_spminres (const dBLCmat  *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(u) ) {
@@ -1024,7 +1024,7 @@ INT fasp_solver_dstr_spminres (const dSTRmat  *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
     
     // tp = A*p1
     fasp_blas_dstr_mxv(A,p1,tp);
@@ -1134,7 +1134,7 @@ INT fasp_solver_dstr_spminres (const dSTRmat  *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         // safety net check: save the best-so-far solution
         if ( fasp_dvec_isnan(u) ) {

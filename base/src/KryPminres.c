@@ -129,7 +129,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat      *A,
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
+    fasp_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
     
     // tp = A*p1
     fasp_blas_dcsr_mxv(A,p1,tp);
@@ -239,7 +239,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat      *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_darray_norminf(m, u->val);
@@ -535,7 +535,7 @@ INT fasp_solver_dblc_pminres (dBLCmat     *A,
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
+    fasp_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
     
     // tp = A*p1
     fasp_blas_dblc_mxv(A,p1,tp);
@@ -645,7 +645,7 @@ INT fasp_solver_dblc_pminres (dBLCmat     *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_darray_norminf(m, u->val);
@@ -938,7 +938,7 @@ INT fasp_solver_dstr_pminres (dSTRmat      *A,
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
+    fasp_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
     
     // tp = A*p1
     fasp_blas_dstr_mxv(A,p1,tp);
@@ -1048,7 +1048,7 @@ INT fasp_solver_dstr_pminres (dSTRmat      *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_darray_norminf(m, u->val);
@@ -1447,7 +1447,7 @@ INT fasp_solver_pminres (mxv_matfree  *mf,
         factor=absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         // solution check, if soultion is too small, return ERROR_SOLVER_SOLSTAG.
         infnormu = fasp_blas_darray_norminf(m, u->val);

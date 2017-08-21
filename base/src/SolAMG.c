@@ -132,7 +132,7 @@ void fasp_solver_amg (const dCSRmat  *A,
     // print out CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&AMG_end);
-        print_cputime("AMG totally", AMG_end - AMG_start);
+        fasp_cputime("AMG totally", AMG_end - AMG_start);
     }
     
 #if DEBUG_MODE > 0

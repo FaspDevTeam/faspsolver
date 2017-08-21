@@ -105,7 +105,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
     unsigned INT  Restart  = restart; // real restart in some fixed restarted cycle
     unsigned INT  Restart1 = Restart + 1;
     unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
-
+    
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
@@ -162,12 +162,12 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
     
     // if initial residual is small, no need to iterate!
     if ( r_norm < epsilon || r_norm < 1e-3*tol ) goto FINISHED;
-
+    
     if ( b_norm > 0.0 ) {
-        print_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,norms[iter],0);
+        fasp_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,norms[iter],0);
     }
     else {
-        print_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],0);
+        fasp_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],0);
     }
     
     /* outer iteration cycle */
@@ -183,7 +183,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
             fasp_mem_free(z);
             return iter;
         }
-
+        
         //-----------------------------------//
         //   adjust the restart parameter    //
         //-----------------------------------//
@@ -208,7 +208,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
         t = 1.0 / r_norm;
         fasp_blas_darray_ax(n, t, p[0]);
         i = 0;
-
+        
         // RESTART CYCLE (right-preconditioning)
         while ( i < Restart && iter < MaxIt ) {
             
@@ -253,12 +253,12 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
             norms[iter] = r_norm;
             
             if ( b_norm > 0 ) {
-                print_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,
-                             norms[iter],norms[iter]/norms[iter-1]);
+                fasp_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,
+                            norms[iter],norms[iter]/norms[iter-1]);
             }
             else {
-                print_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],
-                             norms[iter]/norms[iter-1]);
+                fasp_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],
+                            norms[iter]/norms[iter-1]);
             }
             
             /* should we exit restart cycle? */
@@ -317,7 +317,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
                 if ( prtlvl >= PRINT_SOME ) ITS_FACONV;
                 fasp_darray_cp(n, r, p[0]); i = 0;
             }
-        
+            
         } /* end of convergence check */
         
         /* compute residual vector and continue loop */
@@ -491,10 +491,10 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
     if ( r_norm < epsilon || r_norm < 1e-3*tol ) goto FINISHED;
     
     if ( b_norm > 0.0 ) {
-        print_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,norms[iter],0);
+        fasp_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,norms[iter],0);
     }
     else {
-        print_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],0);
+        fasp_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],0);
     }
     
     /* outer iteration cycle */
@@ -580,12 +580,12 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
             norms[iter] = r_norm;
             
             if ( b_norm > 0 ) {
-                print_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,
-                             norms[iter],norms[iter]/norms[iter-1]);
+                fasp_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,
+                            norms[iter],norms[iter]/norms[iter-1]);
             }
             else {
-                print_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],
-                             norms[iter]/norms[iter-1]);
+                fasp_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],
+                            norms[iter]/norms[iter-1]);
             }
             
             /* should we exit restart cycle? */
@@ -821,10 +821,10 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
     if ( r_norm < epsilon || r_norm < 1e-3*tol ) goto FINISHED;
     
     if ( b_norm > 0.0 ) {
-        print_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,norms[iter],0);
+        fasp_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,norms[iter],0);
     }
     else {
-        print_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],0);
+        fasp_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],0);
     }
     
     /* outer iteration cycle */
@@ -910,12 +910,12 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
             norms[iter] = r_norm;
             
             if ( b_norm > 0 ) {
-                print_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,
-                             norms[iter],norms[iter]/norms[iter-1]);
+                fasp_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,
+                            norms[iter],norms[iter]/norms[iter-1]);
             }
             else {
-                print_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],
-                             norms[iter]/norms[iter-1]);
+                fasp_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],
+                            norms[iter]/norms[iter-1]);
             }
             
             /* should we exit restart cycle? */
@@ -1240,12 +1240,12 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
             norms[iter] = r_norm;
             
             if (b_norm > 0 ) {
-                print_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,
-                             norms[iter],norms[iter]/norms[iter-1]);
+                fasp_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,
+                            norms[iter],norms[iter]/norms[iter-1]);
             }
             else {
-                print_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],
-                             norms[iter]/norms[iter-1]);
+                fasp_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],
+                            norms[iter]/norms[iter-1]);
             }
             
             /* should we exit restart cycle? */

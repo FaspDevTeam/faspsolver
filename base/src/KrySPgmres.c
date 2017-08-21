@@ -163,7 +163,7 @@ INT fasp_solver_dcsr_spgmres (const dCSRmat  *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(PrtLvl,StopType,0,relres,normr0,0.0);
+    fasp_itinfo(PrtLvl,StopType,0,relres,normr0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -226,8 +226,8 @@ INT fasp_solver_dcsr_spgmres (const dCSRmat  *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(PrtLvl, StopType, iter, relres, absres,
-                         norms[iter]/norms[iter-1]);
+            fasp_itinfo(PrtLvl, StopType, iter, relres, absres,
+                        norms[iter]/norms[iter-1]);
             
             // should we exit restart cycle
             if ( relres <= tol && iter >= MIN_ITER ) break;
@@ -504,7 +504,7 @@ INT fasp_solver_dblc_spgmres (const dBLCmat  *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(PrtLvl,StopType,0,relres,normr0,0.0);
+    fasp_itinfo(PrtLvl,StopType,0,relres,normr0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -567,8 +567,8 @@ INT fasp_solver_dblc_spgmres (const dBLCmat  *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(PrtLvl, StopType, iter, relres, absres,
-                         norms[iter]/norms[iter-1]);
+            fasp_itinfo(PrtLvl, StopType, iter, relres, absres,
+                        norms[iter]/norms[iter-1]);
             
             // should we exit restart cycle
             if ( relres <= tol && iter >= MIN_ITER ) break;
@@ -845,7 +845,7 @@ INT fasp_solver_dbsr_spgmres (const dBSRmat  *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(PrtLvl,StopType,0,relres,normr0,0.0);
+    fasp_itinfo(PrtLvl,StopType,0,relres,normr0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -908,8 +908,8 @@ INT fasp_solver_dbsr_spgmres (const dBSRmat  *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(PrtLvl, StopType, iter, relres, absres,
-                         norms[iter]/norms[iter-1]);
+            fasp_itinfo(PrtLvl, StopType, iter, relres, absres,
+                        norms[iter]/norms[iter-1]);
             
             // should we exit restart cycle
             if ( relres <= tol && iter >= MIN_ITER ) break;
@@ -1186,7 +1186,7 @@ INT fasp_solver_dstr_spgmres (const dSTRmat  *A,
     if ( relres < tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(PrtLvl,StopType,0,relres,normr0,0.0);
+    fasp_itinfo(PrtLvl,StopType,0,relres,normr0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -1249,8 +1249,8 @@ INT fasp_solver_dstr_spgmres (const dSTRmat  *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(PrtLvl, StopType, iter, relres, absres,
-                         norms[iter]/norms[iter-1]);
+            fasp_itinfo(PrtLvl, StopType, iter, relres, absres,
+                        norms[iter]/norms[iter-1]);
             
             // should we exit restart cycle
             if ( relres <= tol && iter >= MIN_ITER ) break;

@@ -227,7 +227,7 @@ int main (int argc, const char *argv[])
     }
     
     if ( method > 3 || method < 1) {
-        printf("### ERROR: Wrong solver type !!!\n");
+        printf("### ERROR: Unknown solver type !!!\n");
         return ERROR_INPUT_PAR;
     }
     
