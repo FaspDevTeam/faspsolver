@@ -160,7 +160,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
+    fasp_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
     
     fasp_darray_cp(m,z,p);
     temp1 = fasp_blas_darray_dotprod(m,z,r);
@@ -211,7 +211,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         if ( factor > 0.9 ) {
             
@@ -449,7 +449,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
+    fasp_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
     
     fasp_darray_cp(m,z,p);
     temp1 = fasp_blas_darray_dotprod(m,z,r);
@@ -500,7 +500,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         if ( factor > 0.9 ) {
             
@@ -740,7 +740,7 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
+    fasp_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
     
     fasp_darray_cp(m,z,p);
     temp1 = fasp_blas_darray_dotprod(m,z,r);
@@ -791,7 +791,7 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         if ( factor > 0.9 ) {
             
@@ -1031,7 +1031,7 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
+    fasp_itinfo(prtlvl,stop_type,iter,relres,absres0,0.0);
     
     fasp_darray_cp(m,z,p);
     temp1 = fasp_blas_darray_dotprod(m,z,r);
@@ -1082,7 +1082,7 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         if ( factor > 0.9 ) {
             
@@ -1143,7 +1143,7 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
                     fasp_darray_set(m,p,0.0);
                     ++stag;
                 }
-
+                
             } // end of stagnation check!
             
         } // end of check I and II
@@ -1363,7 +1363,7 @@ INT fasp_solver_pcg (mxv_matfree *mf,
         }
         
         // output iteration information if needed
-        print_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter,relres,absres,factor);
         
         // solution check, if soultion is too small, return ERROR_SOLVER_SOLSTAG.
         infnormu = fasp_blas_darray_norminf(m, u->val);

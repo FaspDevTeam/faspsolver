@@ -332,14 +332,14 @@ int main (int argc, const char * argv[])
         }
         
         else {
-            printf("### ERROR: Wrong preconditioner type %d!!!\n", precond_type);       
+            printf("### ERROR: Unknown preconditioner type %d!!!\n", precond_type);       
             exit(ERROR_SOLVER_PRECTYPE);
         }
         
     }
     
     else {
-        printf("### ERROR: Wrong solver type %d!!!\n", itsolver_type);      
+        printf("### ERROR: Unknown solver type %d!!!\n", itsolver_type);      
         status = ERROR_SOLVER_TYPE;
         goto FINISHED;
     }

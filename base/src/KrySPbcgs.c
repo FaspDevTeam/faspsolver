@@ -120,7 +120,7 @@ INT fasp_solver_dcsr_spbcgs (const dCSRmat  *A,
     if (relres<tol) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
     
     // rho = r* := r
     fasp_darray_cp(m,r,rho);
@@ -247,7 +247,7 @@ INT fasp_solver_dcsr_spbcgs (const dCSRmat  *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_darray_norminf(m, uval);
@@ -508,7 +508,7 @@ INT fasp_solver_dbsr_spbcgs (const dBSRmat  *A,
     if (relres<tol) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
     
     // rho = r* := r
     fasp_darray_cp(m,r,rho);
@@ -635,7 +635,7 @@ INT fasp_solver_dbsr_spbcgs (const dBSRmat  *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_darray_norminf(m, uval);
@@ -896,7 +896,7 @@ INT fasp_solver_dblc_spbcgs (const dBLCmat  *A,
     if (relres<tol) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
     
     // rho = r* := r
     fasp_darray_cp(m,r,rho);
@@ -1023,7 +1023,7 @@ INT fasp_solver_dblc_spbcgs (const dBLCmat  *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_darray_norminf(m, uval);
@@ -1284,7 +1284,7 @@ INT fasp_solver_dstr_spbcgs (const dSTRmat  *A,
     if (relres<tol) goto FINISHED;
     
     // output iteration information if needed
-    print_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
     
     // rho = r* := r
     fasp_darray_cp(m,r,rho);
@@ -1411,7 +1411,7 @@ INT fasp_solver_dstr_spbcgs (const dSTRmat  *A,
         factor = absres/absres0;
         
         // output iteration information if needed
-        print_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
         infnormu = fasp_blas_darray_norminf(m, uval);

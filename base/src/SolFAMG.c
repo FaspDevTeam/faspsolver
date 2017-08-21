@@ -104,7 +104,7 @@ void fasp_solver_famg (const dCSRmat  *A,
     // print out CPU time if needed
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&FMG_end);
-        print_cputime("FAMG totally", FMG_end - FMG_start);
+        fasp_cputime("FAMG totally", FMG_end - FMG_start);
     }
 
 #if DEBUG_MODE > 0

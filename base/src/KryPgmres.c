@@ -39,8 +39,8 @@
 
 /*!
  * \fn INT fasp_solver_dcsr_pgmres (dCSRmat *A, dvector *b, dvector *x, precond *pc,
- *                                  const REAL tol, const INT MaxIt, 
- *                                  const SHORT restart, const SHORT stop_type, 
+ *                                  const REAL tol, const INT MaxIt,
+ *                                  const SHORT restart, const SHORT stop_type,
  *                                  const SHORT prtlvl)
  *
  * \brief Right preconditioned GMRES method for solving Au=b
@@ -163,9 +163,9 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
     
     // if initial residual is small, no need to iterate!
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
-
+    
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
+    fasp_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -228,8 +228,8 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(prtlvl, stop_type, iter, relres, absres,
-                         norms[iter]/norms[iter-1]);
+            fasp_itinfo(prtlvl, stop_type, iter, relres, absres,
+                        norms[iter]/norms[iter-1]);
             
             // exit restart cycle if reaches tolerance
             if ( relres < tol && iter >= MIN_ITER ) break;
@@ -465,9 +465,9 @@ INT fasp_solver_dblc_pgmres (dBLCmat     *A,
     
     // if initial residual is small, no need to iterate!
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
-
+    
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
+    fasp_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -530,8 +530,8 @@ INT fasp_solver_dblc_pgmres (dBLCmat     *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(prtlvl, stop_type, iter, relres, absres,
-                         norms[iter]/norms[iter-1]);
+            fasp_itinfo(prtlvl, stop_type, iter, relres, absres,
+                        norms[iter]/norms[iter-1]);
             
             // exit restart cycle if reaches tolerance
             if ( relres < tol && iter >= MIN_ITER ) break;
@@ -767,9 +767,9 @@ INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
     
     // if initial residual is small, no need to iterate!
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
-
+    
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
+    fasp_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -832,8 +832,8 @@ INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(prtlvl, stop_type, iter, relres, absres,
-                         norms[iter]/norms[iter-1]);
+            fasp_itinfo(prtlvl, stop_type, iter, relres, absres,
+                        norms[iter]/norms[iter-1]);
             
             // exit restart cycle if reaches tolerance
             if ( relres < tol && iter >= MIN_ITER ) break;
@@ -1070,9 +1070,9 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
     
     // if initial residual is small, no need to iterate!
     if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
-
+    
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
+    fasp_itinfo(prtlvl,stop_type,0,relres,absres0,0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -1135,8 +1135,8 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
             norms[iter] = relres;
             
             // output iteration information if needed
-            print_itinfo(prtlvl, stop_type, iter, relres, absres,
-                         norms[iter]/norms[iter-1]);
+            fasp_itinfo(prtlvl, stop_type, iter, relres, absres,
+                        norms[iter]/norms[iter-1]);
             
             // exit restart cycle if reaches tolerance
             if ( relres < tol && iter >= MIN_ITER ) break;
@@ -1435,12 +1435,12 @@ INT fasp_solver_pgmres (mxv_matfree  *mf,
             norms[iter] = r_norm;
             
             if (b_norm > 0 ) {
-                print_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,
-                             norms[iter],norms[iter]/norms[iter-1]);
+                fasp_itinfo(prtlvl,stop_type,iter,norms[iter]/b_norm,
+                            norms[iter],norms[iter]/norms[iter-1]);
             }
             else {
-                print_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],
-                             norms[iter]/norms[iter-1]);
+                fasp_itinfo(prtlvl,stop_type,iter,norms[iter],norms[iter],
+                            norms[iter]/norms[iter-1]);
             }
             
             /* should we exit restart cycle? */

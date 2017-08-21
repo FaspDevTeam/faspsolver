@@ -136,7 +136,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat    *A,
     if ( (prtlvl >= PRINT_SOME) && (iter >= 0) ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
-        print_cputime("Iterative method", solver_duration);
+        fasp_cputime("Iterative method", solver_duration);
     }
     
 #if DEBUG_MODE > 0
@@ -186,7 +186,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat    *A,
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
-        print_cputime("Krylov method totally", solver_duration);
+        fasp_cputime("Krylov method totally", solver_duration);
     }
     
 #if DEBUG_MODE > 0
@@ -244,7 +244,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat    *A,
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
-        print_cputime("Diag_Krylov method totally", solver_duration);
+        fasp_cputime("Diag_Krylov method totally", solver_duration);
     }
     
     fasp_dvec_free(&diag);
@@ -431,7 +431,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat    *A,
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
-        print_cputime("AMG_Krylov method totally", solver_duration);
+        fasp_cputime("AMG_Krylov method totally", solver_duration);
     }
     
 FINISHED:
@@ -502,13 +502,13 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat    *A,
         
         switch (iluparam->ILU_type) {
             case ILUt:
-                print_cputime("ILUt_Krylov method totally", solver_duration);
+                fasp_cputime("ILUt_Krylov method totally", solver_duration);
                 break;
             case ILUtp:
-                print_cputime("ILUtp_Krylov method totally", solver_duration);
+                fasp_cputime("ILUtp_Krylov method totally", solver_duration);
                 break;
             default: // ILUk
-                print_cputime("ILUk_Krylov method totally", solver_duration);
+                fasp_cputime("ILUk_Krylov method totally", solver_duration);
         }
     }
     
@@ -586,13 +586,13 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat    *A,
         
         switch (iluparam->ILU_type) {
             case ILUt:
-                print_cputime("ILUt_Krylov method", solver_duration);
+                fasp_cputime("ILUt_Krylov method", solver_duration);
                 break;
             case ILUtp:
-                print_cputime("ILUtp_Krylov method", solver_duration);
+                fasp_cputime("ILUtp_Krylov method", solver_duration);
                 break;
             default: // ILUk
-                print_cputime("ILUk_Krylov method", solver_duration);
+                fasp_cputime("ILUk_Krylov method", solver_duration);
         }
     }
     
@@ -708,7 +708,7 @@ INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat    *A,
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
-        print_cputime("AMG_NK_Krylov method", solver_duration);
+        fasp_cputime("AMG_NK_Krylov method", solver_duration);
     }
     
 FINISHED:

@@ -127,7 +127,7 @@ INT fasp_solver_itsolver (mxv_matfree  *mf,
     if ( (prtlvl >= PRINT_SOME) && (iter >= 0) ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
-        print_cputime("Iterative method", solver_duration);
+        fasp_cputime("Iterative method", solver_duration);
     }
     
 #if DEBUG_MODE > 0
@@ -178,7 +178,7 @@ INT fasp_solver_krylov (mxv_matfree  *mf,
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
-        print_cputime("Krylov method totally", solver_duration);
+        fasp_cputime("Krylov method totally", solver_duration);
     }    
     
 #if DEBUG_MODE > 0
@@ -229,7 +229,7 @@ void fasp_solver_matfree_init (INT           matrix_format,
             break;
             
         default:
-            printf("### ERROR: Wrong matrix format %d!\n", matrix_format);
+            printf("### ERROR: Unknown matrix format %d!\n", matrix_format);
             exit(ERROR_DATA_STRUCTURE);
             
     }

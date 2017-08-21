@@ -20,8 +20,8 @@
 /*---------------------------------*/
 
 /**
- * \fn void print_itinfo (const INT ptrlvl, const INT stop_type, const INT iter,
- *                        const REAL relres, const REAL absres, const REAL factor)
+ * \fn void fasp_itinfo (const INT ptrlvl, const INT stop_type, const INT iter,
+ *                       const REAL relres, const REAL absres, const REAL factor)
  *
  * \brief Print out iteration information for iterative solvers
  *
@@ -38,12 +38,12 @@
  * Modified by Chensong Zhang on 03/28/2013: Output initial guess
  * Modified by Chensong Zhang on 04/05/2013: Fix a typo
  */
-void print_itinfo (const INT   ptrlvl,
-                   const INT   stop_type,
-                   const INT   iter,
-                   const REAL  relres,
-                   const REAL  absres,
-                   const REAL  factor)
+void fasp_itinfo (const INT   ptrlvl,
+                  const INT   stop_type,
+                  const INT   iter,
+                  const REAL  relres,
+                  const REAL  absres,
+                  const REAL  factor)
 {
     if ( ptrlvl >= PRINT_SOME ) {
         
@@ -71,7 +71,7 @@ void print_itinfo (const INT   ptrlvl,
 }
 
 /**
- * \fn void void print_amgcomplexity (const AMG_data *mgl, const SHORT prtlvl)
+ * \fn void void fasp_amgcomplexity (const AMG_data *mgl, const SHORT prtlvl)
  *
  * \brief Print complexities of AMG method
  *
@@ -81,15 +81,15 @@ void print_itinfo (const INT   ptrlvl,
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-void print_amgcomplexity (const AMG_data  *mgl,
-                          const SHORT      prtlvl)
+void fasp_amgcomplexity (const AMG_data  *mgl,
+                         const SHORT      prtlvl)
 {
     const SHORT   max_levels=mgl->num_levels;
     SHORT         level;
     REAL          gridcom=0.0, opcom=0.0;
     
     if ( prtlvl >= PRINT_SOME ) {
-
+        
         printf("-----------------------------------------------------------\n");
         printf("  Level   Num of rows   Num of nonzeros   Avg. NNZ / row   \n");
         printf("-----------------------------------------------------------\n");
@@ -107,15 +107,15 @@ void print_amgcomplexity (const AMG_data  *mgl,
         opcom   /= mgl[0].A.nnz;
         printf("  Grid complexity = %.3f  |", gridcom);
         printf("  Operator complexity = %.3f\n", opcom);
-
+        
         printf("-----------------------------------------------------------\n");
         
     }
 }
 
 /**
- * \fn void void print_amgcomplexity_bsr (const AMG_data_bsr *mgl, 
- *                                        const SHORT prtlvl)
+ * \fn void void fasp_amgcomplexity_bsr (const AMG_data_bsr *mgl,
+ *                                       const SHORT prtlvl)
  *
  * \brief Print complexities of AMG method for BSR matrices
  *
@@ -125,8 +125,8 @@ void print_amgcomplexity (const AMG_data  *mgl,
  * \author Chensong Zhang
  * \date   05/10/2013
  */
-void print_amgcomplexity_bsr (const AMG_data_bsr  *mgl,
-                              const SHORT          prtlvl)
+void fasp_amgcomplexity_bsr (const AMG_data_bsr  *mgl,
+                             const SHORT          prtlvl)
 {
     const SHORT  max_levels = mgl->num_levels;
     SHORT        level;
@@ -153,12 +153,12 @@ void print_amgcomplexity_bsr (const AMG_data_bsr  *mgl,
         printf("  Operator complexity = %.3f\n", opcom);
         
         printf("-----------------------------------------------------------\n");
-    
+        
     }
 }
 
 /**
- * \fn void void print_cputime (const char *message, const REAL cputime)
+ * \fn void void fasp_cputime (const char *message, const REAL cputime)
  *
  * \brief Print CPU walltime
  *
@@ -168,14 +168,14 @@ void print_amgcomplexity_bsr (const AMG_data_bsr  *mgl,
  * \author Chensong Zhang
  * \date   04/10/2012
  */
-void print_cputime (const char  *message,
-                    const REAL   cputime)
+void fasp_cputime (const char  *message,
+                   const REAL   cputime)
 {
     printf("%s costs %.4f seconds.\n", message, cputime);
 }
 
 /**
- * \fn void print_message (const INT ptrlvl, const char *message)
+ * \fn void fasp_message (const INT ptrlvl, const char *message)
  *
  * \brief Print output information if necessary
  *
@@ -185,8 +185,8 @@ void print_cputime (const char  *message,
  * \author Chensong Zhang
  * \date   11/16/2009
  */
-void print_message (const INT    ptrlvl,
-                    const char  *message)
+void fasp_message (const INT    ptrlvl,
+                   const char  *message)
 {
     if ( ptrlvl > PRINT_NONE ) printf("%s", message);
 }
@@ -205,17 +205,17 @@ void print_message (const INT    ptrlvl,
 void fasp_chkerr (const SHORT  status,
                   const char  *fctname)
 {
-    if ( status >= 0 ) return; // No error at all
+    if ( status >= 0 ) return; // No error found!!!
     
     switch ( status ) {
         case ERROR_OPEN_FILE:
             printf("### ERROR: %s -- Cannot open file!\n", fctname);
             break;
         case ERROR_WRONG_FILE:
-            printf("### ERROR: %s -- Wrong file format!\n", fctname);
+            printf("### ERROR: %s -- Unknown file format!\n", fctname);
             break;
         case ERROR_INPUT_PAR:
-            printf("### ERROR: %s -- Wrong input arguments!\n", fctname);
+            printf("### ERROR: %s -- Unknown input arguments!\n", fctname);
             break;
         case ERROR_REGRESS:
             printf("### ERROR: %s -- Regression test failed!\n", fctname);
@@ -224,7 +224,7 @@ void fasp_chkerr (const SHORT  status,
             printf("### ERROR: %s -- Cannot allocate memory!\n", fctname);
             break;
         case ERROR_NUM_BLOCKS:
-            printf("### ERROR: %s -- Wrong number of blocks!\n", fctname);
+            printf("### ERROR: %s -- Unexpected number of blocks!\n", fctname);
             break;
         case ERROR_DATA_STRUCTURE:
             printf("### ERROR: %s -- Data structure mismatch!\n", fctname);
@@ -251,13 +251,13 @@ void fasp_chkerr (const SHORT  status,
             printf("### ERROR: %s -- Unknown preconditioner type!\n", fctname);
             break;
         case ERROR_SOLVER_STAG:
-            printf("### ERROR: %s -- Solver stagnation error!\n", fctname);
+            printf("### ERROR: %s -- Solver stagnation!\n", fctname);
             break;
         case ERROR_SOLVER_SOLSTAG:
             printf("### ERROR: %s -- Solution is close to zero!\n", fctname);
             break;
         case ERROR_SOLVER_TOLSMALL:
-            printf("### ERROR: %s -- Tol is too small for the solver!\n", fctname);
+            printf("### ERROR: %s -- Tol is too small!\n", fctname);
             break;
         case ERROR_SOLVER_ILUSETUP:
             printf("### ERROR: %s -- ILU setup failed!\n", fctname);
@@ -288,7 +288,7 @@ void fasp_chkerr (const SHORT  status,
     }
     
     exit(status);
-}    
+}
 
 /*---------------------------------*/
 /*--        End of File          --*/

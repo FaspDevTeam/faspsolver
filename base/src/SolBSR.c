@@ -114,7 +114,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat    *A,
     if ( (prtlvl > PRINT_MIN) && (iter >= 0) ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
-        print_cputime("Iterative method", solver_duration);
+        fasp_cputime("Iterative method", solver_duration);
     }
     
 #if DEBUG_MODE > 0
@@ -162,7 +162,7 @@ INT fasp_solver_dbsr_krylov (dBSRmat    *A,
     
     if ( prtlvl > PRINT_NONE ) {
         REAL solver_duration = solver_end - solver_start;
-        print_cputime("Krylov method totally", solver_duration);
+        fasp_cputime("Krylov method totally", solver_duration);
     }
     
 #if DEBUG_MODE > 0
@@ -264,7 +264,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat    *A,
     
     if ( prtlvl > PRINT_NONE ) {
         REAL solver_duration = solver_end - solver_start;
-        print_cputime("Diag_Krylov method totally", solver_duration);
+        fasp_cputime("Diag_Krylov method totally", solver_duration);
     }
     
     // clean up
@@ -331,7 +331,7 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat    *A,
 
     if ( prtlvl > PRINT_NONE ) {
         REAL solver_duration = solver_end - solver_start;
-        print_cputime("ILUk_Krylov method totally", solver_duration);
+        fasp_cputime("ILUk_Krylov method totally", solver_duration);
     }
     
 FINISHED:
@@ -449,7 +449,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat    *A,
     }
     
     if ( prtlvl >= PRINT_MIN ) {
-        print_cputime("BSR AMG setup", setup_duration);
+        fasp_cputime("BSR AMG setup", setup_duration);
     }
     
     //--------------------------------------------------------------
@@ -464,7 +464,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat    *A,
     solver_duration = solver_end - solver_start;
     
     if ( prtlvl >= PRINT_MIN ) {
-        print_cputime("BSR Krylov method", setup_duration+solver_duration);
+        fasp_cputime("BSR Krylov method", setup_duration+solver_duration);
     }
     
 FINISHED:
@@ -606,7 +606,7 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat    *A,
     prec.fct = fasp_precond_dbsr_amg_nk;
     
     if ( prtlvl >= PRINT_MIN ) {
-        print_cputime("BSR AMG setup", setup_duration);
+        fasp_cputime("BSR AMG setup", setup_duration);
     }
     
     //--------------------------------------------------------------
@@ -621,7 +621,7 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat    *A,
     solver_duration = solver_end - solver_start;
     
     if ( prtlvl >= PRINT_MIN ) {
-        print_cputime("BSR Krylov method", setup_duration+solver_duration);
+        fasp_cputime("BSR Krylov method", setup_duration+solver_duration);
     }
     
 FINISHED:
@@ -763,7 +763,7 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat    *A,
     }
     
     if ( prtlvl >= PRINT_MIN ) {
-        print_cputime("BSR AMG setup", setup_duration);
+        fasp_cputime("BSR AMG setup", setup_duration);
     }
     
     //--------------------------------------------------------------
@@ -778,7 +778,7 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat    *A,
     solver_duration = solver_end - solver_start;
     
     if ( prtlvl >= PRINT_MIN ) {
-        print_cputime("BSR Krylov method", setup_duration+solver_duration);
+        fasp_cputime("BSR Krylov method", setup_duration+solver_duration);
     }
     
 FINISHED:

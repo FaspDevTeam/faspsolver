@@ -96,24 +96,24 @@ SHORT fasp_mem_iludata_check (const ILU_data *iludata);
 
 /*-------- In file: AuxMessage.c --------*/
 
-void print_itinfo (const INT   ptrlvl,
-                   const INT   stop_type,
-                   const INT   iter,
-                   const REAL  relres,
-                   const REAL  absres,
-                   const REAL  factor);
+void fasp_itinfo (const INT   ptrlvl,
+                  const INT   stop_type,
+                  const INT   iter,
+                  const REAL  relres,
+                  const REAL  absres,
+                  const REAL  factor);
 
-void print_amgcomplexity (const AMG_data  *mgl,
-                          const SHORT      prtlvl);
+void fasp_amgcomplexity (const AMG_data  *mgl,
+                         const SHORT      prtlvl);
 
-void print_amgcomplexity_bsr (const AMG_data_bsr  *mgl,
-                              const SHORT          prtlvl);
+void fasp_amgcomplexity_bsr (const AMG_data_bsr  *mgl,
+                             const SHORT          prtlvl);
 
-void print_cputime (const char  *message,
-                    const REAL   cputime);
+void fasp_cputime (const char  *message,
+                   const REAL   cputime);
 
-void print_message (const INT    ptrlvl,
-                    const char  *message);
+void fasp_message (const INT    ptrlvl,
+                   const char  *message);
 
 void fasp_chkerr (const SHORT  status,
                   const char  *fctname);

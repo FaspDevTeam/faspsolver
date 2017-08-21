@@ -5,7 +5,7 @@
  *  \note  This file contains Level-3 (Kry) functions. It requires:
  *         AuxArray.c, AuxMemory.c, AuxMessage.c, BlaArray.c, and BlaSpmvCSR.c
  *
- *  Reference: 
+ *  Reference:
  *         Concus, P. and Golub, G.H. and O'Leary, D.P.
  *         A Generalized Conjugate Gradient Method for the Numerical:
  *         Solution of Elliptic Partial Differential Equations,
@@ -113,7 +113,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
     relres = absres/normb;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,iter+1,relres,absres,factor);
+    fasp_itinfo(prtlvl,stop_type,iter+1,relres,absres,factor);
     
     // update relative residual here
     absres0 = absres;
@@ -157,7 +157,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
         relres = absres/normb;
         
         // output iteration information if needed
-        print_itinfo(prtlvl,stop_type,iter+1,relres,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter+1,relres,absres,factor);
         
         if (relres < tol) break;
         
@@ -265,7 +265,7 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
     relres = absres/normb;
     
     // output iteration information if needed
-    print_itinfo(prtlvl,stop_type,iter+1,relres,absres,factor);
+    fasp_itinfo(prtlvl,stop_type,iter+1,relres,absres,factor);
     
     // update relative residual here
     absres0 = absres;
@@ -314,7 +314,7 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
         relres = absres/normb;
         
         // output iteration information if needed
-        print_itinfo(prtlvl,stop_type,iter+1,relres,absres,factor);
+        fasp_itinfo(prtlvl,stop_type,iter+1,relres,absres,factor);
         
         if (relres < tol) break;
         

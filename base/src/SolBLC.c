@@ -112,7 +112,7 @@ INT fasp_solver_dblc_itsolver (dBLCmat    *A,
     if ( (prtlvl >= PRINT_MIN) && (iter >= 0) ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
-        print_cputime("Iterative method", solver_duration);
+        fasp_cputime("Iterative method", solver_duration);
     }
     
 #if DEBUG_MODE > 0
@@ -162,7 +162,7 @@ INT fasp_solver_dblc_krylov (dBLCmat    *A,
     solver_duration = solver_end - solver_start;
     
     if ( prtlvl >= PRINT_MIN )
-        print_cputime("Krylov method totally", solver_duration);
+        fasp_cputime("Krylov method totally", solver_duration);
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
@@ -329,7 +329,7 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;
-        print_cputime("Setup totally", setup_duration);
+        fasp_cputime("Setup totally", setup_duration);
     }
     
     
@@ -343,7 +343,7 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
     solver_duration = solver_end - solver_start;
     
     if ( prtlvl >= PRINT_MIN )
-        print_cputime("Krylov method totally", solver_duration);
+        fasp_cputime("Krylov method totally", solver_duration);
     
     // clean
     /* diagonal blocks are solved exactly */
@@ -466,7 +466,7 @@ INT fasp_solver_dblc_krylov_block_4 (dBLCmat    *A,
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;
-        print_cputime("Setup totally", setup_duration);
+        fasp_cputime("Setup totally", setup_duration);
     }
 
     // solver part
@@ -479,7 +479,7 @@ INT fasp_solver_dblc_krylov_block_4 (dBLCmat    *A,
     solver_duration = solver_end - solver_start;
     
     if ( prtlvl >= PRINT_MIN )
-        print_cputime("Krylov method totally", solver_duration);
+        fasp_cputime("Krylov method totally", solver_duration);
     
     // clean
 #if WITH_UMFPACK
@@ -575,7 +575,7 @@ INT fasp_solver_dblc_krylov_sweeping (dBLCmat    *A,
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;
-        print_cputime("Setup totally", setup_duration);
+        fasp_cputime("Setup totally", setup_duration);
     }
     
     /* solver part */
@@ -588,7 +588,7 @@ INT fasp_solver_dblc_krylov_sweeping (dBLCmat    *A,
     solve_duration = solve_end - solve_start;
     
     if ( prtlvl >= PRINT_MIN )
-        print_cputime("Krylov method totally", setup_duration+solve_duration);
+        fasp_cputime("Krylov method totally", setup_duration+solve_duration);
     
     // clean
 #if WITH_UMFPACK

@@ -1,13 +1,13 @@
 File Name: CHANGES
 
-08/14/2017 FASP 2.0.0:
+08/21/2017 FASP 2.0.0:
 - Add duplicated column check for BSR matrices.
 - Fix ILU hanging problem when there are duplicated columns.
 - Fix a bug in ILU setup which could cause stack overflow.
 - Fix a bug in coarsening when coarsening ratio is too high.
 - Fix a bug in OpenMP version of merge_col.
 - Update VS2010 solution.
-- Clean up a little bit.
+- Clean up a little bit and change a few uncompatible function names.
 
 03/29/2017 FASP 1.9.9:
 - Fix ILUtp problem with permutation.

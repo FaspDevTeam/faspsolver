@@ -170,7 +170,7 @@ void fasp_dcsrvec2_read (const char  *filemat,
         A->IA  = (INT *)fasp_mem_calloc(n+1, sizeof(INT));
     }
     else {
-        printf("### ERROR: Wrong file format %s!\n",filemat);
+        printf("### ERROR: Unknown file format %s!\n",filemat);
     }
 
     for ( i = 0; i <= n; ++i ) {
@@ -185,12 +185,12 @@ void fasp_dcsrvec2_read (const char  *filemat,
     for ( i = 0; i < nz; ++i ) {
         if ( fscanf(fp,"%d\n",&tempi) > 0 ) A->JA[i] = tempi-1;
         else
-            printf("### ERROR: Wrong file format %s!\n",filemat);
+            printf("### ERROR: Unknown file format %s!\n",filemat);
     }
     
     for ( i = 0; i < nz; ++i ) {
         if ( fscanf(fp,"%le\n",&(A->val[i])) <= 0 )
-            printf("### ERROR: Wrong file format %s!\n",filemat);
+            printf("### ERROR: Unknown file format %s!\n",filemat);
     }
     
     fclose(fp);
@@ -209,7 +209,7 @@ void fasp_dcsrvec2_read (const char  *filemat,
     printf("%s: reading file %s...\n", __FUNCTION__, filerhs);
     
     if ( fscanf(fp,"%d\n",&n) < 0 )
-        printf("### ERROR: Wrong file format %s!\n",filerhs);
+        printf("### ERROR: Unknown file format %s!\n",filerhs);
     
     if ( n != b->row ) {
         printf("### ERROR: rhs size %d does not match matrix size %d!\n",n,b->row);
@@ -218,7 +218,7 @@ void fasp_dcsrvec2_read (const char  *filemat,
     
     for ( i = 0; i < n; ++i ) {
         if ( fscanf(fp,"%le\n", &(b->val[i])) <= 0 )
-            printf("### ERROR: Wrong file format %s!\n",filerhs);
+            printf("### ERROR: Unknown file format %s!\n",filerhs);
     }
     
     fclose(fp);
@@ -308,7 +308,7 @@ void fasp_dcoo_read (const char  *filename,
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) <= 0 ) {
-        printf("### ERROR: Wrong file format %s!\n",filename);
+        printf("### ERROR: Unknown file format %s!\n",filename);
     }
 
     dCOOmat Atmp = fasp_dcoo_create(m,n,nnz);
@@ -365,7 +365,7 @@ void fasp_dcoo1_read (const char  *filename,
         fasp_dcoo_alloc(m, n, nnz, A);
     }
     else {
-        printf("### ERROR: Wrong file format %s!\n",filename);
+        printf("### ERROR: Unknown file format %s!\n",filename);
     }
     
     for ( k = 0; k < nnz; k++ ) {
@@ -416,7 +416,7 @@ void fasp_dcoo_shift_read (const char  *filename,
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) <= 0 ) {
-        printf("### ERROR: Wrong file format %s!\n",filename);
+        printf("### ERROR: Unknown file format %s!\n",filename);
     }
     
     dCOOmat Atmp = fasp_dcoo_create(m,n,nnz);
@@ -471,7 +471,7 @@ void fasp_dmtx_read (const char  *filename,
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) <= 0 ) {
-        printf("### ERROR: Wrong file format %s!\n",filename);
+        printf("### ERROR: Unknown file format %s!\n",filename);
     }
     
     dCOOmat Atmp = fasp_dcoo_create(m,n,nnz);
@@ -533,7 +533,7 @@ void fasp_dmtxsym_read (const char  *filename,
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) <= 0 ) {
-        printf("### ERROR: Wrong file format %s!\n",filename);
+        printf("### ERROR: Unknown file format %s!\n",filename);
     }
     
     nnz = 2*(nnz-m) + m; // adjust for sym problem
@@ -615,7 +615,7 @@ void fasp_dstr_read (const char  *filename,
         A->nx = nx; A->ny = ny; A->nz = nz;
     }
     else {
-        printf("### ERROR: Wrong file format %s!\n",filename);
+        printf("### ERROR: Unknown file format %s!\n",filename);
     }
 
     nxy = nx*ny; ngrid = nxy*nz;
@@ -624,13 +624,13 @@ void fasp_dstr_read (const char  *filename,
     // read number of components
     if ( fscanf(fp,"%d",&nc) > 0 ) A->nc = nc;
     else {
-        printf("### ERROR: Wrong file format %s!\n",filename);
+        printf("### ERROR: Unknown file format %s!\n",filename);
     }
     
     // read number of bands
     if ( fscanf(fp,"%d",&nband) > 0 ) A->nband = nband;
     else {
-        printf("### ERROR: Wrong file format %s!\n",filename);
+        printf("### ERROR: Unknown file format %s!\n",filename);
     }
 
     A->offsets = (INT *)fasp_mem_calloc(nband, sizeof(INT));
@@ -640,13 +640,13 @@ void fasp_dstr_read (const char  *filename,
         A->diag = (REAL *)fasp_mem_calloc(n, sizeof(REAL));
     }
     else {
-        printf("### ERROR: Wrong file format %s!\n",filename);
+        printf("### ERROR: Unknown file format %s!\n",filename);
     }
 
     for ( i = 0; i < n; ++i ) {
         if ( fscanf(fp, "%le", &value) > 0 ) A->diag[i] = value;
         else {
-            printf("### ERROR: Wrong file format %s!\n",filename);
+            printf("### ERROR: Unknown file format %s!\n",filename);
         }
     }
     
@@ -659,7 +659,7 @@ void fasp_dstr_read (const char  *filename,
             A->offsets[nband-k-1] = offset;
         }
         else {
-            printf("### ERROR: Wrong file format %s!\n",filename);
+            printf("### ERROR: Unknown file format %s!\n",filename);
         }
         
         A->offdiag[nband-k-1] = (REAL *)fasp_mem_calloc(n, sizeof(REAL));
@@ -668,7 +668,7 @@ void fasp_dstr_read (const char  *filename,
                 A->offdiag[nband-k-1][i] = value;
             }
             else {
-                printf("### ERROR: Wrong file format %s!\n",filename);
+                printf("### ERROR: Unknown file format %s!\n",filename);
             }
         }
     }

@@ -576,7 +576,7 @@ void fasp_solver_namli_bsr (AMG_data_bsr  *mgl,
                             fasp_smoother_dbsr_sor (A0, b0, e0, ASCEND, NULL,relax);
                         break;
                     default:
-                        printf("### ERROR: Wrong smoother type %d!\n", smoother);
+                        printf("### ERROR: Unknown smoother type %d!\n", smoother);
                         fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
                 }
             }
@@ -647,7 +647,7 @@ void fasp_solver_namli_bsr (AMG_data_bsr  *mgl,
                             fasp_smoother_dbsr_sor(A0, b0, e0, ASCEND, NULL,relax);
                         break;
                     default:
-                        printf("### ERROR: Wrong smoother type %d!\n", smoother);
+                        printf("### ERROR: Unknown smoother type %d!\n", smoother);
                         fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
                 }
             }
