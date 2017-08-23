@@ -3,7 +3,7 @@
  *  \brief Direct and standard interpolations for classical AMG
  *
  *  \note  This file contains Level-4 (Pre) functions. It requires:
- *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxThreads.c, 
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxThreads.c,
  *         and PreAMGInterpEM.c
  *
  *  Reference:
@@ -35,14 +35,15 @@
 static void interp_DIR (dCSRmat *, ivector *, dCSRmat *, AMG_param *);
 static void interp_STD (dCSRmat *, ivector *, dCSRmat *, iCSRmat *, AMG_param *);
 static void interp_EXT (dCSRmat *, ivector *, dCSRmat *, iCSRmat *, AMG_param *);
+static void amg_interp_trunc (dCSRmat *, AMG_param *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn void fasp_amg_interp (dCSRmat *A, ivector *vertices, dCSRmat *P, iCSRmat *S,
- *                           AMG_param *param)
+ * \fn void fasp_amg_interp (dCSRmat *A, ivector *vertices, dCSRmat *P,
+ *                           iCSRmat *S, AMG_param *param)
  *
  * \brief Generate interpolation operator P
  *
@@ -65,7 +66,7 @@ void fasp_amg_interp (dCSRmat    *A,
                       iCSRmat    *S,
                       AMG_param  *param)
 {
-	const INT coarsening_type = param->coarsening_type;
+    const INT coarsening_type = param->coarsening_type;
     INT       interp_type     = param->interpolation_type;
     
     // make sure standard interpolation is used for aggressive coarsening
@@ -82,16 +83,16 @@ void fasp_amg_interp (dCSRmat    *A,
             
         case INTERP_STD: // Standard interpolation
             interp_STD(A, vertices, P, S, param); break;
-        
-        case INTERP_ENG: // Energy-min interpolation
-            fasp_amg_interp_em(A, vertices, P, param); break;
-        
+            
         case INTERP_EXT: // Extended interpolation
             interp_EXT(A, vertices, P, S, param); break;
             
+        case INTERP_ENG: // Energy-min interpolation defined in PreAMGInterpEM.c
+            fasp_amg_interp_em(A, vertices, P, param); break;
+            
         default:
             fasp_chkerr(ERROR_AMG_INTERP_TYPE, __FUNCTION__);
-
+            
     }
     
 #if DEBUG_MODE > 0
@@ -99,8 +100,12 @@ void fasp_amg_interp (dCSRmat    *A,
 #endif
 }
 
+/*---------------------------------*/
+/*--      Private Functions      --*/
+/*---------------------------------*/
+
 /**
- * \fn void fasp_amg_interp_trunc (dCSRmat *P, AMG_param *param)
+ * \fn static void amg_interp_trunc (dCSRmat *P, AMG_param *param)
  *
  * \brief Truncation step for prolongation operators
  *
@@ -114,8 +119,8 @@ void fasp_amg_interp (dCSRmat    *A,
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012: add OMP support
  * Modified by Chensong Zhang on 05/14/2013: rewritten
  */
-void fasp_amg_interp_trunc (dCSRmat    *P,
-                            AMG_param  *param)
+static void amg_interp_trunc (dCSRmat    *P,
+                              AMG_param  *param)
 {
     const INT   row    = P->row;
     const INT   nnzold = P->nnz;
@@ -131,15 +136,15 @@ void fasp_amg_interp_trunc (dCSRmat    *P,
     
     INT  index1 = 0, index2 = 0, begin, end;
     INT  i, j;
-
+    
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
 #endif
-
+    
     for ( i = 0; i < row; ++i ) {
         
         begin = P->IA[i]; end = P->IA[i+1];
-
+        
         P->IA[i] = num_nonzero;
         Min_neg  = Max_pos  = 0;
         Sum_neg  = Sum_pos  = 0;
@@ -152,14 +157,15 @@ void fasp_amg_interp_trunc (dCSRmat    *P,
                 Sum_pos += P->val[j];
                 Max_pos = MAX(Max_pos, P->val[j]);
             }
-
-            else if ( P->val[j] < 0 ) {
+            
+            else {
                 Sum_neg += P->val[j];
                 Min_neg = MIN(Min_neg, P->val[j]);
             }
-
+            
         }
         
+        // Truncate according to max and min values!!!
         Max_pos *= eps_tr; Min_neg *= eps_tr;
         
         // 2. Set JA of truncated P
@@ -170,13 +176,13 @@ void fasp_amg_interp_trunc (dCSRmat    *P,
                 P->JA[index1++] = P->JA[j];
                 TSum_pos += P->val[j];
             }
-
+            
             else if ( P->val[j] <= Min_neg ) {
                 num_nonzero++;
                 P->JA[index1++] = P->JA[j];
                 TSum_neg += P->val[j];
             }
-
+            
         }
         
         // 3. Compute factors and set values of truncated P
@@ -186,19 +192,19 @@ void fasp_amg_interp_trunc (dCSRmat    *P,
         else {
             Fac_pos = 1.0;
         }
-            
+        
         if ( TSum_neg < -SMALLREAL ) {
             Fac_neg = Sum_neg / TSum_neg; // factor for negative entries
         }
         else {
             Fac_neg = 1.0;
         }
-
+        
         for ( j = begin; j < end; ++j ) {
             
             if ( P->val[j] >= Max_pos )
                 P->val[index2++] = P->val[j] * Fac_pos;
-
+            
             else if ( P->val[j] <= Min_neg )
                 P->val[index2++] = P->val[j] * Fac_neg;
         }
@@ -211,19 +217,15 @@ void fasp_amg_interp_trunc (dCSRmat    *P,
     P->val = (REAL *)fasp_mem_realloc(P->val, num_nonzero*sizeof(REAL));
     
     if ( prtlvl >= PRINT_MOST ) {
-        printf("Truncate prolongation, nnz before: %10d, after: %10d\n",
+        printf("NNZ in prolongator: before truncation = %10d, after = %10d\n",
                nnzold, num_nonzero);
     }
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
-
+    
 }
-
-/*---------------------------------*/
-/*--      Private Functions      --*/
-/*---------------------------------*/
 
 /**
  * \fn static void interp_DIR (dCSRmat *A, ivector *vertices, dCSRmat *P,
@@ -251,7 +253,7 @@ static void interp_DIR (dCSRmat    *A,
 {
     INT     row = A->row;
     INT    *vec = vertices->val;
-
+    
     // local variables
     SHORT   IS_STRONG;   // is the variable strong coupled to i?
     INT     num_pcouple; // number of positive strong couplings
@@ -261,10 +263,10 @@ static void interp_DIR (dCSRmat    *A,
     // a_minus and a_plus for Neighbors and Prolongation support
     REAL    amN, amP, apN, apP;
     REAL    alpha, beta, aii = 0;
-
+    
     // indices of C-nodes
     INT    *cindex = (INT *)fasp_mem_calloc(row, sizeof(INT));
-
+    
     SHORT   use_openmp = FALSE;
     
 #ifdef _OPENMP
@@ -281,8 +283,8 @@ static void interp_DIR (dCSRmat    *A,
 #ifdef _OPENMP
         stride_i = row/nthreads;
 #pragma omp parallel private(myid,mybegin,myend,i,begin_row,end_row,idiag,aii, \
-                             amN,amP,apN,apP,num_pcouple,j,k,alpha,beta,l)     \
-							 num_threads(nthreads)
+amN,amP,apN,apP,num_pcouple,j,k,alpha,beta,l)     \
+num_threads(nthreads)
         {
             myid = omp_get_thread_num();
             mybegin = myid*stride_i;
@@ -371,7 +373,7 @@ static void interp_DIR (dCSRmat    *A,
                 num_pcouple = 0;
                 
                 for ( j = begin_row; j < end_row; ++j ) {
-                
+                    
                     if ( j == idiag ) continue; // skip diagonal
                     
                     // check a point strong-coupled to i or not
@@ -454,11 +456,11 @@ static void interp_DIR (dCSRmat    *A,
     fasp_mem_free(cindex);
     
     // Step 3. Truncate the prolongation operator to reduce cost
-    fasp_amg_interp_trunc(P, param);
+    amg_interp_trunc(P, param);
 }
 
 /**
- * \fn static void interp_STD (dCSRmat *A, ivector *vertices, dCSRmat *P, 
+ * \fn static void interp_STD (dCSRmat *A, ivector *vertices, dCSRmat *P,
  *                             iCSRmat *S, AMG_param *param)
  *
  * \brief Standard interpolation
@@ -501,7 +503,7 @@ static void interp_STD (dCSRmat    *A,
     
     // sums of strongly connected C neighbors
     REAL * csum   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
-
+    
 #if RS_C1
     // sums of all neighbors except ISPT
     REAL * psum   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
@@ -553,7 +555,7 @@ static void interp_STD (dCSRmat    *A,
     for ( i = 0; i < row; i++ ) {
         
         if ( vec[i] == FGPT ) {
-#if RS_C1            
+#if RS_C1
             alN = psum[i];
 #else
             alN = nsum[i];
@@ -657,17 +659,17 @@ static void interp_STD (dCSRmat    *A,
     fasp_mem_free(csum);
     fasp_mem_free(diag);
     fasp_mem_free(Ahat);
-
+    
 #if RS_C1
     fasp_mem_free(psum);
 #endif
     
     // Step 3. Truncate the prolongation operator to reduce cost
-    fasp_amg_interp_trunc(P, param);
+    amg_interp_trunc(P, param);
 }
 
 /**
- * \fn static void interp_EXT (dCSRmat *A, ivector *vertices, dCSRmat *P, 
+ * \fn static void interp_EXT (dCSRmat *A, ivector *vertices, dCSRmat *P,
  *                             iCSRmat *S, AMG_param *param)
  *
  * \brief Extended interpolation
@@ -708,11 +710,11 @@ static void interp_EXT (dCSRmat    *A,
     
     // sums of strongly connected C neighbors
     REAL * csum   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
-
+    
 #if RS_C1
     // sums of all neighbors except ISPT
     REAL * psum   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
-#endif    
+#endif
     // sums of all neighbors
     REAL * nsum   = (REAL *)fasp_mem_calloc(row, sizeof(REAL));
     
@@ -759,7 +761,7 @@ static void interp_EXT (dCSRmat    *A,
     for ( i = 0; i < row; i++ ) {
         
         if ( vec[i] == FGPT ) {
-#if RS_C1            
+#if RS_C1
             alN = psum[i];
 #else
             alN = nsum[i];
@@ -863,13 +865,13 @@ static void interp_EXT (dCSRmat    *A,
     fasp_mem_free(csum);
     fasp_mem_free(diag);
     fasp_mem_free(Ahat);
-
+    
 #if RS_C1
     fasp_mem_free(psum);
 #endif
-
+    
     // Step 3. Truncate the prolongation operator to reduce cost
-    fasp_amg_interp_trunc(P, param);
+    amg_interp_trunc(P, param);
 }
 
 /*---------------------------------*/

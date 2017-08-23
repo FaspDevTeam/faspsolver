@@ -279,13 +279,14 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
     mgl[0].w          = fasp_dvec_create(m);
 
     for ( lvl = 1; lvl < max_lvls; ++lvl ) {
-        INT mm = mgl[lvl].A.row;
+        const INT mm        = mgl[lvl].A.row;
+        
         mgl[lvl].num_levels = max_lvls;
         mgl[lvl].b          = fasp_dvec_create(mm);
         mgl[lvl].x          = fasp_dvec_create(mm);
 
-        mgl[lvl].cycle_type     = cycle_type; // initialize cycle type!
-        mgl[lvl].ILU_levels     = param->ILU_levels - lvl; // initialize ILU levels!
+        mgl[lvl].cycle_type = cycle_type; // initialize cycle type!
+        mgl[lvl].ILU_levels = param->ILU_levels - lvl; // initialize ILU levels!
         mgl[lvl].SWZ_levels = param->SWZ_levels -lvl; // initialize Schwarz!
 
         // allocate work arrays for the solve phase

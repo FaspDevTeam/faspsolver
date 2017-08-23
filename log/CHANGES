@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+08/23/2017 FASP 2.0.1:
+- Prepare for optimization: 1. vectorization loops.
+
 08/21/2017 FASP 2.0.0:
 - Add duplicated column check for BSR matrices.
 - Fix ILU hanging problem when there are duplicated columns.

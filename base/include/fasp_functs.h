@@ -2157,9 +2157,6 @@ void fasp_amg_interp (dCSRmat    *A,
                       iCSRmat    *S,
                       AMG_param  *param);
 
-void fasp_amg_interp_trunc (dCSRmat    *P,
-                            AMG_param  *param);
-
 
 /*-------- In file: PreAMGInterpEM.c --------*/
 
