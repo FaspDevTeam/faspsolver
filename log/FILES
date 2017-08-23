@@ -1,7 +1,7 @@
     1206 ./base/include/fasp.h
      404 ./base/include/fasp_block.h
      261 ./base/include/fasp_const.h
-    2880 ./base/include/fasp_functs.h
+    2877 ./base/include/fasp_functs.h
       51 ./base/include/fasp_grid.h
     1017 ./base/src/BlaIOUtil.inl
      115 ./base/src/BlaSpmvMatFree.inl
@@ -74,10 +74,10 @@
     1560 ./base/src/KrySPvgmres.c
      448 ./base/src/PreAMGCoarsenCR.c
     2086 ./base/src/PreAMGCoarsenRS.c
-     877 ./base/src/PreAMGInterp.c
+     879 ./base/src/PreAMGInterp.c
      839 ./base/src/PreAMGInterpEM.c
      134 ./base/src/PreAMGSetupCR.c
-     316 ./base/src/PreAMGSetupRS.c
+     317 ./base/src/PreAMGSetupRS.c
      631 ./base/src/PreAMGSetupSA.c
      367 ./base/src/PreAMGSetupSABSR.c
      394 ./base/src/PreAMGSetupUA.c
