@@ -35,7 +35,7 @@
  * \param  istart    starting index
  * \param  iend      ending index
  * \param  istep     step size
- * \param  relax     relaxation parameter for SOR-type smoothers
+ * \param  relax     relaxation parameter or weight for smoothers
  * \param  ndeg      degree of the polynomial smoother
  * \param  order     order for smoothing sweeps
  * \param  ordering  user defined ordering
@@ -73,7 +73,7 @@ static void fasp_dcsr_presmoothing (const SHORT  smoother,
             break;
 
         case SMOOTHER_JACOBI:
-            fasp_smoother_dcsr_jacobi(x, istart, iend, istep, A, b, nsweeps);
+            fasp_smoother_dcsr_jacobi(x, istart, iend, istep, A, b, nsweeps, relax);
             break;
 
         case SMOOTHER_L1DIAG:
@@ -133,7 +133,7 @@ static void fasp_dcsr_presmoothing (const SHORT  smoother,
  * \param  istart    starting index
  * \param  iend      ending index
  * \param  istep     step size
- * \param  relax     relaxation parameter for SOR-type smoothers
+ * \param  relax     relaxation parameter or weight for smoothers
  * \param  ndeg      degree of the polynomial smoother
  * \param  order     order for smoothing sweeps
  * \param  ordering  user defined ordering
@@ -172,7 +172,7 @@ static void fasp_dcsr_postsmoothing (const SHORT  smoother,
             break;
 
         case SMOOTHER_JACOBI:
-            fasp_smoother_dcsr_jacobi(x, iend, istart, istep, A, b, nsweeps);
+            fasp_smoother_dcsr_jacobi(x, iend, istart, istep, A, b, nsweeps, relax);
             break;
 
         case SMOOTHER_L1DIAG:

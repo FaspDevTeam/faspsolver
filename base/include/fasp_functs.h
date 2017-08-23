@@ -1412,7 +1412,8 @@ void fasp_smoother_dcsr_jacobi (dvector    *u,
                                 const INT   s,
                                 dCSRmat    *A,
                                 dvector    *b,
-                                INT         L);
+                                INT         L,
+								const REAL  w);
 
 void fasp_smoother_dcsr_gs (dvector    *u,
                             const INT   i_1,
