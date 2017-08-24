@@ -11,7 +11,7 @@
      341 ./base/src/PreAMGAggregationBSR.inl
     1123 ./base/src/PreAMGAggregationCSR.inl
      292 ./base/src/PreAMGUtil.inl
-    1661 ./base/src/PreGMG.inl
+    1679 ./base/src/PreGMG.inl
      223 ./base/src/PreMGRecurAMLI.inl
      219 ./base/src/PreMGSmoother.inl
       61 ./base/src/PreMGUtil.inl
@@ -98,7 +98,7 @@
      730 ./base/src/SolCSR.c
      119 ./base/src/SolFAMG.c
     1048 ./base/src/SolGMGPoisson.c
-     242 ./base/src/SolMatFree.c
+     243 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
-     320 ./base/src/SolWrapper.c
-   85261 total
+     322 ./base/src/SolWrapper.c
+   85282 total

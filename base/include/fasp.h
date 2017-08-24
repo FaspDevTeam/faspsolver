@@ -372,13 +372,13 @@ typedef struct ivector{
  */
 typedef struct {
     
+    SHORT print_level;   /**< print level: 0--10 */
     SHORT itsolver_type; /**< solver type: see message.h */
     SHORT precond_type;  /**< preconditioner type: see message.h */
     SHORT stop_type;     /**< stopping criteria type */
+    INT   restart;       /**< number of steps for restarting: for GMRES etc */
     INT   maxit;         /**< max number of iterations */
     REAL  tol;           /**< convergence tolerance */
-    INT   restart;       /**< number of steps for restarting: for GMRES etc */
-    SHORT print_level;   /**< print level: 0--10 */
     
 } ITS_param; /**< Parameters for iterative solvers */
 
