@@ -38,7 +38,7 @@
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  *
- * \warning x is reused to store the resulting array.
+ * \warning x is reused to store the resulting array!
  */
 void fasp_blas_darray_ax (const INT    n,
                           const REAL   a,
@@ -90,10 +90,10 @@ void fasp_blas_darray_ax (const INT    n,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-void fasp_blas_darray_axpy (const INT   n,
-                            const REAL  a,
-                            const REAL *x,
-                            REAL       *y)
+void fasp_blas_darray_axpy (const INT    n,
+                            const REAL   a,
+                            const REAL *restrict x,
+                            REAL       *restrict y)
 {
     SHORT use_openmp = FALSE;
     INT   i;
@@ -346,9 +346,9 @@ void fasp_blas_darray_axpy_nc7 (const REAL   a,
  */
 void fasp_blas_darray_axpyz (const INT   n,
                              const REAL  a,
-                             const REAL *x,
-                             const REAL *y,
-                             REAL       *z)
+                             const REAL *restrict x,
+                             const REAL *restrict y,
+                             REAL       *restrict z)
 {
     SHORT use_openmp = FALSE;
     INT   i;
