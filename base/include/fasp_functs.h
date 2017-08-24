@@ -279,10 +279,10 @@ void fasp_blas_darray_ax (const INT    n,
                           const REAL   a,
                           REAL        *x);
 
-void fasp_blas_darray_axpy (const INT   n,
-                            const REAL  a,
-                            const REAL *x,
-                            REAL       *y);
+void fasp_blas_darray_axpy (const INT    n,
+                            const REAL   a,
+                            const REAL *restrict x,
+                            REAL       *restrict y);
 
 void fasp_blas_darray_axpy_nc2 (const REAL   a,
                                 const REAL  *x,
@@ -302,9 +302,9 @@ void fasp_blas_darray_axpy_nc7 (const REAL   a,
 
 void fasp_blas_darray_axpyz (const INT   n,
                              const REAL  a,
-                             const REAL *x,
-                             const REAL *y,
-                             REAL       *z);
+                             const REAL *restrict x,
+                             const REAL *restrict y,
+                             REAL       *restrict z);
 
 void fasp_blas_darray_axpyz_nc2 (const REAL   a,
                                  const REAL  *x,
