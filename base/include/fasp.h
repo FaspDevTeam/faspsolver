@@ -373,8 +373,8 @@ typedef struct ivector{
 typedef struct {
     
     SHORT print_level;   /**< print level: 0--10 */
-    SHORT itsolver_type; /**< solver type: see message.h */
-    SHORT precond_type;  /**< preconditioner type: see message.h */
+    SHORT itsolver_type; /**< solver type: see fasp_const.h */
+    SHORT precond_type;  /**< preconditioner type: see fasp_const.h */
     SHORT stop_type;     /**< stopping criteria type */
     INT   restart;       /**< number of steps for restarting: for GMRES etc */
     INT   maxit;         /**< max number of iterations */

@@ -206,7 +206,7 @@ void fasp_dvec_rand (const INT  n,
 }
 
 /**
- * \fn void fasp_dvec_set (INT n, dvector *x, REAL val)
+ * \fn void fasp_dvec_set (INT n, dvector *x, const REAL val)
  *
  * \brief Initialize dvector x[i]=val for i=0:n-1
  *
@@ -219,9 +219,9 @@ void fasp_dvec_rand (const INT  n,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012    
  */
-void fasp_dvec_set (INT       n,
-                    dvector  *x,
-                    REAL      val)
+void fasp_dvec_set (INT         n,
+                    dvector    *x,
+                    const REAL  val)
 {
     INT   i;
     REAL *xpt = x->val;
@@ -242,7 +242,7 @@ void fasp_dvec_set (INT       n,
 #pragma omp parallel for private(myid, mybegin, myend) 
             for (myid = 0; myid < nthreads; myid++ ) {
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-                memset(&xpt[mybegin],0x0, sizeof(REAL)*(myend-mybegin));
+                memset(&xpt[mybegin], 0x0, sizeof(REAL)*(myend-mybegin));
             }
         }
         else {
@@ -275,30 +275,33 @@ void fasp_dvec_set (INT       n,
 }
 
 /**
- * \fn void fasp_ivec_set (const INT m, ivector *u)
+ * \fn void fasp_ivec_set (INT n, ivector *u, const INT m)
  *
  * \brief Set ivector value to be m
  *
- * \param  m    Integer value of ivector
- * \param  u    Pointer to ivector (MODIFIED)
+ * \param n    Number of variables
+ * \param m    Integer value of ivector
+ * \param u    Pointer to ivector (MODIFIED)
  *
  * \author Chensong Zhang
  * \date   04/03/2010  
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012    
  */
-void fasp_ivec_set (const INT  m,
-                    ivector   *u)
+void fasp_ivec_set (INT        n,
+                    ivector   *u,
+                    const INT  m)
 {    
-    const INT n = u->row;
-
     SHORT nthreads = 1, use_openmp = FALSE;
     INT   i;
     
-#ifdef _OPENMP  
+    if ( n > 0 ) u->row = n;
+    else n = u->row;
+
+#ifdef _OPENMP
 	if ( n > OPENMP_HOLDS ) {
-            use_openmp = TRUE;
-            nthreads = fasp_get_num_threads();
+        use_openmp = TRUE;
+        nthreads = fasp_get_num_threads();
 	}
 #endif
     
@@ -313,8 +316,7 @@ void fasp_ivec_set (const INT  m,
         }        
 	}    
 	else {
-        
-            for (i=0; i<n; ++i) u->val[i] = m;
+        for (i=0; i<n; ++i) u->val[i] = m;
 	}
 }
 

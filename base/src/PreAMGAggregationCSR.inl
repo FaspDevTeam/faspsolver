@@ -724,7 +724,7 @@ static void second_pairwise_unsymm (const dCSRmat  *A,
     
     pair_aggregate_init2(A, map1, vertices1, s1, s);
     
-    fasp_ivec_set(UNPT, vertices);
+    fasp_ivec_set(0, vertices, UNPT);
     
     i = 0;
     

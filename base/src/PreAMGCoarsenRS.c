@@ -2013,7 +2013,7 @@ static INT cfsplitting_mis (iCSRmat   *S,
 	INT i, j, ind;
 	INT row_begin, row_end;
 	
-	fasp_ivec_set (UNPT, vertices);
+	fasp_ivec_set (n, vertices, UNPT);
 
 	for (i=0; i<n ; i++)
 	{

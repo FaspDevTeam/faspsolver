@@ -255,12 +255,13 @@ void fasp_ivec_free (ivector *u);
 void fasp_dvec_rand (const INT  n,
                      dvector   *x);
 
-void fasp_dvec_set (INT       n,
-                    dvector  *x,
-                    REAL      val);
+void fasp_dvec_set (INT         n,
+                    dvector    *x,
+                    const REAL  val);
 
-void fasp_ivec_set (const INT  m,
-                    ivector   *u);
+void fasp_ivec_set (INT        n,
+                    ivector   *u,
+                    const INT  m);
 
 void fasp_dvec_cp (const dvector  *x,
                    dvector        *y);
@@ -1413,7 +1414,7 @@ void fasp_smoother_dcsr_jacobi (dvector    *u,
                                 dCSRmat    *A,
                                 dvector    *b,
                                 INT         L,
-								const REAL  w);
+                                const REAL  w);
 
 void fasp_smoother_dcsr_gs (dvector    *u,
                             const INT   i_1,
