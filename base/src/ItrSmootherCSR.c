@@ -3,7 +3,7 @@
  *  \brief Smoothers for dCSRmat matrices
  *
  *  \note  This file contains Level-2 (Itr) functions. It requires:
- *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxThreads.c, BlaArray.c, 
+ *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxThreads.c, BlaArray.c,
  *         and BlaSpmvCSR.c
  *
  *---------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ void fasp_smoother_dcsr_jacobi (dvector    *u,
                                 dCSRmat    *A,
                                 dvector    *b,
                                 INT         L,
-								const REAL  w)
+                                const REAL  w)
 {
     const INT    N  = ABS(i_n - i_1) + 1;
     const INT   *ia = A->IA, *ja = A->JA;
@@ -742,7 +742,7 @@ void fasp_smoother_dcsr_sgs (dvector *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_sor (dvector *u, const INT i_1, const INT i_n, 
+ * \fn void fasp_smoother_dcsr_sor (dvector *u, const INT i_1, const INT i_n,
  *                                  const INT s, dCSRmat *A, dvector *b, INT L,
  *                                  const REAL w)
  *
@@ -1284,7 +1284,7 @@ void fasp_smoother_dcsr_kaczmarz (dvector    *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_L1diag (dvector *u, const INT i_1, const INT i_n, 
+ * \fn void fasp_smoother_dcsr_L1diag (dvector *u, const INT i_1, const INT i_n,
  *                                     const INT s, dCSRmat *A, dvector *b, INT L)
  *
  * \brief Diagonal scaling (using L1 norm) as a smoother
@@ -1420,7 +1420,7 @@ void fasp_smoother_dcsr_L1diag (dvector    *u,
 }
 
 /**
- * \fn void fasp_smoother_dcsr_gs_rb3d (dvector *u, dCSRmat *A, dvector *b, INT L, 
+ * \fn void fasp_smoother_dcsr_gs_rb3d (dvector *u, dCSRmat *A, dvector *b, INT L,
  *                                      const INT order, INT *mark, const INT maximap,
  *                                      const INT nx, const INT ny, const INT nz)
  *
@@ -1693,47 +1693,47 @@ static void rb0b2d (INT   *ia,
     //INT ox, oy, oz;
     
     for (isweep = 1; isweep <= nsweeps; isweep++) {
-		if ((nx%2==0) &&(ny%2 ==0)) {
-			/*...  e-e (and going backwards) */
-			swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
-			/*...  e-o */
-			swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
-			/*...  o-e */
-			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
-			/*...  o-o */
-			swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
-		}
-		else if ((nx%2==0)&&(ny%2 ==1)) {
-			/*...  e-o (and going backwards) */
-			swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
-			/*...  e-e */
-			swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
-			/*...  o-o */
-			swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
-			/*...  o-e */
-			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
+        if ((nx%2==0) &&(ny%2 ==0)) {
+            /*...  e-e (and going backwards) */
+            swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
+            /*...  e-o */
+            swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
+            /*...  o-e */
+            swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
+            /*...  o-o */
+            swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
         }
-		else if ((nx%2==1)&&(ny%2 ==0)) {
-			/*...  o-e (and going backwards) */
-			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
-			/*...  o-o */
-			swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
-			/*...  e-e */
-			swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
-			/*...  e-o */
-			swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
-		}
-		else if ((nx%2==1)&&(ny%2 ==1)) {
-			/*...  o-o (and going backwards) */
-			swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
-			/*...  o-e */
-			swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
-			/*...  e-o */
-			swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
-			/*...  e-e */
-			swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
-		}
-	}
+        else if ((nx%2==0)&&(ny%2 ==1)) {
+            /*...  e-o (and going backwards) */
+            swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
+            /*...  e-e */
+            swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
+            /*...  o-o */
+            swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
+            /*...  o-e */
+            swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
+        }
+        else if ((nx%2==1)&&(ny%2 ==0)) {
+            /*...  o-e (and going backwards) */
+            swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
+            /*...  o-o */
+            swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
+            /*...  e-e */
+            swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
+            /*...  e-o */
+            swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
+        }
+        else if ((nx%2==1)&&(ny%2 ==1)) {
+            /*...  o-o (and going backwards) */
+            swep2db(ia,ja,aa,u,f,n0o,n0o,mark,nx,ny);
+            /*...  o-e */
+            swep2db(ia,ja,aa,u,f,n0o,n0e,mark,nx,ny);
+            /*...  e-o */
+            swep2db(ia,ja,aa,u,f,n0e,n0o,mark,nx,ny);
+            /*...  e-e */
+            swep2db(ia,ja,aa,u,f,n0e,n0e,mark,nx,ny);
+        }
+    }
 #endif
 }
 
@@ -1801,168 +1801,168 @@ static void rb0b3d (INT   *ia,
     //INT ox, oy, oz;
     
     for (isweep = 1; isweep <= nsweeps; isweep++) {
-		if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==0)) {
-			/*...  e-e-e (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
-			/*...  e-e-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
-			/*...  e-o-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
-			/*...  e-o-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
-			/*...  o-e-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
-			/*...  o-e-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
-			/*...  o-o-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
-			/*...  o-o-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
-			/*...  e-e-e (and going backwards) */
-			//swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
-		}
-		else if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==1)) {
-			/*...  e-e-o (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
-			/*...  e-e-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
-			/*...  e-o-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
-			/*...  e-o-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
-			/*...  o-e-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
-			/*...  o-e-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
-			/*...  o-o-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
-			/*...  o-o-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
-			/*...  e-e-o (and going backwards) */
-			//swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
-		}
-		else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==0)) {
-			/*...  e-o-e (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
-			/*...  e-o-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
-			/*...  e-e-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
-			/*...  e-e-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
-			/*...  o-o-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
-			/*...  o-o-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
-			/*...  o-e-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
-			/*...  o-e-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
-			/*...  e-o-e (and going backwards) */
+        if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==0)) {
+            /*...  e-e-e (and going backwards) */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+            /*...  e-e-o */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+            /*...  e-o-e */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+            /*...  e-o-o */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+            /*...  o-e-e */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+            /*...  o-e-o */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+            /*...  o-o-e */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+            /*...  o-o-o */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+            /*...  e-e-e (and going backwards) */
+            //swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+        }
+        else if ((nx%2==0) &&(ny%2 ==0)  &&(nz%2==1)) {
+            /*...  e-e-o (and going backwards) */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+            /*...  e-e-e */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+            /*...  e-o-o */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+            /*...  e-o-e */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+            /*...  o-e-o */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+            /*...  o-e-e */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+            /*...  o-o-o */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+            /*...  o-o-e */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+            /*...  e-e-o (and going backwards) */
+            //swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+        }
+        else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==0)) {
+            /*...  e-o-e (and going backwards) */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+            /*...  e-o-o */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+            /*...  e-e-e */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+            /*...  e-e-o */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+            /*...  o-o-e */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+            /*...  o-o-o */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+            /*...  o-e-e */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+            /*...  o-e-o */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+            /*...  e-o-e (and going backwards) */
             //	swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
-		}
-		else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==1)) {
-			/*...  e-o-o (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
-			/*...  e-o-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
-			/*...  e-e-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
-			/*...  e-e-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
-			/*...  o-o-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
-			/*...  o-o-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
-			/*...  o-e-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
-			/*...  o-e-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
-			/*...  e-o-o (and going backwards) */
+        }
+        else if ((nx%2==0)&&(ny%2 ==1)&&(nz%2==1)) {
+            /*...  e-o-o (and going backwards) */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+            /*...  e-o-e */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+            /*...  e-e-o */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+            /*...  e-e-e */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+            /*...  o-o-o */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+            /*...  o-o-e */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+            /*...  o-e-o */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+            /*...  o-e-e */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+            /*...  e-o-o (and going backwards) */
             //	swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
-		}
-		else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==0)) {
-			/*...  o-e-e (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
-			/*...  o-e-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
-			/*...  o-o-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
-			/*...  o-o-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
-			/*...  e-e-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
-			/*...  e-e-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
-			/*...  e-o-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
-			/*...  e-o-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
-			/*...  o-e-e (and going backwards) */
+        }
+        else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==0)) {
+            /*...  o-e-e (and going backwards) */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+            /*...  o-e-o */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+            /*...  o-o-e */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+            /*...  o-o-o */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+            /*...  e-e-e */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+            /*...  e-e-o */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+            /*...  e-o-e */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+            /*...  e-o-o */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+            /*...  o-e-e (and going backwards) */
             //	swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
-		}
-		else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==1)) {
-			/*...  o-e-o (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
-			/*...  o-e-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
-			/*...  o-o-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
-			/*...  o-o-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
-			/*...  e-e-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
-			/*...  e-e-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
-			/*...  e-o-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
-			/*...  e-o-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
-			/*...  o-e-o (and going backwards) */
+        }
+        else if ((nx%2==1)&&(ny%2 ==0)&&(nz%2==1)) {
+            /*...  o-e-o (and going backwards) */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+            /*...  o-e-e */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+            /*...  o-o-o */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+            /*...  o-o-e */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+            /*...  e-e-o */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+            /*...  e-e-e */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+            /*...  e-o-o */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+            /*...  e-o-e */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+            /*...  o-e-o (and going backwards) */
             //	swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
-		}
-		else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==0)) {
-			/*...  o-o-e (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
-			/*...  o-o-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
-			/*...  o-e-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
-			/*...  o-e-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
-			/*...  e-o-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
-			/*...  e-o-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
-			/*...  e-e-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
-			/*...  e-e-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
-			/*...  o-o-e (and going backwards) */
-			//swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
-		}
-		else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==1)) {
-			/*...  o-o-o (and going backwards) */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
-			/*...  o-o-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
-			/*...  o-e-o */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
-			/*...  o-e-e */
-			swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
-			/*...  e-o-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
-			/*...  e-o-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
-			/*...  e-e-o */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
-			/*...  e-e-e */
-			swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
-			/*...  o-o-o (and going backwards) */
-			//swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+        }
+        else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==0)) {
+            /*...  o-o-e (and going backwards) */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+            /*...  o-o-o */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+            /*...  o-e-e */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+            /*...  o-e-o */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+            /*...  e-o-e */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+            /*...  e-o-o */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+            /*...  e-e-e */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+            /*...  e-e-o */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+            /*...  o-o-e (and going backwards) */
+            //swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+        }
+        else if ((nx%2==1)&&(ny%2 ==1)&&(nz%2==1)) {
+            /*...  o-o-o (and going backwards) */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
+            /*...  o-o-e */
+            swep3db(ia,ja,aa,u,f,n0o,n0o,n0e,mark,nx,ny,nz);
+            /*...  o-e-o */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0o,mark,nx,ny,nz);
+            /*...  o-e-e */
+            swep3db(ia,ja,aa,u,f,n0o,n0e,n0e,mark,nx,ny,nz);
+            /*...  e-o-o */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0o,mark,nx,ny,nz);
+            /*...  e-o-e */
+            swep3db(ia,ja,aa,u,f,n0e,n0o,n0e,mark,nx,ny,nz);
+            /*...  e-e-o */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0o,mark,nx,ny,nz);
+            /*...  e-e-e */
+            swep3db(ia,ja,aa,u,f,n0e,n0e,n0e,mark,nx,ny,nz);
+            /*...  o-o-o (and going backwards) */
+            //swep3db(ia,ja,aa,u,f,n0o,n0o,n0o,mark,nx,ny,nz);
             
-		}
-	}
+        }
+    }
 #endif
 }
 
@@ -2070,7 +2070,7 @@ static void swep3df (INT   *ia,
     INT nxy=nx*ny,k,k0,j,j0,i,i0;
     INT begin_row,end_row,ii,jj;
     REAL t,d=0;
-        
+    
 #ifdef _OPENMP
 #pragma omp parallel for private(k,k0,j,j0,i,i0,t,begin_row,end_row,ii,jj,d)
 #endif
@@ -2082,7 +2082,7 @@ static void swep3df (INT   *ia,
             {
                 i0 = i   +  j0    + k0;
                 i0 = mark[i0]-1; //Fortran to C
-
+                
                 if (i0>=0 ) {
                     t = f[i0];
                     begin_row = ia[i0], end_row = ia[i0+1];

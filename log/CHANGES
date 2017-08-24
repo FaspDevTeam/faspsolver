@@ -5,6 +5,8 @@ File Name: CHANGES
 - Pass weigth to Jacobi smoother.
 - Enforce const check for GMG routines.
 - Change mg2d behavior; need to double-check this.
+- Update regression result.
+- Revise fasp_ivec_set according to fasp_dvec_set. 
 
 08/21/2017 FASP 2.0.0:
 - Add duplicated column check for BSR matrices.
