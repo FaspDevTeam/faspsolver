@@ -56,11 +56,14 @@ void fasp_fwrapper_amg_ (INT  *n,
     dvector    rhs, sol; // right-hand-side, solution
     AMG_param  amgparam; // parameters for AMG
     
+    // setup AMG parameters
     fasp_param_amg_init(&amgparam);
+    
     amgparam.tol         = *tol;
     amgparam.print_level = *ptrlvl;
     amgparam.maxit       = *maxit;
     
+    // set up coefficient matrix
     mat.row = *n; mat.col = *n; mat.nnz = *nnz;
     mat.IA  = ia; mat.JA  = ja; mat.val = a;
     
@@ -107,24 +110,26 @@ void fasp_fwrapper_krylov_amg_ (INT  *n,
     AMG_param  amgparam; // parameters for AMG
     ITS_param  itparam;  // parameters for itsolver
     
+    // setup AMG parameters
     fasp_param_amg_init(&amgparam);
-    amgparam.AMG_type             = UA_AMG;
+    
     amgparam.print_level          = *ptrlvl;
+    amgparam.AMG_type             = UA_AMG;
     amgparam.aggregation_type     = VMB;
-
     amgparam.coarse_dof           = 100;
+    amgparam.max_aggregation      = 100;
     amgparam.presmooth_iter       = 1;
     amgparam.postsmooth_iter      = 1;
-    
     amgparam.strong_coupled       = 0.00;
-    amgparam.max_aggregation      = 100;
     
+    // setup Krylov method parameters
     fasp_param_solver_init(&itparam);
+    
     itparam.tol                   = *tol;
     itparam.print_level           = *ptrlvl;
     itparam.maxit                 = *maxit;
     
-    
+    // set up coefficient matrix
     mat.row = *n; mat.col = *n; mat.nnz = *nnz;
     mat.IA = ia;  mat.JA  = ja; mat.val = a;
     
@@ -179,31 +184,30 @@ INT fasp_wrapper_dbsr_krylov_amg (INT   n,
     
     // setup AMG parameters
     fasp_param_amg_init(&amgparam);
-    amgparam.AMG_type             = UA_AMG;
-    amgparam.print_level          = PRINT_NONE;
     
-    amgparam.coarse_dof           = 100;
-    amgparam.presmooth_iter       = 1;
-    amgparam.postsmooth_iter      = 1;
-    
-    amgparam.strong_coupled       = 0.00;
-    amgparam.max_aggregation      = 100;
-    
-    amgparam.ILU_type             = ILUk;
-    amgparam.ILU_levels           = 1;
-    amgparam.ILU_lfil             = 1;
+    amgparam.AMG_type        = UA_AMG;
+    amgparam.print_level     = PRINT_NONE;
+    amgparam.coarse_dof      = 100;
+    amgparam.max_aggregation = 100;
+    amgparam.presmooth_iter  = 1;
+    amgparam.postsmooth_iter = 1;
+    amgparam.strong_coupled  = 0.00;
+    amgparam.ILU_type        = ILUk;
+    amgparam.ILU_levels      = 1;
+    amgparam.ILU_lfil        = 1;
     
     // setup Krylov method parameters
     fasp_param_solver_init(&itparam);
-    itparam.tol         = tol;
-    itparam.print_level = ptrlvl;
-    itparam.maxit       = maxit;
     
-    itparam.itsolver_type = SOLVER_VFGMRES;
-    itparam.restart       = 30;
+    itparam.tol              = tol;
+    itparam.print_level      = ptrlvl;
+    itparam.maxit            = maxit;
+    itparam.itsolver_type    = SOLVER_VFGMRES;
+    itparam.restart          = 30;
     
-    mat.row = n; mat.col = n; mat.nnz = nnz;
-    mat.IA = ia;  mat.JA  = ja; mat.val = a;
+    // set up coefficient matrix
+    mat.row = n; mat.col = n;  mat.nnz = nnz;
+    mat.IA = ia; mat.JA  = ja; mat.val = a;
     
     // convert CSR to BSR format
     bsrmat = fasp_format_dcsr_dbsr(&mat, nb);
@@ -262,35 +266,33 @@ INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT   n,
     dBSRmat         bsrmat;   // coefficient matrix in BSR format
     dvector         rhs, sol; // right-hand-side, solution
     AMG_param       amgparam; // parameters for AMG
-    ITS_param  itparam;  // parameters for itsolver
+    ITS_param       itparam;  // parameters for itsolver
     INT             status = FASP_SUCCESS; // return parameter
     
     // setup AMG parameters
     fasp_param_amg_init(&amgparam);
-    amgparam.AMG_type             = UA_AMG;
-    amgparam.print_level          = ptrlvl;
     
-    amgparam.coarse_dof           = 100;
-    amgparam.presmooth_iter       = 1;
-    amgparam.postsmooth_iter      = 1;
-    
-    amgparam.strong_coupled       = 0.00;
-    amgparam.max_aggregation      = 100;
-    
-    amgparam.ILU_type             = ILUk;
-    amgparam.ILU_levels           = 1;
-    amgparam.ILU_lfil             = 1;
+    amgparam.AMG_type        = UA_AMG;
+    amgparam.print_level     = ptrlvl;
+    amgparam.coarse_dof      = 100;
+    amgparam.max_aggregation = 100;
+    amgparam.presmooth_iter  = 1;
+    amgparam.postsmooth_iter = 1;
+    amgparam.strong_coupled  = 0.00;
+    amgparam.ILU_type        = ILUk;
+    amgparam.ILU_levels      = 1;
+    amgparam.ILU_lfil        = 1;
     
     // setup Krylov method parameters
     fasp_param_solver_init(&itparam);
-    itparam.tol         = tol;
-    itparam.print_level = ptrlvl;
-    itparam.maxit       = maxit;
     
-    itparam.itsolver_type = SOLVER_VFGMRES;
-    itparam.restart       = 30;
+    itparam.tol              = tol;
+    itparam.print_level      = ptrlvl;
+    itparam.maxit            = maxit;
+    itparam.itsolver_type    = SOLVER_VFGMRES;
+    itparam.restart          = 30;
     
-    // COO format
+    // set up coefficient matrix
     coomat.row = n; coomat.col = n; coomat.nnz = nnz;
     coomat.rowind = ia; coomat.colind = ja; coomat.val = a;
     

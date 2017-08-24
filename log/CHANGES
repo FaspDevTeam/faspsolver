@@ -3,6 +3,8 @@ File Name: CHANGES
 08/23/2017 FASP 2.0.1:
 - Prepare for optimization: 1. vectorization loops.
 - Pass weigth to Jacobi smoother.
+- Enforce const check for GMG routines.
+- Change mg2d behavior; need to double-check this.
 
 08/21/2017 FASP 2.0.0:
 - Add duplicated column check for BSR matrices.

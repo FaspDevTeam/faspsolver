@@ -18,7 +18,8 @@
 /*---------------------------------*/
 
 /**
- * \fn static void residual1d (REAL *u, REAL *b, REAL *r, INT k, INT *level)
+ * \fn static void residual1d (const REAL *u, const REAL *b, REAL *r, 
+ *                             const INT k, const INT *level)
  * \brief compute residue vector r of 1D problem
  *
  * \param u            Pointer to the vector of DOFs
@@ -30,11 +31,11 @@
  * \author Ziteng Wang
  * \date   2013-06-07
  */
-static void residual1d (REAL *u,
-                        REAL *b,
-                        REAL *r,
-                        INT   k,
-                        INT  *level)
+static void residual1d (const REAL *u,
+                        const REAL *b,
+                        REAL       *r,
+                        const INT   k,
+                        const INT  *level)
 {
     const INT levelk = level[k];
     const INT n      = level[k+1]-levelk;
@@ -46,8 +47,8 @@ static void residual1d (REAL *u,
 }
 
 /**
- * \fn static void residual2d (REAL *u, REAL *b, REAL *r, INT k, INT *level
- *                             INT *nxk, INT *nyk)
+ * \fn static void residual2d (const REAL *u, const REAL *b, REAL *r, const INT k,
+ *                             const INT *level, const INT *nxk, const INT *nyk)
  * \brief compute residue vector r of 2D problem
  *
  * \param u            Pointer to the vector of DOFs
@@ -61,13 +62,13 @@ static void residual1d (REAL *u,
  * \author Ziteng Wang
  * \date   2013-06-07
  */
-static void residual2d (REAL *u,
-                        REAL *b,
-                        REAL *r,
-                        INT   k,
-                        INT  *level,
-                        INT  *nxk,
-                        INT  *nyk)
+static void residual2d (const REAL *u,
+                        const REAL *b,
+                        REAL       *r,
+                        const INT   k,
+                        const INT  *level,
+                        const INT  *nxk,
+                        const INT  *nyk)
 {
     const INT nykk   = nyk[k];
     const INT nxkk   = nxk[k];
@@ -83,8 +84,9 @@ static void residual2d (REAL *u,
 }
 
 /**
- * \fn static void residual3d (REAL *u, REAL *b, REAL *r, INT k, INT *level,
- *                             INT *nxk, INT *nyk, INT *nzk)
+ * \fn static void residual3d (const REAL *u, const REAL *b, REAL *r, const INT k,
+ *                             const INT *level, const INT *nxk, const INT *nyk, 
+ *                             const INT *nzk)
  * \brief compute residue vector r of 3D problem
  *
  * \param u            Pointer to the vector of DOFs
@@ -99,14 +101,14 @@ static void residual2d (REAL *u,
  * \author Ziteng Wang
  * \date   2013-06-07
  */
-static void residual3d (REAL *u,
-                        REAL *b,
-                        REAL *r,
-                        INT   k,
-                        INT  *level,
-                        INT  *nxk,
-                        INT  *nyk,
-                        INT  *nzk)
+static void residual3d (const REAL *u,
+                        const REAL *b,
+                        REAL       *r,
+                        const INT   k,
+                        const INT  *level,
+                        const INT  *nxk,
+                        const INT  *nyk,
+                        const INT  *nzk)
 {
     const INT levelk = level[k];
     const INT nxkk   = nxk[k];
@@ -138,7 +140,7 @@ static void residual3d (REAL *u,
 }
 
 /**
- * \fn static REAL l2norm (REAL *r, INT *level, INT k)
+ * \fn static REAL l2norm (const REAL *r, const INT *level, const INT k)
  * \brief compute L2 norm of vector r
  *
  * \param r     Pointer to the residue vector
@@ -150,9 +152,9 @@ static void residual3d (REAL *u,
  * \author Ziteng Wang
  * \date   06/07/2013
  */
-static REAL l2norm (REAL *r,
-                    INT  *level,
-                    INT   k)
+static REAL l2norm (const REAL *r,
+                    const INT  *level,
+                    const INT   k)
 {
     INT  i,n;
     REAL squarnorm;
@@ -168,7 +170,7 @@ static REAL l2norm (REAL *r,
 }
 
 /**
- * \fn static void xequaly (REAL *x, REAL *y, INT *level, INT k)
+ * \fn static void xequaly (REAL *x, const REAL *y, const INT *level, const INT k)
  * \brief x = y
  *
  * \param x     vector x
@@ -180,9 +182,9 @@ static REAL l2norm (REAL *r,
  * \date 06/07/2013
  */
 static void xequaly (REAL *x,
-                     REAL *y,
-                     INT  *level,
-                     INT   k)
+                     const REAL *y,
+                     const INT  *level,
+                     const INT   k)
 {
     const INT levelk = level[k];
     const INT n      = level[k+1] - levelk;
@@ -194,7 +196,8 @@ static void xequaly (REAL *x,
 }
 
 /**
- * \fn static void ypcz (REAL *x, REAL *y, REAL c, REAL *z, INT *level, INT k)
+ * \fn static void ypcz (REAL *x, const REAL *y, const REAL c, const REAL *z, 
+ *                       const INT *level, const INT k)
  * \brief x = y+c*z
  *
  * \param x     vector x
@@ -207,12 +210,12 @@ static void xequaly (REAL *x,
  * \author Ziteng Wang
  * \date   06/07/2013
  */
-static void ypcz (REAL *x,
-                  REAL *y,
-                  REAL  c,
-                  REAL *z,
-                  INT  *level,
-                  INT   k)
+static void ypcz (REAL       *x,
+                  const REAL *y,
+                  const REAL  c,
+                  const REAL *z,
+                  const INT  *level,
+                  const INT   k)
 {
     const INT levelk = level[k];
     const INT n      = level[k+1]-levelk;
@@ -224,7 +227,7 @@ static void ypcz (REAL *x,
 }
 
 /**
- * \fn void ay1d (REAL *x, REAL *y, INT *level, INT k);
+ * \fn static void ay1d (REAL *x, const REAL *y, const INT *level, const INT k);
  * \brief x = Ay
  *
  * \param x     vector x
@@ -235,10 +238,10 @@ static void ypcz (REAL *x,
  * \author Ziteng Wang
  * \date   06/07/2013
  */
-static void ay1d (REAL *x,
-                  REAL *y,
-                  INT  *level,
-                  INT   k)
+static void ay1d (REAL       *x,
+                  const REAL *y,
+                  const INT  *level,
+                  const INT   k)
 {
     INT   i,n;
     REAL *btemp = (REAL *)malloc(level[k+1]*sizeof(REAL));
@@ -251,14 +254,15 @@ static void ay1d (REAL *x,
     residual1d(y, btemp, x, k, level);
     n = level[k+1]-level[k];
     for (i = 0; i < n; i++) {
-        x[level[k]+i] = (-1)*x[level[k]+i];
+        x[level[k]+i] = (-1)*x[level[k]+i]; // TODO: Optimize loop --Chensong
     }
     
     free(btemp);
 }
 
 /**
- * \fn void ay2d (REAL *x, REAL *y, INT *level, INT k, INt *nxk, INT *nyk)
+ * \fn static void ay2d (REAL *x, const REAL *y, const INT *level, const INT k, 
+ *                       const INT *nxk, const INT *nyk)
  * \brief x = Ay
  *
  * \param x     vector x
@@ -271,12 +275,12 @@ static void ay1d (REAL *x,
  * \author Ziteng Wang
  * \date   06/07/2013
  */
-static void ay2d (REAL *x,
-                  REAL *y,
-                  INT  *level,
-                  INT   k,
-                  INT  *nxk,
-                  INT  *nyk)
+static void ay2d (REAL       *x,
+                  const REAL *y,
+                  const INT  *level,
+                  const INT   k,
+                  const INT  *nxk,
+                  const INT  *nyk)
 {
     INT   i,n;
     REAL *btemp = (REAL *)malloc(level[k+1]*sizeof(REAL));
@@ -296,7 +300,8 @@ static void ay2d (REAL *x,
 }
 
 /**
- * \fn void ay3d (REAL *x, REAL *y, INT *level, INT k, INt *nxk, INT *nyk)
+ * \fn static void ay3d (REAL *x, const REAL *y, const INT *level, const INT k, 
+ *                       const INT *nxk, const INT *nyk)
  * \brief x = Ay 3D
  *
  * \param x     vector x
@@ -310,13 +315,13 @@ static void ay2d (REAL *x,
  * \author Ziteng Wang
  * \date   06/07/2013
  */
-static void ay3d (REAL *x,
-                  REAL *y,
-                  INT  *level,
-                  INT   k,
-                  INT  *nxk,
-                  INT  *nyk,
-                  INT  *nzk)
+static void ay3d (REAL       *x,
+                  const REAL *y,
+                  const INT  *level,
+                  const INT   k,
+                  const INT  *nxk,
+                  const INT  *nyk,
+                  const INT  *nzk)
 {
     const INT levelk  = level[k];
     const INT levelk1 = level[k+1];
@@ -338,23 +343,24 @@ static void ay3d (REAL *x,
 }
 
 /**
- * \fn REAl innerproductxy (REAL *x, REAL *y, INT *level, INT k);
- * \brief <x,y>
+ * \fn static REAl innerproductxy (const REAL *x, const REAL *y, 
+ *                                 const INT *level, const INT k);
+ * \brief Compute inner product <x,y>
  *
  * \param x     vector x
  * \param y     vector x
  * \param level Pointer to the start position of each level
  * \param k     Level k
  *
- * \return Innerproduct of x,y
+ * \return Innerproduct of x and y
  *
  * \author Ziteng Wang
  * \date   06/07/2013
  */
-static REAL innerproductxy (REAL *x,
-                            REAL *y,
-                            INT  *level,
-                            INT   k)
+static REAL innerproductxy (const REAL *x,
+                            const REAL *y,
+                            const INT  *level,
+                            const INT   k)
 {
     const INT levelk  = level[k];
     const INT levelk1 = level[k+1];
@@ -373,8 +379,8 @@ static REAL innerproductxy (REAL *x,
 }
 
 /**
- * \fn void restriction2d5pt (REAL *b, REAL *r, INT *level, const INT k,
- *                            INT *nxk, INT *nyk)
+ * \fn static void restriction2d5pt (REAL *b, const REAL *r, const INT *level, 
+ *                                   const INT k, const INT *nxk, const INT *nyk)
  * \brief Restriction function in multigrid of 2D
  *
  * \param b            Pointer to the right hand vector
@@ -390,11 +396,11 @@ static REAL innerproductxy (REAL *x,
  * Modified by Chensong on 05/05/2015: Fix array out-of-bound bug.
  */
 static void restriction2d5pt (REAL       *b,
-                              REAL       *r,
-                              INT        *level,
+                              const REAL *r,
+                              const INT  *level,
                               const INT   k,
-                              INT        *nxk,
-                              INT        *nyk)
+                              const INT  *nxk,
+                              const INT  *nyk)
 {
     const INT nxkk1   = nxk[k+1];
     const INT nykk1   = nyk[k+1];
@@ -403,28 +409,31 @@ static void restriction2d5pt (REAL       *b,
     const INT levelk1 = level[k+1];
     const INT levelk  = level[k];
     
-    INT k1,k11,k2,i,j;
+    INT       k1, k11, k2, i, j;
     
-    for (i = 1; i < nykk1-1; i++) {
+    for ( i = 1; i < nykk1-1; i++ ) {
         k11 = levelk1+i*nxkk1;
-        k1 = levelk+2*i*nxkk;
-        for (j = 1; j < nxk[k+1]-1; j++) {
+        k1  = levelk+2*i*nxkk;
+        for ( j = 1; j < nxk[k+1]-1; j++ ) {
             k2 = k1+2*j;
-            b[k11+j] = (r[k2]*2+r[k2+1]+r[k2-1]+r[k2+nxkk]+r[k2-nxkk]+r[k2+nxkk+1]+r[k2-nxkk-1])/2;
+            b[k11+j] = (r[k2]*2+r[k2+1]+r[k2-1]+r[k2+nxkk]+r[k2-nxkk]+r[k2+nxkk+1]+r[k2-nxkk-1])*0.5;
         }
-        b[levelk1+(i+1)*nxkk1-1] = (r[levelk+(2*i+1)*nxkk-2]+r[levelk+2*i*nxkk-2])/2;
+        b[levelk1+(i+1)*nxkk1-1] = (r[levelk+(2*i+1)*nxkk-2]+r[levelk+2*i*nxkk-2])*0.5;
     }
+    
     k11 = levelk1+(nykk1-1)*nxkk1;
-    k1 = levelk+(nykk-1)*nxkk-1;
-    for (j = 1; j < nxk[k+1]-1; j++) {
-        b[k11+j] = (r[k1+2*j]+r[k1+2*j-nxkk])/2;
+    k1  = levelk+(nykk-1)*nxkk-1;
+    for ( j = 1; j < nxk[k+1]-1; j++ ) {
+        k2 = k1+2*j;
+        b[k11+j] = (r[k2]+r[k2-nxkk])*0.5;
     }
-    b[levelk1+nxkk1*nykk1-1] = r[levelk+(nykk-1)*nxkk-2]/2;
+    b[levelk1+nxkk1*nykk1-1] = r[levelk+(nykk-1)*nxkk-2]*0.5;
 }
 
 /**
- * \fn void restriction3d7pt (REAL *b, REAL *r, INT *level, INT k,
- *                            INT *nxk, INT *nyk, INT *nzk)
+ * \fn static void restriction3d7pt (REAL *b, const REAL *r, const INT *level, 
+ *                                   const INT k, const INT *nxk, const INT *nyk, 
+ *                                   const INT *nzk)
  * \brief Restriction function in multigrid of 3D
  *
  * \param b            Pointer to the right hand vector
@@ -436,15 +445,15 @@ static void restriction2d5pt (REAL       *b,
  * \param nzk          Number of grids in z direction in level k
  *
  * \author Ziteng Wang
- * \date   06/07/201
+ * \date   06/07/2013
  */
-static void restriction3d7pt (REAL *b,
-                              REAL *r,
-                              INT  *level,
-                              INT   k,
-                              INT  *nxk,
-                              INT  *nyk,
-                              INT  *nzk)
+static void restriction3d7pt (REAL       *b,
+                              const REAL *r,
+                              const INT  *level,
+                              const INT   k,
+                              const INT  *nxk,
+                              const INT  *nyk,
+                              const INT  *nzk)
 {
     const INT levelk = level[k];
     const INT levelk1 = level[k+1];
@@ -459,11 +468,11 @@ static void restriction3d7pt (REAL *b,
     INT nxyk  = nxkk*nykk;
     INT nxyk1 = nxkk1*nykk1;
     
-    for (i = 1; i < nzkk1-1; i++) {
-        i0 = levelk+2*i*nxyk;
+    for ( i = 1; i < nzkk1-1; i++ ) {
+        i0  = levelk+2*i*nxyk;
         i01 = levelk1+i*nxyk1;
-        for (j = 1; j < nykk1-1; j++) {
-            j0 = i0+2*j*nxkk;
+        for ( j = 1; j < nykk1-1; j++ ) {
+            j0  = i0+2*j*nxkk;
             j01 = i01+j*nxkk1;
             for (h = 1; h < nxkk1-1; h++) {
                 k0 = j0+2*h;
@@ -474,14 +483,15 @@ static void restriction3d7pt (REAL *b,
                 k5 = k0+nxyk;
                 k6 = k0+nxyk+nxkk;
                 b[j01+h] = (r[k0]*2+r[k0-1]+r[k0+1]+r[k1]+r[k1-1]+r[k2]+r[k2+1]+r[k3]
-                            +r[k3-1]+r[k4]+r[k4-1]+r[k5]+r[k5+1]+r[k6]+r[k6+1])/4;
+                            +r[k3-1]+r[k4]+r[k4-1]+r[k5]+r[k5+1]+r[k6]+r[k6+1])*0.25;
             }
         }
     }
 }
 
 /**
- * \fn void interpolation2d5pt (REAL *u, INT *level, INT k, INT *nxk, INT *nyk)
+ * \fn static void interpolation2d5pt (REAL *u, const INT *level, const INT k,
+ *                                     const INT *nxk, const INT *nyk)
  * \brief Interpolation function in multigrid of 2D
  *
  * \param u            Pointer to the vector of DOFs
@@ -490,14 +500,14 @@ static void restriction3d7pt (REAL *b,
  * \param nxk          Number of grids in x direction
  * \param nyk          Number of grids in y direction
  *
- * \author Ziteng Wang
- * \date   06/07/201
+ * \author Ziteng Wang, Chensong Zhang
+ * \date   06/07/2013
  */
-static void interpolation2d5pt (REAL *u,
-                                INT  *level,
-                                INT   k,
-                                INT  *nxk,
-                                INT  *nyk)
+static void interpolation2d5pt (REAL       *u,
+                                const INT  *level,
+                                const INT   k,
+                                const INT  *nxk,
+                                const INT  *nyk)
 {
     INT i,j;
     
@@ -515,8 +525,9 @@ static void interpolation2d5pt (REAL *u,
 }
 
 /**
- * \fn void interpolation2d5pt (REAL *u, INT *level, INT k, INT *nxk, INT *nyk)
- * \brief Interpolation function in multigrid of 2D
+ * \fn static void interpolation3d7pt (REAL *u, const INT *level, const INT k,
+ *                                     const INT *nxk, const INT *nyk, const INT *nzk)
+ * \brief Interpolation function in multigrid of 3D
  *
  * \param u            Pointer to the vector of DOFs
  * \param level        Pointer to the start position of each level
@@ -525,15 +536,15 @@ static void interpolation2d5pt (REAL *u,
  * \param nyk          Number of grids in y direction in level k
  * \param nzk          NUmber of grids in z direction in level k
  *
- * \author Ziteng Wang
- * \date   06/07/201
+ * \author Ziteng Wang, Chensong Zhang
+ * \date   06/07/2013
  */
-static void interpolation3d7pt (REAL *u,
-                                INT  *level,
-                                INT   k,
-                                INT  *nxk,
-                                INT  *nyk,
-                                INT  *nzk)
+static void interpolation3d7pt (REAL       *u,
+                                const INT  *level,
+                                const INT   k,
+                                const INT  *nxk,
+                                const INT  *nyk,
+                                const INT  *nzk)
 {
     const INT levelk = level[k];
     const INT levelk1 = level[k-1];
@@ -585,8 +596,9 @@ static void interpolation3d7pt (REAL *u,
 }
 
 /**
- * \fn void gs2d_2color (REAL *u, REAL *b, INT *level, INT k,
- *                       INT maxlevel, INT *nxk, INT nyk)
+ * \fn static void gs2d_2color (REAL *u, const REAL *b, const INT *level, 
+ *                              const INT k, const INT maxlevel, const INT *nxk, 
+ *                              const INT nyk)
  * \brief 2 color G-S iteration of 2D problem
  *
  * \param u            Pointer to the vector of DOFs
@@ -598,15 +610,15 @@ static void interpolation3d7pt (REAL *u,
  * \param nyk          Number of grids in y direction in level k
  *
  * \author Ziteng Wang
- * \date   06/07/201
+ * \date   06/07/2013
  */
-static void gs2d_2color (REAL *u,
-                         REAL *b,
-                         INT  *level,
-                         INT   k,
-                         INT   maxlevel,
-                         INT  *nxk,
-                         INT  *nyk)
+static void gs2d_2color (REAL       *u,
+                         const REAL *b,
+                         const INT  *level,
+                         const INT   k,
+                         const INT   maxlevel,
+                         const INT  *nxk,
+                         const INT  *nyk)
 {
     const INT nxkk   = nxk[k];
     const INT nykk   = nyk[k];
@@ -619,14 +631,14 @@ static void gs2d_2color (REAL *u,
         k1 = levelk+nxkk*h;
         
         for (i = 1; i < nxkk-1; i=i+2) {
-            u[k1+i] = (b[k1+i]+u[k1+i+1]+u[k1+i-1]+u[k1+nxkk+i]+u[k1-nxkk+i])/4;
+            u[k1+i] = (b[k1+i]+u[k1+i+1]+u[k1+i-1]+u[k1+nxkk+i]+u[k1-nxkk+i])*0.25;
         }
     }
     for (h = 2; h < nykk-1; h = h+2) {
         k1 = levelk+nxkk*h;
         
         for (i = 2; i < nxkk-1; i=i+2) {
-            u[k1+i] = (b[k1+i]+u[k1+i+1]+u[k1+i-1]+u[k1+nxkk+i]+u[k1-nxkk+i])/4;
+            u[k1+i] = (b[k1+i]+u[k1+i+1]+u[k1+i-1]+u[k1+nxkk+i]+u[k1-nxkk+i])*0.25;;
         }
     }
     
@@ -635,21 +647,22 @@ static void gs2d_2color (REAL *u,
         k1 = levelk+nxkk*h;
         
         for (i = 2; i < nxkk-1; i=i+2) {
-            u[k1+i] = (b[k1+i]+u[k1+i+1]+u[k1+i-1]+u[k1+nxkk+i]+u[k1-nxkk+i])/4;
+            u[k1+i] = (b[k1+i]+u[k1+i+1]+u[k1+i-1]+u[k1+nxkk+i]+u[k1-nxkk+i])*0.25;;
         }
     }
     for (h = 2; h < nykk-1; h = h+2) {
         k1 = levelk+nxkk*h;
         
         for (i = 1; i < nxkk-1; i=i+2) {
-            u[k1+i] = (b[k1+i]+u[k1+i+1]+u[k1+i-1]+u[k1+nxkk+i]+u[k1-nxkk+i])/4;
+            u[k1+i] = (b[k1+i]+u[k1+i+1]+u[k1+i-1]+u[k1+nxkk+i]+u[k1-nxkk+i])*0.25;;
         }
     }
 }
 
 /**
- * \fn void gs3d_2color (REAL *u, REAL *b, INT *level, INT k,
- *                       INT maxlevel, INT *nxk, INT *nyk, INT *nzk)
+ * \fn static void gs3d_2color (REAL *u, const REAL *b, const INT *level, 
+ *                              const INT k, const INT maxlevel, const INT *nxk, 
+ *                              const INT *nyk, const INT *nzk)
  * \brief 2 color G-S iteration of 3D problem
  *
  * \param u            Pointer to the vector of DOFs
@@ -662,16 +675,16 @@ static void gs2d_2color (REAL *u,
  * \param nzk          Number of grids in z direction in level k
  *
  * \author Ziteng Wang
- * \date   06/07/201
+ * \date   06/07/2013
  */
-static void gs3d_2color (REAL *u,
-                         REAL *b,
-                         INT  *level,
-                         INT   k,
-                         INT   maxlevel,
-                         INT  *nxk,
-                         INT  *nyk,
-                         INT  *nzk)
+static void gs3d_2color (REAL       *u,
+                         const REAL *b,
+                         const INT  *level,
+                         const INT   k,
+                         const INT   maxlevel,
+                         const INT  *nxk,
+                         const INT  *nyk,
+                         const INT  *nzk)
 {
     const INT levelk = level[k];
     const INT nxkk = nxk[k];
@@ -829,9 +842,9 @@ static void gs3d_2color (REAL *u,
 }
 
 /**
- * \fn static void mg1d (REAL *u, REAL *b, INT *level, INT startlevel, INT maxlevel)
- * \brief V cycle starting from level k, where 0 is the finest level
- *        of 1D poisson equation
+ * \fn static void mg1d (REAL *u, REAL *b, const INT *level, const INT startlevel,
+ *                       const INT maxlevel)
+ * \brief V cycle from level k for 1D Poisson equation, where 0 is finest level
  *
  * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
@@ -842,11 +855,11 @@ static void gs3d_2color (REAL *u,
  * \author Ziteng Wang
  * \date   06/07/2013
  */
-static void mg1d (REAL *u,
-                  REAL *b,
-                  INT  *level,
-                  INT   startlevel,
-                  INT   maxlevel)
+static void mg1d (REAL       *u,
+                  REAL       *b,
+                  const INT  *level,
+                  const INT   startlevel,
+                  const INT   maxlevel)
 {
     INT n,i,j,k,levelk,levelk1;
     
@@ -908,10 +921,9 @@ static void mg1d (REAL *u,
 }
 
 /**
- * \fn static void mg2d (REAL *u, REAL *b, INT *level, INT startlevel,
- *                       INT maxlevel, INT *nxk, INT *nyk)
- * \brief V cycle starting from level k, where 0 is the finest level
- *        of 2D poisson equation
+ * \fn static void mg2d (REAL *u, REAL *b, const INT *level, const INT startlevel,
+ *                       const INT maxlevel, const INT *nxk, const INT *nyk)
+ * \brief V cycle from level k for 2D Poisson equation, where 0 is finest level
  *
  * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
@@ -921,16 +933,18 @@ static void mg1d (REAL *u,
  * \param nxk          Pointer to the number of grids of x direction in level k
  * \param nyk          Pointer to the number of grids of y direction in level k
  *
- * \author Ziteng Wang
+ * \author Ziteng Wang, Chensong Zhang
  * \date   06/07/2013
+ *
+ * Modified by Chensong Zhang on 08/24/2017: Revise logic
  */
-static void mg2d (REAL *u,
-                  REAL *b,
-                  INT  *level,
-                  INT   startlevel,
-                  INT   maxlevel,
-                  INT  *nxk,
-                  INT  *nyk)
+static void mg2d (REAL       *u,
+                  REAL       *b,
+                  const INT  *level,
+                  const INT   startlevel,
+                  const INT   maxlevel,
+                  const INT  *nxk,
+                  const INT  *nyk)
 {
     INT  *prosm = (INT *)malloc(maxlevel*sizeof(INT));
     INT  *presm = (INT *)malloc(maxlevel*sizeof(INT));
@@ -986,15 +1000,10 @@ static void mg2d (REAL *u,
         restriction2d5pt(b, r, level, k, nxk, nyk);
     }
     
-    // coarsest grid
-    if (k==maxlevel-1) {
-        u[level[k]+4] = b[level[k]+4]/4;
-        level[k+1] = level[k]+nxk[k]*nyk[k];
-    }
+    // coarsest grid -- Modified by Chensong Zhang on 08/24/2017
+    u[level[k]+4] = b[level[k]+4]*0.25;
     
     // back sweep
-    
-    // interpolation on finer grids
     for (k = maxlevel-1; k > startlevel; k--) {
         interpolation2d5pt(u, level, k, nxk, nyk);
         // post-smoothing
@@ -1013,10 +1022,10 @@ static void mg2d (REAL *u,
 }
 
 /**
- * \fn static void mg2d (REAL *u, REAL *b, INT *level, INT startlevel,
- *                       INT maxlevel, INT *nxk, INT *nyk, INT *nzk)
- * \brief V cycle starting from level k, where 0 is the finest level
- *        of 3D poisson equation
+ * \fn static void mg3d (REAL *u, REAL *b, const INT *level, const INT startlevel,
+ *                       const INT maxlevel, const INT *nxk, const INT *nyk, 
+ *                       const INT *nzk)
+ * \brief V cycle from level k for 3D Poisson equation, where 0 is finest level
  *
  * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
@@ -1030,14 +1039,14 @@ static void mg2d (REAL *u,
  * \author Ziteng Wang
  * \date   06/07/2013
  */
-static void mg3d (REAL *u,
-                  REAL *b,
-                  INT  *level,
-                  INT   startlevel,
-                  INT   maxlevel,
-                  INT  *nxk,
-                  INT  *nyk,
-                  INT  *nzk)
+static void mg3d (REAL       *u,
+                  REAL       *b,
+                  const INT  *level,
+                  const INT   startlevel,
+                  const INT   maxlevel,
+                  const INT  *nxk,
+                  const INT  *nyk,
+                  const INT  *nzk)
 {
     INT  *presmoothtime = (INT *) malloc((maxlevel+1)*sizeof(INT));
     INT  *prosmoothtime = (INT *) malloc((maxlevel+1)*sizeof(INT));
@@ -1105,8 +1114,9 @@ static void mg3d (REAL *u,
 }
 
 /**
- * \fn static void fmg1d (REAL *u, REAL *b, INT *level, INT maxlevel, INT nx)
- * \brief Full multigrid method of 1D poisson equation
+ * \fn static void fmg1d (REAL *u, REAL *b, const INT *level, const INT maxlevel,
+ *                        const INT nx)
+ * \brief Full multigrid method of 1D Poisson equation
  *
  * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
@@ -1114,70 +1124,69 @@ static void mg3d (REAL *u,
  * \param maxlevel     maxlevel of multigrids
  * \param nx           Number of grids in x direction
  *
- * \author Ziteng Wang
+ * \author Ziteng Wang, Chensong Zhang
  * \date   06/07/2013
  */
-static void fmg1d (REAL *u,
-                   REAL *b,
-                   INT  *level,
-                   INT   maxlevel,
-                   INT   nx)
+static void fmg1d (REAL       *u,
+                   REAL       *b,
+                   const INT  *level,
+                   const INT   maxlevel,
+                   const INT   nx)
 {
     INT n,i,j,k,levelk;
     REAL *r = (REAL *)malloc(level[maxlevel+1]*sizeof(REAL));
     
-    // initial
-    n = level[1] - level[0];
-    
-    for (k = 0; k < maxlevel-1; k++) {
+    for ( k = 0; k < maxlevel-1; k++ ) {
         
         // initial some vectors
         levelk = level[k];
-        for (i = 0; i < (level[k+1]-level[k]); i++) {
-            r[levelk+i] = 0.0;
-        }
-        if (k>0) {
-            for (i = 0; i < (level[k+1]-level[k]); i++) {
-                u[levelk+i] = 0.0;
-            }
+        n = level[k+1] - level[k];
+
+        for ( i = 0; i < n; i++ ) r[levelk+i] = 0.0;
+
+        if ( k > 0 ) {
+            for ( i = 0; i < n; i++ ) u[levelk+i] = 0.0;
         }
         
         residual1d(u, b, r, k, level);
         
         // restriction on coarser grids
         n = level[k+2]-level[k+1];
-        for (j = 1; j < n-1; j++) {
-            b[level[k+1]+j] = (2*r[level[k]+2*j]+r[level[k]+2*j-1]+r[level[k]+2*j+1]);
+        for ( j = 1; j < n-1; j++ ) {
+            b[level[k+1]+j] = 2*r[level[k]+2*j]+r[level[k]+2*j-1]+r[level[k]+2*j+1];
         }
     }
     
     // coarsest grid
-    if (k==maxlevel-1) {
+    if ( k == maxlevel-1 ) {
         i = level[maxlevel-1];
-        u[i+1] = b[i+1]/2;
+        u[i+1] = b[i+1]*0.5;
     }
     
     // FULL multigrid
-    while (k>0) {
+    while ( k > 0 ) {
+        
         n = level[k+1] - level[k];
         // interpolation to finer grids
-        for (i = 0; i < n-1; i++) {
-            u[level[k-1]+2*i] += u[level[k]+i];
-            u[level[k-1]+2*i+1] += (u[level[k]+i]+u[level[k]+i+1])/2;
+        for ( i = 0; i < n-1; i++ ) {
+            u[level[k-1]+2*i]   += u[level[k]+i];
+            u[level[k-1]+2*i+1] += (u[level[k]+i]+u[level[k]+i+1])*0.5;
         }
+        
         k = k-1;
-        for(i=0;i<3;i++) {
+        for ( i = 0; i < 3; i++ ) {
             mg1d(u, b, level, k, maxlevel);
         }
+        
     }
     
     free(r);
 }
 
 /**
- * \fn static void fmg2d (REAL *u, REAL *b, INT *level, INT maxlevel,
- *                        INT nxk, INT nyk)
- * \brief Full multigrid method of 2D poisson equation
+ * \fn static void fmg2d (REAL *u, REAL *b, const INT *level, const INT maxlevel,
+ *                        const INT nxk, const INT nyk)
+ * \brief Full multigrid method of 2D Poisson equation
  *
  * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
@@ -1186,15 +1195,15 @@ static void fmg1d (REAL *u,
  * \param nxk          Number of grids in x direction in level k
  * \param nyk          Number of grids in y direction in level k
  *
- * \author Ziteng Wang
+ * \author Ziteng Wang, Chensong Zhang
  * \date   06/07/2013
  */
-static void fmg2d (REAL *u,
-                   REAL *b,
-                   INT  *level,
-                   INT   maxlevel,
-                   INT  *nxk,
-                   INT  *nyk)
+static void fmg2d (REAL       *u,
+                   REAL       *b,
+                   const INT  *level,
+                   const INT   maxlevel,
+                   const INT  *nxk,
+                   const INT  *nyk)
 {
     INT i,k;
     REAL *r = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
@@ -1207,42 +1216,45 @@ static void fmg2d (REAL *u,
     restriction2d5pt(b, r, level, 0, nxk, nyk);
     
     for (k = 1; k < maxlevel-1; k++) {
+        
         // initial u of coarser grids
-        if (k>0) {
+        if ( k > 0 ) {
             for (i = 0; i < (level[k+1]-level[k]); i++) {
                 u[level[k]+i] = 0.0;
             }
         }
+        
+        // restrict residual on coarser grids
         residual2d(u, b, r, k, level, nxk, nyk);
-        // restriction on coarser grids
         restriction2d5pt(b, r, level, k, nxk, nyk);
     }
     
     // coarsest grid
-    if (k==maxlevel-1) {
-        u[level[k]+4] = b[level[k]+4]/4;
-        //level[k+1] = level[k]+nxk[k]*nyk[k];
+    if ( k == maxlevel-1 ) {
+        u[level[k]+4] = b[level[k]+4]*0.25;
     }
     
     // FULL multigrid
-    while (k>0) {
+    while ( k > 0 ) {
+        
         // interpolation from coarser grid
         interpolation2d5pt(u, level, k, nxk, nyk);
         k = k-1;
-        for(i=0;i<3;i++) {
+        for ( i = 0; i < 3; i++ ) {
             mg2d(u, b, level, k, maxlevel, nxk, nyk);
             residual2d(u, b, r, k, level, nxk, nyk);
             l2norm(r, level, k);
         }
+        
     }
     
     free(r);
 }
 
 /**
- * \fn static void fmg3d (REAL *u, REAL *b, INT *level, INT maxlevel,
- *                        INT *nxk, INT *nyk, INT *nzk)
- * \brief Full multigrid method of 3D poisson equation
+ * \fn static void fmg3d (REAL *u, REAL *b, const INT *level, const INT maxlevel,
+ *                        const INT *nxk, const INT *nyk, const INT *nzk)
+ * \brief Full multigrid method of 3D Poisson equation
  *
  * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
@@ -1252,16 +1264,16 @@ static void fmg2d (REAL *u,
  * \param nyk          Number of grids in y direction in level k
  * \param nzk          Number of grids in z direction in level k
  *
- * \author Ziteng Wang
+ * \author Ziteng Wang, Chensong Zhang
  * \date   06/07/2013
  */
-static void fmg3d (REAL *u,
-                   REAL *b,
-                   INT  *level,
-                   INT   maxlevel,
-                   INT  *nxk,
-                   INT  *nyk,
-                   INT  *nzk)
+static void fmg3d (REAL       *u,
+                   REAL       *b,
+                   const INT  *level,
+                   const INT   maxlevel,
+                   const INT  *nxk,
+                   const INT  *nyk,
+                   const INT  *nzk)
 {
     INT i,k,levelk1;
     REAL *r = (REAL *)malloc(level[maxlevel]*sizeof(REAL));
@@ -1269,7 +1281,7 @@ static void fmg3d (REAL *u,
     // initial
     fasp_darray_set(level[maxlevel], r, 0.0);
     
-    for (k = 0; k < maxlevel-1; k++) {
+    for ( k = 0; k < maxlevel-1; k++ ) {
         residual3d(u, b, r, k, level, nxk, nyk, nzk);
         restriction3d7pt(b, r, level, k, nxk, nyk, nzk);
     }
@@ -1278,27 +1290,33 @@ static void fmg3d (REAL *u,
     u[level[maxlevel-1]+13] = b[level[maxlevel-1]+13]/6;
     
     // FULL multigrid
-    for (k = maxlevel-1; k > 1; k--) {
+    for ( k = maxlevel-1; k > 1; k-- ) {
+        
         // interpolation from coarser grid
         levelk1 = level[k-1];
-        for (i=0;i<level[k]-level[k-1]+1;i++) u[levelk1+i] = 0.0;
+        for ( i = 0; i < level[k]-level[k-1]+1; i++ ) u[levelk1+i] = 0.0;
         interpolation3d7pt(u, level, k, nxk, nyk, nzk);
-        for(i = 0;i<2;i++) {
+        
+        for ( i = 0; i < 2; i++ ) {
             mg3d(u, b, level, k-1, maxlevel, nxk, nyk, nzk);
             residual3d(u, b, r, k-1, level, nxk, nyk, nzk);
         }
+        
     }
-    for (i=0;i<level[1]-level[0]+1;i++) u[i] = 0.0;
+    
+    for ( i = 0; i < level[1]-level[0]+1; i++ ) u[i] = 0.0;
     interpolation3d7pt(u, level, 1, nxk, nyk, nzk);
     mg3d(u, b, level, 0, maxlevel, nxk, nyk, nzk);
+    
     free(r);
 }
 
 /**
- * \fn static INT pcg1d (REAL *u, REAL *b, INT *level, INT maxlevel,
- *                       INT nx, INT rtol, INT maxit, const SHORT prtlvl)
+ * \fn static INT pcg1d (REAL *u, const REAL *b, const INT *level, 
+ *                       const INT maxlevel, const INT nx, const INT rtol,
+ *                       const INT maxit, const SHORT prtlvl)
  *
- * \brief Preconditioned CG method of 1D poisson equation
+ * \brief Preconditioned CG method of 1D Poisson equation
  *
  * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
@@ -1313,12 +1331,12 @@ static void fmg3d (REAL *u,
  * \date   06/07/2013
  */
 static INT pcg1d (REAL        *u,
-                  REAL        *b,
-                  INT         *level,
-                  INT          maxlevel,
-                  INT          nx,
-                  REAL         rtol,
-                  INT          maxit,
+                  const REAL  *b,
+                  const INT   *level,
+                  const INT    maxlevel,
+                  const INT    nx,
+                  const REAL   rtol,
+                  const INT    maxit,
                   const SHORT  prtlvl)
 {
     INT k;
@@ -1381,7 +1399,6 @@ static INT pcg1d (REAL        *u,
         
         // update z and beta
         mg1d(z, r, level, 0, maxlevel);
-        //xequaly(z, r, level, 0);
         rh1 = innerproductxy(r, z, level, 0);
         beta = rh1 / rh0;
         
@@ -1392,7 +1409,7 @@ static INT pcg1d (REAL        *u,
         k++;
     }
     
-    if ( prtlvl > PRINT_NONE ){
+    if ( prtlvl > PRINT_NONE ) {
         if (k >= maxit) {
             printf("### WARNING: V-cycle failed to converge.\n");
         }
@@ -1415,10 +1432,11 @@ FINISHED:
 }
 
 /**
- * \fn static INT pcg2d (REAL *u, REAL *b, INT *level, INT maxlevel, INT *nxk,
- *                       INT *nyk, INT rtol, INT maxit, const SHORT prtlvl)
+ * \fn static INT pcg2d (REAL *u, const REAL *b, const INT *level, 
+ *                       const INT maxlevel, const INT *nxk, const INT *nyk,
+ *                       const INT rtol, const INT maxit, const SHORT prtlvl)
  *
- * \brief Preconditioned CG method of 2D poisson equation
+ * \brief Preconditioned CG method of 2D Poisson equation
  *
  * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
@@ -1434,13 +1452,13 @@ FINISHED:
  * \date   06/07/2013
  */
 static INT pcg2d (REAL        *u,
-                  REAL        *b,
-                  INT         *level,
-                  INT          maxlevel,
-                  INT         *nxk,
-                  INT         *nyk,
-                  REAL         rtol,
-                  INT          maxit,
+                  const REAL  *b,
+                  const INT   *level,
+                  const INT    maxlevel,
+                  const INT   *nxk,
+                  const INT   *nyk,
+                  const REAL   rtol,
+                  const INT    maxit,
                   const SHORT  prtlvl)
 {
     INT k = 0;
@@ -1511,7 +1529,7 @@ static INT pcg2d (REAL        *u,
         k++;
     }
     
-    if ( prtlvl > PRINT_NONE ){
+    if ( prtlvl > PRINT_NONE ) {
         if (k >= maxit) {
             printf("### WARNING: V-cycle failed to converge.\n");
         }
@@ -1534,10 +1552,11 @@ FINISHED:
 }
 
 /**
- * \fn static INT pcg3d (REAL *u, REAL *b, INT *level, INT maxlevel, INT *nxk,
- *                       INT *nyk, INT *nzk, INT rtol, INT maxit,
+ * \fn static INT pcg3d (REAL *u, const REAL *b, const INT *level, 
+ *                       const INT maxlevel, const INT *nxk, const INT *nyk,
+ *                       const INT *nzk, const INT rtol, const INT maxit,
  *                       const SHORT prtlvl)
- * \brief Preconditioned CG method of 2D poisson equation
+ * \brief Preconditioned CG method of 2D Poisson equation
  *
  * \param u            Pointer to the vector of DOFs
  * \param b            Pointer to the right hand vector
@@ -1554,14 +1573,14 @@ FINISHED:
  * \date   06/07/2013
  */
 static INT pcg3d (REAL        *u,
-                  REAL        *b,
-                  INT         *level,
-                  INT          maxlevel,
-                  INT         *nxk,
-                  INT         *nyk,
-                  INT         *nzk,
-                  REAL         rtol,
-                  INT          maxit,
+                  const REAL  *b,
+                  const INT   *level,
+                  const INT    maxlevel,
+                  const INT   *nxk,
+                  const INT   *nyk,
+                  const INT   *nzk,
+                  const REAL   rtol,
+                  const INT    maxit,
                   const SHORT  prtlvl)
 {
     INT i, k = 0, done = 0;
@@ -1615,7 +1634,7 @@ static INT pcg3d (REAL        *u,
         normr = l2norm(r, level, 0);
         resid = normr / normb;
         factor = normr / normr1;
-        if ( prtlvl > PRINT_SOME ){
+        if ( prtlvl > PRINT_SOME ) {
             printf("%6d | %13.6e   | %13.6e  | %10.4f\n",k+1,resid,normr,factor);
         }
         normr1 = normr;
@@ -1623,7 +1642,6 @@ static INT pcg3d (REAL        *u,
         
         // update z and beta
         mg3d(z, r, level, 0, maxlevel, nxk, nyk, nzk);
-        //xequaly(z, r, level, 0);
         rh1 = innerproductxy(r, z, level, 0);
         beta = rh1 / rh0;
         

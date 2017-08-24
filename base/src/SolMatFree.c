@@ -64,7 +64,7 @@ INT fasp_solver_itsolver (mxv_matfree  *mf,
     const SHORT prtlvl        = itparam->print_level;
     const SHORT itsolver_type = itparam->itsolver_type;
     const SHORT stop_type     = itparam->stop_type;
-    const SHORT restart       = itparam->restart;
+    const INT   restart       = itparam->restart;
     const INT   MaxIt         = itparam->maxit;
     const REAL  tol           = itparam->tol;
     
@@ -84,6 +84,7 @@ INT fasp_solver_itsolver (mxv_matfree  *mf,
     
     /* Choose a desirable Krylov iterative solver */
     switch ( itsolver_type ) {
+            
         case SOLVER_CG:
             if ( prtlvl > PRINT_NONE ) printf("\nCalling CG solver (MatFree) ...\n");
             iter = fasp_solver_pcg(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
