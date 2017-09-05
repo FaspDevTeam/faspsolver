@@ -76,7 +76,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     // Expected amount of memory for ILU needed and allocate memory
     iwk = (lfil+2)*nnz;
     
-#if DEBUG_MODE > 1
+#if DEBUG_MODE > 0
     if (iluparam->ILU_type == ILUtp) {
         printf("### WARNING: iludata->type = %d not supported!\n",
                iluparam->ILU_type);
@@ -172,6 +172,7 @@ FINISHED:
  * \date   12/04/2016
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
+ * \note Modified by Chunsheng Feng on 09/06/2017 for iludata->type not inited.
  */
 SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
                                ILU_data   *iludata,
@@ -199,7 +200,17 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     // Expected amount of memory for ILU needed and allocate memory
     iwk = (lfil+2)*nnz;
     
+#if DEBUG_MODE > 0
+    if (iluparam->ILU_type == ILUtp) {
+        printf("### WARNING: iludata->type = %d not supported!\n",
+               iluparam->ILU_type);
+    }
+#endif
+
     // setup preconditioner
+    iludata->type  = 0; //need inited 
+    iludata->iperm = NULL;
+    
     iludata->A   = NULL; // No need for BSR matrix
     iludata->row = iludata->col=n;
     iludata->nb  = nb;
@@ -284,6 +295,7 @@ FINISHED:
  * \date   12/04/2016
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
+ * \note Modified by Chunsheng Feng on 09/06/2017 for iludata->type not inited.
  */
 SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
                                       ILU_data   *iludata,
@@ -311,7 +323,17 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     // Expected amount of memory for ILU needed and allocate memory
     iwk = (lfil+2)*nnz;
     
+#if DEBUG_MODE > 0
+    if (iluparam->ILU_type == ILUtp) {
+        printf("### WARNING: iludata->type = %d not supported!\n",
+               iluparam->ILU_type);
+    }
+#endif
+
     // setup preconditioner
+    iludata->type  = 0; //need inited 
+    iludata->iperm = NULL;
+    
     iludata->A   = NULL; // No need for BSR matrix
     iludata->row = iludata->col=n;
     iludata->nb  = nb;
@@ -411,6 +433,7 @@ FINISHED:
  * \date   12/04/2016
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
+ * \note Modified by Chunsheng Feng on 09/06/2017 for iludata->type not inited.
  */
 SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
                                   dCSRmat    *Ap,
@@ -448,6 +471,15 @@ SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
     iludata->ilevU = NULL;
     iludata->jlevU = NULL;
     iludata->A     = NULL; // No need for BSR matrix
+#if DEBUG_MODE > 0
+    if (iluparam->ILU_type == ILUtp) {
+        printf("### WARNING: iludata->type = %d not supported!\n",
+               iluparam->ILU_type);
+    }
+#endif
+
+    iludata->type  = 0; //need inited 
+    iludata->iperm = NULL;
     
     status = fasp_ilu_dbsr_setup_omp(&A_LU,iludata,iluparam);
     
