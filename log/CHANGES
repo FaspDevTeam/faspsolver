@@ -9,6 +9,7 @@ File Name: CHANGES
 - Revise fasp_ivec_set according to fasp_dvec_set.
 - Fix a bug in ILU setup: ILU type not initialized.
 - Get rid of warnings from Xcode and VS10.
+- Get rid of unsupported C features in VS10.
 
 08/21/2017 FASP 2.0.0:
 - Add duplicated column check for BSR matrices.
