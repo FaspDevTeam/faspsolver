@@ -3,14 +3,14 @@
      261 ./base/include/fasp_const.h
     2879 ./base/include/fasp_functs.h
       51 ./base/include/fasp_grid.h
-    1018 ./base/src/BlaIOUtil.inl
+    1047 ./base/src/BlaIOUtil.inl
      115 ./base/src/BlaSpmvMatFree.inl
      238 ./base/src/ItrAuxiliary.inl
      107 ./base/src/KryUtil.inl
      657 ./base/src/PreAMGAggregation.inl
      341 ./base/src/PreAMGAggregationBSR.inl
     1123 ./base/src/PreAMGAggregationCSR.inl
-     292 ./base/src/PreAMGUtil.inl
+     296 ./base/src/PreAMGUtil.inl
     1679 ./base/src/PreGMG.inl
      223 ./base/src/PreMGRecurAMLI.inl
      219 ./base/src/PreMGSmoother.inl
@@ -19,7 +19,7 @@
       99 ./base/src/AuxConvert.c
       86 ./base/src/AuxGivens.c
      769 ./base/src/AuxGraphics.c
-     800 ./base/src/AuxInput.c
+     801 ./base/src/AuxInput.c
      216 ./base/src/AuxMemory.c
      295 ./base/src/AuxMessage.c
      998 ./base/src/AuxParam.c
@@ -34,7 +34,7 @@
     1523 ./base/src/BlaILUSetupBSR.c
      179 ./base/src/BlaILUSetupCSR.c
     1271 ./base/src/BlaILUSetupSTR.c
-    2295 ./base/src/BlaIO.c
+    2299 ./base/src/BlaIO.c
      197 ./base/src/BlaOrderingCSR.c
      601 ./base/src/BlaSchwarzSetup.c
      966 ./base/src/BlaSmallMat.c
@@ -72,7 +72,7 @@
     1408 ./base/src/KrySPgmres.c
     1384 ./base/src/KrySPminres.c
     1560 ./base/src/KrySPvgmres.c
-     435 ./base/src/PreAMGCoarsenCR.c
+     437 ./base/src/PreAMGCoarsenCR.c
     2086 ./base/src/PreAMGCoarsenRS.c
      879 ./base/src/PreAMGInterp.c
      839 ./base/src/PreAMGInterpEM.c
@@ -101,4 +101,4 @@
      243 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      322 ./base/src/SolWrapper.c
-   85304 total
+   85344 total
