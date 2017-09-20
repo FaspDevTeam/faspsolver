@@ -23,6 +23,8 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
+#define AMG_COARSEN_CR
+
 /*---------------------------------*/
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/

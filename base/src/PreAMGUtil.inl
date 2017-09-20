@@ -66,6 +66,8 @@ typedef ListElement *LinkList; /**< linked list */
 /*--      Private Functions      --*/
 /*---------------------------------*/
 
+#ifndef AMG_COARSEN_CR /* the following code is not needed in CR AMG */
+
 /**
  * \fn static void dispose_node( LinkList node_ptr )
  *
@@ -79,92 +81,6 @@ typedef ListElement *LinkList; /**< linked list */
 static void dispose_node (LinkList node_ptr)
 {
     if (node_ptr) fasp_mem_free( node_ptr );
-}
-
-/**
- * \fn static void remove_node (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
- *                              INT measure, INT index, INT *lists, INT *where)
- *
- * \brief Removes a point from the lists
- *
- * \author Xuehai Huang
- * \date   09/06/2009
- */
-static void remove_node (LinkList *LoL_head_ptr,
-                         LinkList *LoL_tail_ptr,
-                         INT measure,
-                         INT index,
-                         INT *lists,
-                         INT *where)
-{
-    LinkList LoL_head = *LoL_head_ptr;
-    LinkList LoL_tail = *LoL_tail_ptr;
-    LinkList list_ptr = LoL_head;
-    
-    do {
-        if (measure == list_ptr->data) {
-            /* point to be removed is only point on list,
-             which must be destroyed */
-            if (list_ptr->head == index && list_ptr->tail == index) {
-                /* removing only list, so num_left better be 0! */
-                if (list_ptr == LoL_head && list_ptr == LoL_tail) {
-                    LoL_head = NULL;
-                    LoL_tail = NULL;
-                    dispose_node(list_ptr);
-                    
-                    *LoL_head_ptr = LoL_head;
-                    *LoL_tail_ptr = LoL_tail;
-                    return;
-                }
-                else if (LoL_head == list_ptr) { /*removing 1st (max_measure) list */
-                    list_ptr -> next_node -> prev_node = NULL;
-                    LoL_head = list_ptr->next_node;
-                    dispose_node(list_ptr);
-                    
-                    *LoL_head_ptr = LoL_head;
-                    *LoL_tail_ptr = LoL_tail;
-                    return;
-                }
-                else if (LoL_tail == list_ptr) { /* removing last list */
-                    list_ptr -> prev_node -> next_node = NULL;
-                    LoL_tail = list_ptr->prev_node;
-                    dispose_node(list_ptr);
-                    
-                    *LoL_head_ptr = LoL_head;
-                    *LoL_tail_ptr = LoL_tail;
-                    return;
-                }
-                else {
-                    list_ptr -> next_node -> prev_node = list_ptr -> prev_node;
-                    list_ptr -> prev_node -> next_node = list_ptr -> next_node;
-                    dispose_node(list_ptr);
-                    
-                    *LoL_head_ptr = LoL_head;
-                    *LoL_tail_ptr = LoL_tail;
-                    return;
-                }
-            }
-            else if (list_ptr->head == index) { /* index is head of list */
-                list_ptr->head = lists[index];
-                where[lists[index]] = LIST_HEAD;
-                return;
-            }
-            else if (list_ptr->tail == index) { /* index is tail of list */
-                list_ptr->tail = where[index];
-                lists[where[index]] = LIST_TAIL;
-                return;
-            }
-            else { /* index is in middle of list */
-                lists[where[index]] = lists[index];
-                where[lists[index]] = where[index];
-                return;
-            }
-        }
-        list_ptr = list_ptr -> next_node;
-    } while (list_ptr != NULL);
-    
-    printf("### ERROR: This list is empty! %s : %d\n", __FILE__, __LINE__);
-    return;
 }
 
 /**
@@ -191,6 +107,92 @@ static LinkList create_node (INT Item)
     new_node_ptr -> tail = LIST_HEAD;
     
     return (new_node_ptr);
+}
+
+/**
+ * \fn static void remove_node (LinkList *LoL_head_ptr, LinkList *LoL_tail_ptr,
+ *                              INT measure, INT index, INT *lists, INT *where)
+ *
+ * \brief Removes a point from the lists
+ *
+ * \author Xuehai Huang
+ * \date   09/06/2009
+ */
+static void remove_node (LinkList *LoL_head_ptr,
+                         LinkList *LoL_tail_ptr,
+                         INT measure,
+                         INT index,
+                         INT *lists,
+                         INT *where)
+{
+    LinkList LoL_head = *LoL_head_ptr;
+    LinkList LoL_tail = *LoL_tail_ptr;
+    LinkList list_ptr = LoL_head;
+
+    do {
+        if (measure == list_ptr->data) {
+            /* point to be removed is only point on list,
+             which must be destroyed */
+            if (list_ptr->head == index && list_ptr->tail == index) {
+                /* removing only list, so num_left better be 0! */
+                if (list_ptr == LoL_head && list_ptr == LoL_tail) {
+                    LoL_head = NULL;
+                    LoL_tail = NULL;
+                    dispose_node(list_ptr);
+
+                    *LoL_head_ptr = LoL_head;
+                    *LoL_tail_ptr = LoL_tail;
+                    return;
+                }
+                else if (LoL_head == list_ptr) { /*removing 1st (max_measure) list */
+                    list_ptr -> next_node -> prev_node = NULL;
+                    LoL_head = list_ptr->next_node;
+                    dispose_node(list_ptr);
+
+                    *LoL_head_ptr = LoL_head;
+                    *LoL_tail_ptr = LoL_tail;
+                    return;
+                }
+                else if (LoL_tail == list_ptr) { /* removing last list */
+                    list_ptr -> prev_node -> next_node = NULL;
+                    LoL_tail = list_ptr->prev_node;
+                    dispose_node(list_ptr);
+
+                    *LoL_head_ptr = LoL_head;
+                    *LoL_tail_ptr = LoL_tail;
+                    return;
+                }
+                else {
+                    list_ptr -> next_node -> prev_node = list_ptr -> prev_node;
+                    list_ptr -> prev_node -> next_node = list_ptr -> next_node;
+                    dispose_node(list_ptr);
+
+                    *LoL_head_ptr = LoL_head;
+                    *LoL_tail_ptr = LoL_tail;
+                    return;
+                }
+            }
+            else if (list_ptr->head == index) { /* index is head of list */
+                list_ptr->head = lists[index];
+                where[lists[index]] = LIST_HEAD;
+                return;
+            }
+            else if (list_ptr->tail == index) { /* index is tail of list */
+                list_ptr->tail = where[index];
+                lists[where[index]] = LIST_TAIL;
+                return;
+            }
+            else { /* index is in middle of list */
+                lists[where[index]] = lists[index];
+                where[lists[index]] = where[index];
+                return;
+            }
+        }
+        list_ptr = list_ptr -> next_node;
+    } while (list_ptr != NULL);
+
+    printf("### ERROR: This list is empty! %s : %d\n", __FILE__, __LINE__);
+    return;
 }
 
 /**
@@ -286,6 +288,8 @@ static void enter_list (LinkList *LoL_head_ptr,
         return;
     }
 }
+
+#endif
 
 /*---------------------------------*/
 /*--        End of File          --*/

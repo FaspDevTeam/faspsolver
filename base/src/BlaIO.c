@@ -752,6 +752,7 @@ void fasp_dbsr_read (const char  *filename,
     }
     
     fclose(fp);
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 /**
@@ -806,6 +807,7 @@ void fasp_dvecind_read (const char  *filename,
     }
     
     fclose(fp);
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 /**
@@ -857,6 +859,7 @@ void fasp_dvec_read (const char  *filename,
     }
     
     fclose(fp);
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 /**
@@ -898,6 +901,7 @@ void fasp_ivecind_read (const char  *filename,
     }
     
     fclose(fp);
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 /**
@@ -939,6 +943,7 @@ void fasp_ivec_read (const char  *filename,
     }
     
     fclose(fp);
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 /**
@@ -1701,7 +1706,7 @@ void fasp_matrix_read (const char  *filename,
     }
     
     fclose(fp);
-    
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 /**
@@ -1765,7 +1770,7 @@ void fasp_matrix_read_bin (const char *filename,
     }
     
     fclose(fp);
-    
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 /**
@@ -1796,7 +1801,6 @@ void fasp_matrix_write (const char *filename,
                         void       *A,
                         const INT   flag)
 {
-    
     INT fileflag, matrixflag;
     FILE *fp;
     
@@ -1889,7 +1893,6 @@ void fasp_matrix_write (const char *filename,
 void fasp_vector_read (const char *filerhs,
                        void       *b)
 {
-    
     INT   index,flag;
     int   status;
     
@@ -1954,6 +1957,7 @@ void fasp_vector_read (const char *filerhs,
     }
     
     fclose(fp);
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 /**

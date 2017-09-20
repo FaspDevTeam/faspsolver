@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+09/20/2017 FASP 2.0.2:
+- Remove ALL unused variables and SOME unused functions.
+- Rewrite "skip rest of the line" to avoid problems with long lines.
+
 09/20/2017 FASP 2.0.1:
 - Prepare for optimization: 1. vectorization loops.
 - Pass weigth to Jacobi smoother.

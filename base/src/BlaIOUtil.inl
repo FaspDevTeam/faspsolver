@@ -112,6 +112,8 @@ static inline void fasp_dcsr_read_s (FILE        *fp,
         status = fscanf(fp, "%lf", &ddata);
         A->val[i]= ddata;
     }
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dcsr_read_b (FILE        *fp,
@@ -147,6 +149,8 @@ static inline void fasp_dcsr_read_b (FILE        *fp,
         status = fread(&ddata, dlength, 1, fp);
         A->val[i] = endian_convert_real(ddata, dlength, EndianFlag);
     }
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dcoo_read_s (FILE        *fp,
@@ -171,9 +175,11 @@ static inline void fasp_dcoo_read_s (FILE        *fp,
             fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
         }
     }
-    
+
     fasp_format_dcoo_dcsr(&Atmp,A);
     fasp_dcoo_free(&Atmp);
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dcoo_read_b (FILE        *fp,
@@ -208,6 +214,8 @@ static inline void fasp_dcoo_read_b (FILE        *fp,
     
     fasp_format_dcoo_dcsr(&Atmp, A);
     fasp_dcoo_free(&Atmp);
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dbsr_read_s (FILE        *fp,
@@ -251,6 +259,7 @@ static inline void fasp_dbsr_read_s (FILE        *fp,
         A->val[i] = value;
     }
     
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dbsr_read_b (FILE        *fp,
@@ -299,6 +308,8 @@ static inline void fasp_dbsr_read_b (FILE        *fp,
         status = fread(&value, sizeof(REAL), 1, fp);
         A->val[i] = endian_convert_real(value, sizeof(REAL), EndianFlag);
     }
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dstr_read_s (FILE        *fp,
@@ -345,6 +356,7 @@ static inline void fasp_dstr_read_s (FILE        *fp,
         }
     }
     
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dstr_read_b (FILE        *fp,
@@ -401,6 +413,8 @@ static inline void fasp_dstr_read_b (FILE        *fp,
             A->offdiag[nband-k-1][i]=endian_convert_real(value, sizeof(REAL), EndianFlag);
         }
     }
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dmtx_read_s (FILE        *fp,
@@ -432,6 +446,8 @@ static inline void fasp_dmtx_read_s (FILE        *fp,
     
     fasp_format_dcoo_dcsr(&Atmp,A);
     fasp_dcoo_free(&Atmp);
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dmtx_read_b (FILE        *fp,
@@ -467,6 +483,8 @@ static inline void fasp_dmtx_read_b (FILE        *fp,
     
     fasp_format_dcoo_dcsr(&Atmp, A);
     fasp_dcoo_free(&Atmp);
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dmtxsym_read_s (FILE        *fp,
@@ -508,6 +526,8 @@ static inline void fasp_dmtxsym_read_s (FILE        *fp,
     
     fasp_format_dcoo_dcsr(&Atmp,A);
     fasp_dcoo_free(&Atmp);
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dmtxsym_read_b (FILE        *fp,
@@ -566,6 +586,8 @@ static inline void fasp_dmtxsym_read_b (FILE        *fp,
     
     fasp_format_dcoo_dcsr(&Atmp,A);
     fasp_dcoo_free(&Atmp);
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dcsr_write_s (FILE        *fp,
@@ -780,13 +802,14 @@ static inline void fasp_dvec_read_s (FILE        *fp,
         status = fscanf(fp, "%le", &value);
         b->val[i] = value;
     }
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dvec_read_b (FILE        *fp,
                                      dvector     *b,
                                      const SHORT  EndianFlag)
 {
-    
     INT     i, n;
     REAL    value;
     size_t  status;
@@ -799,6 +822,8 @@ static inline void fasp_dvec_read_b (FILE        *fp,
         status = fread(&value, dlength, 1, fp);
         b->val[i]=endian_convert_real(value, dlength, EndianFlag);
     }
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_ivec_read_s (FILE        *fp,
@@ -814,6 +839,8 @@ static inline void fasp_ivec_read_s (FILE        *fp,
         status = fscanf(fp, "%d", &value);
         b->val[i] = value;
     }
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_ivec_read_b (FILE        *fp,
@@ -833,6 +860,7 @@ static inline void fasp_ivec_read_b (FILE        *fp,
     }
     
     fclose(fp);
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dvecind_read_s (FILE        *fp,
@@ -849,6 +877,8 @@ static inline void fasp_dvecind_read_s (FILE        *fp,
         status = fscanf(fp, "%d %le", &index, &value);
         b->val[index] = value;
     }
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dvecind_read_b (FILE        *fp,
@@ -870,6 +900,8 @@ static inline void fasp_dvecind_read_b (FILE        *fp,
         value = endian_convert_real(value, ilength, EndianFlag);
         b->val[index] = value;
     }
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_ivecind_read_s (FILE        *fp,
@@ -885,6 +917,8 @@ static inline void fasp_ivecind_read_s (FILE        *fp,
         status = fscanf(fp, "%d %d", &index, &value);
         b->val[index] = value;
     }
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_ivecind_read_b (FILE        *fp,
@@ -905,6 +939,8 @@ static inline void fasp_ivecind_read_b (FILE        *fp,
         value = endian_convert_real(value, dlength, EndianFlag);
         b->val[index] = value;
     }
+
+    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dvec_write_s (FILE        *fp,
@@ -915,7 +951,6 @@ static inline void fasp_dvec_write_s (FILE        *fp,
     fprintf(fp,"%d\n",m);
     
     for ( i = 0; i < m; ++i ) fprintf(fp,"%le\n",vec->val[i]);
-    
 }
 
 static inline void fasp_dvec_write_b (FILE        *fp,
@@ -940,7 +975,6 @@ static inline void fasp_ivec_write_s (FILE        *fp,
     fprintf(fp,"%d\n",m);
     
     for ( i = 0; i < m; ++i ) fprintf(fp,"%d %d\n",i,vec->val[i]);
-    
 }
 
 static inline void fasp_ivec_write_b (FILE        *fp,
@@ -955,7 +989,6 @@ static inline void fasp_ivec_write_b (FILE        *fp,
         fwrite(&i, sizeof(INT), 1, fp);
         fwrite(&value, sizeof(INT), 1, fp);
     }
-    
 }
 
 static inline void fasp_dvecind_write_s (FILE        *fp,
@@ -966,7 +999,6 @@ static inline void fasp_dvecind_write_s (FILE        *fp,
     fprintf(fp,"%d\n",m);
     
     for ( i = 0; i < m; ++i ) fprintf(fp,"%d %le\n",i,vec->val[i]);
-    
 }
 
 static inline void fasp_dvecind_write_b (FILE        *fp,
@@ -982,7 +1014,6 @@ static inline void fasp_dvecind_write_b (FILE        *fp,
         fwrite(&i, sizeof(INT), 1, fp);
         fwrite(&value, sizeof(REAL), 1, fp);
     }
-    
 }
 
 static inline void fasp_ivecind_write_b (FILE        *fp,
@@ -998,7 +1029,6 @@ static inline void fasp_ivecind_write_b (FILE        *fp,
         fwrite(&i, sizeof(INT), 1, fp);
         fwrite(&value, sizeof(INT), 1, fp);
     }
-    
 }
 
 static inline void fasp_ivecind_write_s (FILE        *fp,
@@ -1009,7 +1039,6 @@ static inline void fasp_ivecind_write_s (FILE        *fp,
     fprintf(fp,"%d\n",m);
     
     for ( i = 0; i < m; ++i ) fprintf(fp, "%d %d\n", i, vec->val[i]);
-    
 }
 
 /*---------------------------------*/
