@@ -104,7 +104,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
-    r = work, z = r+n, c = z + Restart*n, alp = c + Restart*n, tmpx = alp + Restart;
+    r = work; z = r+n; c = z + Restart*n; alp = c + Restart*n; tmpx = alp + Restart;
     
     h = (REAL **)fasp_mem_calloc(Restart, sizeof(REAL *));
     for (i = 0; i < Restart; i++) h[i] = (REAL*)fasp_mem_calloc(Restart, sizeof(REAL));
@@ -293,7 +293,7 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
-    r = work, z = r+n, c = z + Restart*n, alp = c + Restart*n, tmpx = alp + Restart;
+    r = work; z = r+n; c = z + Restart*n; alp = c + Restart*n; tmpx = alp + Restart;
     
     h = (REAL **)fasp_mem_calloc(Restart, sizeof(REAL *));
     for (i = 0; i < Restart; i++) h[i] = (REAL*)fasp_mem_calloc(Restart, sizeof(REAL));

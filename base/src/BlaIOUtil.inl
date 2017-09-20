@@ -118,16 +118,16 @@ static inline void fasp_dcsr_read_b (FILE        *fp,
                                      dCSRmat     *A,
                                      const SHORT  EndianFlag)
 {
-    int   status;
-    INT   i,m,nnz,idata;
-    REAL  ddata;
+    size_t   status;
+    INT      i,m,nnz,idata;
+    REAL     ddata;
     
     // Read CSR matrix
     status = fread(&idata, ilength, 1, fp);
     A->row = endian_convert_int(idata, ilength, EndianFlag);
     m = A->row;
     
-    A->IA=(INT *)fasp_mem_calloc(m+1, sizeof(INT));
+    A->IA = (INT *)fasp_mem_calloc(m+1, sizeof(INT));
     for ( i = 0; i <= m; ++i ) {
         status = fread(&idata, ilength, 1, fp);
         A->IA[i] = endian_convert_int(idata, ilength, EndianFlag);
@@ -161,8 +161,11 @@ static inline void fasp_dcoo_read_s (FILE        *fp,
     dCOOmat Atmp = fasp_dcoo_create(m,n,nnz);
     
     for ( k = 0; k < nnz; k++ ) {
-        if ( status = fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
-            Atmp.rowind[k]=i; Atmp.colind[k]=j; Atmp.val[k] = value;
+        status = fscanf(fp, "%d %d %le", &i, &j, &value);
+        if ( status != EOF ) {
+            Atmp.rowind[k] = i;
+            Atmp.colind[k] = j;
+            Atmp.val[k]    = value;
         }
         else {
             fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
@@ -415,13 +418,12 @@ static inline void fasp_dmtx_read_s (FILE        *fp,
     innz = 0;
     
     while (innz < nnz) {
-        if ( status = fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
-            
+        status = fscanf(fp, "%d %d %le", &i, &j, &value);
+        if ( status != EOF ) {
             Atmp.rowind[innz]=i-1;
             Atmp.colind[innz]=j-1;
             Atmp.val[innz] = value;
             innz = innz + 1;
-            
         }
         else {
             fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
@@ -484,8 +486,8 @@ static inline void fasp_dmtxsym_read_s (FILE        *fp,
     innz = 0;
     
     while (innz < nnz) {
-        if ( status = fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
-            
+        status = fscanf(fp, "%d %d %le", &i, &j, &value);
+        if ( status != EOF ) {
             if (i==j) {
                 Atmp.rowind[innz]=i-1;
                 Atmp.colind[innz]=j-1;
@@ -498,7 +500,6 @@ static inline void fasp_dmtxsym_read_s (FILE        *fp,
                 Atmp.val[innz] = value; Atmp.val[innz+1] = value;
                 innz = innz + 2;
             }
-            
         }
         else {
             fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);

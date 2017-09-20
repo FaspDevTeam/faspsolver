@@ -3,7 +3,7 @@
      261 ./base/include/fasp_const.h
     2879 ./base/include/fasp_functs.h
       51 ./base/include/fasp_grid.h
-    1017 ./base/src/BlaIOUtil.inl
+    1018 ./base/src/BlaIOUtil.inl
      115 ./base/src/BlaSpmvMatFree.inl
      238 ./base/src/ItrAuxiliary.inl
      107 ./base/src/KryUtil.inl
@@ -31,7 +31,7 @@
       79 ./base/src/BlaEigen.c
     1006 ./base/src/BlaFormat.c
     2207 ./base/src/BlaILU.c
-    1492 ./base/src/BlaILUSetupBSR.c
+    1523 ./base/src/BlaILUSetupBSR.c
      179 ./base/src/BlaILUSetupCSR.c
     1271 ./base/src/BlaILUSetupSTR.c
     2295 ./base/src/BlaIO.c
@@ -72,7 +72,7 @@
     1408 ./base/src/KrySPgmres.c
     1384 ./base/src/KrySPminres.c
     1560 ./base/src/KrySPvgmres.c
-     448 ./base/src/PreAMGCoarsenCR.c
+     435 ./base/src/PreAMGCoarsenCR.c
     2086 ./base/src/PreAMGCoarsenRS.c
      879 ./base/src/PreAMGInterp.c
      839 ./base/src/PreAMGInterpEM.c
@@ -101,4 +101,4 @@
      243 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      322 ./base/src/SolWrapper.c
-   85285 total
+   85304 total

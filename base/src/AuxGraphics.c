@@ -152,7 +152,7 @@ INT fasp_dcsr_plot (const dCSRmat  *A,
     offset = 14 + 40 + 16 * 4;
     bmsize = (4 * n + 31) / 32;
     /* struct BMPFILEHEADER (14 bytes) */
-    /* UINT bfType */          put_byte(fp, 'B'), put_byte(fp, 'M');
+    /* UINT bfType */          put_byte(fp, 'B'); put_byte(fp, 'M');
     /* DWORD bfSize */         put_dword(fp, offset + bmsize * 4);
     /* UINT bfReserved1 */     put_word(fp, 0);
     /* UNIT bfReserved2 */     put_word(fp, 0);
@@ -382,7 +382,7 @@ INT fasp_dbsr_plot (const dBSRmat  *A,
     offset = 14 + 40 + 16 * 4;
     bmsize = (4 * n + 31) / 32;
     /* struct BMPFILEHEADER (14 bytes) */
-    /* UINT bfType */          put_byte(fp, 'B'), put_byte(fp, 'M');
+    /* UINT bfType */          put_byte(fp, 'B'); put_byte(fp, 'M');
     /* DWORD bfSize */         put_dword(fp, offset + bmsize * 4);
     /* UINT bfReserved1 */     put_word(fp, 0);
     /* UNIT bfReserved2 */     put_word(fp, 0);
@@ -709,7 +709,7 @@ static INT write_bmp16 (const char   *fname,
     offset = 14 + 40 + 16 * 4;
     bmsize = (4 * n + 31) / 32;
     /* struct BMPFILEHEADER (14 bytes) */
-    /* UINT bfType */          put_byte(fp, 'B'), put_byte(fp, 'M');
+    /* UINT bfType */          put_byte(fp, 'B'); put_byte(fp, 'M');
     /* DWORD bfSize */         put_dword(fp, offset + bmsize * 4);
     /* UINT bfReserved1 */     put_word(fp, 0);
     /* UNIT bfReserved2 */     put_word(fp, 0);

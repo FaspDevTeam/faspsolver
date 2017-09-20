@@ -79,7 +79,7 @@ SHORT fasp_check_diagzero (const dCSRmat *A)
     INT          i,j,k,begin_row,end_row;
     
     for ( i = 0; i < m; ++i ) {
-        begin_row = ia[i], end_row = ia[i+1];
+        begin_row = ia[i]; end_row = ia[i+1];
         for ( k = begin_row; k < end_row; ++k ) {
             j = ja[k];
             if ( i == j ) {

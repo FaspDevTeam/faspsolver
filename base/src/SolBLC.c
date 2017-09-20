@@ -527,8 +527,8 @@ INT fasp_solver_dblc_krylov_sweeping (dBLCmat    *A,
     const SHORT prtlvl = itparam->print_level;
     
     INT status = FASP_SUCCESS;
-    REAL setup_start, setup_end, setup_duration;
-    REAL solve_start, solve_end, solve_duration;
+    REAL setup_start, setup_end, setup_duration = 0;
+    REAL solve_start, solve_end, solve_duration = 0;
     
     /* setup preconditioner */
     fasp_gettime(&setup_start);

@@ -227,13 +227,6 @@ INT fasp_amg_coarsening_cr (const INT   i_0,
 /**
  * \fn static INT GraphAdd (Link *list, INT *head, INT *tail, INT index, INT istack)
  * \brief graphadd
- * 
- * \param list
- * \param head
- * \param tail
- * \param index
- * \param istack
- *
  */
 static INT GraphAdd (Link  *list,
                      INT   *head,
@@ -257,12 +250,6 @@ static INT GraphAdd (Link  *list,
 /**
  * \fn static INT GraphRemove (Link *list, INT *head, INT *tail, INT index)
  * \brief GraphRemove
- * 
- * \param list
- * \param head
- * \param tail
- * \param index
- *
  */
 static INT GraphRemove (Link   *list,
                         INT    *head,

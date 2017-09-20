@@ -89,7 +89,7 @@ void * fasp_mem_realloc (void           *oldmem,
 
 void fasp_mem_free (void *mem);
 
-void fasp_mem_usage ();
+void fasp_mem_usage ( void );
 
 SHORT fasp_mem_iludata_check (const ILU_data *iludata);
 
@@ -215,7 +215,7 @@ void fasp_aux_dQuickSortIndex (REAL  *a,
 
 /*-------- In file: AuxThreads.c --------*/
 
-INT fasp_get_num_threads ();
+INT fasp_get_num_threads ( void );
 
 INT fasp_set_num_threads (const INT nthreads);
 
