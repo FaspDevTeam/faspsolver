@@ -57,7 +57,7 @@ void fasp_solver_amg (const dCSRmat  *A,
     // local variables
     SHORT         status;
     AMG_data *    mgl = fasp_amg_data_create(max_levels);
-    REAL          AMG_start, AMG_end;
+    REAL          AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);

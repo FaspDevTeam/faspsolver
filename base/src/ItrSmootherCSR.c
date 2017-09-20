@@ -118,7 +118,7 @@ void fasp_smoother_dcsr_jacobi (dvector    *u,
 #endif
                 for (i=i_1;i<=i_n;i+=s) {
                     t[i]=bval[i];
-                    begin_row=ia[i],end_row=ia[i+1];
+                    begin_row=ia[i]; end_row=ia[i+1];
                     for (k=begin_row;k<end_row;++k) {
                         j=ja[k];
                         if (i!=j) t[i]-=aval[k]*uval[j];
@@ -161,7 +161,7 @@ void fasp_smoother_dcsr_jacobi (dvector    *u,
 #endif
                 for (i=i_1;i>=i_n;i+=s) {
                     t[i]=bval[i];
-                    begin_row=ia[i],end_row=ia[i+1];
+                    begin_row=ia[i]; end_row=ia[i+1];
                     for (k=begin_row;k<end_row;++k) {
                         j=ja[k];
                         if (i!=j) t[i]-=aval[k]*uval[j];
@@ -269,7 +269,7 @@ void fasp_smoother_dcsr_gs (dvector    *u,
 #endif
                 for (i=i_1;i<=i_n;i+=s) {
                     t = bval[i];
-                    begin_row=ia[i],end_row=ia[i+1];
+                    begin_row=ia[i]; end_row=ia[i+1];
                     
 #if DIAGONAL_PREF // diagonal first
                     d=aval[begin_row];
@@ -333,7 +333,7 @@ void fasp_smoother_dcsr_gs (dvector    *u,
 #endif
                 for (i=i_1;i>=i_n;i+=s) {
                     t=bval[i];
-                    begin_row=ia[i],end_row=ia[i+1];
+                    begin_row=ia[i]; end_row=ia[i+1];
 #if DIAGONAL_PREF // diagonal first
                     d=aval[begin_row];
                     if (ABS(d)>SMALLREAL) {
@@ -438,7 +438,7 @@ void fasp_smoother_dcsr_gs_cf (dvector   *u,
                 for (i = 0; i < nrow; i ++) {
                     if (mark[i] != 1) {
                         t = bval[i];
-                        begin_row = ia[i], end_row = ia[i+1];
+                        begin_row = ia[i]; end_row = ia[i+1];
 #if DIAGONAL_PREF // Added by Chensong on 01/17/2013
                         d = aval[begin_row];
                         for (k = begin_row+1; k < end_row; k ++) {
@@ -491,7 +491,7 @@ void fasp_smoother_dcsr_gs_cf (dvector   *u,
                 for (i = 0; i < nrow; i ++) {
                     if (mark[i] == 1) {
                         t = bval[i];
-                        begin_row = ia[i], end_row = ia[i+1];
+                        begin_row = ia[i]; end_row = ia[i+1];
 #if DIAGONAL_PREF // Added by Chensong on 01/17/2013
                         d = aval[begin_row];
                         for (k = begin_row+1; k < end_row; k ++) {
@@ -551,7 +551,7 @@ void fasp_smoother_dcsr_gs_cf (dvector   *u,
                 for (i = 0; i < nrow; i ++)  {
                     if (mark[i] == 1) {
                         t = bval[i];
-                        begin_row = ia[i],end_row = ia[i+1];
+                        begin_row = ia[i]; end_row = ia[i+1];
 #if DIAGONAL_PREF // Added by Chensong on 09/22/2012
                         d = aval[begin_row];
                         for (k = begin_row+1; k < end_row; k ++) {
@@ -604,7 +604,7 @@ void fasp_smoother_dcsr_gs_cf (dvector   *u,
                 for (i = 0; i < nrow; i ++) {
                     if (mark[i] != 1) {
                         t = bval[i];
-                        begin_row = ia[i],end_row = ia[i+1];
+                        begin_row = ia[i]; end_row = ia[i+1];
 #if DIAGONAL_PREF // Added by Chensong on 09/22/2012
                         d = aval[begin_row];
                         for (k = begin_row+1; k < end_row; k ++) {
@@ -689,7 +689,7 @@ void fasp_smoother_dcsr_sgs (dvector *u,
 #endif
             for (i=0;i<=nm1;++i) {
                 t=bval[i];
-                begin_row=ia[i], end_row=ia[i+1];
+                begin_row=ia[i]; end_row=ia[i+1];
                 for (k=begin_row;k<end_row;++k) {
                     j=ja[k];
                     if (i!=j) t-=aval[k]*uval[j];
@@ -725,7 +725,7 @@ void fasp_smoother_dcsr_sgs (dvector *u,
 #endif
             for (i=nm1-1;i>=0;--i) {
                 t=bval[i];
-                begin_row=ia[i], end_row=ia[i+1];
+                begin_row=ia[i]; end_row=ia[i+1];
                 for (k=begin_row;k<end_row;++k) {
                     j=ja[k];
                     if (i!=j) t-=aval[k]*uval[j];
@@ -812,7 +812,7 @@ void fasp_smoother_dcsr_sor (dvector    *u,
 #endif
                 for (i=i_1; i<=i_n; i+=s) {
                     t=bval[i];
-                    begin_row=ia[i], end_row=ia[i+1];
+                    begin_row=ia[i]; end_row=ia[i+1];
                     for (k=begin_row; k<end_row; ++k) {
                         j=ja[k];
                         if (i!=j)
@@ -851,7 +851,7 @@ void fasp_smoother_dcsr_sor (dvector    *u,
 #endif
                 for (i=i_1;i>=i_n;i+=s) {
                     t=bval[i];
-                    begin_row=ia[i],end_row=ia[i+1];
+                    begin_row=ia[i]; end_row=ia[i+1];
                     for (k=begin_row;k<end_row;++k) {
                         j=ja[k];
                         if (i!=j)
@@ -938,7 +938,7 @@ void fasp_smoother_dcsr_sor_cf (dvector    *u,
                 for (i = 0; i < nrow; i ++) {
                     if (mark[i] == 0 || mark[i] == 2) {
                         t = bval[i];
-                        begin_row = ia[i], end_row = ia[i+1];
+                        begin_row = ia[i]; end_row = ia[i+1];
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
                             if (i!=j) t -= aval[k]*uval[j];
@@ -975,7 +975,7 @@ void fasp_smoother_dcsr_sor_cf (dvector    *u,
                 for (i = 0; i < nrow; i ++) {
                     if (mark[i] == 1) {
                         t = bval[i];
-                        begin_row = ia[i], end_row = ia[i+1];
+                        begin_row = ia[i]; end_row = ia[i+1];
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
                             if (i!=j) t -= aval[k]*uval[j];
@@ -1015,7 +1015,7 @@ void fasp_smoother_dcsr_sor_cf (dvector    *u,
                 for (i = 0; i < nrow; i ++) {
                     if (mark[i] == 1) {
                         t = bval[i];
-                        begin_row = ia[i], end_row = ia[i+1];
+                        begin_row = ia[i]; end_row = ia[i+1];
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
                             if (i!=j) t -= aval[k]*uval[j];
@@ -1052,7 +1052,7 @@ void fasp_smoother_dcsr_sor_cf (dvector    *u,
                 for (i = 0; i < nrow; i ++) {
                     if (mark[i] != 1) {
                         t = bval[i];
-                        begin_row = ia[i], end_row = ia[i+1];
+                        begin_row = ia[i]; end_row = ia[i+1];
                         for (k = begin_row; k < end_row; k ++) {
                             j = ja[k];
                             if (i!=j) t -= aval[k]*uval[j];
@@ -1214,7 +1214,7 @@ void fasp_smoother_dcsr_kaczmarz (dvector    *u,
 #endif
                 for (i=i_1;i<=i_n;i+=s) {
                     temp1 = 0; temp2 = 0;
-                    begin_row=ia[i], end_row=ia[i+1];
+                    begin_row=ia[i]; end_row=ia[i+1];
                     for (k=begin_row;k<end_row;++k) {
                         j=ja[k];
                         temp1 += aval[k]*aval[k];
@@ -1261,7 +1261,7 @@ void fasp_smoother_dcsr_kaczmarz (dvector    *u,
 #endif
                 for (i=i_1;i>=i_n;i+=s) {
                     temp1 = 0; temp2 = 0;
-                    begin_row=ia[i], end_row=ia[i+1];
+                    begin_row=ia[i]; end_row=ia[i+1];
                     for (k=begin_row;k<end_row;++k) {
                         j=ja[k];
                         temp1 += aval[k]*aval[k];
@@ -1354,7 +1354,7 @@ void fasp_smoother_dcsr_L1diag (dvector    *u,
 #endif
                 for (i=i_1;i<=i_n;i+=s) {
                     t[i]=bval[i]; d[i]=0.0;
-                    begin_row=ia[i],end_row=ia[i+1];
+                    begin_row=ia[i]; end_row=ia[i+1];
                     for (k=begin_row;k<end_row;++k) {
                         j=ja[k];
                         t[i]-=aval[k]*uval[j];
@@ -1395,7 +1395,7 @@ void fasp_smoother_dcsr_L1diag (dvector    *u,
 #endif
                 for (i=i_1;i>=i_n;i+=s) {
                     t[i]=bval[i];d[i]=0.0;
-                    begin_row=ia[i],end_row=ia[i+1];
+                    begin_row=ia[i]; end_row=ia[i+1];
                     for (k=begin_row;k<end_row;++k) {
                         j=ja[k];
                         t[i]-=aval[k]*uval[j];
@@ -1466,7 +1466,7 @@ void fasp_smoother_dcsr_gs_rb3d (dvector    *u,
 #if 1 // TODO: Check! Why? --Chensong
             for ( i = maximap; i < nrow; i++ ) {
                 t = bval[i];
-                begin_row = ia[i], end_row = ia[i+1];
+                begin_row = ia[i]; end_row = ia[i+1];
                 for ( k = begin_row; k < end_row; k++ ) {
                     j = ja[k];
                     if (i!=j) t -= aa[k]*uval[j];
@@ -1484,7 +1484,7 @@ void fasp_smoother_dcsr_gs_rb3d (dvector    *u,
 #if 1 // TODO: Check! Why? --Chensong
             for ( i = nrow-1; i >= maximap; i-- ) {
                 t = bval[i];
-                begin_row = ia[i],end_row = ia[i+1];
+                begin_row = ia[i]; end_row = ia[i+1];
                 for ( k = begin_row; k < end_row; k ++ ) {
                     j = ja[k];
                     if (i!=j) t -= aa[k]*uval[j];
@@ -1554,7 +1554,7 @@ static void swep2db (INT   *ia,
             i0 = mark[i0]-1; // Fortran to C
             if (i0>=0 ) {
                 t = f[i0];
-                begin_row = ia[i0], end_row = ia[i0+1];
+                begin_row = ia[i0]; end_row = ia[i0+1];
                 for (ii = begin_row; ii < end_row; ii ++) {
                     jj = ja[ii];
                     if (i0!=jj) t -= aa[ii]*u[jj];
@@ -1625,7 +1625,7 @@ static void swep3db (INT   *ia,
                 i0 = mark[i0]-1;  // Fortran to C
                 if (i0>=0 ) {
                     t = f[i0];
-                    begin_row = ia[i0], end_row = ia[i0+1];
+                    begin_row = ia[i0]; end_row = ia[i0+1];
                     for (ii = begin_row; ii < end_row; ii ++) {
                         jj = ja[ii];
                         if (i0!=jj) t -= aa[ii]*u[jj];
@@ -2015,7 +2015,7 @@ static void swep2df (INT   *ia,
             i0 = mark[i0]-1; //Fortran to C
             if (i0>=0 ) {
                 t = f[i0];
-                begin_row = ia[i0], end_row = ia[i0+1];
+                begin_row = ia[i0]; end_row = ia[i0+1];
                 for (ii = begin_row; ii < end_row; ii ++) {
                     jj = ja[ii];
                     if (i0!=jj) t -= aa[ii]*u[jj];
@@ -2085,7 +2085,7 @@ static void swep3df (INT   *ia,
                 
                 if (i0>=0 ) {
                     t = f[i0];
-                    begin_row = ia[i0], end_row = ia[i0+1];
+                    begin_row = ia[i0]; end_row = ia[i0+1];
                     for (ii = begin_row; ii < end_row; ii ++) {
                         jj = ja[ii];
                         if (i0!=jj) t -= aa[ii]*u[jj];

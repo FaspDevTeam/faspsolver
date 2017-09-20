@@ -62,7 +62,7 @@ precond *fasp_precond_setup (const SHORT   precond_type,
             
         pc = (precond *)fasp_mem_calloc(1, sizeof(precond));
         max_levels = amgparam->max_levels;
-        nnz=A->nnz, m=A->row, n=A->col;    
+        nnz = A->nnz; m = A->row; n = A->col;
             
         // initialize A, b, x for mgl[0]    
         mgl=fasp_amg_data_create(max_levels);
@@ -101,7 +101,7 @@ precond *fasp_precond_setup (const SHORT   precond_type,
             
         pc = (precond *)fasp_mem_calloc(1, sizeof(precond));
         max_levels = amgparam->max_levels;
-        nnz=A->nnz, m=A->row, n=A->col;    
+        nnz = A->nnz; m = A->row; n = A->col;
             
         // initialize A, b, x for mgl[0]    
         mgl=fasp_amg_data_create(max_levels);

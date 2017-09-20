@@ -60,7 +60,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
     
     // local variables
-    INT lfil=iluparam->ILU_lfil;
+    INT lfil = iluparam->ILU_lfil;
     INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
     
     REAL    setup_start, setup_end, setup_duration;
@@ -84,11 +84,11 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
 #endif
 
     // setup preconditioner
-    iludata->type  = 0; //need inited 
+    iludata->type  = 0; // Must be initialized
     iludata->iperm = NULL;
-    iludata->A   = NULL; // No need for BSR matrix
-    iludata->row = iludata->col = n;
-    iludata->nb  = nb;
+    iludata->A     = NULL; // No need for BSR matrix
+    iludata->row   = iludata->col = n;
+    iludata->nb    = nb;
     iludata->ilevL = iludata->jlevL = NULL;
     iludata->ilevU = iludata->jlevU = NULL;
     
@@ -183,7 +183,7 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
     
     // local variables
-    INT lfil=iluparam->ILU_lfil;
+    INT lfil = iluparam->ILU_lfil;
     INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
     
     REAL    setup_start, setup_end, setup_duration;
@@ -208,12 +208,11 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
 #endif
 
     // setup preconditioner
-    iludata->type  = 0; //need inited 
+    iludata->type  = 0; // Must be initialized
     iludata->iperm = NULL;
-    
-    iludata->A   = NULL; // No need for BSR matrix
-    iludata->row = iludata->col=n;
-    iludata->nb  = nb;
+    iludata->A     = NULL; // No need for BSR matrix
+    iludata->row   = iludata->col=n;
+    iludata->nb    = nb;
     
     ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
     uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
@@ -231,7 +230,7 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     iludata->nwork = nwork;
     iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu,sizeof(INT));
     iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
-    iludata->work = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
+    iludata->work  = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
     memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
     fasp_darray_set(nzlu*nb2, iludata->luval, 0.0);
     
@@ -257,7 +256,7 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     }
     
     if ( iwk < nzlu ) {
-        printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
+        printf("### ERROR: ILU requires more memory %dB!\n", iwk-nzlu);
         status = ERROR_SOLVER_ILUSETUP;
         goto FINISHED;
     }
@@ -305,7 +304,7 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
     
     // local variables
-    INT lfil=iluparam->ILU_lfil;
+    INT lfil = iluparam->ILU_lfil;
     INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
     
     REAL    setup_start, setup_end, setup_duration;
@@ -331,16 +330,14 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
 #endif
 
     // setup preconditioner
-    iludata->type  = 0; //need inited 
+    iludata->type  = 0; // Must be initialized
     iludata->iperm = NULL;
-    
-    iludata->A   = NULL; // No need for BSR matrix
-    iludata->row = iludata->col=n;
-    iludata->nb  = nb;
+    iludata->A     = NULL; // No need for BSR matrix
+    iludata->row   = iludata->col=n;
+    iludata->nb    = nb;
     
     ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
     uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
-    
     
 #if DEBUG_MODE > 1
     printf("### DEBUG: symbolic factorization ... \n ");
@@ -361,10 +358,10 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     iludata->nwork = nwork;
     iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu,sizeof(INT));
     iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
-    iludata->work = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
+    iludata->work  = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
     memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
     fasp_darray_set(nzlu*nb2, iludata->luval, 0.0);
-    iludata->uptr = NULL,iludata->ic = NULL, iludata->icmap = NULL;
+    iludata->uptr = NULL; iludata->ic = NULL; iludata->icmap = NULL;
     
     topologic_sort_ILU(iludata);
     
@@ -394,7 +391,7 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     }
     
     if ( iwk < nzlu ) {
-        printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
+        printf("### ERROR: ILU requires more memory %dB!\n", iwk-nzlu);
         status = ERROR_SOLVER_ILUSETUP;
         goto FINISHED;
     }
@@ -471,6 +468,7 @@ SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
     iludata->ilevU = NULL;
     iludata->jlevU = NULL;
     iludata->A     = NULL; // No need for BSR matrix
+    
 #if DEBUG_MODE > 0
     if (iluparam->ILU_type == ILUtp) {
         printf("### WARNING: iludata->type = %d not supported!\n",
@@ -478,7 +476,8 @@ SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
     }
 #endif
 
-    iludata->type  = 0; //need inited 
+    // setup preconditioner
+    iludata->type  = 0; // Must be initialized
     iludata->iperm = NULL;
     
     status = fasp_ilu_dbsr_setup_omp(&A_LU,iludata,iluparam);

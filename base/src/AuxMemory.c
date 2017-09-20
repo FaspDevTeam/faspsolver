@@ -170,14 +170,14 @@ void fasp_mem_free (void *mem)
 }
 
 /**
- * \fn void fasp_mem_usage ()
+ * \fn void fasp_mem_usage ( void )
  *
  * \brief Show total allocated memory currently
  *
  * \author Chensong Zhang
  * \date   2010/08/12
  */
-void fasp_mem_usage ()
+void fasp_mem_usage ( void )
 {
 #if DEBUG_MODE > 1
     printf("### DEBUG: Number of alloc = %d, allocated memory = %.3fMB.\n",

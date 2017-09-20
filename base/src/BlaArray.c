@@ -92,8 +92,8 @@ void fasp_blas_darray_ax (const INT    n,
  */
 void fasp_blas_darray_axpy (const INT    n,
                             const REAL   a,
-                            const REAL *restrict x,
-                            REAL       *restrict y)
+                            const REAL  *x,
+                            REAL        *y)
 {
     SHORT use_openmp = FALSE;
     INT   i;
@@ -344,11 +344,11 @@ void fasp_blas_darray_axpy_nc7 (const REAL   a,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-void fasp_blas_darray_axpyz (const INT   n,
-                             const REAL  a,
-                             const REAL *restrict x,
-                             const REAL *restrict y,
-                             REAL       *restrict z)
+void fasp_blas_darray_axpyz (const INT    n,
+                             const REAL   a,
+                             const REAL  *x,
+                             const REAL  *y,
+                             REAL        *z)
 {
     SHORT use_openmp = FALSE;
     INT   i;

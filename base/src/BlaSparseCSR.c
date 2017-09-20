@@ -766,7 +766,7 @@ SHORT fasp_dcsr_regdiag (dCSRmat    *A,
     SHORT status=ERROR_UNKNOWN;
     
     for (i=0;i<m;++i) {
-        begin_row=ia[i],end_row=ia[i+1];
+        begin_row=ia[i]; end_row=ia[i+1];
         for (k=begin_row;k<end_row;++k) {
             j=ja[k];
             if (i==j) {
@@ -883,7 +883,7 @@ void fasp_icsr_trans (const iCSRmat *A,
     // second pass: form A'
     if (A->val != NULL) {
         for (i=0;i<n;++i) {
-            ibegin=A->IA[i], iend=A->IA[i+1];
+            ibegin=A->IA[i]; iend=A->IA[i+1];
             for (p=ibegin;p<iend;p++) {
                 j=A->JA[p]+1;
                 k=AT->IA[j];
@@ -895,7 +895,7 @@ void fasp_icsr_trans (const iCSRmat *A,
     }
     else {
         for (i=0;i<n;++i) {
-            ibegin=A->IA[i], iend=A->IA[i+1];
+            ibegin=A->IA[i]; iend=A->IA[i+1];
             for (p=ibegin;p<iend;p++) {
                 j=A->JA[p]+1;
                 k=AT->IA[j];

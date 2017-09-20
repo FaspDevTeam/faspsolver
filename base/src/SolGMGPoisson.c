@@ -58,7 +58,7 @@ INT fasp_poisson_gmg1d (REAL         *u,
     REAL      *u0, *r0, *b0;
     REAL       norm_r, norm_r0, norm_r1, factor, error = BIGREAL;
     INT        i, *level, count = 0;
-    REAL       AMG_start, AMG_end;
+    REAL       AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -183,7 +183,7 @@ INT fasp_poisson_gmg2d (REAL         *u,
     REAL *u0, *b0, *r0;
     REAL norm_r, norm_r0, norm_r1, factor, error = BIGREAL;
     INT i, k, count = 0, *nxk, *nyk, *level;
-    REAL AMG_start, AMG_end;
+    REAL AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -317,10 +317,10 @@ INT fasp_poisson_gmg3d (REAL         *u,
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
     
-    REAL *u0,*r0,*b0;
-    REAL norm_r,norm_r0,norm_r1, factor, error = BIGREAL;
-    INT i, k, count = 0, *nxk, *nyk, *nzk, *level;
-    REAL AMG_start, AMG_end;
+    REAL       *u0, *r0, *b0;
+    REAL       norm_r,norm_r0,norm_r1, factor, error = BIGREAL;
+    INT        i, k, count = 0, *nxk, *nyk, *nzk, *level;
+    REAL       AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -447,10 +447,10 @@ void fasp_poisson_fgmg1d (REAL         *u,
                           const SHORT   prtlvl)
 {
     const REAL  atol = 1.0E-15;
-    REAL       *u0,*r0,*b0;
+    REAL        *u0, *r0, *b0;
     REAL        norm_r0, norm_r;
     int         i, *level;
-    REAL        AMG_start, AMG_end;
+    REAL        AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -541,10 +541,10 @@ void fasp_poisson_fgmg2d (REAL         *u,
                           const SHORT   prtlvl)
 {
     const REAL atol = 1.0E-15;
-    REAL *u0,*r0,*b0;
-    REAL norm_r0, norm_r;
-    INT i, k, *nxk, *nyk, *level;
-    REAL       AMG_start, AMG_end;
+    REAL       *u0, *r0, *b0;
+    REAL       norm_r0, norm_r;
+    INT        i, k, *nxk, *nyk, *level;
+    REAL       AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -649,10 +649,10 @@ void fasp_poisson_fgmg3d (REAL         *u,
                           const SHORT   prtlvl)
 {
     const REAL  atol = 1.0E-15;
-    REAL       *u0,*r0,*b0;
+    REAL        *u0, *r0, *b0;
     REAL        norm_r0, norm_r;
     int         i, k, *nxk, *nyk, *nzk, *level;
-    REAL        AMG_start, AMG_end;
+    REAL        AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -758,10 +758,10 @@ INT fasp_poisson_gmgcg1d (REAL         *u,
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
     
-    REAL      *u0,*r0,*b0;
+    REAL       *u0, *r0, *b0;
     REAL       norm_r0;
     int        i, *level, iter = 0;
-    REAL       AMG_start, AMG_end;
+    REAL       AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -853,10 +853,10 @@ INT fasp_poisson_gmgcg2d (REAL         *u,
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
     
-    REAL      *u0,*r0,*b0;
+    REAL       *u0,*r0,*b0;
     REAL       norm_r0;
     int        i, k, *nxk, *nyk, *level, iter = 0;
-    REAL       AMG_start, AMG_end;
+    REAL       AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -963,10 +963,10 @@ INT fasp_poisson_gmgcg3d (REAL         *u,
     const REAL atol = 1.0E-15;
     const INT  max_itr_num = 100;
     
-    REAL      *u0,*r0,*b0;
+    REAL       *u0,*r0,*b0;
     REAL       norm_r0;
     int        i, k, *nxk, *nyk, *nzk, *level, iter = 0;
-    REAL       AMG_start, AMG_end;
+    REAL       AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);

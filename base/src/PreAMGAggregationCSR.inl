@@ -74,7 +74,7 @@ static void pair_aggregate_init (const dCSRmat  *A,
     }
     
     for (i=0; i<row; ++i) {
-        rowsum = 0.0, max = 0.0, absrowsum = 0.0;
+        rowsum = 0.0; max = 0.0; absrowsum = 0.0;
         aii = val[ia[i]];
         for (j=ia[i]+1; j<ia[i+1]; ++j) {
             aij = val[j];
@@ -493,13 +493,13 @@ static void first_pairwise_unsymm (const dCSRmat * A,
                                    REAL          * s,
                                    INT           * NumAggregates)
 {
-    const INT row  = A->row;
+    const INT   row  = A->row;
     const INT  *AIA  = A->IA;
     const INT  *AJA  = A->JA;
     const REAL *Aval = A->val;
     
     INT i, j, row_start, row_end, nc, col, k, ipair, node, checkdd;
-    REAL mu, aii, ajj, aij, aji, tent, vals, val;
+    REAL mu, aii, ajj, aij, aji, tent, vals, val = 0;
     REAL del1, del2, eta1, eta2, sig1, sig2, rsi, rsj, epsr,del12;
     
     nc = 0;
@@ -564,7 +564,7 @@ static void first_pairwise_unsymm (const dCSRmat * A,
             ajj = Aval[AIA[col]];
             aji = 0.0;
             
-            for(k = AIA[col]; k < AIA[col+1]; ++k) {
+            for (k = AIA[col]; k < AIA[col+1]; ++k) {
                 if (AJA[k] == i) {
                     aji = Aval[k];
                     break;
@@ -709,7 +709,7 @@ static void second_pairwise_unsymm (const dCSRmat  *A,
     INT *Tnode;
     
     INT  col,ipair,Tsize, row_start, row_end, Semipd, nc, node;
-    REAL mu, aii, ajj, aij, tmp, val, aji, vals;
+    REAL mu, aii, ajj, aij, tmp, aji, vals, val = 0;
     REAL del1, del2, eta1, eta2, sig1, sig2, rsi, rsj, epsr,del12;
     
     Tval  = (REAL*)fasp_mem_calloc(row, sizeof(REAL));
@@ -849,7 +849,7 @@ static void second_pairwise_unsymm (const dCSRmat  *A,
             Semipd = aggregation_quality(A, map1, s1, i, ipair, dopass, k_tg);
             if (!Semipd) {
                 ipair = -1;
-                l = 0, m = 0, ijtent = 0;
+                l = 0; m = 0; ijtent = 0;
                 while (l < Tsize) {
                     if (Tnode[m] >= 0) {
                         tmp = Tval[m];

@@ -28,7 +28,7 @@
 INT thread_ini_flag = 0;
 
 /**
- * \fn     INT fasp_get_num_threads ()
+ * \fn     INT fasp_get_num_threads ( void )
  *
  * \brief  Get the number of threads for thread related functions.
  *
@@ -37,7 +37,7 @@ INT thread_ini_flag = 0;
  * \author Chunsheng Feng, Xiaoqiang Yue and Zheng Li
  * \date   June/15/2012
  */
-INT fasp_get_num_threads ()
+INT fasp_get_num_threads ( void )
 {
     static INT nthreads;
     
