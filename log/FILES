@@ -1,15 +1,18 @@
     1206 ./base/include/fasp.h
      404 ./base/include/fasp_block.h
-     261 ./base/include/fasp_const.h
+     263 ./base/include/fasp_const.h
     2879 ./base/include/fasp_functs.h
       51 ./base/include/fasp_grid.h
     1047 ./base/src/BlaIOUtil.inl
      115 ./base/src/BlaSpmvMatFree.inl
-     238 ./base/src/ItrAuxiliary.inl
+     198 ./base/src/ItrAuxiliary.inl
+     595 ./base/src/ItrSmootherRBGS.inl
+     597 ./base/src/ItrSmootherUtil.inl
      107 ./base/src/KryUtil.inl
-     657 ./base/src/PreAMGAggregation.inl
-     341 ./base/src/PreAMGAggregationBSR.inl
-    1123 ./base/src/PreAMGAggregationCSR.inl
+     231 ./base/src/PreAMGAggregation.inl
+     292 ./base/src/PreAMGAggregationBSR.inl
+      89 ./base/src/PreAMGAggregationCSR.inl
+    1294 ./base/src/PreAMGAggregationUA.inl
      296 ./base/src/PreAMGUtil.inl
     1679 ./base/src/PreGMG.inl
      223 ./base/src/PreMGRecurAMLI.inl
@@ -55,9 +58,9 @@
     1859 ./base/src/BlaSpmvSTR.c
      318 ./base/src/BlaVector.c
     1696 ./base/src/ItrSmootherBSR.c
-    2329 ./base/src/ItrSmootherCSR.c
+    1516 ./base/src/ItrSmootherCSR.c
       93 ./base/src/ItrSmootherCSRcr.c
-     611 ./base/src/ItrSmootherCSRpoly.c
+     650 ./base/src/ItrSmootherCSRpoly.c
     1902 ./base/src/ItrSmootherSTR.c
     1671 ./base/src/KryPbcgs.c
     1512 ./base/src/KryPcg.c
@@ -78,10 +81,10 @@
      839 ./base/src/PreAMGInterpEM.c
      134 ./base/src/PreAMGSetupCR.c
      317 ./base/src/PreAMGSetupRS.c
-     631 ./base/src/PreAMGSetupSA.c
-     367 ./base/src/PreAMGSetupSABSR.c
-     394 ./base/src/PreAMGSetupUA.c
-     369 ./base/src/PreAMGSetupUABSR.c
+     777 ./base/src/PreAMGSetupSA.c
+     525 ./base/src/PreAMGSetupSABSR.c
+     402 ./base/src/PreAMGSetupUA.c
+     381 ./base/src/PreAMGSetupUABSR.c
     1067 ./base/src/PreBLC.c
     1137 ./base/src/PreBSR.c
      671 ./base/src/PreCSR.c
@@ -101,4 +104,4 @@
      243 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      322 ./base/src/SolWrapper.c
-   85344 total
+   85833 total

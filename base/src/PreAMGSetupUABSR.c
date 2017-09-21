@@ -29,8 +29,9 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-#include "PreAMGAggregationBSR.inl"
 #include "PreAMGAggregation.inl"
+#include "PreAMGAggregationBSR.inl"
+#include "PreAMGAggregationUA.inl"
 
 static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr *, AMG_param *);
 
@@ -181,17 +182,18 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr   *mgl,
         /*-- get the diagonal inverse --*/
         mgl[lvl].diaginv = fasp_dbsr_getdiaginv(&mgl[lvl].A);
         
-        /*-- Aggregation --*/
-        //mgl[lvl].PP = condenseBSR(&mgl[lvl].A);
-        mgl[lvl].PP = condenseBSRLinf(&mgl[lvl].A);
         // TODO: Try different way to form the scalar block!  -- Xiaozhe
-        
+        // TODO: Use a generic interface for condensation!    -- Chensong
+        //       mgl[lvl].PP = condenseBSR(&mgl[lvl].A);
+        mgl[lvl].PP = condenseBSRLinf(&mgl[lvl].A);
+
+        /*-- Aggregation --*/
         switch ( param->aggregation_type ) {
 
             case VMB: // VMB aggregation
 
-                status = aggregation_vmb(&mgl[lvl].PP, &vertices[lvl], param,
-                                         lvl+1, &Neighbor[lvl], &num_aggs[lvl]);
+                status = aggregation_vmb (&mgl[lvl].PP, &vertices[lvl], param,
+                                          lvl+1, &Neighbor[lvl], &num_aggs[lvl]);
 
                 /*-- Choose strength threshold adaptively --*/
                 if ( num_aggs[lvl]*4 > mgl[lvl].PP.row )
@@ -201,12 +203,22 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr   *mgl,
 
                 break;
 
-            default: // pairwise matching aggregation
+            case USPAIR: // unsymmetric pairwise matching aggregation
 
                 mgl_csr[lvl].A = mgl[lvl].PP;
-                status = aggregation_pairwise(mgl_csr, param, lvl, vertices, &num_aggs[lvl]);
+                status = aggregation_usympair (mgl_csr, param, lvl, vertices,
+                                               &num_aggs[lvl]);
 
-                // TODO: Need to design better algorithm for this part -- Xiaozhe
+                break;
+
+            default: // symmetric pairwise matching aggregation
+
+                mgl_csr[lvl].A = mgl[lvl].PP;
+                status = aggregation_symmpair (mgl_csr, param, lvl, vertices,
+                                              &num_aggs[lvl]);
+
+                // TODO: Need to design better algorithm for pairwise BSR -- Xiaozhe
+                // TODO: Unsymmetric pairwise aggregation not implemented -- Chensong
 
                break;
         }

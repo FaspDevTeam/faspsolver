@@ -165,8 +165,10 @@
 /**
  * \brief Definition of aggregation types
  */
-#define PAIRWISE                1  /**< pairwise aggregation */
+#define PAIRWISE                1  /**< pairwise aggregation, default is SPAIR */
 #define VMB                     2  /**< VMB aggregation */
+#define USPAIR                  3  /**< unsymmetric pairwise aggregation */
+#define SPAIR                   4  /**< symmetric pairwise aggregation */
 
 /**
  * \brief Definition of cycle types

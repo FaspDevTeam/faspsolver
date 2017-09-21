@@ -1122,10 +1122,10 @@ typedef struct {
     REAL ILU_permtol;    /**< permutation tolerance */
 
     // parameter for Schwarz
-    INT SWZ_mmsize;  /**< maximal block size */
-    INT SWZ_maxlvl;  /**< maximal levels */
-    INT SWZ_type;    /**< type of Schwarz method */
-    INT SWZ_blksolver; /**< type of Schwarz block solver */
+    INT SWZ_mmsize;      /**< maximal block size */
+    INT SWZ_maxlvl;      /**< maximal levels */
+    INT SWZ_type;        /**< type of Schwarz method */
+    INT SWZ_blksolver;   /**< type of Schwarz block solver */
 
     // parameters for AMG
     SHORT AMG_type;                /**< Type of AMG */
@@ -1145,7 +1145,7 @@ typedef struct {
     SHORT AMG_coarse_scaling;      /**< switch of scaling of the coarse grid correction */
     SHORT AMG_amli_degree;         /**< degree of the polynomial used by AMLI cycle */
     SHORT AMG_nl_amli_krylov_type; /**< type of Krylov method used by nonlinear AMLI cycle */
-    INT AMG_SWZ_levels;        /**< number of levels use Schwarz smoother */
+    INT AMG_SWZ_levels;            /**< number of levels use Schwarz smoother */
 
     // parameters for classical AMG
     SHORT AMG_coarsening_type;     /**< coarsening type */
@@ -1155,7 +1155,7 @@ typedef struct {
     REAL AMG_truncation_threshold; /**< truncation factor for interpolation */
     REAL AMG_max_row_sum;          /**< maximal row sum */
     INT AMG_aggressive_level;      /**< number of levels use aggressive coarsening */
-    INT AMG_aggressive_path;       /**< number of paths used to determine strongly coupled C-set */
+    INT AMG_aggressive_path;       /**< number of paths to determine strongly coupled C-set */
     INT AMG_pair_number;           /**< number of pairs in matching algorithm */
     REAL AMG_quality_bound;        /**< threshold for pair wise aggregation */
 
@@ -1170,7 +1170,7 @@ typedef struct {
 /*
  * OpenMP definitions and declarations
  */
-#define FASP_GSRB 1  /**< MG level 0 use RedBlack Gauss Seidel Smoothing */
+#define FASP_GSRB 0  /**< Use Red-Black Gauss Seidel Smoother on level 0 */
 
 #if FASP_GSRB
 extern INT  nx_rb ;  /**< Red Black Gs Smoother Nx */

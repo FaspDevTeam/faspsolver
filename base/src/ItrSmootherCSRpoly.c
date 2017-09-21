@@ -36,13 +36,15 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-#include "ItrAuxiliary.inl"
+//#include "ItrAuxiliary.inl"
 
 static void bminax (REAL *,INT *,INT *, REAL *, REAL *,INT *, REAL *);
 static void Diaginv (dCSRmat *, REAL *);
 static REAL DinvAnorminf (dCSRmat *, REAL *);
 static void Diagx (REAL *, INT, REAL *, REAL *);
 static void Rr (dCSRmat *, REAL *, REAL *, REAL *, REAL *, REAL *, REAL *, REAL *, INT);
+static void fasp_aux_uuplv0_ (REAL *, REAL *, INT *);
+static void fasp_aux_norm1_ (INT *, INT *, REAL *, INT *, REAL *);
 
 /*---------------------------------*/
 /*--      Public Function        --*/
@@ -314,6 +316,7 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
 /*---------------------------------*/
 /*--      Private Functions      --*/
 /*---------------------------------*/
+
 /**
  * \fn static void bminax(REAL *b,INT *ia,INT *ja, REAL *a, REAL *x,INT *nn, REAL *res)
  *
@@ -604,6 +607,42 @@ static void Rr (dCSRmat *Amat,
         }
 #endif
     }
+}
+    
+static void fasp_aux_uuplv0_ (REAL *u,
+                              REAL *v,
+                              INT *n)
+{
+    /*
+     This computes y = y + x.
+     */
+    INT i;
+    for (i=0; i < *n ; i++) u[i]=u[i]+v[i];
+    return;
+}
+
+static void fasp_aux_norm1_ (INT   *ia,
+                             INT   *ja,
+                             REAL  *a,
+                             INT   *nn,
+                             REAL  *a1norm)
+{
+    INT  n,i,jk,iaa,iab;
+    REAL sum,s;
+    /* computes one norm of a matrix a and stores it in the variable
+       pointed to by *a1norm*/
+    n=*nn;
+    s = 0e+00;
+    for (i=0; i < n ; i++) {
+        iaa = ia[i];
+        iab = ia[i+1];
+        sum = 0e+00;
+        for (jk = iaa; jk < iab; jk++) {
+            sum += fabs(a[jk]);
+        }
+        if ( sum > s) s = sum;
+    }
+    *a1norm=s;
 }
 
 /*---------------------------------*/
