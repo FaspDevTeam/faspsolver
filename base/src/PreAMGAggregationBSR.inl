@@ -9,13 +9,118 @@
  *  Copyright (C) 2014--2017 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
- *
- *  // TODO: Unused functions! --Chensong
  */
 
 /*---------------------------------*/
 /*--      Private Functions      --*/
 /*---------------------------------*/
+
+/**
+ * \fn static dCSRmat condenseBSR (const dBSRmat *A)
+ *
+ * \brief Form a dCSRmat matrix from a dBSRmat matrix: use the (1,1)-entry
+ *
+ * \param A    Pointer to the BSR format matrix
+ *
+ * \return     dCSRmat matrix if succeed, NULL if fail
+ *
+ * \author Xiaozhe Hu
+ * \date   03/16/2012
+ */
+static dCSRmat condenseBSR (const dBSRmat *A)
+{
+    // information about A
+    const INT   ROW = A->ROW;
+    const INT   COL = A->COL;
+    const INT   NNZ = A->NNZ;
+    const SHORT  nc = A->nb;
+    const SHORT nc2 = nc*nc;
+    const REAL  TOL = 1e-8;
+
+    const REAL *val = A->val;
+    const INT  *IA  = A->IA;
+    const INT  *JA  = A->JA;
+
+    // (1,1) block
+    dCSRmat  P_csr = fasp_dcsr_create(ROW, COL, NNZ);
+    REAL    *Pval  = P_csr.val;
+    memcpy (P_csr.JA, JA, NNZ*sizeof(INT));
+    memcpy (P_csr.IA, IA, (ROW+1)*sizeof(INT));
+
+#ifdef _OPENMP
+    INT i;
+
+#pragma omp parallel for if(NNZ>OPENMP_HOLDS)
+    for ( i=NNZ-1; i>=0; i-- ) Pval[i] = val[i*nc2];
+
+#else
+    INT i, j;
+
+    for ( i=NNZ, j=NNZ*nc2-nc2 + (0*nc+0); i--; j-=nc2 ) Pval[i] = val[j];
+#endif
+
+    // compress CSR format
+    fasp_dcsr_compress_inplace (&P_csr,TOL);
+
+    // return P
+    return P_csr;
+}
+
+/**
+ * \fn static dCSRmat condenseBSRLinf (const dBSRmat *A)
+ *
+ * \brief Form a dCSRmat matrix from a dBSRmat matrix: use inf-norm of each block
+ *
+ * \param A    Pointer to the BSR format matrix
+ *
+ * \return     dCSRmat matrix if succeed, NULL if fail
+ *
+ * \author Xiaozhe Hu
+ * \date   05/25/2014
+ */
+static dCSRmat condenseBSRLinf (const dBSRmat *A)
+{
+    // information about A
+    const INT   ROW = A->ROW;
+    const INT   COL = A->COL;
+    const INT   NNZ = A->NNZ;
+    const SHORT  nc = A->nb;
+    const SHORT nc2 = nc*nc;
+    const REAL  TOL = 1e-8;
+
+    const REAL *val = A->val;
+    const INT  *IA  = A->IA;
+    const INT  *JA  = A->JA;
+
+    // CSR matrix
+    dCSRmat  Acsr = fasp_dcsr_create (ROW, COL, NNZ);
+    REAL    *Aval = Acsr.val;
+
+    // get structure
+    memcpy (Acsr.JA, JA, NNZ*sizeof(INT));
+    memcpy (Acsr.IA, IA, (ROW+1)*sizeof(INT));
+
+    INT i, j, k;
+    INT row_start, row_end;
+
+    for ( i=0; i<ROW; i++ ) {
+
+        row_start = A->IA[i]; row_end = A->IA[i+1];
+
+        for ( k = row_start; k < row_end; k++ ) {
+            j = A->JA[k];
+            Aval[k] = fasp_smat_Linf (val+k*nc2, nc);
+            if ( i != j ) Aval[k] = -Aval[k];
+        }
+
+    }
+
+    // compress CSR format
+    fasp_dcsr_compress_inplace(&Acsr,TOL);
+
+    // return CSR matrix
+    return Acsr;
+}
 
 /**
  * \fn static void form_boolean_p_bsr (const ivector *vertices, dBSRmat *tentp,
@@ -180,160 +285,6 @@ static void form_tentative_p_bsr1 (const ivector       *vertices,
             }
         }
     }
-}
-
-/**
- * \fn static void smooth_agg_bsr (const dBSRmat *A, dBSRmat *tentp, dBSRmat *P,
- *                                 const AMG_param *param, const INT NumLevels, 
- *                                 const dCSRmat *N)
- *
- * \brief Smooth the tentative prolongation
- *
- * \param A           Pointer to the coefficient matrices (dBSRmat)
- * \param tentp       Pointer to the tentative prolongation operators (dBSRmat)
- * \param P           Pointer to the prolongation operators (dBSRmat)
- * \param param       Pointer to AMG parameters
- * \param NumLevels   Current level number
- * \param N           Pointer to strongly coupled neighbors
- *
- * \author Xiaozhe Hu
- * \date   05/26/2014
- */
-static void smooth_agg_bsr (const dBSRmat    *A,
-                            dBSRmat          *tentp,
-                            dBSRmat          *P,
-                            const AMG_param  *param,
-                            const INT         NumLevels,
-                            const dCSRmat    *N)
-{
-    const SHORT filter = param->smooth_filter;
-    const INT   row = A->ROW, col= A->COL, nnz = A->NNZ;
-    const INT   nb = A->nb, nb2 = nb*nb;
-    const REAL  smooth_factor = param->tentative_smooth;
-    
-    // local variables
-    dBSRmat S;
-    dvector diaginv;  // diagonal block inv
-    
-    INT i,j;
-    
-    REAL *Id   = (REAL *)fasp_mem_calloc(nb2, sizeof(REAL));
-    REAL *temp = (REAL *)fasp_mem_calloc(nb2, sizeof(REAL));
-    
-    fasp_smat_identity(Id, nb, nb2);
-    
-    /* Step 1. Form smoother */
-    
-    /* Without filter: Using A for damped Jacobian smoother */
-    if ( filter != ON ) {
-        
-        // copy structure from A
-        S = fasp_dbsr_create(row, col, nnz, nb, 0);
-        
-        for ( i=0; i<=row; ++i ) S.IA[i] = A->IA[i];
-        for ( i=0; i<nnz; ++i ) S.JA[i] = A->JA[i];
-        
-        diaginv = fasp_dbsr_getdiaginv(A);
-        
-        // for S
-        for (i=0; i<row; ++i) {
-            
-            for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
-                
-                if (S.JA[j] == i) {
-                    
-                    fasp_blas_smat_mul(diaginv.val+(i*nb2), A->val+(j*nb2), temp, nb);
-                    fasp_blas_smat_add(Id, temp, nb, 1.0, (-1.0)*smooth_factor, S.val+(j*nb2));
-                    
-                }
-                else {
-                    
-                    fasp_blas_smat_mul(diaginv.val+(i*nb2), A->val+(j*nb2), S.val+(j*nb2), nb);
-                    fasp_blas_smat_axm(S.val+(j*nb2), nb, (-1.0)*smooth_factor);
-                    
-                }
-                
-            }
-            
-        }
-    }
-    
-    fasp_dvec_free(&diaginv);
-    fasp_mem_free(Id);
-    fasp_mem_free(temp);
-    
-    /* Step 2. Smooth the tentative prolongation P = S*tenp */
-    fasp_blas_dbsr_mxm(&S, tentp, P); // Note: think twice about this.
-    
-    P->NNZ = P->IA[P->ROW];
-    
-    fasp_dbsr_free(&S);
-}
-
-/**
- * \fn static void smooth_agg_bsr1 (const dBSRmat *A, dBSRmat *tentp, dBSRmat *P,
- *                                  const AMG_param *param, const INT NumLevels, 
- *                                  const dCSRmat *N)
- *
- * \brief Smooth the tentative prolongation (without filter)
- *
- * \param A            Pointer to the coefficient matrices (dBSRmat)
- * \param tentp        Pointer to the tentative prolongation operators (dBSRmat)
- * \param P            Pointer to the prolongation operators (dBSRmat)
- * \param param        Pointer to AMG parameters
- * \param NumLevels    Current level number
- * \param N            Pointer to strongly coupled neighbors
- *
- * \author Xiaozhe Hu
- * \date   05/26/2014
- */
-static void smooth_agg_bsr1 (const dBSRmat    *A,
-                             dBSRmat          *tentp,
-                             dBSRmat          *P,
-                             const AMG_param  *param,
-                             const INT         NumLevels,
-                             const dCSRmat    *N)
-{
-    const INT   row = A->ROW;
-    const INT   nb = A->nb;
-    const INT   nb2 = nb*nb;
-    const REAL  smooth_factor = param->tentative_smooth;
-    
-    // local variables
-    dBSRmat S;
-    
-    INT i,j;
-    
-    REAL *Id   = (REAL *)fasp_mem_calloc(nb2, sizeof(REAL));
-    REAL *temp = (REAL *)fasp_mem_calloc(nb2, sizeof(REAL));
-    
-    fasp_smat_identity(Id, nb, nb2);
-    
-    /* Step 1. D^{-1}A */
-    S = fasp_dbsr_diaginv(A);
-    
-    /* Step 2. -wD^{-1}A */
-    fasp_blas_dbsr_axm (&S, (-1.0)*smooth_factor);
-    
-    /* Step 3. I - wD^{-1}A */
-    for (i=0; i<row; ++i) {
-        for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
-            if (S.JA[j] == i) {
-                fasp_blas_smat_add(Id, S.val+(j*nb2), nb, 1.0, 1.0, temp);
-                fasp_darray_cp(nb2, temp, S.val+(j*nb2));
-            }
-        }
-    }
-    
-    fasp_mem_free(Id);
-    fasp_mem_free(temp);
-    
-    /* Step 2. Smooth the tentative prolongation P = S*tenp */
-    fasp_blas_dbsr_mxm(&S, tentp, P); // Note: think twice about this.
-    
-    P->NNZ = P->IA[P->ROW];
-    
-    fasp_dbsr_free(&S);
 }
 
 /*---------------------------------*/

@@ -1,8 +1,10 @@
 File Name: CHANGES
 
-09/20/2017 FASP 2.0.2:
-- Remove ALL unused variables and SOME unused functions.
+09/21/2017 FASP 2.0.2:
+- Remove almost ALL unused variables and functions.
 - Rewrite "skip rest of the line" to avoid problems with long lines.
+- Get rid of some OMP pragma which causes indentation problems.
+- Change some function names in pairwise aggregation.
 
 09/20/2017 FASP 2.0.1:
 - Prepare for optimization: 1. vectorization loops.

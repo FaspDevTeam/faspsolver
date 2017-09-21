@@ -2,16 +2,14 @@
  *
  *  \brief Read, write, and other auxiliary routines for iterative methods.
  *
- *  \note  This file contains Level-2 (Itr) functions, which are used in:
- *         ItrSmootherCSR.c
+ *  \note  This file contains Level-2 (Itr) functions, which was used in:
+ *         ItrSmootherCSRpoly.c. Currently NOT used!
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
- *  \warning Most of these functions are NOT used any more!
- * 
  *  // TODO: Consider to remove this file at some point!!! --Chensong
  */
 
@@ -106,20 +104,6 @@ static void fasp_aux_ijvcrs (INT   *nnzi,
     return;
 }
 
-static void fasp_aux_uuplv0_ (REAL *u,
-                              REAL *v,
-                              INT *n)
-{
-    /*
-     This computes y = y + x.
-     */
-    INT i;
-    for (i=0; i < *n ; i++) {
-        u[i]=u[i]+v[i];
-    }
-    return;
-}
-
 static void fasp_aux_rveci (FILE  *inp,
                             INT   *vec,
                             INT   *nn)
@@ -181,30 +165,6 @@ static void fasp_aux_wvecd (FILE  *inp,
     fprintf(inp,"\n");
     fprintf(stdout,"Wrote %d REALS", n);
     return;
-}
-
-static void fasp_aux_norm1_ (INT   *ia,
-                             INT   *ja,
-                             REAL  *a,
-                             INT   *nn,
-                             REAL  *a1norm)
-{
-    INT n,i,jk,iaa,iab;
-    REAL sum,s;
-    /* computes one norm of a matrix a and stores it in the variable
-     pointed to by *a1norm*/
-    n=*nn;
-    s = 0e+00;
-    for (i=0; i < n ; i++) {
-        iaa = ia[i];
-        iab = ia[i+1];
-        sum = 0e+00;
-        for (jk = iaa; jk < iab; jk++) {
-            sum += fabs(a[jk]);
-        }
-        if ( sum > s) s = sum;
-    }
-    *a1norm=s;
 }
 
 static void fasp_aux_auv_ (INT   *ia,

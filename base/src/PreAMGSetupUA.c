@@ -29,8 +29,9 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-#include "PreAMGAggregationCSR.inl"
 #include "PreAMGAggregation.inl"
+#include "PreAMGAggregationCSR.inl"
+#include "PreAMGAggregationUA.inl"
 
 static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *, AMG_param *);
 
@@ -221,8 +222,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
 
             case VMB: // VMB aggregation
 
-                status = aggregation_vmb(&mgl[lvl].A, &vertices[lvl], param,
-                                         lvl+1, &Neighbor[lvl], &num_aggs[lvl]);
+                status = aggregation_vmb (&mgl[lvl].A, &vertices[lvl], param,
+                                          lvl+1, &Neighbor[lvl], &num_aggs[lvl]);
 
                 /*-- Choose strength threshold adaptively --*/
                 if ( num_aggs[lvl]*4 > mgl[lvl].A.row )
@@ -232,9 +233,16 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
 
                 break;
 
-            default: // pairwise matching aggregation
+            case USPAIR: // unsymmetric pairwise matching aggregation
 
-                status = aggregation_pairwise(mgl, param, lvl, vertices,
+                status = aggregation_usympair (mgl, param, lvl, vertices,
+                                               &num_aggs[lvl]);
+
+                break;
+
+            default: // symmetric pairwise matching aggregation
+
+                status = aggregation_symmpair (mgl, param, lvl, vertices,
                                               &num_aggs[lvl]);
 
                 break;

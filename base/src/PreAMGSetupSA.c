@@ -33,11 +33,12 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-#include "PreAMGAggregationCSR.inl"
 #include "PreAMGAggregation.inl"
+#include "PreAMGAggregationCSR.inl"
 
 static SHORT amg_setup_smoothP_smoothR (AMG_data *, AMG_param *);
 static SHORT amg_setup_smoothP_unsmoothR (AMG_data *, AMG_param *);
+static void smooth_agg (dCSRmat *, dCSRmat *, dCSRmat *, AMG_param *, INT, dCSRmat *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -73,6 +74,7 @@ SHORT fasp_amg_setup_sa (AMG_data   *mgl,
 #if TRUE
     status = amg_setup_smoothP_smoothR(mgl, param);
 #else // smoothed P, unsmoothed R
+    // TODO: Need to test this algorithm! --Chensong
     status = amg_setup_smoothP_unsmoothR(mgl, param);
 #endif
 
@@ -86,6 +88,150 @@ SHORT fasp_amg_setup_sa (AMG_data   *mgl,
 /*---------------------------------*/
 /*--      Private Functions      --*/
 /*---------------------------------*/
+
+/**
+ * \fn static void smooth_agg (dCSRmat *A, dCSRmat *tentp, dCSRmat *P,
+ *                             AMG_param *param, INT levelNum, dCSRmat *N)
+ *
+ * \brief Smooth the tentative prolongation
+ *
+ * \param A         Pointer to the coefficient matrices
+ * \param tentp     Pointer to the tentative prolongation operators
+ * \param P         Pointer to the prolongation operators
+ * \param param     Pointer to AMG parameters
+ * \param levelNum  Current level number
+ * \param N         Pointer to strongly coupled neighbors
+ *
+ * \author Xiaozhe Hu
+ * \date   09/29/2009
+ *
+ * Modified by Chensong on 04/29/2014: Fix a sign problem
+ * Modified by Chensong on 09/21/2017: Remove some OMP pragma
+ */
+static void smooth_agg (dCSRmat    *A,
+                        dCSRmat    *tentp,
+                        dCSRmat    *P,
+                        AMG_param  *param,
+                        INT         levelNum,
+                        dCSRmat    *N)
+{
+    const SHORT filter = param->smooth_filter;
+    const INT   row = A->row, col= A->col;
+    const REAL  smooth_factor = param->tentative_smooth;
+
+    dCSRmat S;
+    dvector diag;  // diagonal entries
+
+    REAL row_sum_A, row_sum_N;
+    INT i,j;
+
+    /* Step 1. Form smoother */
+
+    /* Without filter: Using A for damped Jacobian smoother */
+    if ( filter != ON ) {
+
+        // copy structure from A
+        S = fasp_dcsr_create(row, col, A->IA[row]);
+
+#ifdef _OPENMP
+#pragma omp parallel for if(row>OPENMP_HOLDS)
+#endif
+        for ( i=0; i<=row; ++i ) S.IA[i] = A->IA[i];
+        for ( i=0; i<S.IA[S.row]; ++i ) S.JA[i] = A->JA[i];
+
+        fasp_dcsr_getdiag(0, A, &diag);  // get the diagonal entries of A
+
+        // check the diagonal entries.
+        // if it is too small, use Richardson smoother for the corresponding row
+#ifdef _OPENMP
+#pragma omp parallel for if(row>OPENMP_HOLDS)
+#endif
+        for (i=0; i<row; ++i) {
+            if (ABS(diag.val[i]) < 1e-6) diag.val[i] = 1.0;
+        }
+
+#ifdef _OPENMP
+#pragma omp parallel for if(row>OPENMP_HOLDS) private(j)
+#endif
+        for (i=0; i<row; ++i) {
+            for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
+                if (S.JA[j] == i) {
+                    S.val[j] = 1 - smooth_factor * A->val[j] / diag.val[i];
+                }
+                else {
+                    S.val[j] = - smooth_factor * A->val[j] / diag.val[i];
+                }
+            }
+        }
+    }
+
+    /* Using filtered A for damped Jacobian smoother */
+    else {
+        /* Form filtered A and store in N */
+#ifdef _OPENMP
+#pragma omp parallel for private(j, row_sum_A, row_sum_N) if (row>OPENMP_HOLDS)
+#endif
+        for (i=0; i<row; ++i) {
+            for (row_sum_A = 0.0, j=A->IA[i]; j<A->IA[i+1]; ++j) {
+                if (A->JA[j] != i) row_sum_A += A->val[j];
+            }
+
+            for (row_sum_N = 0.0, j=N->IA[i]; j<N->IA[i+1]; ++j) {
+                if (N->JA[j] != i) row_sum_N += N->val[j];
+            }
+
+            for (j=N->IA[i]; j<N->IA[i+1]; ++j) {
+                if (N->JA[j] == i) {
+                    // The original paper has a wrong sign!!! --Chensong
+                    N->val[j] += row_sum_A - row_sum_N;
+                }
+            }
+        }
+
+        // copy structure from N (filtered A)
+        S = fasp_dcsr_create(row, col, N->IA[row]);
+
+#ifdef _OPENMP
+#pragma omp parallel for if(row>OPENMP_HOLDS)
+#endif
+        for (i=0; i<=row; ++i) S.IA[i] = N->IA[i];
+
+        for (i=0; i<S.IA[S.row]; ++i) S.JA[i] = N->JA[i];
+
+        fasp_dcsr_getdiag(0, N, &diag);  // get the diagonal entries of N (filtered A)
+
+        // check the diagonal entries.
+        // if it is too small, use Richardson smoother for the corresponding row
+#ifdef _OPENMP
+#pragma omp parallel for if(row>OPENMP_HOLDS)
+#endif
+        for (i=0;i<row;++i) {
+            if (ABS(diag.val[i]) < 1e-6) diag.val[i] = 1.0;
+        }
+
+#ifdef _OPENMP
+#pragma omp parallel for if(row>OPENMP_HOLDS) private(i,j)
+#endif
+        for (i=0;i<row;++i) {
+            for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
+                if (S.JA[j] == i) {
+                    S.val[j] = 1 - smooth_factor * N->val[j] / diag.val[i];
+                }
+                else {
+                    S.val[j] = - smooth_factor * N->val[j] / diag.val[i];
+                }
+            }
+        }
+
+    }
+
+    fasp_dvec_free(&diag);
+
+    /* Step 2. Smooth the tentative prolongation P = S*tenp */
+    fasp_blas_dcsr_mxm(&S, tentp, P); // Note: think twice about this.
+    P->nnz = P->IA[P->row];
+    fasp_dcsr_free(&S);
+}
 
 /**
  * \fn static SHORT amg_setup_smoothP_smoothR (AMG_data *mgl, AMG_param *param)
@@ -344,8 +490,8 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data   *mgl,
         mgl[lvl].b          = fasp_dvec_create(mm);
         mgl[lvl].x          = fasp_dvec_create(mm);
 
-        mgl[lvl].cycle_type     = cycle_type; // initialize cycle type!
-        mgl[lvl].ILU_levels     = param->ILU_levels - lvl; // initialize ILU levels!
+        mgl[lvl].cycle_type = cycle_type; // initialize cycle type!
+        mgl[lvl].ILU_levels = param->ILU_levels - lvl; // initialize ILU levels!
         mgl[lvl].SWZ_levels = param->SWZ_levels -lvl; // initialize Schwarz!
 
         if ( cycle_type == NL_AMLI_CYCLE )
