@@ -2,15 +2,13 @@
  *
  *  \brief Read, write, and other auxiliary routines for iterative methods.
  *
- *  \note  This file contains Level-2 (Itr) functions, which was used in:
+ *  \note  This file contains Level-2 (Itr) functions, which WAS used in:
  *         ItrSmootherCSRpoly.c. Currently NOT used!
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
- *
- *  // TODO: Consider to remove this file at some point!!! --Chensong
  */
 
 #include <math.h>

@@ -49,7 +49,7 @@ static inline INT endian_convert_int (const INT   inum,
 
 /**
  * \fn static inline REAL endian_convert_real (const REAL rnum, const INT vlength,
- *                                      const SHORT EndianFlag)
+ *                                             const SHORT EndianFlag)
  *
  * \brief Swap order of a REAL number
  *
@@ -229,10 +229,10 @@ static inline void fasp_dbsr_read_s (FILE        *fp,
     status = fscanf(fp, "%d %d %d", &ROW,&COL,&NNZ); // read dimension of the problem
     A->ROW = ROW; A->COL = COL; A->NNZ = NNZ;
     
-    status = fscanf(fp, "%d", &nb); // read the size of each block
+    status = fscanf(fp, "%d", &nb); // read the size
     A->nb = nb;
     
-    status = fscanf(fp, "%d", &storage_manner); // read the storage_manner of each block
+    status = fscanf(fp, "%d", &storage_manner); // read the storage_manner
     A->storage_manner = storage_manner;
     
     // allocate memory space
@@ -279,10 +279,10 @@ static inline void fasp_dbsr_read_b (FILE        *fp,
     status = fread(&NNZ, ilength, 1, fp);
     A->NNZ = endian_convert_int(NNZ, ilength, EndianFlag);
     
-    status = fread(&nb, ilength, 1, fp); // read the size of each block
+    status = fread(&nb, ilength, 1, fp); // read the size
     A->nb = endian_convert_int(nb, ilength, EndianFlag);
     
-    status = fread(&storage_manner, 1, ilength, fp); // read the storage manner of each block
+    status = fread(&storage_manner, 1, ilength, fp); // read the storage manner
     A->storage_manner = endian_convert_int(storage_manner, ilength, EndianFlag);
     
     // allocate memory space
@@ -643,9 +643,9 @@ static inline void fasp_dbsr_write_s (FILE        *fp,
     
     fprintf(fp,"%d  %d  %d\n",ROW,COL,NNZ); // write dimension of the block matrix
     
-    fprintf(fp,"%d\n",nb); // write the size of each block
+    fprintf(fp,"%d\n",nb); // write the size
     
-    fprintf(fp,"%d\n",storage_manner); // write storage manner of each block
+    fprintf(fp,"%d\n",storage_manner); // write storage manner
     
     // write A->IA
     n = ROW+1; // length of A->IA
@@ -681,7 +681,7 @@ static inline void fasp_dbsr_write_b (FILE        *fp,
     fwrite(&COL, sizeof(INT), 1, fp);
     fwrite(&NNZ, sizeof(INT), 1, fp);
     
-    fwrite(&nb, sizeof(INT), 1, fp); // write the size of each block
+    fwrite(&nb, sizeof(INT), 1, fp); // write the size
     
     fwrite(&storage_manner, sizeof(INT), 1, fp);
     

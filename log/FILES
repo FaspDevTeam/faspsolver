@@ -5,9 +5,8 @@
       51 ./base/include/fasp_grid.h
     1047 ./base/src/BlaIOUtil.inl
      115 ./base/src/BlaSpmvMatFree.inl
-     198 ./base/src/ItrAuxiliary.inl
-     595 ./base/src/ItrSmootherRBGS.inl
-     597 ./base/src/ItrSmootherUtil.inl
+     196 ./base/src/ItrAuxiliary.inl
+     593 ./base/src/ItrSmootherRBGS.inl
      107 ./base/src/KryUtil.inl
      231 ./base/src/PreAMGAggregation.inl
      292 ./base/src/PreAMGAggregationBSR.inl
@@ -60,7 +59,7 @@
     1696 ./base/src/ItrSmootherBSR.c
     1516 ./base/src/ItrSmootherCSR.c
       93 ./base/src/ItrSmootherCSRcr.c
-     650 ./base/src/ItrSmootherCSRpoly.c
+     647 ./base/src/ItrSmootherCSRpoly.c
     1902 ./base/src/ItrSmootherSTR.c
     1671 ./base/src/KryPbcgs.c
     1512 ./base/src/KryPcg.c
@@ -76,7 +75,7 @@
     1384 ./base/src/KrySPminres.c
     1560 ./base/src/KrySPvgmres.c
      437 ./base/src/PreAMGCoarsenCR.c
-    2086 ./base/src/PreAMGCoarsenRS.c
+    2088 ./base/src/PreAMGCoarsenRS.c
      879 ./base/src/PreAMGInterp.c
      839 ./base/src/PreAMGInterpEM.c
      134 ./base/src/PreAMGSetupCR.c
@@ -104,4 +103,4 @@
      243 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      322 ./base/src/SolWrapper.c
-   85833 total
+   85231 total

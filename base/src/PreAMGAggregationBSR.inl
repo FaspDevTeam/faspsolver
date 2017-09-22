@@ -127,7 +127,7 @@ static dCSRmat condenseBSRLinf (const dBSRmat *A)
  *                                     const AMG_data_bsr *mgl,
  *                                     const INT NumLevels, const INT NumAggregates)
  *
- * \brief Form boolean prolongations in dBSRmat (assume constant vector is in 
+ * \brief Form boolean prolongations in dBSRmat (assume constant vector is in
  *        the null space)
  *
  * \param vertices           Pointer to the aggregation of vertices
@@ -196,10 +196,10 @@ static void form_boolean_p_bsr (const ivector       *vertices,
 /**
  * \fn static void form_tentative_p_bsr1 (const ivector *vertices, dBSRmat *tentp,
  *                                        const AMG_data_bsr *mgl, const INT NumLevels,
- *                                        const INT NumAggregates, const const INT dim, 
+ *                                        const INT NumAggregates, const const INT dim,
  *                                        REAL **basis)
  *
- * \brief Form tentative prolongation for BSR format matrix (use general basis for 
+ * \brief Form tentative prolongation for BSR format matrix (use general basis for
  *        the null space)
  *
  * \param vertices           Pointer to the aggregation of vertices
