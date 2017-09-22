@@ -10,7 +10,7 @@
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
- *  // TODO: Reconsider implementation for efficiency! --Chensong
+ *  // TODO: Revisit implementation for efficiency! --Chensong
  */
 
 /*---------------------------------*/

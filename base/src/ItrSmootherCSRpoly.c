@@ -36,8 +36,6 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-//#include "ItrAuxiliary.inl"
-
 static void bminax (REAL *,INT *,INT *, REAL *, REAL *,INT *, REAL *);
 static void Diaginv (dCSRmat *, REAL *);
 static REAL DinvAnorminf (dCSRmat *, REAL *);
@@ -88,7 +86,6 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     v1    = (REAL *) fasp_mem_calloc(n,sizeof(REAL)); 
     error = (REAL *) fasp_mem_calloc(n,sizeof(REAL));
     k     = (REAL *) fasp_mem_calloc(6,sizeof(REAL)); // coefficients for calculation
-    
     
     // get the inverse of the diagonal of A
     Diaginv(Amat, Dinv);

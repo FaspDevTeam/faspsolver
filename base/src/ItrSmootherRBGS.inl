@@ -2,15 +2,13 @@
  *
  *  \brief Routines for Red-Black Gauss-Seidel smoother.
  *
- *  \note  This file contains Level-2 (Itr) functions, which was used in:
+ *  \note  This file contains Level-2 (Itr) functions, which WAS used in:
  *         ItrSmootherCSR.c. Currently NOT used!
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
- *
- *  // TODO: Consider to remove this file at some point!!! --Chensong
  */
 
 #include <math.h>
@@ -20,9 +18,9 @@
 #include "fasp_functs.h"
 
 /**
- * \fn void fasp_smoother_dcsr_gs_rb3d (dvector *u, dCSRmat *A, dvector *b, INT L,
- *                                      const INT order, INT *mark, const INT maximap,
- *                                      const INT nx, const INT ny, const INT nz)
+ * \fn void fasp_smoother_dcsr_rbgs3d (dvector *u, dCSRmat *A, dvector *b, INT L,
+ *                                     const INT order, INT *mark, const INT maximap,
+ *                                     const INT nx, const INT ny, const INT nz)
  *
  * \brief       Red-black Gauss-Seidel smoother for Au=b in 3D
  *
@@ -30,7 +28,7 @@
  * \param A        Pointer to stiffness matrix
  * \param b        Pointer to right hand side
  * \param L        Number of iterations
- * \param order    Ordering: -1: Forward; 1: Backward
+ * \param order    Ordering: -1 = forward, 1 = backward
  * \param mark     Marker for C/F points
  * \param maximap  Size of IMAP
  * \param nx       Number vertex of X direction
@@ -40,16 +38,16 @@
  * \author Chunsheng Feng
  * \date   02/08/2012
  */
-void fasp_smoother_dcsr_gs_rb3d (dvector    *u,
-                                 dCSRmat    *A,
-                                 dvector    *b,
-                                 INT         L,
-                                 const INT   order,
-                                 INT        *mark,
-                                 const INT   maximap,
-                                 const INT   nx,
-                                 const INT   ny,
-                                 const INT   nz)
+void fasp_smoother_dcsr_rbgs3d (dvector    *u,
+                                dCSRmat    *A,
+                                dvector    *b,
+                                INT         L,
+                                const INT   order,
+                                INT        *mark,
+                                const INT   maximap,
+                                const INT   nx,
+                                const INT   ny,
+                                const INT   nz)
 {
     const INT   nrow = b->row; // number of rows
     INT        *ia = A->IA,  *ja   = A->JA;
