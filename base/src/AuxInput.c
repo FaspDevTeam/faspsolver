@@ -727,8 +727,7 @@ void fasp_param_input (const char   *fname,
             fscanf(fp, "%*[^\n]"); // skip rest of line
         }
         
-        else if (strcmp(buffer,"SWZ_mmsize")==0)
-		{
+        else if (strcmp(buffer,"SWZ_mmsize")==0) {
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
 				status = ERROR_INPUT_PAR; break;
@@ -739,8 +738,7 @@ void fasp_param_input (const char   *fname,
             fscanf(fp, "%*[^\n]"); // skip rest of line
 		}
 		
-		else if (strcmp(buffer,"SWZ_maxlvl")==0)
-		{
+		else if (strcmp(buffer,"SWZ_maxlvl")==0) {
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
 				status = ERROR_INPUT_PAR; break;
@@ -751,8 +749,7 @@ void fasp_param_input (const char   *fname,
             fscanf(fp, "%*[^\n]"); // skip rest of line
 		}
 		
-		else if (strcmp(buffer,"SWZ_type")==0)
-		{
+		else if (strcmp(buffer,"SWZ_type")==0) {
 			val = fscanf(fp,"%s",buffer);
 			if (val!=1 || strcmp(buffer,"=")!=0) {
 				status = ERROR_INPUT_PAR; break;
@@ -763,8 +760,7 @@ void fasp_param_input (const char   *fname,
             fscanf(fp, "%*[^\n]"); // skip rest of line
 		}
 
-        else if (strcmp(buffer,"SWZ_blksolver")==0)
-        {
+        else if (strcmp(buffer,"SWZ_blksolver")==0) {
             val = fscanf(fp,"%s",buffer);
             if (val!=1 || strcmp(buffer,"=")!=0) {
                 status = ERROR_INPUT_PAR; break;

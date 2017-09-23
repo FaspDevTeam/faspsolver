@@ -6,6 +6,7 @@ File Name: CHANGES
 - Get rid of some OMP pragma which causes indentation problems.
 - Change some function names in pairwise aggregation.
 - Fix problems with auto-indentation except for ItrSmootherCSRpoly.c!!!
+- Fix an input parameter problem in fasp4ns. 
 
 09/20/2017 FASP 2.0.1:
 - Prepare for optimization: 1. vectorization loops.
