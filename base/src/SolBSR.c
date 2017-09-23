@@ -82,32 +82,27 @@ INT fasp_solver_dbsr_itsolver (dBSRmat    *A,
     switch (itsolver_type) {
             
         case SOLVER_CG:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling CG solver (BSR) ...\n");
             iter = fasp_solver_dbsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_BiCGstab:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (BSR) ...\n");
             iter = fasp_solver_dbsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_GMRES:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling GMRES solver (BSR) ...\n");
             iter = fasp_solver_dbsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VGMRES:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling vGMRES solver (BSR) ...\n");
             iter = fasp_solver_dbsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VFGMRES:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling vFGMRes solver (BSR) ...\n");
             iter = fasp_solver_dbsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         default:
-            printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
+            printf("### ERROR: Unknown iterative solver type %d!\n", itsolver_type);
             
     }
     

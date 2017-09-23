@@ -30,8 +30,8 @@ static void dense_aAtxpby (INT, INT, REAL *, REAL, REAL *, REAL, REAL *);
 /**
  * \fn INT fasp_solver_dcsr_pgcr (dCSRmat *A,  dvector *b, dvector *x,
  *                                precond *pc, const REAL tol, const INT MaxIt,
- *                                const SHORT restart, const SHORT stop_type,
- *                                const SHORT prtlvl)
+ *                                const SHORT restart, const SHORT StopType,
+ *                                const SHORT PrtLvl)
  *
  * \brief A preconditioned GCR method for solving Au=b
  *
@@ -42,8 +42,8 @@ static void dense_aAtxpby (INT, INT, REAL *, REAL, REAL *, REAL, REAL *);
  * \param tol       Tolerance for stopage
  * \param MaxIt     Maximal number of iterations
  * \param restart   Restart number for GCR
- * \param stop_type Stopping type
- * \param prtlvl    How much information to print out
+ * \param StopType  Stopping type
+ * \param PrtLvl    How much information to print out
  *
  * \return          Iteration number if converges; ERROR otherwise.
  *
@@ -59,8 +59,8 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
                            const REAL   tol,
                            const INT    MaxIt,
                            const SHORT  restart,
-                           const SHORT  stop_type,
-                           const SHORT  prtlvl)
+                           const SHORT  StopType,
+                           const SHORT  PrtLvl)
 {
     const INT   n = b->row;
     
@@ -80,6 +80,9 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
     INT      Restart = MIN(restart, MaxIt);
     LONG     worksize = n+2*Restart*n+Restart+Restart;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling GCR solver (CSR) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
@@ -100,7 +103,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( prtlvl > PRINT_MIN && Restart < restart ) {
+    if ( PrtLvl > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
@@ -122,7 +125,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
     relres  = absres/absres0;
     
     // output iteration information if needed
-    fasp_itinfo(prtlvl,stop_type,0,relres,sqrt(absres0),0.0);
+    fasp_itinfo(PrtLvl,StopType,0,relres,sqrt(absres0),0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -179,7 +182,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
             
             norms[iter] = relres;
             
-            fasp_itinfo(prtlvl, stop_type, iter, sqrt(relres), sqrt(absres),
+            fasp_itinfo(PrtLvl, StopType, iter, sqrt(relres), sqrt(absres),
                         sqrt(norms[iter]/norms[iter-1]));
             
             if (sqrt(relres) < tol)  break;
@@ -197,7 +200,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
         
     }
     
-    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,sqrt(relres));
+    if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,sqrt(relres));
     
     // clean up memory
     for (i = 0; i < Restart; i++) fasp_mem_free(h[i]);
@@ -219,8 +222,8 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
 /**
  * \fn INT fasp_solver_dblc_pgcr (dBLCmat *A,  dvector *b, dvector *x,
  *                                precond *pc, const REAL tol, const INT MaxIt,
- *                                const SHORT restart, const SHORT stop_type,
- *                                const SHORT prtlvl)
+ *                                const SHORT restart, const SHORT StopType,
+ *                                const SHORT PrtLvl)
  *
  * \brief A preconditioned GCR method for solving Au=b
  *
@@ -231,8 +234,8 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
  * \param tol       Tolerance for stopage
  * \param MaxIt     Maximal number of iterations
  * \param restart   Restart number for GCR
- * \param stop_type Stopping type
- * \param prtlvl    How much information to print out
+ * \param StopType  Stopping type
+ * \param PrtLvl    How much information to print out
  *
  * \return          Iteration number if converges; ERROR otherwise.
  *
@@ -248,8 +251,8 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
                            const REAL   tol,
                            const INT    MaxIt,
                            const SHORT  restart,
-                           const SHORT  stop_type,
-                           const SHORT  prtlvl)
+                           const SHORT  StopType,
+                           const SHORT  PrtLvl)
 {
     const INT   n = b->row;
     
@@ -269,6 +272,9 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
     INT      Restart = MIN(restart, MaxIt);
     LONG     worksize = n+2*Restart*n+Restart+Restart;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling GCR solver (BLC) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
@@ -289,7 +295,7 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
         exit(ERROR_ALLOC_MEM);
     }
     
-    if ( prtlvl > PRINT_MIN && Restart < restart ) {
+    if ( PrtLvl > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: GMRES restart number set to %d!\n", Restart);
     }
     
@@ -311,7 +317,7 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
     relres  = absres/absres0;
     
     // output iteration information if needed
-    fasp_itinfo(prtlvl,stop_type,0,relres,sqrt(absres0),0.0);
+    fasp_itinfo(PrtLvl,StopType,0,relres,sqrt(absres0),0.0);
     
     // store initial residual
     norms[0] = relres;
@@ -368,7 +374,7 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
             
             norms[iter] = relres;
             
-            fasp_itinfo(prtlvl, stop_type, iter, sqrt(relres), sqrt(absres),
+            fasp_itinfo(PrtLvl, StopType, iter, sqrt(relres), sqrt(absres),
                         sqrt(norms[iter]/norms[iter-1]));
             
             if (sqrt(relres) < tol)  break;
@@ -386,7 +392,7 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
         
     }
     
-    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,sqrt(relres));
+    if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,sqrt(relres));
     
     // clean up memory
     for (i = 0; i < Restart; i++) fasp_mem_free(h[i]);

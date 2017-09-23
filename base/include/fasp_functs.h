@@ -1475,17 +1475,6 @@ void fasp_smoother_dcsr_L1diag (dvector    *u,
                                 dvector    *b,
                                 INT         L);
 
-void fasp_smoother_dcsr_gs_rb3d (dvector    *u,
-                                 dCSRmat    *A,
-                                 dvector    *b,
-                                 INT         L,
-                                 const INT   order,
-                                 INT        *mark,
-                                 const INT   maximap,
-                                 const INT   nx,
-                                 const INT   ny,
-                                 const INT   nz);
-
 
 /*-------- In file: ItrSmootherCSRcr.c --------*/
 
@@ -1628,8 +1617,8 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
                             precond     *pc,
                             const REAL   tol,
                             const INT    MaxIt,
-                            const SHORT  stop_type,
-                            const SHORT  prtlvl);
+                            const SHORT  StopType,
+                            const SHORT  PrtLvl);
 
 INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
                             dvector     *b,
@@ -1637,8 +1626,8 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
                             precond     *pc,
                             const REAL   tol,
                             const INT    MaxIt,
-                            const SHORT  stop_type,
-                            const SHORT  prtlvl);
+                            const SHORT  StopType,
+                            const SHORT  PrtLvl);
 
 INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
                             dvector     *b,
@@ -1646,8 +1635,8 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
                             precond     *pc,
                             const REAL   tol,
                             const INT    MaxIt,
-                            const SHORT  stop_type,
-                            const SHORT  prtlvl);
+                            const SHORT  StopType,
+                            const SHORT  PrtLvl);
 
 INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
                             dvector     *b,
@@ -1655,8 +1644,8 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
                             precond     *pc,
                             const REAL   tol,
                             const INT    MaxIt,
-                            const SHORT  stop_type,
-                            const SHORT  prtlvl);
+                            const SHORT  StopType,
+                            const SHORT  PrtLvl);
 
 INT fasp_solver_pbcgs (mxv_matfree *mf,
                        dvector     *b,
@@ -1664,8 +1653,8 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
                        precond     *pc,
                        const REAL   tol,
                        const INT    MaxIt,
-                       const SHORT  stop_type,
-                       const SHORT  prtlvl);
+                       const SHORT  StopType,
+                       const SHORT  PrtLvl);
 
 
 /*-------- In file: KryPcg.c --------*/
@@ -1676,8 +1665,8 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
                           precond     *pc,
                           const REAL   tol,
                           const INT    MaxIt,
-                          const SHORT  stop_type,
-                          const SHORT  prtlvl);
+                          const SHORT  StopType,
+                          const SHORT  PrtLvl);
 
 INT fasp_solver_dbsr_pcg (dBSRmat     *A,
                           dvector     *b,
@@ -1685,8 +1674,8 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
                           precond     *pc,
                           const REAL   tol,
                           const INT    MaxIt,
-                          const SHORT  stop_type,
-                          const SHORT  prtlvl);
+                          const SHORT  StopType,
+                          const SHORT  PrtLvl);
 
 INT fasp_solver_dblc_pcg (dBLCmat     *A,
                           dvector     *b,
@@ -1694,8 +1683,8 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
                           precond     *pc,
                           const REAL   tol,
                           const INT    MaxIt,
-                          const SHORT  stop_type,
-                          const SHORT  prtlvl);
+                          const SHORT  StopType,
+                          const SHORT  PrtLvl);
 
 INT fasp_solver_dstr_pcg (dSTRmat     *A,
                           dvector     *b,
@@ -1703,8 +1692,8 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
                           precond     *pc,
                           const REAL   tol,
                           const INT    MaxIt,
-                          const SHORT  stop_type,
-                          const SHORT  prtlvl);
+                          const SHORT  StopType,
+                          const SHORT  PrtLvl);
 
 INT fasp_solver_pcg (mxv_matfree *mf,
                      dvector     *b,
@@ -1712,8 +1701,8 @@ INT fasp_solver_pcg (mxv_matfree *mf,
                      precond     *pc,
                      const REAL   tol,
                      const INT    MaxIt,
-                     const SHORT  stop_type,
-                     const SHORT  prtlvl);
+                     const SHORT  StopType,
+                     const SHORT  PrtLvl);
 
 
 /*-------- In file: KryPgcg.c --------*/
@@ -1724,8 +1713,8 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
                            precond     *pc,
                            const REAL   tol,
                            const INT    MaxIt,
-                           const SHORT  stop_type,
-                           const SHORT  prtlvl);
+                           const SHORT  StopType,
+                           const SHORT  PrtLvl);
 
 INT fasp_solver_pgcg (mxv_matfree *mf,
                       dvector     *b,
@@ -1733,8 +1722,8 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
                       precond     *pc,
                       const REAL   tol,
                       const INT    MaxIt,
-                      const SHORT  stop_type,
-                      const SHORT  prtlvl);
+                      const SHORT  StopType,
+                      const SHORT  PrtLvl);
 
 
 /*-------- In file: KryPgcr.c --------*/
@@ -1746,8 +1735,8 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
                            const REAL   tol,
                            const INT    MaxIt,
                            const SHORT  restart,
-                           const SHORT  stop_type,
-                           const SHORT  prtlvl);
+                           const SHORT  StopType,
+                           const SHORT  PrtLvl);
 
 INT fasp_solver_dblc_pgcr (dBLCmat     *A,
                            dvector     *b,
@@ -1756,8 +1745,8 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
                            const REAL   tol,
                            const INT    MaxIt,
                            const SHORT  restart,
-                           const SHORT  stop_type,
-                           const SHORT  prtlvl);
+                           const SHORT  StopType,
+                           const SHORT  PrtLvl);
 
 
 /*-------- In file: KryPgmres.c --------*/
@@ -1769,18 +1758,8 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
                              const REAL   tol,
                              const INT    MaxIt,
                              const SHORT  restart,
-                             const SHORT  stop_type,
-                             const SHORT  prtlvl);
-
-INT fasp_solver_dblc_pgmres (dBLCmat     *A,
-                             dvector     *b,
-                             dvector     *x,
-                             precond     *pc,
-                             const REAL   tol,
-                             const INT    MaxIt,
-                             const SHORT  restart,
-                             const SHORT  stop_type,
-                             const SHORT  prtlvl);
+                             const SHORT  StopType,
+                             const SHORT  PrtLvl);
 
 INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
                              dvector     *b,
@@ -1789,8 +1768,18 @@ INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
                              const REAL   tol,
                              const INT    MaxIt,
                              const SHORT  restart,
-                             const SHORT  stop_type,
-                             const SHORT  prtlvl);
+                             const SHORT  StopType,
+                             const SHORT  PrtLvl);
+
+INT fasp_solver_dblc_pgmres (dBLCmat     *A,
+                             dvector     *b,
+                             dvector     *x,
+                             precond     *pc,
+                             const REAL   tol,
+                             const INT    MaxIt,
+                             const SHORT  restart,
+                             const SHORT  StopType,
+                             const SHORT  PrtLvl);
 
 INT fasp_solver_dstr_pgmres (dSTRmat     *A,
                              dvector     *b,
@@ -1799,8 +1788,8 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
                              const REAL   tol,
                              const INT    MaxIt,
                              const SHORT  restart,
-                             const SHORT  stop_type,
-                             const SHORT  prtlvl);
+                             const SHORT  StopType,
+                             const SHORT  PrtLvl);
 
 INT fasp_solver_pgmres (mxv_matfree  *mf,
                         dvector      *b,
@@ -1809,8 +1798,8 @@ INT fasp_solver_pgmres (mxv_matfree  *mf,
                         const REAL    tol,
                         const INT     MaxIt,
                         const SHORT   restart,
-                        const SHORT   stop_type,
-                        const SHORT   prtlvl);
+                        const SHORT   StopType,
+                        const SHORT   PrtLvl);
 
 
 /*-------- In file: KryPminres.c --------*/
@@ -1821,8 +1810,8 @@ INT fasp_solver_dcsr_pminres (dCSRmat      *A,
                               precond      *pc,
                               const REAL    tol,
                               const INT     MaxIt,
-                              const SHORT   stop_type,
-                              const SHORT   prtlvl);
+                              const SHORT   StopType,
+                              const SHORT   PrtLvl);
 
 INT fasp_solver_dblc_pminres (dBLCmat     *A,
                               dvector     *b,
@@ -1830,8 +1819,8 @@ INT fasp_solver_dblc_pminres (dBLCmat     *A,
                               precond     *pc,
                               const REAL   tol,
                               const INT    MaxIt,
-                              const SHORT  stop_type,
-                              const SHORT  prtlvl);
+                              const SHORT  StopType,
+                              const SHORT  PrtLvl);
 
 INT fasp_solver_dstr_pminres (dSTRmat      *A,
                               dvector      *b,
@@ -1839,8 +1828,8 @@ INT fasp_solver_dstr_pminres (dSTRmat      *A,
                               precond      *pc,
                               const REAL    tol,
                               const INT     MaxIt,
-                              const SHORT   stop_type,
-                              const SHORT   prtlvl);
+                              const SHORT   StopType,
+                              const SHORT   PrtLvl);
 
 INT fasp_solver_pminres (mxv_matfree  *mf,
                          dvector      *b,
@@ -1848,8 +1837,8 @@ INT fasp_solver_pminres (mxv_matfree  *mf,
                          precond      *pc,
                          const REAL    tol,
                          const INT     MaxIt,
-                         const SHORT   stop_type,
-                         const SHORT   prtlvl);
+                         const SHORT   StopType,
+                         const SHORT   PrtLvl);
 
 
 /*-------- In file: KryPvfgmres.c --------*/
@@ -1861,8 +1850,8 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
                                const REAL    tol,
                                const INT     MaxIt,
                                const SHORT   restart,
-                               const SHORT   stop_type,
-                               const SHORT   prtlvl);
+                               const SHORT   StopType,
+                               const SHORT   PrtLvl);
 
 INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
                                dvector      *b,
@@ -1871,8 +1860,8 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
                                const REAL    tol,
                                const INT     MaxIt,
                                const SHORT   restart,
-                               const SHORT   stop_type,
-                               const SHORT   prtlvl);
+                               const SHORT   StopType,
+                               const SHORT   PrtLvl);
 
 INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
                                dvector     *b,
@@ -1881,8 +1870,8 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
                                const REAL   tol,
                                const INT    MaxIt,
                                const SHORT  restart,
-                               const SHORT  stop_type,
-                               const SHORT  prtlvl);
+                               const SHORT  StopType,
+                               const SHORT  PrtLvl);
 
 INT fasp_solver_pvfgmres (mxv_matfree  *mf,
                           dvector      *b,
@@ -1891,8 +1880,8 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
                           const REAL    tol,
                           const INT     MaxIt,
                           const SHORT   restart,
-                          const SHORT   stop_type,
-                          const SHORT   prtlvl);
+                          const SHORT   StopType,
+                          const SHORT   PrtLvl);
 
 
 /*-------- In file: KryPvgmres.c --------*/
@@ -1904,18 +1893,8 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat      *A,
                               const REAL    tol,
                               const INT     MaxIt,
                               const SHORT   restart,
-                              const SHORT   stop_type,
-                              const SHORT   prtlvl);
-
-INT fasp_solver_dblc_pvgmres (dBLCmat     *A,
-                              dvector     *b,
-                              dvector     *x,
-                              precond     *pc,
-                              const REAL   tol,
-                              const INT    MaxIt,
-                              const SHORT  restart,
-                              const SHORT  stop_type,
-                              const SHORT  prtlvl);
+                              const SHORT   StopType,
+                              const SHORT   PrtLvl);
 
 INT fasp_solver_dbsr_pvgmres (dBSRmat      *A,
                               dvector      *b,
@@ -1924,8 +1903,18 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat      *A,
                               const REAL    tol,
                               const INT     MaxIt,
                               const SHORT   restart,
-                              const SHORT   stop_type,
-                              const SHORT   prtlvl);
+                              const SHORT   StopType,
+                              const SHORT   PrtLvl);
+
+INT fasp_solver_dblc_pvgmres (dBLCmat     *A,
+                              dvector     *b,
+                              dvector     *x,
+                              precond     *pc,
+                              const REAL   tol,
+                              const INT    MaxIt,
+                              const SHORT  restart,
+                              const SHORT  StopType,
+                              const SHORT  PrtLvl);
 
 INT fasp_solver_dstr_pvgmres (dSTRmat      *A,
                               dvector      *b,
@@ -1934,8 +1923,8 @@ INT fasp_solver_dstr_pvgmres (dSTRmat      *A,
                               const REAL    tol,
                               const INT     MaxIt,
                               const SHORT   restart,
-                              const SHORT   stop_type,
-                              const SHORT   prtlvl);
+                              const SHORT   StopType,
+                              const SHORT   PrtLvl);
 
 INT fasp_solver_pvgmres (mxv_matfree  *mf,
                          dvector      *b,
@@ -1944,8 +1933,8 @@ INT fasp_solver_pvgmres (mxv_matfree  *mf,
                          const REAL    tol,
                          const INT     MaxIt,
                          SHORT         restart,
-                         const SHORT   stop_type,
-                         const SHORT   prtlvl);
+                         const SHORT   StopType,
+                         const SHORT   PrtLvl);
 
 
 /*-------- In file: KrySPbcgs.c --------*/
@@ -2029,7 +2018,7 @@ INT fasp_solver_dcsr_spgmres (const dCSRmat  *A,
                               const SHORT     StopType,
                               const SHORT     PrtLvl);
 
-INT fasp_solver_dblc_spgmres (const dBLCmat  *A,
+INT fasp_solver_dbsr_spgmres (const dBSRmat  *A,
                               const dvector  *b,
                               dvector        *x,
                               precond        *pc,
@@ -2039,7 +2028,7 @@ INT fasp_solver_dblc_spgmres (const dBLCmat  *A,
                               const SHORT     StopType,
                               const SHORT     PrtLvl);
 
-INT fasp_solver_dbsr_spgmres (const dBSRmat  *A,
+INT fasp_solver_dblc_spgmres (const dBLCmat  *A,
                               const dvector  *b,
                               dvector        *x,
                               precond        *pc,
@@ -2102,7 +2091,7 @@ INT fasp_solver_dcsr_spvgmres (const dCSRmat  *A,
                                const SHORT     StopType,
                                const SHORT     PrtLvl);
 
-INT fasp_solver_dblc_spvgmres (const dBLCmat  *A,
+INT fasp_solver_dbsr_spvgmres (const dBSRmat  *A,
                                const dvector  *b,
                                dvector        *x,
                                precond        *pc,
@@ -2112,7 +2101,7 @@ INT fasp_solver_dblc_spvgmres (const dBLCmat  *A,
                                const SHORT     StopType,
                                const SHORT     PrtLvl);
 
-INT fasp_solver_dbsr_spvgmres (const dBSRmat  *A,
+INT fasp_solver_dblc_spvgmres (const dBLCmat  *A,
                                const dvector  *b,
                                dvector        *x,
                                precond        *pc,

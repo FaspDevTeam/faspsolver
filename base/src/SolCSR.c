@@ -88,47 +88,39 @@ INT fasp_solver_dcsr_itsolver (dCSRmat    *A,
     /* Choose a desirable Krylov iterative solver */
     switch ( itsolver_type ) {
         case SOLVER_CG:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling CG solver (CSR) ...\n");
             iter = fasp_solver_dcsr_pcg(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_BiCGstab:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (CSR) ...\n");
             iter = fasp_solver_dcsr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_MinRes:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling MinRes solver (CSR) ...\n");
             iter = fasp_solver_dcsr_pminres(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_GMRES:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling GMRes solver (CSR) ...\n");
             iter = fasp_solver_dcsr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VGMRES:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling VGMRes solver (CSR) ...\n");
             iter = fasp_solver_dcsr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VFGMRES:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling VFGMRes solver (CSR) ...\n");
             iter = fasp_solver_dcsr_pvfgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_GCG:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling GCG solver (CSR) ...\n");
             iter = fasp_solver_dcsr_pgcg(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
 
         case SOLVER_GCR:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling GCR solver (CSR) ...\n");
             iter = fasp_solver_dcsr_pgcr(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         default:
-            printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
+            printf("### ERROR: Unknown iterative solver type %d!\n", itsolver_type);
             return ERROR_SOLVER_TYPE;
             
     }

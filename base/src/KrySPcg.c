@@ -83,6 +83,9 @@ INT fasp_solver_dcsr_spcg (const dCSRmat  *A,
     REAL *work = (REAL *)fasp_mem_calloc(5*m,sizeof(REAL));
     REAL *p = work, *z = work+m, *r = z+m, *t = r+m, *u_best = t+m;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe CG solver (CSR) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
@@ -413,6 +416,9 @@ INT fasp_solver_dblc_spcg (const dBLCmat  *A,
     REAL *work = (REAL *)fasp_mem_calloc(5*m,sizeof(REAL));
     REAL *p = work, *z = work+m, *r = z+m, *t = r+m, *u_best = t+m;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe CG solver (BLC) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
@@ -743,6 +749,9 @@ INT fasp_solver_dstr_spcg (const dSTRmat  *A,
     REAL *work = (REAL *)fasp_mem_calloc(5*m,sizeof(REAL));
     REAL *p = work, *z = work+m, *r = z+m, *t = r+m, *u_best = t+m;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe CG solver (STR) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);

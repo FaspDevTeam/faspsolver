@@ -86,42 +86,35 @@ INT fasp_solver_itsolver (mxv_matfree  *mf,
     switch ( itsolver_type ) {
             
         case SOLVER_CG:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling CG solver (MatFree) ...\n");
-            iter = fasp_solver_pcg(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
+            iter = fasp_solver_pcg(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_BiCGstab:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (MatFree) ...\n");
-            iter = fasp_solver_pbcgs(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
+            iter = fasp_solver_pbcgs(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_MinRes:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling MinRes solver (MatFree) ...\n");
-            iter = fasp_solver_pminres(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
+            iter = fasp_solver_pminres(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl);
             break;
             
         case SOLVER_GMRES:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling GMRes solver (MatFree) ...\n");
             iter = fasp_solver_pgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VGMRES: 
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling vGMRes solver (MatFree) ...\n");
-            iter = fasp_solver_pvgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);    
+            iter = fasp_solver_pvgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_VFGMRES: 
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling vFGMRes solver (MatFree) ...\n");
             iter = fasp_solver_pvfgmres(mf, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
             break;
             
         case SOLVER_GCG:
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling GCG solver (MatFree) ...\n");
             iter = fasp_solver_pgcg(mf, b, x, pc, tol, MaxIt, stop_type, prtlvl); 
             break;
             
         default:
-            printf("### ERROR: Unknown itertive solver type %d!\n", itsolver_type);
+            printf("### ERROR: Unknown iterative solver type %d!\n", itsolver_type);
             
     } 
     
