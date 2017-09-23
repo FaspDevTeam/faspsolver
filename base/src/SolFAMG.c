@@ -77,17 +77,14 @@ void fasp_solver_famg (const dCSRmat  *A,
             
         case SA_AMG:
             // Smoothed Aggregation AMG setup phase
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling SA FAMG ...\n");
             fasp_amg_setup_sa(mgl, param); break;
             
         case UA_AMG:
             // Unsmoothed Aggregation AMG setup phase
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling UA FAMG ...\n");
             fasp_amg_setup_ua(mgl, param); break;
             
         default:
             // Classical AMG setup phase
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling FAMG ...\n");
             fasp_amg_setup_rs(mgl, param); break;
             
     }

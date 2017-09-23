@@ -55,6 +55,11 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *, AMG_param *);
 SHORT fasp_amg_setup_ua (AMG_data   *mgl,
                          AMG_param  *param)
 {
+    const SHORT prtlvl     = param->print_level;
+
+    // Output some info for debuging
+    if ( prtlvl > PRINT_NONE ) printf("\nSetting up UA AMG ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n",

@@ -82,15 +82,12 @@ void fasp_solver_amg (const dCSRmat  *A,
     switch (amg_type) {
             
         case SA_AMG: // Smoothed Aggregation AMG setup
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling SA AMG ...\n");
             status = fasp_amg_setup_sa(mgl, param); break;
             
         case UA_AMG: // Unsmoothed Aggregation AMG setup
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling UA AMG ...\n");
             status = fasp_amg_setup_ua(mgl, param); break;
             
         default: // Classical AMG setup
-            if ( prtlvl > PRINT_NONE ) printf("\nCalling classical AMG ...\n");
             status = fasp_amg_setup_rs(mgl, param); break;
 
     }

@@ -537,6 +537,9 @@ typedef struct {
     //! switch for filtered matrix used for smoothing the tentative prolongation
     SHORT smooth_filter;
     
+    //! smooth the restriction or not
+    SHORT smooth_restriction;
+
     //! number of levels use ILU smoother
     SHORT ILU_levels;
     
@@ -1164,6 +1167,7 @@ typedef struct {
     INT AMG_max_aggregation;       /**< max size of each aggregate */
     REAL AMG_tentative_smooth;     /**< relaxation factor for smoothing the tentative prolongation */
     SHORT AMG_smooth_filter;       /**< use filter for smoothing the tentative prolongation or not */
+    SHORT AMG_smooth_restriction;  /**< smoothing the restriction or not */
 
 } input_param; /**< Input parameters */
 

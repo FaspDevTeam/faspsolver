@@ -87,6 +87,9 @@ INT fasp_solver_dcsr_spbcgs (const dCSRmat  *A,
     REAL *p    = work,  *z  = work + m, *r = z  + m, *t  = r + m;
     REAL *rho  = t + m, *pp = rho  + m, *s = pp + m, *sp = s + m, *u_best = sp + m;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe BiCGstab solver (CSR) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
@@ -475,6 +478,9 @@ INT fasp_solver_dbsr_spbcgs (const dBSRmat  *A,
     REAL *p    = work,  *z  = work + m, *r = z  + m, *t  = r + m;
     REAL *rho  = t + m, *pp = rho  + m, *s = pp + m, *sp = s + m, *u_best = sp + m;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe BiCGstab solver (BSR) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
@@ -863,6 +869,9 @@ INT fasp_solver_dblc_spbcgs (const dBLCmat  *A,
     REAL *p    = work,  *z  = work + m, *r = z  + m, *t  = r + m;
     REAL *rho  = t + m, *pp = rho  + m, *s = pp + m, *sp = s + m, *u_best = sp + m;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe BiCGstab solver (BLC) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
@@ -1251,6 +1260,9 @@ INT fasp_solver_dstr_spbcgs (const dSTRmat  *A,
     REAL *p    = work,  *z  = work + m, *r = z  + m, *t  = r + m;
     REAL *rho  = t + m, *pp = rho  + m, *s = pp + m, *sp = s + m, *u_best = sp + m;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe BiCGstab solver (STR) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);

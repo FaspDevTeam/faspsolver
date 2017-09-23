@@ -41,7 +41,7 @@
 /**
  * \fn INT fasp_solver_dcsr_pbcgs (dCSRmat *A, dvector *b, dvector *u, precond *pc,
  *                                 const REAL tol, const INT MaxIt,
- *                                 const SHORT stop_type, const SHORT prtlvl)
+ *                                 const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Preconditioned BiCGstab method for solving Au=b for CSR matrix
  *
@@ -51,8 +51,8 @@
  * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
- * \param stop_type    Stopping criteria type
- * \param prtlvl       How much information to print out
+ * \param StopType     Stopping criteria type
+ * \param PrtLvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
@@ -65,8 +65,8 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
                             precond     *pc,
                             const REAL   tol,
                             const INT    MaxIt,
-                            const SHORT  stop_type,
-                            const SHORT  prtlvl)
+                            const SHORT  StopType,
+                            const SHORT  PrtLvl)
 {
     const INT    m = b->row;
     
@@ -85,6 +85,9 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
     REAL *r=work, *rt=r+m, *p=rt+m, *v=p+m;
     REAL *ph=v+m, *xhalf=ph+m, *s=xhalf+m, *sh=s+m;
     REAL *t = sh+m, *xmin = t+m;
+
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (CSR) ...\n");
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -116,7 +119,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
     }
     
     // output iteration information if needed
-    fasp_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,n2b,0.0);
     
     // shadow residual rt = r* := r
     fasp_darray_cp(m,r,rt);
@@ -199,7 +202,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
         // compute reduction factor of residual ||r||
         absres = normr_act;
         factor = absres/absres0;
-        fasp_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,normr_act/n2b,absres,factor);
         
         // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
@@ -214,7 +217,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
                 flag = 0;
                 imin = iter - 0.5;
                 half_step++;
-                if ( prtlvl >= PRINT_MORE )
+                if ( PrtLvl >= PRINT_MORE )
                     printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                            flag,stag,imin,half_step);
                 goto FINISHED;
@@ -243,7 +246,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
             fasp_darray_cp(m,xhalf,xmin);
             imin = iter - 0.5;
             half_step++;
-            if ( prtlvl >= PRINT_MORE )
+            if ( PrtLvl >= PRINT_MORE )
                 printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                        flag,stag,imin,half_step);
         }
@@ -318,7 +321,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
             goto FINISHED;
         }
         
-        if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
+        if ( PrtLvl >= PRINT_MORE ) ITS_REALRES(relres);
         
         absres0 = absres;
     }   // for iter = 1 : maxit
@@ -342,9 +345,9 @@ FINISHED:  // finish iterative method
         }
     }
     
-    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
-    if ( prtlvl >= PRINT_MORE )
+    if ( PrtLvl >= PRINT_MORE )
         printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                flag,stag,imin,half_step);
     
@@ -364,7 +367,7 @@ FINISHED:  // finish iterative method
 /**
  * \fn INT fasp_solver_dbsr_pbcgs (dBSRmat *A, dvector *b, dvector *u, precond *pc,
  *                                 const REAL tol, const INT MaxIt,
- *                                 const SHORT stop_type, const SHORT prtlvl)
+ *                                 const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Preconditioned BiCGstab method for solving Au=b for BSR matrix
  *
@@ -374,8 +377,8 @@ FINISHED:  // finish iterative method
  * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
- * \param stop_type    Stopping criteria type
- * \param prtlvl       How much information to print out
+ * \param StopType     Stopping criteria type
+ * \param PrtLvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
@@ -388,8 +391,8 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
                             precond     *pc,
                             const REAL   tol,
                             const INT    MaxIt,
-                            const SHORT  stop_type,
-                            const SHORT  prtlvl)
+                            const SHORT  StopType,
+                            const SHORT  PrtLvl)
 {
     const INT    m = b->row;
     
@@ -409,6 +412,9 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
     REAL *ph=v+m, *xhalf=ph+m, *s=xhalf+m, *sh=s+m;
     REAL *t = sh+m, *xmin = t+m;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (BSR) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
@@ -439,7 +445,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
     }
     
     // output iteration information if needed
-    fasp_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,n2b,0.0);
     
     // shadow residual rt = r* := r
     fasp_darray_cp(m,r,rt);
@@ -522,7 +528,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
         // compute reduction factor of residual ||r||
         absres = normr_act;
         factor = absres/absres0;
-        fasp_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,normr_act/n2b,absres,factor);
         
         // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
@@ -537,7 +543,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
                 flag = 0;
                 imin = iter - 0.5;
                 half_step++;
-                if ( prtlvl >= PRINT_MORE )
+                if ( PrtLvl >= PRINT_MORE )
                     printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                            flag,stag,imin,half_step);
                 goto FINISHED;
@@ -566,7 +572,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
             fasp_darray_cp(m,xhalf,xmin);
             imin = iter - 0.5;
             half_step++;
-            if ( prtlvl >= PRINT_MORE )
+            if ( PrtLvl >= PRINT_MORE )
                 printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                        flag,stag,imin,half_step);
         }
@@ -641,7 +647,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
             goto FINISHED;
         }
         
-        if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
+        if ( PrtLvl >= PRINT_MORE ) ITS_REALRES(relres);
         
         absres0 = absres;
     }   // for iter = 1 : maxit
@@ -665,9 +671,9 @@ FINISHED:  // finish iterative method
         }
     }
     
-    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
-    if ( prtlvl >= PRINT_MORE )
+    if ( PrtLvl >= PRINT_MORE )
         printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                flag,stag,imin,half_step);
     
@@ -687,7 +693,7 @@ FINISHED:  // finish iterative method
 /**
  * \fn INT fasp_solver_dblc_pbcgs (dBLCmat *A, dvector *b, dvector *u, precond *pc,
  *                                 const REAL tol, const INT MaxIt,
- *                                 const SHORT stop_type, const SHORT prtlvl)
+ *                                 const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Preconditioned BiCGstab method for solving Au=b for BLC matrix
  *
@@ -697,8 +703,8 @@ FINISHED:  // finish iterative method
  * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
- * \param stop_type    Stopping criteria type
- * \param prtlvl       How much information to print out
+ * \param StopType     Stopping criteria type
+ * \param PrtLvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
@@ -711,8 +717,8 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
                             precond     *pc,
                             const REAL   tol,
                             const INT    MaxIt,
-                            const SHORT  stop_type,
-                            const SHORT  prtlvl)
+                            const SHORT  StopType,
+                            const SHORT  PrtLvl)
 {
     const INT    m = b->row;
     
@@ -732,6 +738,9 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
     REAL *ph=v+m, *xhalf=ph+m, *s=xhalf+m, *sh=s+m;
     REAL *t = sh+m, *xmin = t+m;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (BLC) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
@@ -762,7 +771,7 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
     }
     
     // output iteration information if needed
-    fasp_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,n2b,0.0);
     
     // shadow residual rt = r* := r
     fasp_darray_cp(m,r,rt);
@@ -845,7 +854,7 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
         // compute reduction factor of residual ||r||
         absres = normr_act;
         factor = absres/absres0;
-        fasp_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,normr_act/n2b,absres,factor);
         
         // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
@@ -860,7 +869,7 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
                 flag = 0;
                 imin = iter - 0.5;
                 half_step++;
-                if ( prtlvl >= PRINT_MORE )
+                if ( PrtLvl >= PRINT_MORE )
                     printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                            flag,stag,imin,half_step);
                 goto FINISHED;
@@ -889,7 +898,7 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
             fasp_darray_cp(m,xhalf,xmin);
             imin = iter - 0.5;
             half_step++;
-            if ( prtlvl >= PRINT_MORE )
+            if ( PrtLvl >= PRINT_MORE )
                 printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                        flag,stag,imin,half_step);
         }
@@ -964,7 +973,7 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
             goto FINISHED;
         }
         
-        if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
+        if ( PrtLvl >= PRINT_MORE ) ITS_REALRES(relres);
         
         absres0 = absres;
     }   // for iter = 1 : maxit
@@ -988,9 +997,9 @@ FINISHED:  // finish iterative method
         }
     }
     
-    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
-    if ( prtlvl >= PRINT_MORE )
+    if ( PrtLvl >= PRINT_MORE )
         printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                flag,stag,imin,half_step);
     
@@ -1010,7 +1019,7 @@ FINISHED:  // finish iterative method
 /**
  * \fn INT fasp_solver_dstr_pbcgs (dSTRmat *A, dvector *b, dvector *u, precond *pc,
  *                                 const REAL tol, const INT MaxIt,
- *                                 const SHORT stop_type, const SHORT prtlvl)
+ *                                 const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Preconditioned BiCGstab method for solving Au=b for STR matrix
  *
@@ -1020,14 +1029,13 @@ FINISHED:  // finish iterative method
  * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
- * \param stop_type    Stopping criteria type
- * \param prtlvl       How much information to print out
+ * \param StopType     Stopping criteria type
+ * \param PrtLvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
  * \author Chunsheng Feng
  * \date   03/04/2016
- *
  */
 INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
                             dvector     *b,
@@ -1035,8 +1043,8 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
                             precond     *pc,
                             const REAL   tol,
                             const INT    MaxIt,
-                            const SHORT  stop_type,
-                            const SHORT  prtlvl)
+                            const SHORT  StopType,
+                            const SHORT  PrtLvl)
 {
     const INT    m = b->row;
     
@@ -1056,6 +1064,9 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
     REAL *ph=v+m, *xhalf=ph+m, *s=xhalf+m, *sh=s+m;
     REAL *t = sh+m, *xmin = t+m;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (STR) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
@@ -1086,7 +1097,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
     }
     
     // output iteration information if needed
-    fasp_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,n2b,0.0);
     
     // shadow residual rt = r* := r
     fasp_darray_cp(m,r,rt);
@@ -1169,7 +1180,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
         // compute reduction factor of residual ||r||
         absres = normr_act;
         factor = absres/absres0;
-        fasp_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,normr_act/n2b,absres,factor);
         
         // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
@@ -1184,7 +1195,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
                 flag = 0;
                 imin = iter - 0.5;
                 half_step++;
-                if ( prtlvl >= PRINT_MORE )
+                if ( PrtLvl >= PRINT_MORE )
                     printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                            flag,stag,imin,half_step);
                 goto FINISHED;
@@ -1213,7 +1224,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
             fasp_darray_cp(m,xhalf,xmin);
             imin = iter - 0.5;
             half_step++;
-            if ( prtlvl >= PRINT_MORE )
+            if ( PrtLvl >= PRINT_MORE )
                 printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                        flag,stag,imin,half_step);
         }
@@ -1288,7 +1299,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
             goto FINISHED;
         }
         
-        if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
+        if ( PrtLvl >= PRINT_MORE ) ITS_REALRES(relres);
         
         absres0 = absres;
     }   // for iter = 1 : maxit
@@ -1312,9 +1323,9 @@ FINISHED:  // finish iterative method
         }
     }
     
-    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
-    if ( prtlvl >= PRINT_MORE )
+    if ( PrtLvl >= PRINT_MORE )
         printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                flag,stag,imin,half_step);
     
@@ -1334,7 +1345,7 @@ FINISHED:  // finish iterative method
 /**
  * \fn INT fasp_solver_pbcgs (mxv_matfree *mf, dvector *b, dvector *u, precond *pc,
  *                            const REAL tol, const INT MaxIt,
- *                            const SHORT stop_type, const SHORT prtlvl)
+ *                            const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Preconditioned BiCGstab method for solving Au=b
  *
@@ -1344,8 +1355,8 @@ FINISHED:  // finish iterative method
  * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
- * \param stop_type    Stopping criteria type
- * \param prtlvl       How much information to print out
+ * \param StopType     Stopping criteria type
+ * \param PrtLvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
@@ -1358,8 +1369,8 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
                        precond     *pc,
                        const REAL   tol,
                        const INT    MaxIt,
-                       const SHORT  stop_type,
-                       const SHORT  prtlvl)
+                       const SHORT  StopType,
+                       const SHORT  PrtLvl)
 {
     const INT    m = b->row;
     
@@ -1379,6 +1390,9 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
     REAL *ph=v+m, *xhalf=ph+m, *s=xhalf+m, *sh=s+m;
     REAL *t = sh+m, *xmin = t+m;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling BiCGstab solver (MatFree) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
@@ -1412,7 +1426,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
     
     // output iteration information if needed
     
-    fasp_itinfo(prtlvl,stop_type,iter,relres,n2b,0.0);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,n2b,0.0);
     
     // shadow residual rt = r* := r
     fasp_darray_cp(m,r,rt);
@@ -1487,15 +1501,15 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
         
         // xhalf = x + alpha * ph;        // form the "half" iterate
         // s = r - alpha * v;             // residual associated with xhalf
-        fasp_blas_darray_axpyz(m, alpha, ph, x , xhalf);  //       z= ax + y
+        fasp_blas_darray_axpyz(m, alpha, ph, x , xhalf);  // z= ax + y
         fasp_blas_darray_axpyz(m, -alpha, v, r, s);
-        normr = fasp_blas_darray_norm2(m,s);  //       normr = norm(s);
+        normr = fasp_blas_darray_norm2(m,s);  // normr = norm(s);
         normr_act = normr;
         
         // compute reduction factor of residual ||r||
         absres = normr_act;
         factor = absres/absres0;
-        fasp_itinfo(prtlvl,stop_type,iter,normr_act/n2b,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,normr_act/n2b,absres,factor);
         
         // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
@@ -1511,7 +1525,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
                 flag = 0;
                 imin = iter - 0.5;
                 half_step++;
-                if ( prtlvl >= PRINT_MORE )
+                if ( PrtLvl >= PRINT_MORE )
                     printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                            flag,stag,imin,half_step);
                 goto FINISHED;
@@ -1540,7 +1554,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
             fasp_darray_cp(m,xhalf,xmin);
             imin = iter - 0.5;
             half_step++;
-            if ( prtlvl >= PRINT_MORE )
+            if ( PrtLvl >= PRINT_MORE )
                 printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                        flag,stag,imin,half_step);
         }
@@ -1622,7 +1636,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
             goto FINISHED;
         }
         
-        if ( prtlvl >= PRINT_MORE ) ITS_REALRES(relres);
+        if ( PrtLvl >= PRINT_MORE ) ITS_REALRES(relres);
         
         absres0 = absres;
     }   // for iter = 1 : maxit
@@ -1647,9 +1661,9 @@ FINISHED:  // finish iterative method
         }
     }
     
-    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
-    if ( prtlvl >= PRINT_MORE )
+    if ( PrtLvl >= PRINT_MORE )
         printf("Flag = %d Stag = %d Itermin = %.1f Half_step = %d\n",
                flag,stag,imin,half_step);
     

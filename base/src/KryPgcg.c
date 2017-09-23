@@ -37,7 +37,7 @@
 /**
  * \fn INT fasp_solver_dcsr_pgcg (dCSRmat *A, dvector *b, dvector *u, precond *pc,
  *                                const REAL tol, const INT MaxIt,
- *                                const SHORT stop_type, const SHORT prtlvl)
+ *                                const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Preconditioned generilzed conjugate gradient (GCG) method for solving Au=b
  *
@@ -47,8 +47,8 @@
  * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
- * \param stop_type    Stopping criteria type
- * \param prtlvl       How much information to print out
+ * \param StopType     Stopping criteria type
+ * \param PrtLvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
@@ -63,8 +63,8 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
                            precond     *pc,
                            const REAL   tol,
                            const INT    MaxIt,
-                           const SHORT  stop_type,
-                           const SHORT  prtlvl)
+                           const SHORT  StopType,
+                           const SHORT  PrtLvl)
 {
     INT    iter=0, m=A->row, i;
     REAL   absres0 = BIGREAL, absres = BIGREAL;
@@ -77,6 +77,9 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
     REAL *r, *Br, *beta, *p;
     r = work; Br = r + m; beta = Br + m; p = beta + MaxIt;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling GCG solver (CSR) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
@@ -113,7 +116,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
     relres = absres/normb;
     
     // output iteration information if needed
-    fasp_itinfo(prtlvl,stop_type,iter+1,relres,absres,factor);
+    fasp_itinfo(PrtLvl,StopType,iter+1,relres,absres,factor);
     
     // update relative residual here
     absres0 = absres;
@@ -157,7 +160,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
         relres = absres/normb;
         
         // output iteration information if needed
-        fasp_itinfo(prtlvl,stop_type,iter+1,relres,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter+1,relres,absres,factor);
         
         if (relres < tol) break;
         
@@ -167,7 +170,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
     } // end of main GCG loop.
     
     // finish iterative method
-    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
     fasp_mem_free(work);
@@ -185,7 +188,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
 /**
  * \fn INT fasp_solver_pgcg (mxv_matfree *mf, dvector *b, dvector *u, precond *pc,
  *                           const REAL tol, const INT MaxIt,
- *                           const SHORT stop_type, const SHORT prtlvl)
+ *                           const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Preconditioned generilzed conjugate gradient (GCG) method for solving Au=b
  *
@@ -195,8 +198,8 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
  * \param pc           Pointer to precond: structure of precondition
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
- * \param stop_type    Stopping criteria type -- Not implemented
- * \param prtlvl       How much information to print out
+ * \param StopType     Stopping criteria type -- DOES not support this parameter
+ * \param PrtLvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
  *
@@ -213,8 +216,8 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
                       precond     *pc,
                       const REAL   tol,
                       const INT    MaxIt,
-                      const SHORT  stop_type,
-                      const SHORT  prtlvl)
+                      const SHORT  StopType,
+                      const SHORT  PrtLvl)
 {
     INT    iter=0, m=b->row, i;
     REAL   absres0 = BIGREAL, absres = BIGREAL;
@@ -227,6 +230,9 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
     REAL *r, *Br, *beta, *p, *q;
     q = work; r = q + m; Br = r + m; beta = Br + m; p = beta + MaxIt;
     
+    // Output some info for debuging
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling GCG solver (MatFree) ...\n");
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
@@ -265,7 +271,7 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
     relres = absres/normb;
     
     // output iteration information if needed
-    fasp_itinfo(prtlvl,stop_type,iter+1,relres,absres,factor);
+    fasp_itinfo(PrtLvl,StopType,iter+1,relres,absres,factor);
     
     // update relative residual here
     absres0 = absres;
@@ -314,7 +320,7 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
         relres = absres/normb;
         
         // output iteration information if needed
-        fasp_itinfo(prtlvl,stop_type,iter+1,relres,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter+1,relres,absres,factor);
         
         if (relres < tol) break;
         
@@ -324,7 +330,7 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
     } // end of main GCG loop.
     
     // finish iterative method
-    if ( prtlvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
+    if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
     fasp_mem_free(work);

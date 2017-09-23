@@ -63,7 +63,12 @@ static void smooth_agg (dCSRmat *, dCSRmat *, dCSRmat *, AMG_param *, INT, dCSRm
 SHORT fasp_amg_setup_sa (AMG_data   *mgl,
                          AMG_param  *param)
 {
-    SHORT status  = FASP_SUCCESS;
+    const SHORT prtlvl     = param->print_level;
+    const SHORT smoothR    = param->smooth_restriction;
+    SHORT status           = FASP_SUCCESS;
+
+    // Output some info for debuging
+    if ( prtlvl > PRINT_NONE ) printf("\nSetting up SA AMG ...\n");
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -71,12 +76,12 @@ SHORT fasp_amg_setup_sa (AMG_data   *mgl,
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
 
-#if TRUE
-    status = amg_setup_smoothP_smoothR(mgl, param);
-#else // smoothed P, unsmoothed R
-    // TODO: Need to test this algorithm! --Chensong
-    status = amg_setup_smoothP_unsmoothR(mgl, param);
-#endif
+    if ( smoothR ) { // Default: smoothed P, smoothed R
+        status = amg_setup_smoothP_smoothR(mgl, param);
+    }
+    else { // smoothed P, unsmoothed R
+        status = amg_setup_smoothP_unsmoothR(mgl, param);
+    }
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);

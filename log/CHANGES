@@ -1,12 +1,16 @@
 File Name: CHANGES
 
-09/22/2017 FASP 2.0.2:
+09/23/2017 FASP 2.0.2:
 - Remove almost ALL unused variables and functions.
 - Rewrite "skip rest of the line" to avoid problems with long lines.
 - Get rid of some OMP pragma which causes indentation problems.
 - Change some function names in pairwise aggregation.
 - Fix problems with auto-indentation except for ItrSmootherCSRpoly.c!!!
-- Fix an input parameter problem in fasp4ns. 
+- Fix an input parameter problem in fasp4ns.
+- Test GCC7.2 and it works just fine.
+- Add an SA AMG parameter for smoothing restriction or not.
+- Update output information for AMG, iterative, etc.
+- Update regression results.
 
 09/20/2017 FASP 2.0.1:
 - Prepare for optimization: 1. vectorization loops.

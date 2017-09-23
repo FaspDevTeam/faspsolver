@@ -85,6 +85,8 @@ SHORT fasp_param_check (input_param  *inparam)
         || inparam->AMG_max_aggregation<=0
         || inparam->AMG_tentative_smooth<0
         || inparam->AMG_smooth_filter<0
+        || inparam->AMG_smooth_restriction<0
+        || inparam->AMG_smooth_restriction>1
         ) status = ERROR_INPUT_PAR;
     
     return status;
@@ -333,18 +335,43 @@ void fasp_param_input (const char   *fname,
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
     
             if ((strcmp(buffer,"ON")==0)||(strcmp(buffer,"on")==0)||
-                (strcmp(buffer,"On")==0)||(strcmp(buffer,"oN")==0))
+                (strcmp(buffer,"On")==0)||(strcmp(buffer,"oN")==0)) {
                 inparam->AMG_smooth_filter = ON;
+            }
             else if ((strcmp(buffer,"OFF")==0)||(strcmp(buffer,"off")==0)||
                      (strcmp(buffer,"ofF")==0)||(strcmp(buffer,"oFf")==0)||
                      (strcmp(buffer,"Off")==0)||(strcmp(buffer,"oFF")==0)||
-                     (strcmp(buffer,"OfF")==0)||(strcmp(buffer,"OFf")==0))
+                     (strcmp(buffer,"OfF")==0)||(strcmp(buffer,"OFf")==0)) {
                 inparam->AMG_smooth_filter = OFF;
+            }
             else
                 { status = ERROR_INPUT_PAR; break; }
             fscanf(fp, "%*[^\n]"); // skip rest of line
         }
-    
+
+        else if (strcmp(buffer,"AMG_smooth_restriction")==0) {
+            val = fscanf(fp,"%s",buffer);
+            if (val!=1 || strcmp(buffer,"=")!=0) {
+                status = ERROR_INPUT_PAR; break;
+            }
+            val = fscanf(fp,"%s",buffer);
+            if (val!=1) { status = ERROR_INPUT_PAR; break; }
+
+            if ((strcmp(buffer,"ON")==0)||(strcmp(buffer,"on")==0)||
+                (strcmp(buffer,"On")==0)||(strcmp(buffer,"oN")==0)) {
+                inparam->AMG_smooth_restriction = ON;
+            }
+            else if ((strcmp(buffer,"OFF")==0)||(strcmp(buffer,"off")==0)||
+                     (strcmp(buffer,"ofF")==0)||(strcmp(buffer,"oFf")==0)||
+                     (strcmp(buffer,"Off")==0)||(strcmp(buffer,"oFF")==0)||
+                     (strcmp(buffer,"OfF")==0)||(strcmp(buffer,"OFf")==0)) {
+                inparam->AMG_smooth_restriction = OFF;
+            }
+            else
+                { status = ERROR_INPUT_PAR; break; }
+            fscanf(fp, "%*[^\n]"); // skip rest of line
+        }
+
         else if (strcmp(buffer,"AMG_coarse_solver")==0) {
             val = fscanf(fp,"%s",buffer);
             if (val!=1 || strcmp(buffer,"=")!=0) {
@@ -365,13 +392,15 @@ void fasp_param_input (const char   *fname,
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
     
             if ((strcmp(buffer,"ON")==0)||(strcmp(buffer,"on")==0)||
-                (strcmp(buffer,"On")==0)||(strcmp(buffer,"oN")==0))
+                (strcmp(buffer,"On")==0)||(strcmp(buffer,"oN")==0)) {
                 inparam->AMG_coarse_scaling = ON;
+            }
             else if ((strcmp(buffer,"OFF")==0)||(strcmp(buffer,"off")==0)||
                      (strcmp(buffer,"ofF")==0)||(strcmp(buffer,"oFf")==0)||
                      (strcmp(buffer,"Off")==0)||(strcmp(buffer,"oFF")==0)||
-                     (strcmp(buffer,"OfF")==0)||(strcmp(buffer,"OFf")==0))
+                     (strcmp(buffer,"OfF")==0)||(strcmp(buffer,"OFf")==0)) {
                 inparam->AMG_coarse_scaling = OFF;
+            }
             else
                 { status = ERROR_INPUT_PAR; break; }
             fscanf(fp, "%*[^\n]"); // skip rest of line
