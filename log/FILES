@@ -21,7 +21,7 @@
       99 ./base/src/AuxConvert.c
       86 ./base/src/AuxGivens.c
      769 ./base/src/AuxGraphics.c
-     801 ./base/src/AuxInput.c
+     797 ./base/src/AuxInput.c
      216 ./base/src/AuxMemory.c
      295 ./base/src/AuxMessage.c
      998 ./base/src/AuxParam.c
@@ -103,4 +103,4 @@
      243 ./base/src/SolMatFree.c
      413 ./base/src/SolSTR.c
      322 ./base/src/SolWrapper.c
-   85231 total
+   85227 total
