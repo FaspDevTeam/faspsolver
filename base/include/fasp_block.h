@@ -139,7 +139,7 @@ typedef struct block_ivector {
 
 /**
  * \struct AMG_data_bsr
- * \brief Data for multigrid levels. (BSR format)
+ * \brief Data for multigrid levels in dBSRmat format
  *
  * \note This structure is needed for the AMG solver/preconditioner in BSR format
  */
@@ -233,8 +233,8 @@ typedef struct {
 } AMG_data_bsr; /**< AMG data for BSR matrices */
 
 /**
- * \struct precond_diagbsr
- * \brief Data passed to diagnal preconditioner for dBSRmat matrices
+ * \struct precond_diag_bsr
+ * \brief Data for diagnal preconditioners in dBSRmat format
  *
  * \note This is needed for the diagnal preconditioner.
  */
@@ -246,14 +246,13 @@ typedef struct {
     //! diagnal elements
     dvector diag;
 
-} precond_diagbsr; /**< Data for diagonal preconditioner of BSR matrices */
+} precond_diag_bsr; /**< Data for diagnal preconditioners in dBSRmat format */
 
 /**
  * \struct precond_data_bsr
- * \brief Data passed to the preconditioners.
+ * \brief Data for preconditioners in dBSRmat format
  *
  * \note This structure is needed for the AMG solver/preconditioner in BSR format
- *
  */
 typedef struct {
 
@@ -340,10 +339,10 @@ typedef struct {
     //! temporary work space for other usage
     REAL *w;
 
-} precond_data_bsr; /**< Preconditioner data for BSR matrices */
+} precond_data_bsr; /**< Data for preconditioners in dBSRmat format */
 
 /**
- * \brief Data passed to the preconditioner for block preconditioning for dBLCmat format
+ * \brief Data for block preconditioners in dBLCmat format
  *
  * This is needed for the block preconditioner.
  */
@@ -361,18 +360,20 @@ typedef struct {
     /*------------------------------*/
     /* Data for the diagonal blocks */
     /*------------------------------*/
+
     /*--- solve by direct solver ---*/
     void **LU_diag;       /**< LU decomposition for the diagonal blocks (for UMFpack) */
 
-    /*---  solve by AMG ---*/
+    /*--- solve by AMG ---*/
     AMG_data **mgl;       /**< AMG data for the diagonal blocks */
+
     AMG_param *amgparam;  /**< parameters for AMG */
 
 } precond_block_data; /**< Precond data for block matrices */
 
 /**
  * \struct precond_sweeping_data
- * \brief Data passed to the preconditioner for sweeping preconditioning.
+ * \brief Data for sweeping preconditioner
  *
  * \author Xiaozhe Hu
  * \date   05/01/2014
@@ -395,7 +396,7 @@ typedef struct {
     dvector r; /**< temporary dvector used to store and restore the residual */
     REAL *w;   /**< temporary work space for other usage */
 
-} precond_sweeping_data; /**< Precond data for block matrices */
+} precond_sweeping_data; /**< Data for sweeping preconditioner */
 
 #endif /* end if for __FASPBLOCK_HEADER__ */
 

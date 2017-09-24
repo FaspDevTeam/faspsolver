@@ -57,7 +57,7 @@ int main (int argc, const char * argv[])
     strncpy(filename2, inparam.workdir, 128);
     datafile2="rhs_FE.dat"; strcat(filename2, datafile2);
     
-    fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+    fasp_dcsrvec_read2(filename1, filename2, &A, &b);
     
     // Step 2. Print problem size and AMG parameters
     if (print_level>PRINT_NONE) {

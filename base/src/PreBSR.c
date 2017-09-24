@@ -50,7 +50,7 @@ void fasp_precond_dbsr_diag (REAL *r,
                              REAL *z, 
                              void *data) 
 {
-    precond_diagbsr *diag   = (precond_diagbsr *)data;
+    precond_diag_bsr * diag = (precond_diag_bsr *)data;
     const INT nb = diag->nb; 
     
     switch (nb) {
@@ -122,8 +122,8 @@ void fasp_precond_dbsr_diag_nc2 (REAL *r,
                                  REAL *z,
                                  void *data) 
 {
-    precond_diagbsr *diag   = (precond_diagbsr *)data;
-    REAL          *diagptr = diag->diag.val;
+    precond_diag_bsr  * diag    = (precond_diag_bsr *)data;
+    REAL              * diagptr = diag->diag.val;
     
     unsigned INT i;
     const INT m = diag->diag.row/4;    
@@ -170,8 +170,8 @@ void fasp_precond_dbsr_diag_nc3 (REAL *r,
                                  REAL *z,
                                  void *data)
 {
-    precond_diagbsr *diag   = (precond_diagbsr *)data;
-    REAL          *diagptr = diag->diag.val;
+    precond_diag_bsr  * diag    = (precond_diag_bsr *)data;
+    REAL              * diagptr = diag->diag.val;
     
     const INT m = diag->diag.row/9;    
     unsigned INT i;
@@ -218,8 +218,8 @@ void fasp_precond_dbsr_diag_nc5 (REAL *r,
                                  REAL *z,
                                  void *data)
 {
-    precond_diagbsr *diag   = (precond_diagbsr *)data;
-    REAL          *diagptr = diag->diag.val;
+    precond_diag_bsr  * diag    = (precond_diag_bsr *)data;
+    REAL              * diagptr = diag->diag.val;
     
     unsigned INT i;
     const INT m = diag->diag.row/25;
@@ -266,8 +266,8 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
                                  REAL *z, 
                                  void *data) 
 {
-    precond_diagbsr *diag   = (precond_diagbsr *)data;
-    REAL          *diagptr = diag->diag.val;
+    precond_diag_bsr  * diag    = (precond_diag_bsr *)data;
+    REAL              * diagptr = diag->diag.val;
     
     unsigned INT i;
     const INT m = diag->diag.row/49;    

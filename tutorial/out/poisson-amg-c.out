@@ -3,15 +3,15 @@
 ||   FASP: AMG example -- C version   ||
 ========================================
 
-fasp_dcsrvec2_read: reading file ../data/csrmat_FE.dat...
-fasp_dcsrvec2_read: reading file ../data/rhs_FE.dat...
+fasp_dcsrvec_read2: reading file ../data/csrmat_FE.dat...
+fasp_dcsrvec_read2: reading file ../data/rhs_FE.dat...
 A: m = 3969, n = 3969, nnz = 27281
 b: n = 3969
 
        Parameters in AMG_param
 -----------------------------------------------
 AMG print level:                   2
-AMG max num of iter:               100
+AMG max num of iter:               50
 AMG type:                          1
 AMG tolerance:                     1.00e-06
 AMG max levels:                    20
@@ -33,7 +33,7 @@ AMG aggressive path:               1
 -----------------------------------------------
 
 
-Calling classical AMG ...
+Setting up Classical AMG ...
 -----------------------------------------------------------
   Level   Num of rows   Num of nonzeros   Avg. NNZ / row   
 -----------------------------------------------------------
@@ -44,7 +44,7 @@ Calling classical AMG ...
 -----------------------------------------------------------
   Grid complexity = 1.672  |  Operator complexity = 2.403
 -----------------------------------------------------------
-Classical AMG setup costs 0.0047 seconds.
+Classical AMG setup costs 0.0044 seconds.
 -----------------------------------------------------------
 It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
 -----------------------------------------------------------
@@ -54,5 +54,5 @@ It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
      3 |  1.764023e-05   |  1.325550e-04  |     0.0503
      4 |  8.820794e-07   |  6.628261e-06  |     0.0500
 Number of iterations = 4 with relative residual 8.820794e-07.
-AMG solve costs 0.0015 seconds.
+AMG solve costs 0.0019 seconds.
 AMG totally costs 0.0066 seconds.

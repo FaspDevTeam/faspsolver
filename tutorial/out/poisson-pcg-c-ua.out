@@ -3,8 +3,8 @@
 ||   FASP: PCG example -- C version   ||
 ========================================
 
-fasp_dcsrvec2_read: reading file ../data/csrmat_FE.dat...
-fasp_dcsrvec2_read: reading file ../data/rhs_FE.dat...
+fasp_dcsrvec_read2: reading file ../data/csrmat_FE.dat...
+fasp_dcsrvec_read2: reading file ../data/rhs_FE.dat...
 A: m = 3969, n = 3969, nnz = 27281
 b: n = 3969
 
@@ -18,6 +18,8 @@ Solver tolerance:                  1.00e-06
 Solver stopping type:              1
 -----------------------------------------------
 
+
+Setting up UA AMG ...
 -----------------------------------------------------------
   Level   Num of rows   Num of nonzeros   Avg. NNZ / row   
 -----------------------------------------------------------
@@ -28,7 +30,9 @@ Solver stopping type:              1
 -----------------------------------------------------------
   Grid complexity = 1.357  |  Operator complexity = 1.348
 -----------------------------------------------------------
-Unsmoothed aggregation setup costs 0.0016 seconds.
+Unsmoothed aggregation setup costs 0.0015 seconds.
+
+Calling CG solver (CSR) ...
 -----------------------------------------------------------
 It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
 -----------------------------------------------------------

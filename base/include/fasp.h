@@ -100,7 +100,7 @@ extern unsigned INT total_alloc_count; /**< total allocation times */
 
 /**
  * \struct ddenmat
- * \brief Dense matrix of REAL type
+ * \brief  Dense matrix of REAL type
  *
  * A dense REAL matrix
  */
@@ -119,7 +119,7 @@ typedef struct ddenmat{
 
 /**
  * \struct idenmat
- * \brief Dense matrix of INT type
+ * \brief  Dense matrix of INT type
  *
  * A dense INT matrix
  */
@@ -138,7 +138,7 @@ typedef struct idenmat{
 
 /**
  * \struct dCSRmat
- * \brief Sparse matrix of REAL type in CSR format
+ * \brief  Sparse matrix of REAL type in CSR format
  *
  * CSR Format (IA,JA,A) in REAL
  *
@@ -168,7 +168,7 @@ typedef struct dCSRmat{
 
 /**
  * \struct iCSRmat
- * \brief Sparse matrix of INT type in CSR format
+ * \brief  Sparse matrix of INT type in CSR format
  *
  * CSR Format (IA,JA,A) in integer
  *
@@ -198,7 +198,7 @@ typedef struct iCSRmat{
 
 /**
  * \struct dCOOmat
- * \brief Sparse matrix of REAL type in COO (or IJ) format
+ * \brief  Sparse matrix of REAL type in COO (IJ) format
  *
  * Coordinate Format (I,J,A)
  *
@@ -229,7 +229,7 @@ typedef struct dCOOmat{
 
 /**
  * \struct iCOOmat
- * \brief Sparse matrix of INT type in COO (or IJ) format
+ * \brief  Sparse matrix of INT type in COO (IJ) format
  *
  * Coordinate Format (I,J,A)
  *
@@ -259,7 +259,7 @@ typedef struct iCOOmat{
 
 /*!
  * \struct dCSRLmat
- * \brief Sparse matrix of REAL type in CSRL format
+ * \brief  Sparse matrix of REAL type in CSRL format
  */
 typedef struct dCSRLmat{
 
@@ -294,7 +294,7 @@ typedef struct dCSRLmat{
 
 /**
  * \struct dSTRmat
- * \brief Structure matrix of REAL type
+ * \brief  Structure matrix of REAL type
  *
  * \note Every nc^2 entries of the array diag and off-diag[i] store one block:
  *       For 2D matrix, the recommended offsets is [-1,1,-nx,nx];
@@ -336,7 +336,7 @@ typedef struct dSTRmat{
 
 /**
  * \struct dvector
- * \brief Vector with n entries of REAL type
+ * \brief  Vector with n entries of REAL type
  */
 typedef struct dvector{
 
@@ -350,7 +350,7 @@ typedef struct dvector{
 
 /**
  * \struct ivector
- * \brief Vector with n entries of INT type
+ * \brief  Vector with n entries of INT type
  */
 typedef struct ivector{
 
@@ -368,7 +368,7 @@ typedef struct ivector{
 
 /**
  * \struct ITS_param
- * \brief Parameters passed to iterative solvers
+ * \brief  Parameters for iterative solvers
  */
 typedef struct {
     
@@ -384,7 +384,7 @@ typedef struct {
 
 /**
  * \struct ILU_param
- * \brief Parameters for ILU
+ * \brief  Parameters for ILU
  */
 typedef struct {
     
@@ -410,9 +410,7 @@ typedef struct {
 
 /**
  * \struct SWZ_param
- * \brief Parameters for Schwarz method
- *
- * Added on 05/14/2012
+ * \brief  Parameters for Schwarz method
  */
 typedef struct {
     
@@ -431,11 +429,11 @@ typedef struct {
     //! type of Schwarz block solver
     INT SWZ_blksolver;
     
-} SWZ_param; /**< Parameters for ILU */
+} SWZ_param; /**< Parameters for Schwarz method */
 
 /**
  * \struct AMG_param
- * \brief Parameters for AMG solver
+ * \brief  Parameters for AMG methods
  *
  * \note This is needed for the AMG solver/preconditioner.
  */
@@ -573,7 +571,7 @@ typedef struct {
     //! type of Schwarz block solver
     INT SWZ_blksolver;
     
-} AMG_param; /**< Parameters for AMG */
+} AMG_param; /**< Parameters for AMG methods */
 
 /*---------------------------*/
 /*--- Work data structures --*/
@@ -581,7 +579,7 @@ typedef struct {
 
 /**
  * \struct Mumps_data
- * \brief Parameters for MUMPS interface
+ * \brief  Data for MUMPS interface
  *
  * Added on 10/10/2014
  */
@@ -595,11 +593,11 @@ typedef struct {
     //! work for MUMPS
     INT job;
     
-} Mumps_data; /**< Parameters for MUMPS */
+} Mumps_data; /**< Data for MUMPS */
 
 /**
  * \struct Pardiso_data
- * \brief Parameters for Intel MKL PARDISO interface
+ * \brief  Data for Intel MKL PARDISO interface
  *
  * Added on 11/28/2015
  */
@@ -623,11 +621,11 @@ typedef struct {
     
 #endif
     
-} Pardiso_data; /**< Parameters for PARDISO */
+} Pardiso_data; /**< Data for PARDISO */
 
 /**
  * \struct ILU_data
- * \brief Data for ILU setup
+ * \brief  Data for ILU setup
  */
 typedef struct {
     
@@ -700,7 +698,7 @@ typedef struct {
 
 /**
  * \struct SWZ_data
- * \brief Data for Schwarz methods
+ * \brief  Data for Schwarz methods
  *
  * This is needed for the Schwarz solver/preconditioner/smoother.
  */
@@ -774,11 +772,11 @@ typedef struct {
     //! param for Schwarz
     SWZ_param *swzparam;
     
-} SWZ_data;
+} SWZ_data; /**< Data for Schwarz method */
 
 /**
  * \struct AMG_data
- * \brief Data for AMG solvers
+ * \brief  Data for AMG methods
  *
  * \note This is needed for the AMG solver/preconditioner.
  */
@@ -861,11 +859,11 @@ typedef struct {
     //! weight for smoother
     REAL weight;
     
-} AMG_data; /**< Data for AMG */
+} AMG_data; /**< Data for AMG methods */
 
 /**
  * \struct precond_data
- * \brief Data passed to the preconditioners
+ * \brief  Data for preconditioners
  */
 typedef struct {
     
@@ -954,11 +952,11 @@ typedef struct {
     //! temporary work space for other usage
     REAL *w;
     
-} precond_data; /**< Data for general preconditioner */
+} precond_data; /**< Data for preconditioners */
 
 /**
  * \struct precond_data_str
- * \brief Data passed to the preconditioner for dSTRmat matrices
+ * \brief  Data for preconditioners in dSTRmat format
  */
 typedef struct {
     
@@ -1044,11 +1042,11 @@ typedef struct {
     //! temporary work space for other usage
     REAL *w;
     
-} precond_data_str; /**< Data for preconditioner of STR matrices */
+} precond_data_str; /**< Data for preconditioners of STR matrices */
 
 /**
  * \struct precond_diag_str
- * \brief Data passed to diagonal preconditioner for dSTRmat matrices
+ * \brief  Data for diagonal preconditioners in dSTRmat format
  *
  * \note This is needed for the diagonal preconditioner.
  */
@@ -1060,11 +1058,11 @@ typedef struct {
     //! diagonal elements
     dvector diag;
     
-} precond_diag_str; /**< Data for diagonal preconditioner of STR matrices */
+} precond_diag_str; /**< Data for diagonal preconditioners of STR matrices */
 
 /**
  * \struct precond
- * \brief Preconditioner data and action
+ * \brief  Preconditioner data and action
  *
  * \note This is the preconditioner structure for preconditioned iterative methods.
  */
@@ -1080,7 +1078,7 @@ typedef struct {
 
 /**
  * \struct mxv_matfree
- * \brief Matrix-vector multiplication, replace the actual matrix
+ * \brief  Matrix-vector multiplication, replace the actual matrix
  */
 typedef struct {
 
@@ -1094,7 +1092,7 @@ typedef struct {
 
 /**
  * \struct input_param
- * \brief Input parameters
+ * \brief  Input parameters
  *
  * Input parameters, reading from disk file
  */

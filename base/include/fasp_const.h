@@ -1,7 +1,6 @@
 /*! \file  fasp_const.h
  *
- *  \brief Definition of all kinds of FASP constants, including error messages,
- *         solver types, etc.
+ *  \brief Definition of FASP constants, including messages, solver types, etc.
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.

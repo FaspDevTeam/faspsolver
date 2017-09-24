@@ -71,7 +71,7 @@
 
 \author{FASP Developers}
 
-\date{\vfill Version 1.9.9} % Activate to display a given date or no date
+\date{\vfill Version 2.0.3} % Activate to display a given date or no date
 
 \begin{document}
 
@@ -433,7 +433,7 @@ accessed by multiple users.
   different location.
 \end{snugshade}
 
-To uninstall FASP and clean up the working directory, you can run
+To easily uninstall FASP and clean up the working directory, FASP comes with an automatic uninstallation script; you can run
 %
 \begin{lstlisting}[numbers=none]
 $ make uninstall
@@ -861,7 +861,7 @@ This example is very similar to the first example and we now briefly explain it:
 %
 \item Line 44--50 sets the parameters for the setup phase of the classical AMG method (\S\ref{sec:amg}).
 %
-\item Line 56--59 gives the parameters for the setup phase of the aggregation-base AMG methods (\S\ref{sec:amg}).
+\item Line 56--60 gives the parameters for the setup phase of the aggregation-base AMG methods (\S\ref{sec:amg}).
 %
 \end{itemize}
 %
@@ -1177,7 +1177,7 @@ This format is simple and is derived from the dCSRmat data structure. The follow
 
 In FASP, we provided several functions for reading, writing, and printing different formats of sparse matrices in plain text or binary formats. These functions can be found in ``\url{base/src/BlaIO.c}'' and we list the available functions as follows:
 %
-\lstinputlisting[language=C,firstnumber=469,firstline=469,lastline=580]{../base/include/fasp_functs.h}
+\lstinputlisting[language=C,firstnumber=470,firstline=470,lastline=581]{../base/include/fasp_functs.h}
 %
 \begin{snugshade}\noindent
   NOTE: The above function declarations are taken from
@@ -1239,15 +1239,15 @@ We first show the abstract interface for the iterative methods. The following co
 %
 The names of the input arguments explain themselves mostly and they are explained in the Reference Manual in detail.
 
-We briefly discuss how to call this function; and, once you understand PCG, you can easily call other iterative methods.
+We briefly discuss how to call this function; and, once you understand PCG, you can easily call other Krylov-type iterative methods.
 %
-\lstinputlisting[firstnumber=489,firstline=489,lastline=502]{../base/src/SolCSR.c}
+\lstinputlisting[firstnumber=476,firstline=476,lastline=489]{../base/src/SolCSR.c}
 %
 Now we explain this code segment a little bit:
 \begin{itemize}
-\item Line 490--491 performs the setup phase for ILU method. The particular type of ILU method is determined by ``\verb|iluparam|''; see \S\ref{sec:parameters}. Line 7 performs a simple memory check for ILU.
-\item Line 497--499 defines the preconditioner data structure ``\verb|pc|'', which contains two parts: one is the actual preconditioning action ``\verb|pc.fct|'', the other is the auxiliary data which is needed to perform the preconditioning action ``\verb|pc.data|''.
-\item Line 502 calls iterative methods. ``A'' is the matrix in dCSRmat format; ``b'' and ``x'' are the right-hand side and the solution vectors, respectively. Similar to ILU setup, the type of iterative methods is determined by ``\verb|itparam|''.
+\item Line 477--478 performs the setup phase for ILU method. The particular type of ILU method is determined by ``\verb|iluparam|''; see \S\ref{sec:parameters}. Line 7 performs a simple memory check for ILU.
+\item Line 484--486 defines the preconditioner data structure ``\verb|pc|'', which contains two parts: one is the actual preconditioning action ``\verb|pc.fct|'', the other is the auxiliary data which is needed to perform the preconditioning action ``\verb|pc.data|''.
+\item Line 489 calls iterative methods. ``A'' is the matrix in dCSRmat format; ``b'' and ``x'' are the right-hand side and the solution vectors, respectively. Similar to ILU setup, the type of iterative methods is determined by ``\verb|itparam|''.
 \end{itemize}
 
 Apparently, we should now explain the data structure ``\verb|itparam|''.
@@ -1256,7 +1256,7 @@ Apparently, we should now explain the data structure ``\verb|itparam|''.
 %
 Possible ``\verb|itsolver_type|'' includes:
 %
-\lstinputlisting[language=C,numbers=none,firstline=97,lastline=121]{../base/include/fasp_const.h}
+\lstinputlisting[language=C,numbers=none,firstline=96,lastline=120]{../base/include/fasp_const.h}
 %
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1267,15 +1267,15 @@ The classical algebraic multigrid method~\cite{Ruge.RugeStuben.1987bs} is an imp
 
 The following code segment is part of ``\url{base/src/SolAMG.c}'' and it is a good example which shows how to call different AMG methods (classical AMG, smoothed aggregation, un-smoothed aggregation) and different multilevel iterative methods (V-cycle, W-cycle, AMLI-cycle, Nonlinear AMLI-cycle, etc).
 %
-\lstinputlisting[language=C,firstnumber=46,firstline=46,lastline=143]{../base/src/SolAMG.c}
+\lstinputlisting[language=C,firstnumber=46,firstline=46,lastline=140]{../base/src/SolAMG.c}
 %
 The code above is very simple and we only wish to point out that:
 %
 \begin{itemize}
 \item Line 51--54 reads some of the parameters from ``\verb|AMG_param|'', which can be set in an input file; see \S\ref{sec:parameters}.
 \item Line 72--79 initializes the ``\verb|AMG_data|'' with a copy of the coefficient matrix, the right-hand side, and the initial solution (it will store the final solution eventually).
-\item Line 82--96 calls three different AMG setup methods, determined by ``\verb|amg_type|''.
-\item Line 101--112 calls three different multilevel iterative methods, determined by ``\verb|cycle_type|''.
+\item Line 82--93 calls three different AMG setup methods, determined by ``\verb|amg_type|''.
+\item Line 98--109 calls three different multilevel iterative methods, determined by ``\verb|cycle_type|''.
 \end{itemize}
 
 \subsection{Parameters for AMG}

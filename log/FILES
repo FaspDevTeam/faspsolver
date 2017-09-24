@@ -1,6 +1,6 @@
-    1210 ./base/include/fasp.h
-     404 ./base/include/fasp_block.h
-     263 ./base/include/fasp_const.h
+    1208 ./base/include/fasp.h
+     405 ./base/include/fasp_block.h
+     262 ./base/include/fasp_const.h
     2868 ./base/include/fasp_functs.h
       51 ./base/include/fasp_grid.h
     1047 ./base/src/BlaIOUtil.inl
@@ -87,7 +87,7 @@
     1067 ./base/src/PreBLC.c
     1137 ./base/src/PreBSR.c
      671 ./base/src/PreCSR.c
-     362 ./base/src/PreDataInit.c
+     360 ./base/src/PreDataInit.c
      551 ./base/src/PreMGCycle.c
      364 ./base/src/PreMGCycleFull.c
      167 ./base/src/PreMGRecur.c
@@ -103,4 +103,4 @@
      236 ./base/src/SolMatFree.c
      409 ./base/src/SolSTR.c
      322 ./base/src/SolWrapper.c
-   85357 total
+   85353 total

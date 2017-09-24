@@ -3,8 +3,8 @@
 ||   FASP: AMG example -- C version   ||
 ========================================
 
-fasp_dcsrvec2_read: reading file ../data/csrmat_FE.dat...
-fasp_dcsrvec2_read: reading file ../data/rhs_FE.dat...
+fasp_dcsrvec_read2: reading file ../data/csrmat_FE.dat...
+fasp_dcsrvec_read2: reading file ../data/rhs_FE.dat...
 A: m = 3969, n = 3969, nnz = 27281
 b: n = 3969
 
@@ -28,7 +28,7 @@ Aggregation quality bound:         8.00
 -----------------------------------------------
 
 
-Calling SA AMG ...
+Setting up SA AMG ...
 -----------------------------------------------------------
   Level   Num of rows   Num of nonzeros   Avg. NNZ / row   
 -----------------------------------------------------------
@@ -38,7 +38,7 @@ Calling SA AMG ...
 -----------------------------------------------------------
   Grid complexity = 1.147  |  Operator complexity = 1.255
 -----------------------------------------------------------
-Smoothed aggregation setup costs 0.0032 seconds.
+Smoothed aggregation setup costs 0.0027 seconds.
 -----------------------------------------------------------
 It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
 -----------------------------------------------------------
@@ -65,5 +65,5 @@ It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
     20 |  1.978978e-08   |  1.487075e-07  |     0.5014
     21 |  9.931176e-09   |  7.462641e-08  |     0.5018
 Number of iterations = 21 with relative residual 9.931176e-09.
-AMG solve costs 0.0061 seconds.
-AMG totally costs 0.0098 seconds.
+AMG solve costs 0.0060 seconds.
+AMG totally costs 0.0090 seconds.

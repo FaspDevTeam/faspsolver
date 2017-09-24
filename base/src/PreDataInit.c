@@ -282,8 +282,6 @@ void fasp_ilu_data_create (const INT   iwk,
  *
  * \param iludata   Pointer to ILU_data
  *
- * \param A   Pointer to dSCRmat
- *
  * \author Chensong Zhang
  * \date   2010/04/03
  *

@@ -76,3 +76,4 @@ AMG_strong_coupled       = 0.08   % Strong coupled threshold
 AMG_max_aggregation      = 20     % Max size of aggregations
 AMG_tentative_smooth     = 0.67   % Smoothing factor for tentative prolongation
 AMG_smooth_filter        = OFF    % Switch for filtered matrix for smoothing
+AMG_smooth_restriction   = ON     % Switch for smoothing restriction or not

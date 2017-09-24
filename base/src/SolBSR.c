@@ -204,7 +204,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat    *A,
     INT nthreads = fasp_get_num_threads();
 #endif
     // setup preconditioner
-    precond_diagbsr diag;
+    precond_diag_bsr diag;
     fasp_dvec_alloc(ROW*nb2, &(diag.diag));
     
 #if DEBUG_MODE > 0
