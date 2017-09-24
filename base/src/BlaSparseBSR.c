@@ -2081,11 +2081,11 @@ dBSRmat fasp_dbsr_perm (const dBSRmat *A,
 }
 
 /**
- * \fn INT fasp_dbsr_merge_col (const dBSRmat *A)
+ * \fn INT fasp_dbsr_merge_col (dBSRmat *A)
  *
  * \brief Check and merge some same col index in one row.
  *
- * \param A  Pointer to the original dCSRmat matrix
+ * \param A  Pointer to the original dBSRmat matrix
  *
  * \return   The new merged dCSRmat matrix
  *

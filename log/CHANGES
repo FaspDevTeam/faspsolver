@@ -4,7 +4,11 @@ File Name: CHANGES
 - Add testgs.c; preparing for testing new sparse matrix data structures.
 - When reading matrix data, check and quit if error occurs.
 - Important: Name change for some file reading functions.
+- Important: Name change for preconditioner data in BSR.
+- Fix ALL warnings from Doxygen.
+- Update reference manual and user's guide.
 - Update regression results.
+- Update tutorial example output.
 
 09/23/2017 FASP 2.0.2:
 - Remove almost ALL unused variables and functions.

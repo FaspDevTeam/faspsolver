@@ -29,9 +29,9 @@ ILU drop tolerance:                1.00e-03
 ILU permutation tolerance:         0.00e+00
 -----------------------------------------------
 
-BSR ILU(0) setup costs 0.000228 seconds.
+BSR ILU(0) setup costs 0.000185 seconds.
 
-Calling GMRES solver (BSR) ...
+Calling GMRes solver (BSR) ...
 -----------------------------------------------------------
 It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
 -----------------------------------------------------------
@@ -56,4 +56,4 @@ It Num |   ||r||/||b||   |     ||r||      |  Conv. Factor
     18 |  8.553378e-07   |  7.019817e-03  |     0.2190
 Number of iterations = 18 with relative residual 8.553446e-07.
 Iterative method costs 0.0009 seconds.
-ILUk_Krylov method totally costs 0.0009 seconds.
+ILUk_Krylov method totally costs 0.0011 seconds.
