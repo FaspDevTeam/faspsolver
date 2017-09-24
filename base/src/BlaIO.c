@@ -13,8 +13,6 @@
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
- *
- *  // TODO: Quit and throw an error info if file format is wrong!!! --Chensong
  */
 
 #include "fasp.h"
@@ -36,7 +34,7 @@ INT   dlength; /**< Length of REAL in byte */
 /*---------------------------------*/
 
 /**
- * \fn void fasp_dcsrvec1_read (const char *filename, dCSRmat *A, dvector *b)
+ * \fn void fasp_dcsrvec_read1 (const char *filename, dCSRmat *A, dvector *b)
  *
  * \brief Read A and b from a SINGLE disk file
  *
@@ -62,7 +60,7 @@ INT   dlength; /**< Length of REAL in byte */
  *
  * Modified by Chensong Zhang on 03/14/2012
  */
-void fasp_dcsrvec1_read (const char  *filename,
+void fasp_dcsrvec_read1 (const char  *filename,
                          dCSRmat     *A,
                          dvector     *b)
 {
@@ -72,21 +70,24 @@ void fasp_dcsrvec1_read (const char  *filename,
     // Open input disk file
     FILE *fp = fopen(filename, "r");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     // Read CSR matrix
     if ( fscanf(fp, "%d %d", &m, &n) > 0 ) {
         A->row = m; A->col = n;
     }
+    else {
+        fasp_chkerr(ERROR_WRONG_FILE, filename);
+    }
     
     A->IA = (INT *)fasp_mem_calloc(m+1, sizeof(INT));
     for ( i = 0; i <= m; ++i ) {
         if ( fscanf(fp, "%d", &idata) > 0 ) A->IA[i] = idata;
+        else {
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
+        }
     }
     
     INT nnz = A->IA[m]-A->IA[0];
@@ -97,10 +98,16 @@ void fasp_dcsrvec1_read (const char  *filename,
     
     for ( i = 0; i < nnz; ++i ) {
         if ( fscanf(fp, "%d", &idata) > 0 ) A->JA[i] = idata;
+        else {
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
+        }
     }
     
     for ( i = 0; i < nnz; ++i ) {
         if ( fscanf(fp, "%lf", &ddata) > 0 ) A->val[i] = ddata;
+        else {
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
+        }
     }
     
     // Read RHS vector
@@ -110,16 +117,19 @@ void fasp_dcsrvec1_read (const char  *filename,
     
     for ( i = 0; i < m; ++i ) {
         if ( fscanf(fp, "%lf", &ddata) > 0 ) b->val[i] = ddata;
+        else {
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
+        }
     }
     
     fclose(fp);
 }
 
 /**
- * \fn void fasp_dcsrvec2_read (const char *filemat, const char *filerhs,
+ * \fn void fasp_dcsrvec_read2 (const char *filemat, const char *filerhs,
  *                              dCSRmat *A, dvector *b)
  *
- * \brief Read A and b from two disk files
+ * \brief Read A and b from two separate disk files
  *
  * \param filemat  File name for matrix
  * \param filerhs  File name for right-hand side
@@ -147,7 +157,7 @@ void fasp_dcsrvec1_read (const char  *filename,
  *
  * Modified by Chensong Zhang on 2012/01/05
  */
-void fasp_dcsrvec2_read (const char  *filemat,
+void fasp_dcsrvec_read2 (const char  *filemat,
                          const char  *filerhs,
                          dCSRmat     *A,
                          dvector     *b)
@@ -157,11 +167,8 @@ void fasp_dcsrvec2_read (const char  *filemat,
     /* read the matrix from file */
     FILE *fp = fopen(filemat,"r");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n",filemat);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filemat);
+
     printf("%s: reading file %s...\n", __FUNCTION__, filemat);
     
     if ( fscanf(fp,"%d\n",&n) > 0 ) {
@@ -170,11 +177,14 @@ void fasp_dcsrvec2_read (const char  *filemat,
         A->IA  = (INT *)fasp_mem_calloc(n+1, sizeof(INT));
     }
     else {
-        printf("### ERROR: Unknown file format %s!\n",filemat);
+        fasp_chkerr(ERROR_WRONG_FILE, filemat);
     }
 
     for ( i = 0; i <= n; ++i ) {
         if ( fscanf(fp,"%d\n",&tempi) > 0 ) A->IA[i] = tempi-1;
+        else {
+            fasp_chkerr(ERROR_WRONG_FILE, filemat);
+        }
     }
     
     INT nz = A->IA[n];
@@ -184,13 +194,15 @@ void fasp_dcsrvec2_read (const char  *filemat,
     
     for ( i = 0; i < nz; ++i ) {
         if ( fscanf(fp,"%d\n",&tempi) > 0 ) A->JA[i] = tempi-1;
-        else
-            printf("### ERROR: Unknown file format %s!\n",filemat);
+        else {
+            fasp_chkerr(ERROR_WRONG_FILE, filemat);
+        }
     }
     
     for ( i = 0; i < nz; ++i ) {
-        if ( fscanf(fp,"%le\n",&(A->val[i])) <= 0 )
-            printf("### ERROR: Unknown file format %s!\n",filemat);
+        if ( fscanf(fp,"%le\n",&(A->val[i])) <= 0 ) {
+            fasp_chkerr(ERROR_WRONG_FILE, filemat);
+        }
     }
     
     fclose(fp);
@@ -201,24 +213,21 @@ void fasp_dcsrvec2_read (const char  *filemat,
     
     fp = fopen(filerhs,"r");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n",filerhs);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filerhs);
+
     printf("%s: reading file %s...\n", __FUNCTION__, filerhs);
     
-    if ( fscanf(fp,"%d\n",&n) < 0 )
-        printf("### ERROR: Unknown file format %s!\n",filerhs);
-    
+    if ( fscanf(fp,"%d\n",&n) < 0 ) fasp_chkerr(ERROR_WRONG_FILE, filerhs);
+
     if ( n != b->row ) {
-        printf("### ERROR: rhs size %d does not match matrix size %d!\n",n,b->row);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
+        printf("### WARNING: rhs size = %d, matrix size = %d!\n", n, b->row);
+        fasp_chkerr(ERROR_MAT_SIZE, filemat);
     }
     
     for ( i = 0; i < n; ++i ) {
-        if ( fscanf(fp,"%le\n", &(b->val[i])) <= 0 )
-            printf("### ERROR: Unknown file format %s!\n",filerhs);
+        if ( fscanf(fp, "%le\n", &(b->val[i])) <= 0 ) {
+            fasp_chkerr(ERROR_WRONG_FILE, filerhs);
+        }
     }
     
     fclose(fp);
@@ -244,19 +253,22 @@ void fasp_dcsr_read (const char  *filename,
     // Open input disk file
     FILE *fp = fopen(filename, "r");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     // Read CSR matrix
     if ( fscanf(fp, "%d", &m) > 0 ) A->row = A->col = m;
-    
+    else {
+        fasp_chkerr(ERROR_WRONG_FILE, filename);
+    }
+
     A->IA = (INT *)fasp_mem_calloc(m+1, sizeof(INT));
     for ( i = 0; i <= m; ++i ) {
         if ( fscanf(fp, "%d", &idata) > 0 ) A->IA[i] = idata;
+        else {
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
+        }
     }
     
     INT nnz = A->IA[m]-A->IA[0];
@@ -267,11 +279,18 @@ void fasp_dcsr_read (const char  *filename,
     
     for ( i = 0; i < nnz; ++i ) {
         if ( fscanf(fp, "%d", &idata) > 0 ) A->JA[i] = idata;
+        else {
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
+        }
     }
     
     for ( i = 0; i < nnz; ++i ) {
         if ( fscanf(fp, "%lf", &ddata) > 0 ) A->val[i]= ddata;
+        else {
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
+        }
     }
+
     fclose(fp);
 }
 
@@ -300,15 +319,12 @@ void fasp_dcoo_read (const char  *filename,
     
     FILE *fp = fopen(filename,"r");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) <= 0 ) {
-        printf("### ERROR: Unknown file format %s!\n",filename);
+        fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
 
     dCOOmat Atmp = fasp_dcoo_create(m,n,nnz);
@@ -318,7 +334,7 @@ void fasp_dcoo_read (const char  *filename,
             Atmp.rowind[k]=i; Atmp.colind[k]=j; Atmp.val[k] = value;
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
         }
     }
     
@@ -329,7 +345,7 @@ void fasp_dcoo_read (const char  *filename,
 }
 
 /**
- * \fn void fasp_dcoo1_read (const char *filename, dCOOmat *A)
+ * \fn void fasp_dcoo_read1 (const char *filename, dCOOmat *A)
  *
  * \brief Read A from matrix disk file in IJ format -- indices starting from 1
  *
@@ -346,7 +362,7 @@ void fasp_dcoo_read (const char  *filename,
  * \author Xiaozhe Hu
  * \date   03/24/2013
  */
-void fasp_dcoo1_read (const char  *filename,
+void fasp_dcoo_read1 (const char  *filename,
                       dCOOmat     *A)
 {
     int  i,j,k,m,n,nnz;
@@ -354,10 +370,7 @@ void fasp_dcoo1_read (const char  *filename,
     
     FILE *fp = fopen(filename,"r");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
@@ -365,7 +378,7 @@ void fasp_dcoo1_read (const char  *filename,
         fasp_dcoo_alloc(m, n, nnz, A);
     }
     else {
-        printf("### ERROR: Unknown file format %s!\n",filename);
+        fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
     
     for ( k = 0; k < nnz; k++ ) {
@@ -373,7 +386,7 @@ void fasp_dcoo1_read (const char  *filename,
             A->rowind[k]=i-1; A->colind[k]=j-1; A->val[k] = value;
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
         }
     }
     
@@ -408,15 +421,12 @@ void fasp_dcoo_shift_read (const char  *filename,
     
     FILE *fp = fopen(filename,"r");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) <= 0 ) {
-        printf("### ERROR: Unknown file format %s!\n",filename);
+        fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
     
     dCOOmat Atmp = fasp_dcoo_create(m,n,nnz);
@@ -426,7 +436,7 @@ void fasp_dcoo_shift_read (const char  *filename,
             Atmp.rowind[k]=i-1; Atmp.colind[k]=j-1; Atmp.val[k] = value;
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
         }
     }
     
@@ -463,15 +473,12 @@ void fasp_dmtx_read (const char  *filename,
     
     FILE *fp = fopen(filename,"r");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) <= 0 ) {
-        printf("### ERROR: Unknown file format %s!\n",filename);
+        fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
     
     dCOOmat Atmp = fasp_dcoo_create(m,n,nnz);
@@ -480,15 +487,13 @@ void fasp_dmtx_read (const char  *filename,
     
     while (innz < nnz) {
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
-            
             Atmp.rowind[innz]=i-1;
             Atmp.colind[innz]=j-1;
             Atmp.val[innz] = value;
             innz = innz + 1;
-            
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
         }
     }
     
@@ -525,15 +530,12 @@ void fasp_dmtxsym_read (const char  *filename,
     
     FILE *fp = fopen(filename,"r");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) <= 0 ) {
-        printf("### ERROR: Unknown file format %s!\n",filename);
+        fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
     
     nnz = 2*(nnz-m) + m; // adjust for sym problem
@@ -560,7 +562,7 @@ void fasp_dmtxsym_read (const char  *filename,
             
         }
         else {
-            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
         }
     }
     
@@ -603,10 +605,7 @@ void fasp_dstr_read (const char  *filename,
     
     FILE *fp = fopen(filename,"r");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
@@ -615,7 +614,7 @@ void fasp_dstr_read (const char  *filename,
         A->nx = nx; A->ny = ny; A->nz = nz;
     }
     else {
-        printf("### ERROR: Unknown file format %s!\n",filename);
+        fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
 
     nxy = nx*ny; ngrid = nxy*nz;
@@ -624,13 +623,13 @@ void fasp_dstr_read (const char  *filename,
     // read number of components
     if ( fscanf(fp,"%d",&nc) > 0 ) A->nc = nc;
     else {
-        printf("### ERROR: Unknown file format %s!\n",filename);
+        fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
     
     // read number of bands
     if ( fscanf(fp,"%d",&nband) > 0 ) A->nband = nband;
     else {
-        printf("### ERROR: Unknown file format %s!\n",filename);
+        fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
 
     A->offsets = (INT *)fasp_mem_calloc(nband, sizeof(INT));
@@ -640,13 +639,13 @@ void fasp_dstr_read (const char  *filename,
         A->diag = (REAL *)fasp_mem_calloc(n, sizeof(REAL));
     }
     else {
-        printf("### ERROR: Unknown file format %s!\n",filename);
+        fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
 
     for ( i = 0; i < n; ++i ) {
         if ( fscanf(fp, "%le", &value) > 0 ) A->diag[i] = value;
         else {
-            printf("### ERROR: Unknown file format %s!\n",filename);
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
         }
     }
     
@@ -659,7 +658,7 @@ void fasp_dstr_read (const char  *filename,
             A->offsets[nband-k-1] = offset;
         }
         else {
-            printf("### ERROR: Unknown file format %s!\n",filename);
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
         }
         
         A->offdiag[nband-k-1] = (REAL *)fasp_mem_calloc(n, sizeof(REAL));
@@ -668,7 +667,7 @@ void fasp_dstr_read (const char  *filename,
                 A->offdiag[nband-k-1][i] = value;
             }
             else {
-                printf("### ERROR: Unknown file format %s!\n",filename);
+                fasp_chkerr(ERROR_WRONG_FILE, filename);
             }
         }
     }
@@ -711,11 +710,9 @@ void fasp_dbsr_read (const char  *filename,
     int  status;
     
     FILE *fp = fopen(filename,"r");
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     status = fscanf(fp, "%d %d %d", &ROW,&COL,&NNZ); // read dimension of the problem
@@ -752,7 +749,7 @@ void fasp_dbsr_read (const char  *filename,
     }
     
     fclose(fp);
-    fasp_chkerr(status, __FUNCTION__);
+    fasp_chkerr(status, filename);
 }
 
 /**
@@ -782,10 +779,7 @@ void fasp_dvecind_read (const char  *filename,
     
     int   status;
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
@@ -807,7 +801,7 @@ void fasp_dvecind_read (const char  *filename,
     }
     
     fclose(fp);
-    fasp_chkerr(status, __FUNCTION__);
+    fasp_chkerr(status, filename);
 }
 
 /**
@@ -833,11 +827,9 @@ void fasp_dvec_read (const char  *filename,
     int   status;
     
     FILE *fp = fopen(filename,"r");
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     status = fscanf(fp,"%d",&n);
@@ -859,7 +851,7 @@ void fasp_dvec_read (const char  *filename,
     }
     
     fclose(fp);
-    fasp_chkerr(status, __FUNCTION__);
+    fasp_chkerr(status, filename);
 }
 
 /**
@@ -885,11 +877,8 @@ void fasp_ivecind_read (const char  *filename,
 
     FILE *fp = fopen(filename,"r");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     status = fscanf(fp,"%d",&n);
@@ -901,7 +890,7 @@ void fasp_ivecind_read (const char  *filename,
     }
     
     fclose(fp);
-    fasp_chkerr(status, __FUNCTION__);
+    fasp_chkerr(status, filename);
 }
 
 /**
@@ -927,11 +916,8 @@ void fasp_ivec_read (const char  *filename,
 
     FILE *fp = fopen(filename,"r");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     status = fscanf(fp,"%d",&n);
@@ -943,11 +929,11 @@ void fasp_ivec_read (const char  *filename,
     }
     
     fclose(fp);
-    fasp_chkerr(status, __FUNCTION__);
+    fasp_chkerr(status, filename);
 }
 
 /**
- * \fn void fasp_dcsrvec1_write (const char *filename, dCSRmat *A, dvector *b)
+ * \fn void fasp_dcsrvec_write1 (const char *filename, dCSRmat *A, dvector *b)
  *
  * \brief Write A and b to a SINGLE disk file
  *
@@ -971,7 +957,7 @@ void fasp_ivec_read (const char  *filename,
  *
  * Modified by Chensong on 12/26/2012
  */
-void fasp_dcsrvec1_write (const char  *filename,
+void fasp_dcsrvec_write1 (const char  *filename,
                           dCSRmat     *A,
                           dvector     *b)
 {
@@ -979,13 +965,10 @@ void fasp_dcsrvec1_write (const char  *filename,
     INT i;
     
     FILE *fp = fopen(filename, "w");
-    
+
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     /* write the matrix to file */
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     fprintf(fp,"%d %d\n",m,n);
@@ -1002,11 +985,6 @@ void fasp_dcsrvec1_write (const char  *filename,
     m = b->row;
     
     /* write the rhs to file */
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
     
     fprintf(fp,"%d\n",m);
@@ -1017,10 +995,10 @@ void fasp_dcsrvec1_write (const char  *filename,
 }
 
 /**
- * \fn void fasp_dcsrvec2_write (const char *filemat, const char *filerhs,
+ * \fn void fasp_dcsrvec_write2 (const char *filemat, const char *filerhs,
  *                               dCSRmat *A, dvector *b)
  *
- * \brief Write A and b to two disk files
+ * \brief Write A and b to two separate disk files
  *
  * \param filemat  File name for matrix
  * \param filerhs  File name for right-hand side
@@ -1046,9 +1024,8 @@ void fasp_dcsrvec1_write (const char  *filename,
  *
  * \author Feiteng Huang
  * \date   05/19/2012
- *
  */
-void fasp_dcsrvec2_write (const char  *filemat,
+void fasp_dcsrvec_write2 (const char  *filemat,
                           const char  *filerhs,
                           dCSRmat     *A,
                           dvector     *b)
@@ -1057,13 +1034,10 @@ void fasp_dcsrvec2_write (const char  *filemat,
     INT i;
     
     FILE *fp = fopen(filemat, "w");
-    
+
     /* write the matrix to file */
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filemat);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filemat);
+
     printf("%s: writing to file %s...\n", __FUNCTION__, filemat);
     
     fprintf(fp,"%d\n",m);
@@ -1084,10 +1058,7 @@ void fasp_dcsrvec2_write (const char  *filemat,
     fp = fopen(filerhs,"w");
     
     /* write the rhs to file */
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filerhs);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filerhs);
     
     printf("%s: writing to file %s...\n", __FUNCTION__, filerhs);
     
@@ -1126,11 +1097,8 @@ void fasp_dcoo_write (const char  *filename,
     
     FILE *fp = fopen(filename, "w");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
     
     fprintf(fp,"%d  %d  %d\n",m,n,A->nnz);
@@ -1167,11 +1135,9 @@ void fasp_dstr_write (const char  *filename,
     unsigned INT i, k, n;
     
     FILE *fp = fopen(filename,"w");
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
     
     fprintf(fp,"%d  %d  %d\n",nx,ny,nz); // write dimension of the problem
@@ -1226,11 +1192,9 @@ void fasp_dbsr_write (const char *filename,
     unsigned INT i, n;
     
     FILE *fp = fopen(filename,"w");
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
     
     fprintf(fp,"%d  %d  %d\n",ROW,COL,NNZ); // write dimension of the block matrix
@@ -1275,11 +1239,8 @@ void fasp_dvec_write (const char  *filename,
     
     FILE *fp = fopen(filename,"w");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
     
     fprintf(fp,"%d\n",m);
@@ -1310,11 +1271,9 @@ void fasp_dvecind_write (const char  *filename,
     INT m = vec->row, i;
     
     FILE *fp = fopen(filename,"w");
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
     
     fprintf(fp,"%d\n",m);
@@ -1346,11 +1305,8 @@ void fasp_ivec_write (const char  *filename,
     
     FILE *fp = fopen(filename,"w");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
     
     // write number of nonzeros
@@ -1506,14 +1462,13 @@ void fasp_dbsr_write_coo (const char    *filename,
     nb2 =nb*nb;
     
     FILE *fp = fopen(filename,"w");
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
-#if DEBUG_MODE > 1
-    printf("nrow = %d, ncol = %d, nnz = %d, nb = %d, storage_manner = %d\n",
-           A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
+
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
+#if DEBUG_MODE > PRINT_MIN
+    printf("### DEBUG: nrow = %d, ncol = %d, nnz = %d, nb = %d\n",
+           A->ROW, A->COL, A->NNZ, A->nb);
+    printf("### DEBUG: storage_manner = %d\n", A->storage_manner);
 #endif
     
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
@@ -1533,6 +1488,7 @@ void fasp_dbsr_write_coo (const char    *filename,
             }
         }
     }
+
     fclose(fp);
 }
 
@@ -1552,15 +1508,15 @@ void fasp_dcsr_write_coo (const char    *filename,
 {
     
     INT i, j;
-    printf("nrow = %d, ncol = %d, nnz = %d\n",
-           A->row, A->col, A->nnz);
-    
+
+#if DEBUG_MODE > PRINT_MIN
+    printf("nrow = %d, ncol = %d, nnz = %d\n", A->row, A->col, A->nnz);
+#endif
+
     FILE *fp = fopen(filename,"w");
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
     
     // write dimension of the block matrix
@@ -1588,7 +1544,7 @@ void fasp_dcsr_write_coo (const char    *filename,
  */
 void fasp_dstr_print (const dSTRmat *A)
 {
-    // To be added later! --Chensong
+    // TODO: To be added later! --Chensong
 }
 
 /**
@@ -1624,20 +1580,19 @@ void fasp_matrix_read (const char  *filename,
                        void        *A)
 {
     
-    INT   index,flag;
+    INT   index, flag;
     int   status;
+    SHORT EndianFlag;
 
     FILE *fp = fopen(filename,"rb");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     status = fread(&index, sizeof(INT), 1, fp);
-    
+    fasp_chkerr(status, filename);
+
     // matrix stored in ASCII format
     if ( index == 808464432 ) {
         
@@ -1664,6 +1619,7 @@ void fasp_matrix_read (const char  *filename,
                 fasp_dmtxsym_read_s(fp, (dCSRmat *)A); break;
             default:
                 printf("### ERROR: Unknown file flag %d\n", flag);
+                fasp_chkerr(ERROR_WRONG_FILE, filename);
         }
         
         fclose(fp);
@@ -1674,9 +1630,11 @@ void fasp_matrix_read (const char  *filename,
     // matrix stored in binary format
     
     // test Endian consistence of machine and file
-    SHORT EndianFlag = index;
+    EndianFlag = index;
     
     status = fread(&index, sizeof(INT), 1, fp);
+    fasp_chkerr(status, filename);
+
     index = endian_convert_int(index, sizeof(INT), EndianFlag);
     flag = (INT) index/100;
     ilength = (INT) (index - flag*100)/10;
@@ -1703,10 +1661,10 @@ void fasp_matrix_read (const char  *filename,
             break;
         default:
             printf("### ERROR: Unknown file flag %d\n", flag);
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
     
     fclose(fp);
-    fasp_chkerr(status, __FUNCTION__);
 }
 
 /**
@@ -1727,19 +1685,17 @@ void fasp_matrix_read_bin (const char *filename,
 {
     size_t  status;
     INT     index, flag;
+    SHORT   EndianFlag = 1;
+
     FILE   *fp = fopen(filename, "rb");
-    
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     status = fread(&index, sizeof(INT), 1, fp);
-    
-    SHORT EndianFlag = 1;
-    
+    fasp_chkerr(status, filename);
+
     index = endian_convert_int(index, sizeof(INT), EndianFlag);
     
     flag = (INT) index/100;
@@ -1767,10 +1723,10 @@ void fasp_matrix_read_bin (const char *filename,
             break;
         default:
             printf("### ERROR: Unknown file flag %d\n", flag);
+            fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
     
     fclose(fp);
-    fasp_chkerr(status, __FUNCTION__);
 }
 
 /**
@@ -1811,11 +1767,9 @@ void fasp_matrix_write (const char *filename,
     if( !fileflag ) {
         
         fp = fopen(filename,"w");
-        if ( fp == NULL ) {
-            printf("### ERROR: Cannot open %s!\n", filename);
-            fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-        }
-        
+
+        if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
         printf("%s: writing to file %s...\n", __FUNCTION__, filename);
         
         fprintf(fp,"%d%d%d%d\n",fileflag,fileflag,fileflag,fileflag);
@@ -1832,7 +1786,9 @@ void fasp_matrix_write (const char *filename,
             case 3:
                 fasp_dstr_write_s(fp, (dSTRmat *)A);
                 break;
-        }
+            default:
+                printf("### WARNING: Unknown matrix flag %d\n", matrixflag);
+       }
         fclose(fp);
         return;
     }
@@ -1840,11 +1796,8 @@ void fasp_matrix_write (const char *filename,
     // write matrix in binary file
     fp = fopen(filename,"wb");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filename);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
     
     INT putflag = fileflag*100 + sizeof(INT)*10 + sizeof(REAL);
@@ -1860,6 +1813,8 @@ void fasp_matrix_write (const char *filename,
         case 3:
             fasp_dstr_write_b(fp, (dSTRmat *)A);
             break;
+        default:
+            printf("### WARNING: Unknown matrix flag %d\n", matrixflag);
     }
     
     fclose(fp);
@@ -1895,14 +1850,12 @@ void fasp_vector_read (const char *filerhs,
 {
     INT   index,flag;
     int   status;
-    
+    SHORT EndianFlag;
+
     FILE *fp = fopen(filerhs,"rb");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filerhs);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filerhs);
+
     printf("%s: reading file %s...\n", __FUNCTION__, filerhs);
     
     status = fread(&index, sizeof(INT), 1, fp);
@@ -1934,7 +1887,7 @@ void fasp_vector_read (const char *filerhs,
     }
     
     // vector stored in binary
-    SHORT EndianFlag = index;
+    EndianFlag = index;
     status = fread(&index, sizeof(INT), 1, fp);
     index = endian_convert_int(index, sizeof(INT), EndianFlag);
     flag = (int) index/100;
@@ -1954,10 +1907,13 @@ void fasp_vector_read (const char *filerhs,
         case 4:
             fasp_ivecind_read_b(fp, (ivector *)b, EndianFlag);
             break;
+        default:
+            printf("### ERROR: Unknown file flag %d\n", flag);
+            fasp_chkerr(ERROR_WRONG_FILE, filerhs);
     }
     
     fclose(fp);
-    fasp_chkerr(status, __FUNCTION__);
+    fasp_chkerr(status, filerhs);
 }
 
 /**
@@ -2004,11 +1960,8 @@ void fasp_vector_write (const char *filerhs,
     if (!fileflag) {
         fp = fopen(filerhs,"w");
         
-        if ( fp == NULL ) {
-            printf("### ERROR: Cannot open %s!\n", filerhs);
-            fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-        }
-        
+        if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filerhs);
+
         printf("%s: writing to file %s...\n", __FUNCTION__, filerhs);
         
         fprintf(fp,"%d%d%d%d\n",fileflag,fileflag,fileflag,fileflag);
@@ -2028,7 +1981,10 @@ void fasp_vector_write (const char *filerhs,
             case 4:
                 fasp_ivecind_write_s(fp, (ivector *)b);
                 break;
+            default:
+                printf("### WARNING: Unknown vector flag %d\n", vectorflag);
         }
+
         fclose(fp);
         return;
     }
@@ -2036,11 +1992,8 @@ void fasp_vector_write (const char *filerhs,
     // write vector in binary
     fp = fopen(filerhs,"wb");
     
-    if ( fp == NULL ) {
-        printf("### ERROR: Cannot open %s!\n", filerhs);
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
-    
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filerhs);
+
     printf("%s: writing to file %s...\n", __FUNCTION__, filerhs);
     
     INT putflag = vectorflag*100 + sizeof(INT)*10 + sizeof(REAL);
@@ -2059,6 +2012,8 @@ void fasp_vector_write (const char *filerhs,
         case 4:
             fasp_ivecind_write_b(fp, (ivector *)b);
             break;
+        default:
+            printf("### WARNING: Unknown vector flag %d\n", vectorflag);
     }
     
     fclose(fp);
@@ -2073,7 +2028,8 @@ void fasp_vector_write (const char *filerhs,
  * \param A            Pointer to the matrix
  * \param b            Pointer to the vector
  *
- * \note Modified from the c code hb_io_prb.c by John Burkardt
+ * \note Modified from the C code hb_io_prb.c by John Burkardt, which is NOT part
+ *       of the FASP project!
  *
  * \author Xiaoehe Hu
  * \date   05/30/2014
@@ -2149,7 +2105,7 @@ void fasp_hb_read (const char *input_file,
     //-------------------------
     // Printing if needed
     //-------------------------
-#if DEBUG_MODE > 1
+#if DEBUG_MODE > PRINT_MIN
     /*
      Print out the header information.
      */

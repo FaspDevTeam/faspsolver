@@ -153,6 +153,7 @@ Test and Debug
 [ 1.6.1 ] compare regression results automatically
 [ 1.6.9 ] finish the debug environment construction
 [ 1.9.8 ] add automatic build and test tool on BitBucket
+[ 2.0.3 ] add testgs.c for testing sparse matrix formats
 [       ] look for possible memory leaks and divide-by-zero (Chensong)
 
 ========================
@@ -199,3 +200,4 @@ Important Bug Fixes
 [ 1.9.9 ] ILUtp setup fails for Matrix-Market Prob 9
 [ 1.9.9 ] fix matrix format problem for Matrix-Market Prob 9
 [ 1.9.9 ] AMG does not pass Matrix-Market Prob 7
+[ 2.0.1 ] Uninitialized parameter which causes OpenMP problem
