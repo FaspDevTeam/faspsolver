@@ -467,11 +467,11 @@ void fasp_ilu_dstr_setup1 (dSTRmat  *A,
 
 /*-------- In file: BlaIO.c --------*/
 
-void fasp_dcsrvec1_read (const char  *filename,
+void fasp_dcsrvec_read1 (const char  *filename,
                          dCSRmat     *A,
                          dvector     *b);
 
-void fasp_dcsrvec2_read (const char  *filemat,
+void fasp_dcsrvec_read2 (const char  *filemat,
                          const char  *filerhs,
                          dCSRmat     *A,
                          dvector     *b);
@@ -482,7 +482,7 @@ void fasp_dcsr_read (const char  *filename,
 void fasp_dcoo_read (const char  *filename,
                      dCSRmat     *A);
 
-void fasp_dcoo1_read (const char  *filename,
+void fasp_dcoo_read1 (const char  *filename,
                       dCOOmat     *A);
 
 void fasp_dcoo_shift_read (const char  *filename,
@@ -512,11 +512,11 @@ void fasp_ivecind_read (const char  *filename,
 void fasp_ivec_read (const char  *filename,
                      ivector     *b);
 
-void fasp_dcsrvec1_write (const char  *filename,
+void fasp_dcsrvec_write1 (const char  *filename,
                           dCSRmat     *A,
                           dvector     *b);
 
-void fasp_dcsrvec2_write (const char  *filemat,
+void fasp_dcsrvec_write2 (const char  *filemat,
                           const char  *filerhs,
                           dCSRmat     *A,
                           dvector     *b);

@@ -68,7 +68,7 @@ int main (int argc, const char * argv[])
         datafile2="rhs_FE.dat";
         strcat(filename2,datafile2);
         
-        fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+        fasp_dcsrvec_read2(filename1, filename2, &A, &b);
 
     }
     
@@ -99,7 +99,7 @@ int main (int argc, const char * argv[])
         datafile2="rhs_1023X1023.dat";
         strcat(filename2,datafile2);
         
-        fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+        fasp_dcsrvec_read2(filename1, filename2, &A, &b);
         
     }
 

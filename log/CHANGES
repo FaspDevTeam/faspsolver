@@ -2,6 +2,9 @@ File Name: CHANGES
 
 09/24/2017 FASP 2.0.3:
 - Add testgs.c; preparing for testing new sparse matrix data structures.
+- When reading matrix data, check and quit if error occurs.
+- Important: Name change for some file reading functions.
+- Update regression results.
 
 09/23/2017 FASP 2.0.2:
 - Remove almost ALL unused variables and functions.

@@ -43,7 +43,7 @@ int main(int argc, const char * argv[])
     strcat(filename1,datafile1);
     datafile2="rhs_FE.dat";
     strcat(filename2,datafile2);        
-    fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+    fasp_dcsrvec_read2(filename1, filename2, &A, &b);
         
     // Check sparse pattern
     char *bmpfile="out/matrixsubplot.bmp";  /* Output the matrix as BMP file */

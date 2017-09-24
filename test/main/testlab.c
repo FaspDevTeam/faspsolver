@@ -72,7 +72,7 @@ int main (int argc, const char * argv[])
         datafile2="rhs_FE.dat";
         strcat(filename2,datafile2);        
         
-        fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+        fasp_dcsrvec_read2(filename1, filename2, &A, &b);
     }   
     
     // Read A and b -- P1 FE discretization for Poisson, 1M DoF    
@@ -99,7 +99,7 @@ int main (int argc, const char * argv[])
         datafile2="rhs_1023X1023.dat";
         strcat(filename2,datafile2);
         
-        fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+        fasp_dcsrvec_read2(filename1, filename2, &A, &b);
     }
     
     else if (problem_num == 20){
@@ -151,7 +151,7 @@ int main (int argc, const char * argv[])
         datafile2="Pan_rhs_small.dat";
         strcat(filename2,datafile2);
         
-        fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+        fasp_dcsrvec_read2(filename1, filename2, &A, &b);
     }
     
     else if (problem_num == 31) {
@@ -161,7 +161,7 @@ int main (int argc, const char * argv[])
         datafile2="Pan_rhs_big.dat";
         strcat(filename2,datafile2);
         
-        fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+        fasp_dcsrvec_read2(filename1, filename2, &A, &b);
     }
     
     else if (problem_num == 32) {
@@ -174,7 +174,7 @@ int main (int argc, const char * argv[])
         fasp_dcoo_read(filename1, &A);
         fasp_dvec_read(filename2, &b);
         
-        //fasp_dcsrvec2_read(filename1, filename2, &A, &b);
+        //fasp_dcsrvec_read2(filename1, filename2, &A, &b);
         
         //fasp_dcoo_write("Pan_mech_mat_coo.dat", &A);
     }
