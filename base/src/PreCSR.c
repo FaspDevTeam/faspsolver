@@ -243,8 +243,9 @@ void fasp_precond_ilu (REAL *r,
     return;
     
 MEMERR:
-    printf("### ERROR: Need %d memory, only %d available!\n", memneed, iludata->nwork);
-    exit(ERROR_ALLOC_MEM);
+    printf("### ERROR: Need %d memory, only %d available!\n",
+           memneed, iludata->nwork);
+    fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
 }
 
 /**
@@ -296,8 +297,9 @@ void fasp_precond_ilu_forward (REAL *r,
     return;
     
 MEMERR:
-    printf("### ERROR: Need %d memory, only %d available!", memneed, iludata->nwork);
-    exit(ERROR_ALLOC_MEM);
+    printf("### ERROR: Need %d memory, only %d available!",
+           memneed, iludata->nwork);
+    fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
 }
 
 /**
@@ -347,8 +349,9 @@ void fasp_precond_ilu_backward (REAL *r,
     return;
     
 MEMERR:
-    printf("### ERROR: Need %d memory, only %d available!", memneed, iludata->nwork);
-    exit(ERROR_ALLOC_MEM);
+    printf("### ERROR: Need %d memory, only %d available!",
+           memneed, iludata->nwork);
+    fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
 }
 
 /**

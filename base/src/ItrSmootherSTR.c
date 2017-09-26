@@ -184,7 +184,7 @@ void fasp_smoother_dstr_jacobi1 (dSTRmat *A,
         }
     } // end else if (nc > 1)
     else {
-        printf("### ERROR: nc is illegal! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
     fasp_mem_free(b_tmp);
@@ -412,7 +412,7 @@ void fasp_smoother_dstr_gs_ascend (dSTRmat *A,
     
     } // end else if (nc > 1)
     else {
-        printf("### ERROR: nc is illegal! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
     fasp_mem_free(vec_tmp);
@@ -528,7 +528,7 @@ void fasp_smoother_dstr_gs_descend (dSTRmat *A,
     } // end else if (nc > 1)
 
     else {
-        printf("### ERROR: nc is illegal! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
     fasp_mem_free(vec_tmp);
@@ -648,7 +648,7 @@ void fasp_smoother_dstr_gs_order (dSTRmat *A,
     
     } // end else if (nc > 1)
     else {
-        printf("### ERROR: nc is illegal! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
     fasp_mem_free(vec_tmp);
@@ -835,7 +835,7 @@ void fasp_smoother_dstr_gs_cf (dSTRmat    *A,
     
     } // end else if (nc > 1)
     else {
-        printf("### ERROR: nc is illegal! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
     fasp_mem_free(vec_tmp);
@@ -1071,7 +1071,7 @@ void fasp_smoother_dstr_sor_ascend (dSTRmat *A,
     
     } // end else if (nc > 1)
     else {
-        printf("### ERROR: nc is illegal! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
     fasp_mem_free(vec_tmp);
@@ -1191,7 +1191,7 @@ void fasp_smoother_dstr_sor_descend (dSTRmat *A,
     
     } // end else if (nc > 1)
     else {
-        printf("### ERROR: nc is illegal! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
     fasp_mem_free(vec_tmp);
@@ -1317,7 +1317,7 @@ void fasp_smoother_dstr_sor_order (dSTRmat *A,
     } // end else if (nc > 1)
     
     else {
-        printf("### ERROR: nc is illegal! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
     
@@ -1512,7 +1512,7 @@ void fasp_smoother_dstr_sor_cf (dSTRmat    *A,
     
     } // end else if (nc > 1)
     else {
-        printf("### ERROR: nc is illegal! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
     fasp_mem_free(vec_tmp);

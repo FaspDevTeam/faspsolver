@@ -791,10 +791,10 @@ void fasp_dvecind_read (const char  *filename,
         status = fscanf(fp, "%d %le", &index, &value);
         
         if ( value > BIGREAL || index >= n ) {
+            fasp_dvec_free(b); fclose(fp);
+
             printf("### ERROR: Wrong index = %d or value = %lf\n", index, value);
-            fasp_dvec_free(b);
-            fclose(fp);
-            exit(ERROR_INPUT_PAR);
+            fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
         }
         
         b->val[index] = value;
@@ -842,10 +842,10 @@ void fasp_dvec_read (const char  *filename,
         b->val[i] = value;
         
         if ( value > BIGREAL ) {
-            printf("### ERROR: Wrong value = %lf\n", value);
-            fasp_dvec_free(b);
-            fclose(fp);
-            exit(ERROR_INPUT_PAR);
+            fasp_dvec_free(b); fclose(fp);
+
+            printf("### ERROR: Wrong value = %lf!\n", value);
+            fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
         }
         
     }
@@ -1618,8 +1618,8 @@ void fasp_matrix_read (const char  *filename,
             case 6:
                 fasp_dmtxsym_read_s(fp, (dCSRmat *)A); break;
             default:
-                printf("### ERROR: Unknown file flag %d\n", flag);
-                fasp_chkerr(ERROR_WRONG_FILE, filename);
+                printf("### ERROR: Unknown flag %d in %s!\n", flag, filename);
+                fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
         }
         
         fclose(fp);
@@ -1660,8 +1660,8 @@ void fasp_matrix_read (const char  *filename,
             fasp_dmtxsym_read_b(fp, (dCSRmat *)A, EndianFlag);
             break;
         default:
-            printf("### ERROR: Unknown file flag %d\n", flag);
-            fasp_chkerr(ERROR_WRONG_FILE, filename);
+            printf("### ERROR: Unknown flag %d in %s!\n", flag, filename);
+            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
     }
     
     fclose(fp);
@@ -1722,8 +1722,8 @@ void fasp_matrix_read_bin (const char *filename,
             fasp_dmtxsym_read_b(fp, (dCSRmat *)A, EndianFlag);
             break;
         default:
-            printf("### ERROR: Unknown file flag %d\n", flag);
-            fasp_chkerr(ERROR_WRONG_FILE, filename);
+            printf("### ERROR: Unknown flag %d in %s!\n", flag, filename);
+            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
     }
     
     fclose(fp);
@@ -1823,7 +1823,7 @@ void fasp_matrix_write (const char *filename,
 /**
  * \fn fasp_vector_read (const char *filerhs, void *b)
  *
- * \brief Read RHS vector from different kinds of formats from both ASCII and binary files
+ * \brief Read RHS vector from different kinds of formats in ASCII or binary files
  *
  * \param filerhs File name of vector file
  * \param b Pointer to the vector
@@ -1908,8 +1908,8 @@ void fasp_vector_read (const char *filerhs,
             fasp_ivecind_read_b(fp, (ivector *)b, EndianFlag);
             break;
         default:
-            printf("### ERROR: Unknown file flag %d\n", flag);
-            fasp_chkerr(ERROR_WRONG_FILE, filerhs);
+            printf("### ERROR: Unknown flag %d in %s!\n", flag, filerhs);
+            fasp_chkerr(ERROR_WRONG_FILE, __FUNCTION__);
     }
     
     fclose(fp);
@@ -2086,11 +2086,9 @@ void fasp_hb_read (const char *input_file,
     
     input = fopen ( input_file, "rt" );
     
-    if ( !input )
-    {
-        printf ( "\n" );
-        printf ( "### ERROR: Fail to open the file.\n" );
-        return;
+    if ( !input ) {
+        printf ("### ERROR: Fail to open the file [%s]\n", input_file);
+        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
     //-------------------------
@@ -2170,7 +2168,7 @@ void fasp_hb_read (const char *input_file,
     
     // convert matrix
     if (ncol != nrow) {
-        printf ( "### ERROR: The matrix is not square!\n" );
+        printf ( "### ERROR: The matrix is not square! [%s]\n", __FUNCTION__ );
         goto FINISHED;
     }
     
@@ -2217,13 +2215,13 @@ void fasp_hb_read (const char *input_file,
     
     if ( nrhs == 0 ){
         
-        printf ( "### ERROR: There is not right hand side!\n" );
+        printf ( "### ERROR: No right hand side! [%s]\n", __FUNCTION__ );
         goto FINISHED;
         
     }
     else if (nrhs > 1){
         
-        printf ( "### ERROR: There is more than one right hand side!\n" );
+        printf ( "### ERROR: More than one right hand side! [%s]\n", __FUNCTION__ );
         goto FINISHED;
         
     }

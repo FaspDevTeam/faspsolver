@@ -100,7 +100,9 @@ INT fasp_solver_dblc_itsolver (dBLCmat    *A,
             break;
             
         default:
-            printf("### ERROR: Unknown iterative solver type %d!\n", itsolver_type);
+            printf("### ERROR: Unknown iterative solver type %d! [%s]\n",
+                   itsolver_type, __FUNCTION__);
+            return ERROR_SOLVER_TYPE;
             
     }
     

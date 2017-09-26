@@ -588,7 +588,7 @@ void fasp_dcsr_getcol (const INT      n,
     
     // check the column index n
     if ( n < 0 || n >= ncol ) {
-        printf("### ERROR: Column index %d is illegal!\n", n);
+        printf("### ERROR: Illegal column index %d! [%s]\n", n, __FUNCTION__);
         status = ERROR_DUMMY_VAR;
         goto FINISHED;
     }
@@ -695,7 +695,7 @@ void fasp_dcsr_diagpref (dCSRmat *A)
                         }
                     }
                     if (j == iend) {
-                        printf("### ERROR: Diagonal entry %d is missing or zero!\n", i);
+                        printf("### ERROR: Diagonal entry %d is zero!\n", i);
                         fasp_chkerr(ERROR_MISC, __FUNCTION__);
                     }
                 }
@@ -725,7 +725,7 @@ void fasp_dcsr_diagpref (dCSRmat *A)
                     }
                 }
                 if (j == row_size) {
-                    printf("### ERROR: Diagonal entry %d is missing or zero!\n", i);
+                    printf("### ERROR: Diagonal entry %d is zero!\n", i);
                     fasp_chkerr(ERROR_MISC, __FUNCTION__);
                 }
             }
@@ -1158,7 +1158,7 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat    *A,
         A->val = (REAL *)fasp_mem_realloc(A->val, k*sizeof(REAL));
     }
     else {
-        printf("### ERROR: Size of compressed matrix is larger than the original!\n");
+        printf("### WARNING: Size of compressed matrix is bigger than original!\n");
         status = ERROR_UNKNOWN;
     }
     
@@ -1424,7 +1424,7 @@ void fasp_dcsr_multicoloring (dCSRmat *A,
     free(newr);
     *groups = group;
 #else
-    printf("### ERROR: MULTI_COLOR_ORDER has not been defined!\n");
+    printf("### ERROR: %s has not been defined!\n", __FUNCTION__);
 #endif
 }
 

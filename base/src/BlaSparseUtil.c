@@ -812,8 +812,8 @@ void fasp_sparse_rapcmp_ (INT  *ir,
     icp = (INT *) calloc(n,sizeof(INT));
     jv  = (INT *) calloc(n,sizeof(INT));
     if (!(icp && v && jv)) {
-        fprintf(stderr,"### ERROR: Could not allocate local mem in rap\n");
-        exit(19);
+        fprintf(stderr,"### ERROR: Could not allocate memory!\n");
+        fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     for (i=0;i<n;++i) {
         icp[i] = 0;

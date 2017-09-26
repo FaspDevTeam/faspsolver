@@ -174,7 +174,7 @@ INT fasp_check_symm (const dCSRmat *A)
     const INT nnz = A->IA[nn]-A->IA[0];
     
     if (nnz!=A->nnz) {
-        printf("### ERROR: nnz=%d, ia[n]-ia[0]=%d does NOT match!\n",A->nnz,nnz);
+        printf("### ERROR: nnz=%d, ia[n]-ia[0]=%d, mismatch!\n",A->nnz,nnz);
         fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     

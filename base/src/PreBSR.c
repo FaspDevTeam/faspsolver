@@ -47,34 +47,34 @@
  * \note Works for general nb (Xiaozhe)
  */
 void fasp_precond_dbsr_diag (REAL *r,
-                             REAL *z, 
-                             void *data) 
+                             REAL *z,
+                             void *data)
 {
     precond_diag_bsr * diag = (precond_diag_bsr *)data;
-    const INT nb = diag->nb; 
+    const INT nb = diag->nb;
     
     switch (nb) {
 
-    case 2:
-        fasp_precond_dbsr_diag_nc2( r, z, diag);
-        break;
-    case 3:
-        fasp_precond_dbsr_diag_nc3( r, z, diag);
-        break;
-    
-    case 5:
-        fasp_precond_dbsr_diag_nc5( r, z, diag);
-        break;
-    
-    case 7:
-        fasp_precond_dbsr_diag_nc7( r, z, diag);
-        break;
-    
-    default:
+        case 2:
+            fasp_precond_dbsr_diag_nc2( r, z, diag);
+            break;
+        case 3:
+            fasp_precond_dbsr_diag_nc3( r, z, diag);
+            break;
+
+        case 5:
+            fasp_precond_dbsr_diag_nc5( r, z, diag);
+            break;
+
+        case 7:
+            fasp_precond_dbsr_diag_nc7( r, z, diag);
+            break;
+
+        default:
         {
             REAL *diagptr = diag->diag.val;
             const INT nb2 = nb*nb;
-            const INT m = diag->diag.row/nb2;    
+            const INT m = diag->diag.row/nb2;
             unsigned INT i;
 
 #ifdef _OPENMP 
@@ -97,7 +97,7 @@ void fasp_precond_dbsr_diag (REAL *r,
 #ifdef _OPENMP
             }
 #endif
-        break;
+            break;
         }
     }
 }
@@ -120,18 +120,18 @@ void fasp_precond_dbsr_diag (REAL *r,
  */
 void fasp_precond_dbsr_diag_nc2 (REAL *r,
                                  REAL *z,
-                                 void *data) 
+                                 void *data)
 {
     precond_diag_bsr  * diag    = (precond_diag_bsr *)data;
     REAL              * diagptr = diag->diag.val;
     
     unsigned INT i;
-    const INT m = diag->diag.row/4;    
+    const INT m = diag->diag.row/4;
 
 #ifdef _OPENMP 
     if (m > OPENMP_HOLDS) {
         INT myid, mybegin, myend;
-	INT nthreads = fasp_get_num_threads();
+        INT nthreads = fasp_get_num_threads();
 #pragma omp parallel for private(myid, mybegin, myend, i)
         for (myid = 0; myid < nthreads; myid++) {
             fasp_get_start_end(myid, nthreads, m, &mybegin, &myend);
@@ -173,7 +173,7 @@ void fasp_precond_dbsr_diag_nc3 (REAL *r,
     precond_diag_bsr  * diag    = (precond_diag_bsr *)data;
     REAL              * diagptr = diag->diag.val;
     
-    const INT m = diag->diag.row/9;    
+    const INT m = diag->diag.row/9;
     unsigned INT i;
     
 #ifdef _OPENMP 
@@ -210,7 +210,7 @@ void fasp_precond_dbsr_diag_nc3 (REAL *r,
  * \author Zhou Zhiyang, Xiaozhe Hu
  * \date   01/06/2011
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012    
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012
  *
  * \note Works for 5-component (Xiaozhe)
  */
@@ -263,19 +263,19 @@ void fasp_precond_dbsr_diag_nc5 (REAL *r,
  * \note Works for 7-component (Xiaozhe)
  */
 void fasp_precond_dbsr_diag_nc7 (REAL *r, 
-                                 REAL *z, 
-                                 void *data) 
+                                 REAL *z,
+                                 void *data)
 {
     precond_diag_bsr  * diag    = (precond_diag_bsr *)data;
     REAL              * diagptr = diag->diag.val;
     
     unsigned INT i;
-    const INT m = diag->diag.row/49;    
+    const INT m = diag->diag.row/49;
 
 #ifdef _OPENMP 
     if (m > OPENMP_HOLDS) {
         INT myid, mybegin, myend;
-        INT nthreads = fasp_get_num_threads();    
+        INT nthreads = fasp_get_num_threads();
 #pragma omp parallel for private(myid, mybegin, myend, i)
         for (myid = 0; myid < nthreads; myid++) {
             fasp_get_start_end(myid, nthreads, m, &mybegin, &myend);
@@ -309,7 +309,7 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
  * \note Works for general nb (Xiaozhe)
  */
 void fasp_precond_dbsr_ilu (REAL *r, 
-                            REAL *z, 
+                            REAL *z,
                             void *data)
 {
     const ILU_data  *iludata=(ILU_data *)data;
@@ -321,232 +321,232 @@ void fasp_precond_dbsr_ilu (REAL *r,
     
     INT         ib, ibstart,ibstart1;
     INT         i, j, jj, begin_row, end_row;
-    REAL       *zz, *zr, *mult;       
+    REAL       *zz, *zr, *mult;
     
     if (iludata->nwork<memneed) {
         printf("### ERROR: Need %d memory, only %d available!\n",
                memneed, iludata->nwork);
-        exit(ERROR_ALLOC_MEM);
+        fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
-    zz   = iludata->work; 
+    zz   = iludata->work;
     zr   = zz + size;
     mult = zr + size;
     
     memcpy(zr, r, size*sizeof(REAL));
     
     switch (nb) {
-    
-    case 1:
-    
-        // forward sweep: solve unit lower matrix equation L*zz=zr
-        zz[0]=zr[0];
-        for (i=1;i<=mm1;++i) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            for (j=begin_row;j<=end_row;++j) {
-                jj=ijlu[j];
-                if (jj<i) zr[i]-=lu[j]*zz[jj];
-                else break;
+
+        case 1:
+
+            // forward sweep: solve unit lower matrix equation L*zz=zr
+            zz[0]=zr[0];
+            for (i=1;i<=mm1;++i) {
+                begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                for (j=begin_row;j<=end_row;++j) {
+                    jj=ijlu[j];
+                    if (jj<i) zr[i]-=lu[j]*zz[jj];
+                    else break;
+                }
+                zz[i]=zr[i];
             }
-            zz[i]=zr[i];
-        }
-    
-        // backward sweep: solve upper matrix equation U*z=zz
-        z[mm1]=zz[mm1]*lu[mm1];
-        for (i=mm2;i>=0;i--) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            for (j=end_row;j>=begin_row;j--) {
-                jj=ijlu[j];
-                if (jj>i) zz[i]-=lu[j]*z[jj];
-                else break;
-            } 
-            z[i]=zz[i]*lu[i];
-        }
-    
-        break; //end (if nb==1) 
-    
-    case 3:
-    
-        // forward sweep: solve unit lower matrix equation L*zz=zr
-        zz[0] = zr[0];
-        zz[1] = zr[1];
-        zz[2] = zr[2];
-    
-        for (i=1;i<=mm1;++i) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb;
-            for (j=begin_row;j<=end_row;++j) {
-                jj=ijlu[j];
-                if (jj<i)
+
+            // backward sweep: solve upper matrix equation U*z=zz
+            z[mm1]=zz[mm1]*lu[mm1];
+            for (i=mm2;i>=0;i--) {
+                begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                for (j=end_row;j>=begin_row;j--) {
+                    jj=ijlu[j];
+                    if (jj>i) zz[i]-=lu[j]*z[jj];
+                    else break;
+                }
+                z[i]=zz[i]*lu[i];
+            }
+
+            break; //end (if nb==1)
+
+        case 3:
+
+            // forward sweep: solve unit lower matrix equation L*zz=zr
+            zz[0] = zr[0];
+            zz[1] = zr[1];
+            zz[2] = zr[2];
+
+            for (i=1;i<=mm1;++i) {
+                begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                ibstart=i*nb;
+                for (j=begin_row;j<=end_row;++j) {
+                    jj=ijlu[j];
+                    if (jj<i)
                     {
                         fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(zz[jj*nb]),mult);
                         for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
                     }
-                else break;
-            }
-    
-            zz[ibstart]   = zr[ibstart];
-            zz[ibstart+1] = zr[ibstart+1];
-            zz[ibstart+2] = zr[ibstart+2];
-        }
-    
-        // backward sweep: solve upper matrix equation U*z=zz
-        ibstart=mm1*nb2;
-        ibstart1=mm1*nb;
-        fasp_blas_smat_mxv_nc3(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
-    
-        for (i=mm2;i>=0;i--) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb2;
-            ibstart1=i*nb;
-            for (j=end_row;j>=begin_row;j--) {
-                jj=ijlu[j];
-                if (jj>i) {
-                    fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(z[jj*nb]),mult);
-                    for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                    else break;
                 }
-    
-                else break;
-            } 
-    
+
+                zz[ibstart]   = zr[ibstart];
+                zz[ibstart+1] = zr[ibstart+1];
+                zz[ibstart+2] = zr[ibstart+2];
+            }
+
+            // backward sweep: solve upper matrix equation U*z=zz
+            ibstart=mm1*nb2;
+            ibstart1=mm1*nb;
             fasp_blas_smat_mxv_nc3(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
-    
-        }
-    
-        break; // end (if nb=3)
-    
-    case 5:
-    
-        // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_darray_cp(nb,&(zr[0]),&(zz[0]));
-    
-        for (i=1;i<=mm1;++i) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb;
-            for (j=begin_row;j<=end_row;++j) {
-                jj=ijlu[j];
-                if (jj<i) {
-                    fasp_blas_smat_mxv_nc5(&(lu[j*nb2]),&(zz[jj*nb]),mult);
-                    for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+
+            for (i=mm2;i>=0;i--) {
+                begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                ibstart=i*nb2;
+                ibstart1=i*nb;
+                for (j=end_row;j>=begin_row;j--) {
+                    jj=ijlu[j];
+                    if (jj>i) {
+                        fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(z[jj*nb]),mult);
+                        for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                    }
+
+                    else break;
                 }
-                else break;
+
+                fasp_blas_smat_mxv_nc3(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
+
             }
-    
-            fasp_darray_cp(nb,&(zr[ibstart]),&(zz[ibstart]));
-        }
-    
-        // backward sweep: solve upper matrix equation U*z=zz
-        ibstart=mm1*nb2;
-        ibstart1=mm1*nb;
-        fasp_blas_smat_mxv_nc5(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
-    
-        for (i=mm2;i>=0;i--) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb2;
-            ibstart1=i*nb;
-            for (j=end_row;j>=begin_row;j--) {
-                jj=ijlu[j];
-                if (jj>i) {
-                    fasp_blas_smat_mxv_nc5(&(lu[j*nb2]),&(z[jj*nb]),mult);
-                    for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+
+            break; // end (if nb=3)
+
+        case 5:
+
+            // forward sweep: solve unit lower matrix equation L*zz=zr
+            fasp_darray_cp(nb,&(zr[0]),&(zz[0]));
+
+            for (i=1;i<=mm1;++i) {
+                begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                ibstart=i*nb;
+                for (j=begin_row;j<=end_row;++j) {
+                    jj=ijlu[j];
+                    if (jj<i) {
+                        fasp_blas_smat_mxv_nc5(&(lu[j*nb2]),&(zz[jj*nb]),mult);
+                        for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                    }
+                    else break;
                 }
-    
-                else break;
-            } 
-    
+
+                fasp_darray_cp(nb,&(zr[ibstart]),&(zz[ibstart]));
+            }
+
+            // backward sweep: solve upper matrix equation U*z=zz
+            ibstart=mm1*nb2;
+            ibstart1=mm1*nb;
             fasp_blas_smat_mxv_nc5(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
-    
-        }
-    
-        break; //end (if nb==5)
-    
-    case 7:
-    
-        // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_darray_cp(nb,&(zr[0]),&(zz[0]));
-    
-        for (i=1;i<=mm1;++i) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb;
-            for (j=begin_row;j<=end_row;++j) {
-                jj=ijlu[j];
-                if (jj<i) {
-                    fasp_blas_smat_mxv_nc7(&(lu[j*nb2]),&(zz[jj*nb]),mult);
-                    for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+
+            for (i=mm2;i>=0;i--) {
+                begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                ibstart=i*nb2;
+                ibstart1=i*nb;
+                for (j=end_row;j>=begin_row;j--) {
+                    jj=ijlu[j];
+                    if (jj>i) {
+                        fasp_blas_smat_mxv_nc5(&(lu[j*nb2]),&(z[jj*nb]),mult);
+                        for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                    }
+
+                    else break;
                 }
-                else break;
+
+                fasp_blas_smat_mxv_nc5(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
+
             }
-    
-            fasp_darray_cp(nb,&(zr[ibstart]),&(zz[ibstart]));
-        }
-    
-        // backward sweep: solve upper matrix equation U*z=zz
-        ibstart=mm1*nb2;
-        ibstart1=mm1*nb;
-        fasp_blas_smat_mxv_nc7(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
-    
-        for (i=mm2;i>=0;i--) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb2;
-            ibstart1=i*nb;
-            for (j=end_row;j>=begin_row;j--) {
-                jj=ijlu[j];
-                if (jj>i) {
-                    fasp_blas_smat_mxv_nc7(&(lu[j*nb2]),&(z[jj*nb]),mult);
-                    for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+
+            break; //end (if nb==5)
+
+        case 7:
+
+            // forward sweep: solve unit lower matrix equation L*zz=zr
+            fasp_darray_cp(nb,&(zr[0]),&(zz[0]));
+
+            for (i=1;i<=mm1;++i) {
+                begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                ibstart=i*nb;
+                for (j=begin_row;j<=end_row;++j) {
+                    jj=ijlu[j];
+                    if (jj<i) {
+                        fasp_blas_smat_mxv_nc7(&(lu[j*nb2]),&(zz[jj*nb]),mult);
+                        for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                    }
+                    else break;
                 }
-    
-                else break;
-            } 
-    
+
+                fasp_darray_cp(nb,&(zr[ibstart]),&(zz[ibstart]));
+            }
+
+            // backward sweep: solve upper matrix equation U*z=zz
+            ibstart=mm1*nb2;
+            ibstart1=mm1*nb;
             fasp_blas_smat_mxv_nc7(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
-        }
-    
-        break; //end (if nb==7)
-    
-    default:
-    
-        // forward sweep: solve unit lower matrix equation L*zz=zr
-        fasp_darray_cp(nb,&(zr[0]),&(zz[0]));
-    
-        for (i=1;i<=mm1;++i) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb;
-            for (j=begin_row;j<=end_row;++j) {
-                jj=ijlu[j];
-                if (jj<i) {
-                    fasp_blas_smat_mxv(&(lu[j*nb2]),&(zz[jj*nb]),mult,nb);
-                    for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+
+            for (i=mm2;i>=0;i--) {
+                begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                ibstart=i*nb2;
+                ibstart1=i*nb;
+                for (j=end_row;j>=begin_row;j--) {
+                    jj=ijlu[j];
+                    if (jj>i) {
+                        fasp_blas_smat_mxv_nc7(&(lu[j*nb2]),&(z[jj*nb]),mult);
+                        for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                    }
+
+                    else break;
                 }
-                else break;
+
+                fasp_blas_smat_mxv_nc7(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
             }
-    
-            fasp_darray_cp(nb,&(zr[ibstart]),&(zz[ibstart]));
-        }
-    
-        // backward sweep: solve upper matrix equation U*z=zz
-        ibstart=mm1*nb2;
-        ibstart1=mm1*nb;
-        fasp_blas_smat_mxv(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]),nb);
-    
-        for (i=mm2;i>=0;i--) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb2;
-            ibstart1=i*nb;
-            for (j=end_row;j>=begin_row;j--) {
-                jj=ijlu[j];
-                if (jj>i) {
-                    fasp_blas_smat_mxv(&(lu[j*nb2]),&(z[jj*nb]),mult,nb);
-                    for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+
+            break; //end (if nb==7)
+
+        default:
+
+            // forward sweep: solve unit lower matrix equation L*zz=zr
+            fasp_darray_cp(nb,&(zr[0]),&(zz[0]));
+
+            for (i=1;i<=mm1;++i) {
+                begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                ibstart=i*nb;
+                for (j=begin_row;j<=end_row;++j) {
+                    jj=ijlu[j];
+                    if (jj<i) {
+                        fasp_blas_smat_mxv(&(lu[j*nb2]),&(zz[jj*nb]),mult,nb);
+                        for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                    }
+                    else break;
                 }
-    
-                else break;
-            } 
-    
+
+                fasp_darray_cp(nb,&(zr[ibstart]),&(zz[ibstart]));
+            }
+
+            // backward sweep: solve upper matrix equation U*z=zz
+            ibstart=mm1*nb2;
+            ibstart1=mm1*nb;
             fasp_blas_smat_mxv(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]),nb);
-        }
-    
-        break; // end everything else 
+
+            for (i=mm2;i>=0;i--) {
+                begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                ibstart=i*nb2;
+                ibstart1=i*nb;
+                for (j=end_row;j>=begin_row;j--) {
+                    jj=ijlu[j];
+                    if (jj>i) {
+                        fasp_blas_smat_mxv(&(lu[j*nb2]),&(z[jj*nb]),mult,nb);
+                        for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                    }
+
+                    else break;
+                }
+
+                fasp_blas_smat_mxv(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]),nb);
+            }
+
+            break; // end everything else
     }
     
     return;
@@ -561,20 +561,20 @@ void fasp_precond_dbsr_ilu (REAL *r,
  * \param z     Pointer to preconditioned vector
  * \param data  Pointer to precondition data
  *
- * \author ZhengLi 
+ * \author ZhengLi
  * \date   12/04/2016
  *
  * \note Only works for nb 1, 2, and 3 (Zheng)
  */
 void fasp_precond_dbsr_ilu_mc_omp (REAL *r, 
-                                   REAL *z, 
+                                   REAL *z,
                                    void *data)
 {
 #ifdef _OPENMP
     const ILU_data  *iludata=(ILU_data *)data;
     const INT        m=iludata->row, memneed=2*m;
     const INT        nb=iludata->nb, nb2=nb*nb, size=m*nb;
-   
+
     INT        *ijlu=iludata->ijlu;
     REAL       *lu=iludata->luval;
     INT        ncolors = iludata->nlevL;
@@ -582,167 +582,171 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
     
     INT         ib, ibstart,ibstart1;
     INT         i, j, jj, k, begin_row, end_row;
-    REAL        *zz, *zr, *mult;       
+    REAL        *zz, *zr, *mult;
     
     if (iludata->nwork<memneed) {
         printf("### ERROR: Need %d memory, only %d available!\n",
                memneed, iludata->nwork);
-        exit(ERROR_ALLOC_MEM);
+        fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
-    zz   = iludata->work; 
+    zz   = iludata->work;
     zr   = zz + size;
     
     memcpy(zr, r, size*sizeof(REAL));
     
     switch (nb) {
-    
-    case 1:
-        // forward sweep: solve unit lower matrix equation L*zz=zr
-        for (k=0; k<ncolors; ++k) {
+
+        case 1:
+            // forward sweep: solve unit lower matrix equation L*zz=zr
+            for (k=0; k<ncolors; ++k) {
 #pragma omp parallel for private(i,begin_row,end_row,j,jj)
-        for (i=ic[k];i<ic[k+1];++i) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            for (j=begin_row;j<=end_row;++j) {
-                jj=ijlu[j];
-                if (jj<i) zr[i]-=lu[j]*zz[jj];
-                else break;
+                for (i=ic[k];i<ic[k+1];++i) {
+                    begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                    for (j=begin_row;j<=end_row;++j) {
+                        jj=ijlu[j];
+                        if (jj<i) zr[i]-=lu[j]*zz[jj];
+                        else break;
+                    }
+                    zz[i]=zr[i];
+                }
             }
-            zz[i]=zr[i];
-        }
-        }
-        // backward sweep: solve upper matrix equation U*z=zz
-        for (k=ncolors-1; k>=0; k--) {
+            // backward sweep: solve upper matrix equation U*z=zz
+            for (k=ncolors-1; k>=0; k--) {
 #pragma omp parallel for private(i,begin_row,end_row,j,jj)  
-        for (i=ic[k+1]-1;i>=ic[k];i--) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            for (j=end_row;j>=begin_row;j--) {
-                jj=ijlu[j];
-                if (jj>i) zz[i]-=lu[j]*z[jj];
-                else break;
-            } 
-            z[i]=zz[i]*lu[i];
-        }
-        }
-    
-        break; //end (if nb==1) 
-    
-    case 2:
-    
-        for (k=0; k<ncolors; ++k) {
-#pragma omp parallel private(i,begin_row,end_row,ibstart,j,jj,ib,mult)
-{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
-#pragma omp for
-        for (i=ic[k];i<ic[k+1];++i) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb;
-            for (j=begin_row;j<=end_row;++j) {
-                jj=ijlu[j];
-                if (jj<i)
-                    {
-                        fasp_blas_smat_mxv_nc2(&(lu[j*nb2]),&(zz[jj*nb]),mult);
-                        for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                for (i=ic[k+1]-1;i>=ic[k];i--) {
+                    begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                    for (j=end_row;j>=begin_row;j--) {
+                        jj=ijlu[j];
+                        if (jj>i) zz[i]-=lu[j]*z[jj];
+                        else break;
                     }
-                else break;
-            }
-    
-            zz[ibstart]   = zr[ibstart];
-            zz[ibstart+1] = zr[ibstart+1];
-        }
-
-        fasp_mem_free(mult);
-}
-        }
-    
-        for (k=ncolors-1; k>=0; k--) {
-#pragma omp parallel private(i,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
-{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
-#pragma omp for
-        for (i=ic[k+1]-1;i>=ic[k];i--) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb2;
-            ibstart1=i*nb;
-            for (j=end_row;j>=begin_row;j--) {
-                jj=ijlu[j];
-                if (jj>i) {
-                    fasp_blas_smat_mxv_nc2(&(lu[j*nb2]),&(z[jj*nb]),mult);
-                    for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                    z[i]=zz[i]*lu[i];
                 }
-    
-                else break;
-            } 
-    
-            fasp_blas_smat_mxv_nc2(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
-    
-        }
-        fasp_mem_free(mult);
-}
-        }
-    
-        break; // end (if nb=2) 
-    case 3:
-    
-        for (k=0; k<ncolors; ++k) {
+            }
+
+            break; //end (if nb==1)
+
+        case 2:
+
+            for (k=0; k<ncolors; ++k) {
 #pragma omp parallel private(i,begin_row,end_row,ibstart,j,jj,ib,mult)
-{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
+                {
+                    mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));
 #pragma omp for
-        for (i=ic[k];i<ic[k+1];++i) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb;
-            for (j=begin_row;j<=end_row;++j) {
-                jj=ijlu[j];
-                if (jj<i)
-                    {
-                        fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(zz[jj*nb]),mult);
-                        for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                    for (i=ic[k];i<ic[k+1];++i) {
+                        begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                        ibstart=i*nb;
+                        for (j=begin_row;j<=end_row;++j) {
+                            jj=ijlu[j];
+                            if (jj<i)
+                            {
+                                fasp_blas_smat_mxv_nc2(&(lu[j*nb2]),&(zz[jj*nb]),mult);
+                                for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                            }
+                            else break;
+                        }
+
+                        zz[ibstart]   = zr[ibstart];
+                        zz[ibstart+1] = zr[ibstart+1];
                     }
-                else break;
-            }
-    
-            zz[ibstart]   = zr[ibstart];
-            zz[ibstart+1] = zr[ibstart+1];
-            zz[ibstart+2] = zr[ibstart+2];
-        }
 
-        fasp_mem_free(mult);
-}
-        }
-
-        for (k=ncolors-1; k>=0; k--) {
-#pragma omp parallel private(i,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
-{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
-#pragma omp for
-        for (i=ic[k+1]-1;i>=ic[k];i--) {
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb2;
-            ibstart1=i*nb;
-            for (j=end_row;j>=begin_row;j--) {
-                jj=ijlu[j];
-                if (jj>i) {
-                    fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(z[jj*nb]),mult);
-                    for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                    fasp_mem_free(mult);
                 }
-    
-                else break;
-            } 
-    
-            fasp_blas_smat_mxv_nc3(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
-    
-        }
-        fasp_mem_free(mult);
-}
-        }
-    
-        break; // end (if nb=3) 
-    
-        default: 
+            }
+
+            for (k=ncolors-1; k>=0; k--) {
+#pragma omp parallel private(i,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
+                {
+                    mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));
+#pragma omp for
+                    for (i=ic[k+1]-1;i>=ic[k];i--) {
+                        begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                        ibstart=i*nb2;
+                        ibstart1=i*nb;
+                        for (j=end_row;j>=begin_row;j--) {
+                            jj=ijlu[j];
+                            if (jj>i) {
+                                fasp_blas_smat_mxv_nc2(&(lu[j*nb2]),&(z[jj*nb]),mult);
+                                for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                            }
+
+                            else break;
+                        }
+
+                        fasp_blas_smat_mxv_nc2(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
+
+                    }
+                    fasp_mem_free(mult);
+                }
+            }
+
+            break; // end (if nb=2)
+        case 3:
+
+            for (k=0; k<ncolors; ++k) {
+#pragma omp parallel private(i,begin_row,end_row,ibstart,j,jj,ib,mult)
+                {
+                    mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));
+#pragma omp for
+                    for (i=ic[k];i<ic[k+1];++i) {
+                        begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                        ibstart=i*nb;
+                        for (j=begin_row;j<=end_row;++j) {
+                            jj=ijlu[j];
+                            if (jj<i)
+                            {
+                                fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(zz[jj*nb]),mult);
+                                for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                            }
+                            else break;
+                        }
+
+                        zz[ibstart]   = zr[ibstart];
+                        zz[ibstart+1] = zr[ibstart+1];
+                        zz[ibstart+2] = zr[ibstart+2];
+                    }
+
+                    fasp_mem_free(mult);
+                }
+            }
+
+            for (k=ncolors-1; k>=0; k--) {
+#pragma omp parallel private(i,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
+                {
+                    mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));
+#pragma omp for
+                    for (i=ic[k+1]-1;i>=ic[k];i--) {
+                        begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                        ibstart=i*nb2;
+                        ibstart1=i*nb;
+                        for (j=end_row;j>=begin_row;j--) {
+                            jj=ijlu[j];
+                            if (jj>i) {
+                                fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(z[jj*nb]),mult);
+                                for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                            }
+
+                            else break;
+                        }
+
+                        fasp_blas_smat_mxv_nc3(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
+
+                    }
+                    fasp_mem_free(mult);
+                }
+            }
+
+            break; // end (if nb=3)
+
+        default:
         {
-           if (nb > 3) {
-               printf("### ERROR: Multi-thread Parallel ILU for %d components \
-                      has not yet been implemented!!!", nb);
-              exit(0);
-           }
-           break;
+            if (nb > 3) {
+                printf("### ERROR: Multi-thread Parallel ILU for %d components \
+                       has not yet been implemented!!!", nb);
+                fasp_chkerr(ERROR_UNKNOWN, __FUNCTION__);
+            }
+            break;
         }
     }
     
@@ -759,7 +763,7 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
  * \param z     Pointer to preconditioned vector
  * \param data  Pointer to precondition data
  *
- * \author ZhengLi 
+ * \author ZhengLi
  * \date   12/04/2016
  *
  * \note Only works for nb 1, 2, and 3 (Zheng)
@@ -772,7 +776,7 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
     const ILU_data  *iludata=(ILU_data *)data;
     const INT        m=iludata->row, memneed=2*m;
     const INT        nb=iludata->nb, nb2=nb*nb, size=m*nb;
-   
+
     INT        *ijlu=iludata->ijlu;
     REAL       *lu=iludata->luval;
     INT        nlevL = iludata->nlevL;
@@ -784,175 +788,179 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
     
     INT         ib, ibstart,ibstart1;
     INT         i, ii, j, jj, k, begin_row, end_row;
-    REAL       *zz, *zr, *mult;       
+    REAL       *zz, *zr, *mult;
     
     if (iludata->nwork<memneed) {
         printf("### ERROR: Need %d memory, only %d available!\n",
                memneed, iludata->nwork);
-        exit(ERROR_ALLOC_MEM);
+        fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
-    zz   = iludata->work; 
+    zz   = iludata->work;
     zr   = zz + size;
     //mult = zr + size;
     
     memcpy(zr, r, size*sizeof(REAL));
     
     switch (nb) {
-    
-    case 1:
-        // forward sweep: solve unit lower matrix equation L*zz=zr
-        for (k=0; k<nlevL; ++k) {
+
+        case 1:
+            // forward sweep: solve unit lower matrix equation L*zz=zr
+            for (k=0; k<nlevL; ++k) {
 #pragma omp parallel for private(i,ii,begin_row,end_row,j,jj)
-        for (ii=ilevL[k];ii<ilevL[k+1];++ii) {
-            i = jlevL[ii];
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            for (j=begin_row;j<=end_row;++j) {
-                jj=ijlu[j];
-                if (jj<i) zr[i]-=lu[j]*zz[jj];
-                else break;
+                for (ii=ilevL[k];ii<ilevL[k+1];++ii) {
+                    i = jlevL[ii];
+                    begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                    for (j=begin_row;j<=end_row;++j) {
+                        jj=ijlu[j];
+                        if (jj<i) zr[i]-=lu[j]*zz[jj];
+                        else break;
+                    }
+                    zz[i]=zr[i];
+                }
             }
-            zz[i]=zr[i];
-        }
-        }
-        // backward sweep: solve upper matrix equation U*z=zz
-        for (k=0; k<nlevU; k++) {
+            // backward sweep: solve upper matrix equation U*z=zz
+            for (k=0; k<nlevU; k++) {
 #pragma omp parallel for private(i,ii,begin_row,end_row,j,jj)  
-        for (ii=ilevU[k+1]-1;ii>=ilevU[k];ii--) {
-            i = jlevU[ii];
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            for (j=end_row;j>=begin_row;j--) {
-                jj=ijlu[j];
-                if (jj>i) zz[i]-=lu[j]*z[jj];
-                else break;
-            } 
-            z[i]=zz[i]*lu[i];
-        }
-        }
-    
-        break; //end (if nb==1) 
-    
-    case 2:
-    
-        for (k=0; k<nlevL; ++k) {
-#pragma omp parallel private(i,ii,begin_row,end_row,ibstart,j,jj,ib,mult)
-{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
-#pragma omp for
-        for (ii=ilevL[k];ii<ilevL[k+1];++ii) {
-            i = jlevL[ii];
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb;
-            for (j=begin_row;j<=end_row;++j) {
-                jj=ijlu[j];
-                if (jj<i)
-                    {
-                        fasp_blas_smat_mxv_nc2(&(lu[j*nb2]),&(zz[jj*nb]),mult);
-                        for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                for (ii=ilevU[k+1]-1;ii>=ilevU[k];ii--) {
+                    i = jlevU[ii];
+                    begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                    for (j=end_row;j>=begin_row;j--) {
+                        jj=ijlu[j];
+                        if (jj>i) zz[i]-=lu[j]*z[jj];
+                        else break;
                     }
-                else break;
-            }
-    
-            zz[ibstart]   = zr[ibstart];
-            zz[ibstart+1] = zr[ibstart+1];
-        }
-
-        fasp_mem_free(mult);
-}
-        }
-    
-        for (k=0; k<nlevU; k++) {
-#pragma omp parallel private(i,ii,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
-{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
-#pragma omp for
-        for (ii=ilevU[k+1]-1;ii>=ilevU[k];ii--) {
-            i = jlevU[ii];
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb2;
-            ibstart1=i*nb;
-            for (j=end_row;j>=begin_row;j--) {
-                jj=ijlu[j];
-                if (jj>i) {
-                    fasp_blas_smat_mxv_nc2(&(lu[j*nb2]),&(z[jj*nb]),mult);
-                    for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                    z[i]=zz[i]*lu[i];
                 }
-    
-                else break;
-            } 
-    
-            fasp_blas_smat_mxv_nc2(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
-    
-        }
-        fasp_mem_free(mult);
-}
-        }
-    
-        break; // end (if nb=2) 
-    case 3:
-    
-        for (k=0; k<nlevL; ++k) {
+            }
+
+            break; //end (if nb==1)
+
+        case 2:
+
+            for (k=0; k<nlevL; ++k) {
 #pragma omp parallel private(i,ii,begin_row,end_row,ibstart,j,jj,ib,mult)
-{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
+                {
+                    mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));
 #pragma omp for
-        for (ii=ilevL[k];ii<ilevL[k+1];++ii) {
-            i = jlevL[ii];
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb;
-            for (j=begin_row;j<=end_row;++j) {
-                jj=ijlu[j];
-                if (jj<i)
-                    {
-                        fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(zz[jj*nb]),mult);
-                        for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                    for (ii=ilevL[k];ii<ilevL[k+1];++ii) {
+                        i = jlevL[ii];
+                        begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                        ibstart=i*nb;
+                        for (j=begin_row;j<=end_row;++j) {
+                            jj=ijlu[j];
+                            if (jj<i)
+                            {
+                                fasp_blas_smat_mxv_nc2(&(lu[j*nb2]),&(zz[jj*nb]),mult);
+                                for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                            }
+                            else break;
+                        }
+
+                        zz[ibstart]   = zr[ibstart];
+                        zz[ibstart+1] = zr[ibstart+1];
                     }
-                else break;
-            }
-    
-            zz[ibstart]   = zr[ibstart];
-            zz[ibstart+1] = zr[ibstart+1];
-            zz[ibstart+2] = zr[ibstart+2];
-        }
 
-        fasp_mem_free(mult);
-}
-        }
-
-        for (k=0; k<nlevU; k++) {
-#pragma omp parallel private(i,ii,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
-{        mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));        
-#pragma omp for
-        for (ii=ilevU[k+1]-1;ii>=ilevU[k];ii--) {
-            i = jlevU[ii];
-            begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
-            ibstart=i*nb2;
-            ibstart1=i*nb;
-            for (j=end_row;j>=begin_row;j--) {
-                jj=ijlu[j];
-                if (jj>i) {
-                    fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(z[jj*nb]),mult);
-                    for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                    fasp_mem_free(mult);
                 }
-    
-                else break;
-            } 
-    
-            fasp_blas_smat_mxv_nc3(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
-    
-        }
-        fasp_mem_free(mult);
-}
-        }
-    
-        break; // end (if nb=3) 
-       
-        default: 
+            }
+
+            for (k=0; k<nlevU; k++) {
+#pragma omp parallel private(i,ii,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
+                {
+                    mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));
+#pragma omp for
+                    for (ii=ilevU[k+1]-1;ii>=ilevU[k];ii--) {
+                        i = jlevU[ii];
+                        begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                        ibstart=i*nb2;
+                        ibstart1=i*nb;
+                        for (j=end_row;j>=begin_row;j--) {
+                            jj=ijlu[j];
+                            if (jj>i) {
+                                fasp_blas_smat_mxv_nc2(&(lu[j*nb2]),&(z[jj*nb]),mult);
+                                for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                            }
+
+                            else break;
+                        }
+
+                        fasp_blas_smat_mxv_nc2(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
+
+                    }
+                    fasp_mem_free(mult);
+                }
+            }
+
+            break; // end (if nb=2)
+        case 3:
+
+            for (k=0; k<nlevL; ++k) {
+#pragma omp parallel private(i,ii,begin_row,end_row,ibstart,j,jj,ib,mult)
+                {
+                    mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));
+#pragma omp for
+                    for (ii=ilevL[k];ii<ilevL[k+1];++ii) {
+                        i = jlevL[ii];
+                        begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                        ibstart=i*nb;
+                        for (j=begin_row;j<=end_row;++j) {
+                            jj=ijlu[j];
+                            if (jj<i)
+                            {
+                                fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(zz[jj*nb]),mult);
+                                for (ib=0;ib<nb;++ib) zr[ibstart+ib]-=mult[ib];
+                            }
+                            else break;
+                        }
+
+                        zz[ibstart]   = zr[ibstart];
+                        zz[ibstart+1] = zr[ibstart+1];
+                        zz[ibstart+2] = zr[ibstart+2];
+                    }
+
+                    fasp_mem_free(mult);
+                }
+            }
+
+            for (k=0; k<nlevU; k++) {
+#pragma omp parallel private(i,ii,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
+                {
+                    mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));
+#pragma omp for
+                    for (ii=ilevU[k+1]-1;ii>=ilevU[k];ii--) {
+                        i = jlevU[ii];
+                        begin_row=ijlu[i]; end_row=ijlu[i+1]-1;
+                        ibstart=i*nb2;
+                        ibstart1=i*nb;
+                        for (j=end_row;j>=begin_row;j--) {
+                            jj=ijlu[j];
+                            if (jj>i) {
+                                fasp_blas_smat_mxv_nc3(&(lu[j*nb2]),&(z[jj*nb]),mult);
+                                for (ib=0;ib<nb;++ib) zz[ibstart1+ib]-=mult[ib];
+                            }
+
+                            else break;
+                        }
+
+                        fasp_blas_smat_mxv_nc3(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
+
+                    }
+                    fasp_mem_free(mult);
+                }
+            }
+
+            break; // end (if nb=3)
+
+        default:
         {
-          if (nb > 3) {
-          	printf("### ERROR: Multi-thread Parallel ILU for %d components \
-                    has not yet been implemented!!!", nb);
-          	exit(0);
-          }
-          break;
-       }
+            if (nb > 3) {
+                printf("### ERROR: Multi-thread Parallel ILU for %d components \
+                       has not yet been implemented!!!", nb);
+                fasp_chkerr(ERROR_UNKNOWN, __FUNCTION__);
+            }
+            break;
+        }
     }
     
     return;
@@ -972,7 +980,7 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
  * \date   08/07/2011
  */
 void fasp_precond_dbsr_amg (REAL *r, 
-                            REAL *z, 
+                            REAL *z,
                             void *data)
 {
     precond_data_bsr *predata=(precond_data_bsr *)data;
@@ -994,12 +1002,12 @@ void fasp_precond_dbsr_amg (REAL *r,
     amgparam.ILU_levels = predata->mgl_data->ILU_levels;
     
     AMG_data_bsr *mgl = predata->mgl_data;
-    mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input 
+    mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
     for ( i=maxit; i--; ) fasp_solver_mgcycle_bsr(mgl,&amgparam);
     
-    fasp_darray_cp(m,mgl->x.val,z);    
+    fasp_darray_cp(m,mgl->x.val,z);
 }
 
 /**
@@ -1031,12 +1039,12 @@ void fasp_precond_dbsr_namli (REAL *r,
     fasp_param_precbsr_to_amg(&amgparam,pcdata);
     
     AMG_data_bsr *mgl = pcdata->mgl_data;
-    mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input 
+    mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
     for ( i=maxit; i--; ) fasp_solver_namli_bsr(mgl,&amgparam,0, num_levels);
     
-    fasp_darray_cp(m,mgl->x.val,z);   
+    fasp_darray_cp(m,mgl->x.val,z);
 }
 
 /**
@@ -1108,7 +1116,7 @@ void fasp_precond_dbsr_amg_nk (REAL *r,
     mgl->x.row=m; //fasp_dvec_set(m,&mgl->x,0.0);
     fasp_darray_cp(m, z, mgl->x.val);
     
-    for ( i=maxit; i--; ) fasp_solver_mgcycle_bsr(mgl,&amgparam); 
+    for ( i=maxit; i--; ) fasp_solver_mgcycle_bsr(mgl,&amgparam);
     
     fasp_darray_cp(m,mgl->x.val,z);
     

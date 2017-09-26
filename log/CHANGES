@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+09/26/2017 FASP 2.0.4:
+- Format ERROR messages for all functions.
+
 09/24/2017 FASP 2.0.3:
 - Add testgs.c; preparing for testing new sparse matrix data structures.
 - When reading matrix data, check and quit if error occurs.

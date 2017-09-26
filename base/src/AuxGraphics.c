@@ -91,7 +91,7 @@ void fasp_dcsr_subplot (const dCSRmat  *A,
 }
 
 /**
- * \fn INT fasp_dcsr_plot (const dCSRmat *A, const char *fname)
+ * \fn void fasp_dcsr_plot (const dCSRmat *A, const char *fname)
  *
  * \brief Write dCSR sparse matrix pattern in BMP file format
  *
@@ -114,11 +114,11 @@ void fasp_dcsr_subplot (const dCSRmat  *A,
  *  Red      negative element
  *  Brown    nearly zero element
  */
-INT fasp_dcsr_plot (const dCSRmat  *A,
-                    const char     *fname)
+void fasp_dcsr_plot (const dCSRmat  *A,
+                     const char     *fname)
 {
     FILE *fp;
-    INT offset, bmsize, i, j, b, ret = 1;
+    INT offset, bmsize, i, j, b;
     INT n,m;
     INT size;
     
@@ -137,15 +137,14 @@ INT fasp_dcsr_plot (const dCSRmat  *A,
     memset(map, 0x0F, size);
     
     if (!(1 <= m && m <= 32767))
-        printf("### ERROR: %s invalid height %d\n", __FUNCTION__, m);
+        printf("### ERROR: Invalid num of rows %d! [%s]\n", m, __FUNCTION__);
     
     if (!(1 <= n && n <= 32767))
-        printf("### ERROR: %s invalid width %d\n", __FUNCTION__, n);
+        printf("### ERROR: Invalid num of cols %d! [%s]\n", n, __FUNCTION__);
     
     fp = fopen(fname, "wb");
     if (fp == NULL) {
-        printf("### ERROR: %s unable to create `%s'\n", __FUNCTION__, fname);
-        ret = 0;
+        printf("### ERROR: Unable to create `%s'! [%s]\n", fname, __FUNCTION__);
         goto FINISH;
     }
     
@@ -228,14 +227,12 @@ INT fasp_dcsr_plot (const dCSRmat  *A,
     
     fflush(fp);
     if (ferror(fp)) {
-        printf("### ERROR: %s write error on `%s'\n", __FUNCTION__, fname);
-        ret = 0;
+        printf("### ERROR: Write error on `%s'! [%s]\n", fname, __FUNCTION__);
     }
+
 FINISH: if (fp != NULL) fclose(fp);
     
     fasp_mem_free(map);
-    
-    return ret;
 }
 
 /**
@@ -272,8 +269,7 @@ void fasp_dbsr_subplot (const dBSRmat  *A,
 	INT nb = A->nb;
 	INT nb2 = nb*nb;
     INT offset;
-    
-    INT row,col,i, j, k,l, minmn=nb*MIN(m,n);
+    INT row, col, i, j, k, l, minmn=nb*MIN(m,n);
     REAL val;
     
     if (size>minmn) size=minmn;
@@ -343,11 +339,11 @@ void fasp_dbsr_subplot (const dBSRmat  *A,
  *  Red      negative element
  *  Brown    nearly zero element
  */
-INT fasp_dbsr_plot (const dBSRmat  *A,
-                    const char     *fname)
+void fasp_dbsr_plot (const dBSRmat  *A,
+                     const char     *fname)
 {
     FILE *fp;
-    INT offset, bmsize, i, j, b, ret = 1;
+    INT offset, bmsize, i, j, b;
     INT n,m;
     INT size;
     INT nb = A->nb;
@@ -367,15 +363,14 @@ INT fasp_dbsr_plot (const dBSRmat  *A,
     memset(map, 0x0F, size);
     
     if (!(1 <= m && m <= 32767))
-        printf("### ERROR: %s invalid height %d\n", __FUNCTION__, m);
-    
+        printf("### ERROR: Invalid num of rows %d! [%s]\n", m, __FUNCTION__);
+
     if (!(1 <= n && n <= 32767))
-        printf("### ERROR: %s invalid width %d\n", __FUNCTION__, n);
-    
+        printf("### ERROR: Invalid num of cols %d! [%s]\n", n, __FUNCTION__);
+
     fp = fopen(fname, "wb");
     if (fp == NULL) {
-        printf("### ERROR: %s unable to create `%s'\n", __FUNCTION__, fname);
-        ret = 0;
+        printf("### ERROR: Unable to create `%s'! [%s]\n", fname, __FUNCTION__);
         goto FINISH;
     }
     
@@ -468,15 +463,12 @@ INT fasp_dbsr_plot (const dBSRmat  *A,
     
     fflush(fp);
     if (ferror(fp)) {
-        printf("### ERROR: %s write error on `%s'\n", __FUNCTION__, fname);
-        ret = 0;
+        printf("### ERROR: Write error on `%s'! [%s]\n", fname, __FUNCTION__);
     }
     
 FINISH: if (fp != NULL) fclose(fp);
     
     fasp_mem_free(map);
-    
-    return ret;
 }
 
 /*!

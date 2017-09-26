@@ -328,7 +328,7 @@ void fasp_blas_dbsr_aAxpby (const REAL   alpha,
 }
 
 /*!
- * \fn void fasp_blas_dbsr_aAxpy (const REAL alpha, const dBSRmat *A, 
+ * \fn void fasp_blas_dbsr_aAxpy (const REAL alpha, const dBSRmat *A,
  *                                const REAL *x, REAL *y)
  *
  * \brief Compute y := alpha*A*x + y
@@ -606,7 +606,7 @@ void fasp_blas_dbsr_aAxpy (const REAL      alpha,
 }
 
 /*!
- * \fn void fasp_blas_dbsr_aAxpy_agg (const REAL alpha, const dBSRmat *A, 
+ * \fn void fasp_blas_dbsr_aAxpy_agg (const REAL alpha, const dBSRmat *A,
  *                                    const REAL *x, REAL *y)
  *
  * \brief Compute y := alpha*A*x + y where each small block matrix is an identity matrix
@@ -4655,7 +4655,11 @@ void fasp_blas_dbsr_mxm (const dBSRmat  *A,
     const INT nb2 = nb*nb;
     
     // /TODO: check A and B see if there are compatible for multiplication!! -- Xiaozhe
-    
+    if ( (A->COL != B->ROW) && (A->nb != B->nb ) ) {
+        printf("### ERROR: Matrix sizes do not match!\n");
+        fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);
+    }
+
     C->ROW = A->ROW;
     C->COL = B->COL;
     C->nb  = A->nb;
@@ -4670,7 +4674,7 @@ void fasp_blas_dbsr_mxm (const dBSRmat  *A,
     for (i=0;i<B->COL;++i) JD[i]=-1;
     
     // step 1: Find first the structure IA of C
-    for(i=0;i<C->ROW;++i) {
+    for (i=0;i<C->ROW;++i) {
         count=0;
         
         for (k=A->IA[i];k<A->IA[i+1];++k) {
@@ -4748,7 +4752,7 @@ void fasp_blas_dbsr_mxm (const dBSRmat  *A,
 }
 
 /**
- * \fn void fasp_blas_dbsr_rap1 (const dBSRmat *R, const dBSRmat *A, 
+ * \fn void fasp_blas_dbsr_rap1 (const dBSRmat *R, const dBSRmat *A,
  *                               const dBSRmat *P, dBSRmat *B)
  *
  * \brief dBSRmat sparse matrix multiplication B=R*A*P
@@ -4937,7 +4941,7 @@ void fasp_blas_dbsr_rap1 (const dBSRmat  *R,
 }
 
 /**
- * \fn void fasp_blas_dbsr_rap (const dBSRmat *R, const dBSRmat *A, 
+ * \fn void fasp_blas_dbsr_rap (const dBSRmat *R, const dBSRmat *A,
  *                              const dBSRmat *P, dBSRmat *B)
  *
  * \brief dBSRmat sparse matrix multiplication B=R*A*P
@@ -5131,7 +5135,7 @@ jj3, i3, smat_tmp)
                                 }
                                 else {
                                     fasp_blas_darray_axpy(nb2, 1.0, smat_tmp+nb2,
-                                                         &acj[P_marker[i3]*nb2]);
+                                                          &acj[P_marker[i3]*nb2]);
                                 }
                             }
                         }
@@ -5140,7 +5144,7 @@ jj3, i3, smat_tmp)
                                 i3 = jp[jj3];
                                 fasp_blas_smat_mul(smat_tmp, &pj[jj3*nb2], smat_tmp+nb2, nb);
                                 fasp_blas_darray_axpy(nb2, 1.0, smat_tmp+nb2,
-                                                     &acj[P_marker[i3]*nb2]);
+                                                      &acj[P_marker[i3]*nb2]);
                             }
                         }
                     }
@@ -5176,7 +5180,7 @@ jj3, i3, smat_tmp)
                             }
                             else {
                                 fasp_blas_darray_axpy(nb2, 1.0, tmp+nb2,
-                                                     &acj[Ps_marker[i3]*nb2]);
+                                                      &acj[Ps_marker[i3]*nb2]);
                             }
                         }
                     }
@@ -5204,7 +5208,7 @@ jj3, i3, smat_tmp)
 }
 
 /**
- * \fn void fasp_blas_dbsr_rap_agg (const dBSRmat *R, const dBSRmat *A, 
+ * \fn void fasp_blas_dbsr_rap_agg (const dBSRmat *R, const dBSRmat *A,
  *                                  const dBSRmat *P, dBSRmat *B)
  *
  * \brief dBSRmat sparse matrix multiplication B=R*A*P, where small block matrices in
@@ -5390,7 +5394,7 @@ counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
                                 }
                                 else {
                                     fasp_blas_darray_axpy(nb2, 1.0, &aj[jj2*nb2],
-                                                         &acj[P_marker[i3]*nb2]);
+                                                          &acj[P_marker[i3]*nb2]);
                                 }
                             }
                         }
@@ -5398,7 +5402,7 @@ counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
                             for (jj3 = ip[i2]; jj3 < ip[i2+1]; jj3 ++) {
                                 i3 = jp[jj3];
                                 fasp_blas_darray_axpy(nb2, 1.0, &aj[jj2*nb2],
-                                                     &acj[P_marker[i3]*nb2]);
+                                                      &acj[P_marker[i3]*nb2]);
                             }
                         }
                     }
@@ -5433,7 +5437,7 @@ counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
                             }
                             else {
                                 fasp_blas_darray_axpy(nb2, 1.0, &aj[jj2*nb2],
-                                                     &acj[Ps_marker[i3]*nb2]);
+                                                      &acj[Ps_marker[i3]*nb2]);
                             }
                         }
                     }
@@ -5441,7 +5445,7 @@ counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
                         for (jj3 = ip[i2]; jj3 < ip[i2+1]; jj3 ++) {
                             i3 = jp[jj3];
                             fasp_blas_darray_axpy(nb2, 1.0, &aj[jj2*nb2],
-                                                 &acj[Ps_marker[i3]*nb2]);
+                                                  &acj[Ps_marker[i3]*nb2]);
                         }
                     }
                 }

@@ -115,9 +115,8 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
     }
     
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for GMRES %s : %s : %d!\n",
-               __FILE__, __FUNCTION__, __LINE__ );
-        exit(ERROR_ALLOC_MEM);
+        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
+        fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
     if ( PrtLvl > PRINT_MIN && Restart < restart ) {
@@ -160,7 +159,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -420,9 +419,8 @@ INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
     }
 
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for GMRES %s : %s : %d!\n",
-               __FILE__, __FUNCTION__, __LINE__ );
-        exit(ERROR_ALLOC_MEM);
+        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
+        fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
 
     if ( PrtLvl > PRINT_MIN && Restart < restart ) {
@@ -465,7 +463,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
             relres  = absres0/normu;
             break;
             default:
-            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
             goto FINISHED;
     }
 
@@ -726,9 +724,8 @@ INT fasp_solver_dblc_pgmres (dBLCmat     *A,
     }
     
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for GMRES %s : %s : %d!\n",
-               __FILE__, __FUNCTION__, __LINE__ );
-        exit(ERROR_ALLOC_MEM);
+        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
+        fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
     if ( PrtLvl > PRINT_MIN && Restart < restart ) {
@@ -771,7 +768,7 @@ INT fasp_solver_dblc_pgmres (dBLCmat     *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -1031,9 +1028,8 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
     }
     
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for GMRES %s : %s : %d!\n",
-               __FILE__, __FUNCTION__, __LINE__ );
-        exit(ERROR_ALLOC_MEM);
+        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
+        fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
     if ( PrtLvl > PRINT_MIN && Restart < restart ) {
@@ -1076,7 +1072,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -1336,9 +1332,8 @@ INT fasp_solver_pgmres (mxv_matfree  *mf,
     }
     
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for GMRES %s : %s : %d!\n",
-               __FILE__, __FUNCTION__, __LINE__ );
-        exit(ERROR_ALLOC_MEM);
+        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
+        fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
     if ( PrtLvl > PRINT_MIN && Restart < restart ) {

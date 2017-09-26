@@ -30,10 +30,10 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_dstr_itsolver (dSTRmat *A, dvector *b, dvector *x, 
+ * \fn INT fasp_solver_dstr_itsolver (dSTRmat *A, dvector *b, dvector *x,
  *                                    precond *pc, ITS_param *itparam)
  *
- * \brief Solve Ax=b by standard Krylov methods 
+ * \brief Solve Ax=b by standard Krylov methods
  *
  * \param A        Pointer to the coeff matrix in dSTRmat format
  * \param b        Pointer to the right hand side in dvector format
@@ -44,7 +44,7 @@
  * \return         Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang
- * \date   09/25/2009 
+ * \date   09/25/2009
  *
  * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
@@ -76,25 +76,27 @@ INT fasp_solver_dstr_itsolver (dSTRmat    *A,
     ITS_CHECK ( MaxIt, tol );
     
     switch (itsolver_type) {
-    
-    case SOLVER_CG: 
-        iter=fasp_solver_dstr_pcg(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
-        break;
-    
-    case SOLVER_BiCGstab:
-        iter=fasp_solver_dstr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
-        break;
-    
-    case SOLVER_GMRES:
-        iter=fasp_solver_dstr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
-        break;    
-    
-    case SOLVER_VGMRES:
-        iter=fasp_solver_dstr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);    
-        break;    
-    
-    default:
-        printf("### ERROR: Unknown iterative solver type %d!\n", itsolver_type);
+
+        case SOLVER_CG:
+            iter=fasp_solver_dstr_pcg(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
+            break;
+
+        case SOLVER_BiCGstab:
+            iter=fasp_solver_dstr_pbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
+            break;
+
+        case SOLVER_GMRES:
+            iter=fasp_solver_dstr_pgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
+            break;
+
+        case SOLVER_VGMRES:
+            iter=fasp_solver_dstr_pvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
+            break;
+
+        default:
+            printf("### ERROR: Unknown iterative solver type %d! [%s]\n",
+                   itsolver_type, __FUNCTION__);
+            return ERROR_SOLVER_TYPE;
 
     }
     
@@ -112,10 +114,10 @@ INT fasp_solver_dstr_itsolver (dSTRmat    *A,
 }    
 
 /**
- * \fn INT fasp_solver_dstr_krylov (dSTRmat *A, dvector *b, dvector *x, 
+ * \fn INT fasp_solver_dstr_krylov (dSTRmat *A, dvector *b, dvector *x,
  *                                  ITS_param *itparam)
  *
- * \brief Solve Ax=b by standard Krylov methods 
+ * \brief Solve Ax=b by standard Krylov methods
  *
  * \param A         Pointer to the coeff matrix in dSTRmat format
  * \param b         Pointer to the right hand side in dvector format
@@ -160,10 +162,10 @@ INT fasp_solver_dstr_krylov (dSTRmat    *A,
 }
 
 /**
- * \fn INT fasp_solver_dstr_krylov_diag (dSTRmat *A, dvector *b, dvector *x, 
+ * \fn INT fasp_solver_dstr_krylov_diag (dSTRmat *A, dvector *b, dvector *x,
  *                                       ITS_param *itparam)
  *
- * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
+ * \brief Solve Ax=b by diagonal preconditioned Krylov methods
  *
  * \param A         Pointer to the coeff matrix in dSTRmat format
  * \param b         Pointer to the right hand side in dvector format
@@ -196,7 +198,7 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat    *A,
     
     for (i=0;i<ngrid;++i) fasp_smat_inv(&(diag.diag.val[i*nc2]),nc);
     
-    precond *pc = (precond *)fasp_mem_calloc(1,sizeof(precond));    
+    precond *pc = (precond *)fasp_mem_calloc(1,sizeof(precond));
     
     pc->data = &diag;
     pc->fct  = fasp_precond_dstr_diag;
@@ -225,10 +227,10 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat    *A,
 }
 
 /**
- * \fn INT fasp_solver_dstr_krylov_ilu(dSTRmat *A, dvector *b, dvector *x, 
+ * \fn INT fasp_solver_dstr_krylov_ilu(dSTRmat *A, dvector *b, dvector *x,
  *                                 ITS_param *itparam, ILU_param *iluparam)
  *
- * \brief Solve Ax=b by structured ILU preconditioned Krylov methods 
+ * \brief Solve Ax=b by structured ILU preconditioned Krylov methods
  *
  * \param A         Pointer to the coeff matrix in dSTRmat format
  * \param b         Pointer to the right hand side in dvector format
@@ -269,8 +271,8 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat    *A,
     else if (ILU_lfil == 1) {
         fasp_ilu_dstr_setup1(A,&LU);
     }
-    else  {    
-        printf("### ERROR: Illegal level of fill-in for ILU (lfil>=2)!\n");
+    else  {
+        printf("### ERROR: Illegal level of ILU fill-in (>1)! [%s]\n", __FUNCTION__);
         return ERROR_MISC;
     }
 
@@ -279,7 +281,7 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat    *A,
     setup_duration = setup_end - setup_start;
     
     if ( prtlvl > PRINT_NONE )
-        printf("structrued ILU(%d) setup costs %f seconds.\n", ILU_lfil, setup_duration);
+        printf("Structrued ILU(%d) setup costs %f seconds.\n", ILU_lfil, setup_duration);
     
     precond pc; pc.data=&LU;
     if (ILU_lfil == 0) {
@@ -289,7 +291,7 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat    *A,
         pc.fct = fasp_precond_dstr_ilu1;
     }
     else {
-        printf("### ERROR: Illegal level of fill-in for ILU (lfil>=2)!\n");
+        printf("### ERROR: Illegal level of ILU fill-in (>1)! [%s]\n", __FUNCTION__);
         return ERROR_MISC;
     }
     
@@ -299,7 +301,7 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat    *A,
     status=fasp_solver_dstr_itsolver(A,b,x,&pc,itparam);
 
     fasp_gettime(&solve_end);
-        
+
     if ( prtlvl >= PRINT_MIN ) {
         solve_duration = solve_end - solve_start;
         printf("Iterative solver costs %f seconds.\n", solve_duration);
@@ -316,11 +318,11 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat    *A,
 }
 
 /**
- * \fn INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A, dvector *b, dvector *x, 
+ * \fn INT fasp_solver_dstr_krylov_blockgs (dSTRmat *A, dvector *b, dvector *x,
  *                                          ITS_param *itparam, ivector *neigh,
  *                                          ivector *order)
  *
- * \brief Solve Ax=b by diagonal preconditioned Krylov methods 
+ * \brief Solve Ax=b by diagonal preconditioned Krylov methods
  *
  * \param A         Pointer to the coeff matrix in dSTRmat format
  * \param b         Pointer to the right hand side in dvector format
@@ -380,7 +382,7 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat    *A,
     fasp_gettime(&setup_end);
     
     if ( prtlvl > PRINT_NONE ) {
-        setup_duration = setup_end - setup_start;      
+        setup_duration = setup_end - setup_start;
         printf("Preconditioner setup costs %f seconds.\n", setup_duration);
     }
     

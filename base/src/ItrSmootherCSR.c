@@ -1115,7 +1115,7 @@ void fasp_smoother_dcsr_ilu (dCSRmat *A,
     return;
     
 MEMERR:
-    printf("### ERROR: ILU needs %d memory, only %d available! %s : %d\n",
+    printf("### ERROR: ILU needs %d memory, only %d available! [%s:%d]\n",
            memneed, iludata->nwork, __FILE__, __LINE__);
     fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
 }
@@ -1483,7 +1483,8 @@ static dCSRmat form_contractor (dCSRmat    *A,
                 fasp_smoother_dcsr_sor(&x, n-1, 0,-1, A, &b, steps, relax);
                 break;
             default:
-                printf("### ERROR: Unknown smoother type!\n");
+                printf("### ERROR: Unknown smoother type! [%s:%d]\n",
+                       __FILE__, __LINE__);
                 fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
         }
         

@@ -396,7 +396,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
         fasp_mem_free(b_tmp);
     }
     else {
-        printf("### ERROR: nb is illegal! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: nb is illegal! [%s:%d]\n", __FILE__, __LINE__);
         fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
     
@@ -626,7 +626,7 @@ void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
         fasp_mem_free(b_tmp);
     }
     else {
-        printf("### ERROR: nb is illegal! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: nb is illegal! [%s:%d]\n", __FILE__, __LINE__);
         fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
     
@@ -698,7 +698,7 @@ void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A,
         fasp_mem_free(b_tmp);
     }
     else {
-        printf("### ERROR: nb is illegal! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: nb is illegal! [%s:%d]\n", __FILE__, __LINE__);
         fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
     
@@ -768,7 +768,7 @@ void fasp_smoother_dbsr_gs_descend (dBSRmat *A,
         fasp_mem_free(b_tmp);
     }
     else {
-        printf("### ERROR: nb is illegal! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: nb is illegal! [%s:%d]\n", __FILE__, __LINE__);
         fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
     
@@ -841,7 +841,7 @@ void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
         fasp_mem_free(b_tmp);
     }
     else {
-        printf("### ERROR: nb is illegal! %s : %d\n", __FILE__, __LINE__);
+        printf("### ERROR: nb is illegal! [%s:%d]\n", __FILE__, __LINE__);
         fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
     }
     
@@ -1612,7 +1612,7 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     return;
     
 MEMERR:
-    printf("### ERROR: ILU needs %d memory, only %d available! %s : %d\n",
+    printf("### ERROR: ILU needs %d memory, only %d available! [%s:%d]\n",
            memneed, iludata->nwork, __FILE__, __LINE__);
     fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
 }

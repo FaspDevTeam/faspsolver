@@ -124,8 +124,7 @@ void fasp_param_input (const char   *fname,
     
     FILE *fp = fopen(fname,"r");
     if (fp==NULL) {
-        printf("### ERROR: Could not open file %s...\n", fname);
-        fasp_chkerr(ERROR_OPEN_FILE, "fasp_param_input");
+        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     }
     
     while ( status == FASP_SUCCESS ) {
