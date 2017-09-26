@@ -26,7 +26,7 @@ int main (int argc, const char * argv[])
     dvector b, uh;
     
     dCSRmat A;
-    dCSRmat *A_diag;
+    dCSRmat *A_diag = NULL;
     dvector b_temp;
     
     ivector phi_idx;
@@ -35,9 +35,9 @@ int main (int argc, const char * argv[])
     
     INT i,j;
     dBLCmat Aiblc;
-    INT NumLayers;
-    dCSRmat *local_A;
-    ivector *local_index;
+    INT NumLayers = 1;
+    dCSRmat *local_A = NULL;
+    ivector *local_index = NULL;
     
     int status = FASP_SUCCESS;
     

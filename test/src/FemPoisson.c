@@ -409,9 +409,10 @@ double get_l2_error_poisson (ddenmat *node,
                              int num_qp)
 {
     double l2error = 0.0;
-    double T[3][2];
+    double T[3][2] = {{0, 0}, {0, 0}, {0, 0}};
+    double uh_local[3] = {0, 0, 0};
     double gauss[MAX_QUAD][DIM+1];
-    double s, uh_local[3], l2, a, p[DIM], uh_p;
+    double s, l2, a, p[DIM], uh_p;
     
     int i,j,k;
     

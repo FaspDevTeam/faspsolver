@@ -87,7 +87,7 @@ void fasp_precond_dstr_ilu0 (REAL *r,
     INT size=m*nc;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif    
     
     if (nx == 1) {
@@ -332,7 +332,7 @@ void fasp_precond_dstr_ilu0 (REAL *r,
     fasp_mem_free(tc);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif    
     
     return;

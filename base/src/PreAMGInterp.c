@@ -73,7 +73,7 @@ void fasp_amg_interp (dCSRmat    *A,
     if ( coarsening_type == COARSE_AC ) interp_type = INTERP_STD;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     switch ( interp_type ) {
@@ -96,7 +96,7 @@ void fasp_amg_interp (dCSRmat    *A,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 }
 
@@ -138,7 +138,7 @@ static void amg_interp_trunc (dCSRmat    *P,
     INT  i, j;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     for ( i = 0; i < row; ++i ) {
@@ -222,7 +222,7 @@ static void amg_interp_trunc (dCSRmat    *P,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
 }

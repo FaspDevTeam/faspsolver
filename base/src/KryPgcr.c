@@ -84,7 +84,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GCR solver (CSR) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -210,7 +210,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
     fasp_mem_free(norms);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if ( iter >= MaxIt )
@@ -276,7 +276,7 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GCR solver (BLC) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -402,7 +402,7 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
     fasp_mem_free(norms);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if ( iter >= MaxIt )

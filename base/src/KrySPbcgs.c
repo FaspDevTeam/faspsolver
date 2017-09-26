@@ -91,7 +91,7 @@ INT fasp_solver_dcsr_spbcgs (const dCSRmat  *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe BiCGstab solver (CSR) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -418,7 +418,7 @@ FINISHED: // finish the iterative method
     fasp_mem_free(work);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if ( iter > MaxIt )
@@ -482,7 +482,7 @@ INT fasp_solver_dbsr_spbcgs (const dBSRmat  *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe BiCGstab solver (BSR) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -809,7 +809,7 @@ FINISHED: // finish the iterative method
     fasp_mem_free(work);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if ( iter > MaxIt )
@@ -873,7 +873,7 @@ INT fasp_solver_dblc_spbcgs (const dBLCmat  *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe BiCGstab solver (BLC) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -1200,7 +1200,7 @@ FINISHED: // finish the iterative method
     fasp_mem_free(work);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if ( iter > MaxIt )
@@ -1264,7 +1264,7 @@ INT fasp_solver_dstr_spbcgs (const dSTRmat  *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe BiCGstab solver (STR) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -1591,7 +1591,7 @@ FINISHED: // finish the iterative method
     fasp_mem_free(work);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if ( iter > MaxIt )

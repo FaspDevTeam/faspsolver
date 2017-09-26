@@ -53,7 +53,7 @@ void fasp_solver_famg (const dCSRmat  *A,
     REAL          FMG_start = 0, FMG_end;
     
 #if DEBUG_MODE > 0
-    printf("###DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("###DEBUG: %s ...... [begin]\n", __FUNCTION__);
     printf("###DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
@@ -105,7 +105,7 @@ void fasp_solver_famg (const dCSRmat  *A,
     }
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return;

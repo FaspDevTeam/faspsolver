@@ -24,20 +24,20 @@
 /*---------------------------------*/
 
 /** 
- * \fn static void localb (double (*node)[2], double *b, int num_qp, int nt, 
+ * \fn static void localb (double (*node)[2], double *b, int num_qp, int nt,
  *                         double dt)
  *
  * \brief Form local right-hand side b from triangle node
  *
  * \param (*node)[2]   vertices of the triangle
  * \param *b           local right-hand side
- * \param num_qp       number of quad point 
+ * \param num_qp       number of quad point
  * \param nt           number of time steps
  * \param dt           size of time step
  *
  * \author Feiteng Huang
  * \date   02/23/2012
- * 
+ *
  * Modify by Feiteng Huang 04/01/2012: for heat transfer
  */
 static void localb (double (*node)[2],
@@ -54,7 +54,7 @@ static void localb (double (*node)[2],
     for (i=0;i<3*nt;++i)
         b[i] = 0;
     
-    fasp_gauss2d(num_qp, 2, gauss); // Gauss integration initial    
+    fasp_gauss2d(num_qp, 2, gauss); // Gauss integration initial
     
     for (i=0;i<num_qp;++i) {
         g = 1-gauss[i][0]-gauss[i][1];
@@ -71,7 +71,7 @@ static void localb (double (*node)[2],
 }
 
 /**
- * \fn static void assemble_stiffmat (dCSRmat *A, dCSRmat *M, dvector *b, Mesh *mesh, 
+ * \fn static void assemble_stiffmat (dCSRmat *A, dCSRmat *M, dvector *b, Mesh *mesh,
  *                                    Mesh_aux *mesh_aux, FEM_param *pt, double dt)
  *
  * \brief Assemble stiffness matrix and right-hand side
@@ -79,9 +79,9 @@ static void localb (double (*node)[2],
  * \param *A                           pointer to stiffness matrix
  * \param *M                           pointer to mass matrix
  * \param *b                           pointer to right hand side
- * \param *mesh                        pointer to mesh info 
- * \param *mesh_aux                    pointer to auxiliary mesh info 
- * \param *pt                          pointer to parameter 
+ * \param *mesh                        pointer to mesh info
+ * \param *mesh_aux                    pointer to auxiliary mesh info
+ * \param *pt                          pointer to parameter
  * \param dt                           size of time step
  *
  * \note This subroutine follows Ludmil' note on CSR.
@@ -92,11 +92,11 @@ static void localb (double (*node)[2],
  * Modified by Feiteng Huang on 04/06/2012: restructure assembling
  */
 static void assemble_stiffmat (dCSRmat *A, 
-                               dCSRmat *M, 
-                               dvector *b, 
-                               Mesh *mesh, 
-                               Mesh_aux *mesh_aux, 
-                               FEM_param *pt, 
+                               dCSRmat *M,
+                               dvector *b,
+                               Mesh *mesh,
+                               Mesh_aux *mesh_aux,
+                               FEM_param *pt,
                                double dt)
 {
     // assemble option
@@ -161,7 +161,7 @@ static void assemble_stiffmat (dCSRmat *A,
         M->JA[A->IA[i]] = i;
     }
     
-    // get JA 
+    // get JA
     for (i=0;i<num_edge;++i) {
         n1 = mesh_aux->edge.val[i][0];
         n2 = mesh_aux->edge.val[i][1];
@@ -178,7 +178,7 @@ static void assemble_stiffmat (dCSRmat *A,
     
     // Loop element by element and compute the actual entries storing them in A
     if (rhs && mat) {
-        for (k=0;k<mesh->elem.row;++k) { 
+        for (k=0;k<mesh->elem.row;++k) {
 
             for (i=0;i<mesh->elem.col;++i) {
                 j=mesh->elem.val[k][i];
@@ -228,7 +228,7 @@ static void assemble_stiffmat (dCSRmat *A,
         } // end for k
     }// end if
     else if (rhs) {
-        for (k=0;k<mesh->elem.row;++k) { 
+        for (k=0;k<mesh->elem.row;++k) {
 
             for (i=0;i<mesh->elem.col;++i) {
                 j=mesh->elem.val[k][i];
@@ -252,7 +252,7 @@ static void assemble_stiffmat (dCSRmat *A,
         } // end for k
     }
     else if (mat) {
-        for (k=0;k<mesh->elem.row;++k) { 
+        for (k=0;k<mesh->elem.row;++k) {
 
             for (i=0;i<mesh->elem.col;++i) {
                 j=mesh->elem.val[k][i];
@@ -322,18 +322,18 @@ static void assemble_stiffmat (dCSRmat *A,
  * \param *A                     pointer to stiffness matrix
  * \param *Mass                  pointer to mass matrix
  * \param *b_heat                pointer to right hand side
- * \param *mesh                  pointer to mesh info 
- * \param *mesh_aux              pointer to auxiliary mesh info 
- * \param *pt                    pointer to parameter 
+ * \param *mesh                  pointer to mesh info
+ * \param *mesh_aux              pointer to auxiliary mesh info
+ * \param *pt                    pointer to parameter
  * \param *uh_heat                             discrete solution
- * \param *bdinfo                               info to apply boundary condition 
+ * \param *bdinfo                               info to apply boundary condition
  * \param dt                     size of time step
  *
  * \return                       FASP_SUCCESS if succeed
  *
  * \author Chensong Zhang and Feiteng Huang
  * \date   08/10/2010
- * 
+ *
  * Modified by Feiteng Huang on 04/01/2012, output node, elem, uh, and dof for l2 error
  * Modified by Feiteng Huang on 04/09/2012, restructure the code
  */
@@ -347,7 +347,7 @@ int setup_heat (dCSRmat *A_heat,
                 Bd_apply_info *bdinfo,
                 double dt)
 {
-    // assemble 
+    // assemble
     dCSRmat Stiff;
     dvector rhs;
     
@@ -363,8 +363,8 @@ int setup_heat (dCSRmat *A_heat,
             dirichlet_count++;
     }
     
-    dirichlet = fasp_ivec_create(dirichlet_count); 
-    nondirichlet = fasp_ivec_create(mesh->node.row-dirichlet_count); 
+    dirichlet = fasp_ivec_create(dirichlet_count);
+    nondirichlet = fasp_ivec_create(mesh->node.row-dirichlet_count);
     index = fasp_ivec_create(mesh->node.row);
     
     j = k = 0;
@@ -421,7 +421,7 @@ int setup_heat (dCSRmat *A_heat,
  * \param *elem                  elem info
  * \param *ptr_uh                discrete solution
  * \param num_qp                 number of quad point
- * \param t                      time 
+ * \param t                      time
  *
  * \author Feiteng Huang
  * \date   03/30/2012
@@ -434,24 +434,25 @@ double get_l2_error_heat (ddenmat *node,
 {
     double l2error = 0.0;
     
-    double T[3][2];
+    double uh_local[3] = {0, 0, 0};
+    double T[3][2] = {{0, 0}, {0, 0}, {0, 0}};
     double gauss[MAX_QUAD][DIM+1];
-    double s, uh_local[3], l2, a, p[DIM+1], uh_p;
+    double s, l2, a, p[DIM+1], uh_p;
     p[DIM] = t;
     
     int i,j,k;
     
     fasp_gauss2d(num_qp, 2, gauss); // Gauss integration initial
     
-    for (k=0;k<elem->row;++k) { 
+    for (k=0;k<elem->row;++k) {
 
         for (i=0;i<elem->col;++i) {
-            j=elem->val[k][i];
-            T[i][0]=node->val[j][0];
-            T[i][1]=node->val[j][1];
+            j = elem->val[k][i];
+            T[i][0] = node->val[j][0];
+            T[i][1] = node->val[j][1];
             uh_local[i] = uh->val[j];
         } // end for i
-        s=2.0*areaT(T[0][0], T[1][0], T[2][0], T[0][1], T[1][1], T[2][1]);
+        s = 2.0*areaT(T[0][0], T[1][0], T[2][0], T[0][1], T[1][1], T[2][1]);
 
         for (i=0;i<num_qp;++i) {
             l2 = 1 - gauss[i][0] - gauss[i][1];
@@ -459,8 +460,8 @@ double get_l2_error_heat (ddenmat *node,
                 p[j]=T[0][j]*gauss[i][0]+T[1][j]*gauss[i][1]+T[2][j]*l2;
             a=u(p);
             
-        uh_p = uh_local[0]*gauss[i][0] + uh_local[1]*gauss[i][1] + uh_local[2]*l2;
-            l2error+=s*gauss[i][2]*((a - uh_p)*(a - uh_p));
+            uh_p = uh_local[0]*gauss[i][0] + uh_local[1]*gauss[i][1] + uh_local[2]*l2;
+            l2error += s*gauss[i][2]*((a - uh_p)*(a - uh_p));
         }
     }
     

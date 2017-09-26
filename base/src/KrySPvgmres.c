@@ -115,7 +115,7 @@ INT fasp_solver_dcsr_spvgmres (const dCSRmat  *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe VGMRes solver (CSR) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -412,7 +412,7 @@ FINISHED:
     fasp_mem_free(norms);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if (iter>=MaxIt)
@@ -496,7 +496,7 @@ INT fasp_solver_dbsr_spvgmres (const dBSRmat  *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe VGMRes solver (BSR) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
 
@@ -793,7 +793,7 @@ FINISHED:
     fasp_mem_free(norms);
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
     if (iter>=MaxIt)
@@ -876,7 +876,7 @@ INT fasp_solver_dblc_spvgmres (const dBLCmat  *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe VGMRes solver (BLC) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -1173,7 +1173,7 @@ FINISHED:
     fasp_mem_free(norms);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if (iter>=MaxIt)
@@ -1257,7 +1257,7 @@ INT fasp_solver_dstr_spvgmres (const dSTRmat  *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling Safe VGMRes solver (STR) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -1554,7 +1554,7 @@ FINISHED:
     fasp_mem_free(norms);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if (iter>=MaxIt)

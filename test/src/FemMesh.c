@@ -18,10 +18,10 @@
  *
  * \brief Initialize the mesh info from input file
  *
- * \param *mesh          Mesh info
- * \param *filename      Input mesh filename
+ * \param mesh          Mesh info
+ * \param filename      Input mesh filename
  *
- * \return               FASP_SUCCESS if succeed
+ * \return              FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/05/2009
@@ -103,10 +103,10 @@ int mesh_init (Mesh *mesh, const char *filename)
  *
  * \brief Initialize the mesh info from input file with bd flag
  *
- * \param *mesh          Mesh info
- * \param *filename      Input mesh filename
+ * \param mesh          Mesh info
+ * \param filename      Input mesh filename
  *
- * \return               FASP_SUCCESS if succeed
+ * \return              FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/05/2009
@@ -192,11 +192,11 @@ int mesh_init_pro (Mesh *mesh, const char *filename)
  *
  * \brief Initialize the auxiliary mesh info from mesh info and input file
  *
- * \param *mesh          Mesh info
- * \param *mesh_aux      Auxiliary mesh info
- * \param *filename      Input mesh filename
+ * \param mesh          Mesh info
+ * \param mesh_aux      Auxiliary mesh info
+ * \param filename      Input mesh filename
  *
- * \return               FASP_SUCCESS if succeed
+ * \return              FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/06/2009
@@ -287,11 +287,11 @@ int mesh_aux_init (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
  *
  * \brief Initialize the auxiliary mesh info from mesh info and input file with bd flag
  *
- * \param *mesh          Mesh info
- * \param *mesh_aux      Auxiliary mesh info
- * \param *filename      Input mesh filename
+ * \param mesh          Mesh info
+ * \param mesh_aux      Auxiliary mesh info
+ * \param filename      Input mesh filename
  *
- * \return               FASP_SUCCESS if succeed
+ * \return              FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/06/2009
@@ -378,10 +378,10 @@ int mesh_aux_init_pro (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
  *
  * \brief Generate auxiliary mesh info
  *
- * \param *mesh          Mesh info
- * \param *mesh_aux      Auxiliary mesh info
+ * \param mesh          Mesh info
+ * \param mesh_aux      Auxiliary mesh info
  *
- * \return               FASP_SUCCESS if succeed
+ * \return              FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/05/2009
@@ -397,11 +397,11 @@ int mesh_aux_build(Mesh *mesh, Mesh_aux *mesh_aux)
     int dim_elem2edge = dim_elem;
     mesh_aux->elem2edge.row = num_elem2edge;
     mesh_aux->elem2edge.col = dim_elem2edge;
-    int num_edge = 3*num_node;// pre-define num_edge, actually num_edge < 3*num_node
+    int num_edge = 3*num_node; // pre-define num_edge, actually num_edge < 3*num_node
     int dim_edge = dim_node;
     mesh_aux->edge.col = dim_edge;
     
-    int i, j, n1, n2, n1t, n2t, count = 0, edge_c;
+    int i, j, n1, n2, n1t, n2t, count = 0, edge_c = 0;
     double p[DIM];
     mesh_aux->edge.val = (int **)fasp_mem_calloc(num_edge, sizeof(int*));
     mesh_aux->edge.val[0] = (int *)fasp_mem_calloc(num_edge*dim_edge, sizeof(int));
@@ -536,10 +536,10 @@ int mesh_aux_build(Mesh *mesh, Mesh_aux *mesh_aux)
  *
  * \brief Write the mesh information
  *
- * \param *mesh          Mesh info
- * \param *filename      Output mesh file
+ * \param mesh          Mesh info
+ * \param filename      Output mesh file
  *
- * \return               FASP_SUCCESS if succeed
+ * \return              FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/06/2012
@@ -586,10 +586,10 @@ int mesh_write (Mesh *mesh, const char *filename)
  *
  * \brief Write the mesh information with bd flag
  *
- * \param *mesh          Mesh info
- * \param *filename      Output mesh file
+ * \param mesh          Mesh info
+ * \param filename      Output mesh file
  *
- * \return               FASP_SUCCESS if succeed
+ * \return              FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/06/2012
@@ -641,10 +641,10 @@ int mesh_write_pro (Mesh *mesh, const char *filename)
  *
  * \brief Write the auxiliary mesh information
  *
- * \param *mesh_aux      Auxiliary mesh info
- * \param *filename      Output mesh file
+ * \param mesh_aux      Auxiliary mesh info
+ * \param filename      Output mesh file
  *
- * \return               FASP_SUCCESS if succeed
+ * \return              FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/06/2012
@@ -692,10 +692,10 @@ int mesh_aux_write (Mesh_aux *mesh_aux, const char *filename)
  *
  * \brief Write the auxiliary mesh information with bd flag
  *
- * \param *mesh_aux      Auxiliary mesh info
- * \param *filename      Output mesh file
+ * \param mesh_aux      Auxiliary mesh info
+ * \param filename      Output mesh file
  *
- * \return               FASP_SUCCESS if succeed
+ * \return              FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/06/2012
@@ -749,9 +749,9 @@ int mesh_aux_write_pro (Mesh_aux *mesh_aux, const char *filename)
  *
  * \brief free memory for mesh info
  *
- * \param *mesh          Mesh info
+ * \param mesh          Mesh info
  *
- * \return               FASP_SUCCESS if succeed
+ * \return              FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/05/2009
@@ -781,7 +781,7 @@ int mesh_free (Mesh *mesh)
  *
  * \brief free memory for auxiliary mesh info
  *
- * \param *mesh_aux          auxiliary mesh info
+ * \param mesh_aux       Auxiliary mesh info
  *
  * \return               1 if succeed 0 if fail
  *
@@ -813,10 +813,10 @@ int mesh_aux_free (Mesh_aux *mesh_aux)
  *
  * \brief refine mesh use mesh info and auxiliary mesh info
  *
- * \param *mesh          Mesh info
- * \param *mesh_aux      Auxiliary mesh info
+ * \param mesh          Mesh info
+ * \param mesh_aux      Auxiliary mesh info
  *
- * \return               FASP_SUCCESS if succeed
+ * \return              FASP_SUCCESS if succeed
  *
  * \author Feiteng Huang
  * \date   04/06/2009
@@ -835,7 +835,7 @@ int mesh_refine(Mesh *mesh, Mesh_aux *mesh_aux)
     int num_newelem = 4*num_elem;
     
     int i, j, k;
-    int n[3], e[6];
+    int n[3], e[6] = {0, 0, 0, 0, 0, 0};
     
     mesh->node.row = num_newnode;
     mesh->elem.row = num_newelem;

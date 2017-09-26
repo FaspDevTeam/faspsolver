@@ -66,7 +66,7 @@ INT fasp_solver_dstr_itsolver (dSTRmat    *A,
     REAL solve_start, solve_end, solve_duration;
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
 
@@ -107,7 +107,7 @@ INT fasp_solver_dstr_itsolver (dSTRmat    *A,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
     return iter;
@@ -139,7 +139,7 @@ INT fasp_solver_dstr_krylov (dSTRmat    *A,
     REAL solve_start, solve_end, solve_duration;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
 
     // solver part
@@ -155,7 +155,7 @@ INT fasp_solver_dstr_krylov (dSTRmat    *A,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
     return status;
@@ -204,7 +204,7 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat    *A,
     pc->fct  = fasp_precond_dstr_diag;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
 
     // solver part
@@ -220,7 +220,7 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat    *A,
         fasp_cputime("Diag_Krylov method totally", solve_duration);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
     return status;
@@ -260,7 +260,7 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat    *A,
     dSTRmat LU;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
 
     fasp_gettime(&setup_start);
@@ -311,7 +311,7 @@ INT fasp_solver_dstr_krylov_ilu (dSTRmat    *A,
     fasp_dstr_free(&LU);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
     return status;
@@ -360,7 +360,7 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat    *A,
     ivector *pivot;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     // setup preconditioner
@@ -400,7 +400,7 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat    *A,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
     return status;

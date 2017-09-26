@@ -70,7 +70,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat    *A,
     REAL solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
@@ -115,7 +115,7 @@ INT fasp_solver_dbsr_itsolver (dBSRmat    *A,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return iter;
@@ -147,7 +147,7 @@ INT fasp_solver_dbsr_krylov (dBSRmat    *A,
     REAL solver_start, solver_end;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     // solver part
@@ -163,7 +163,7 @@ INT fasp_solver_dbsr_krylov (dBSRmat    *A,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return status;
@@ -210,7 +210,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat    *A,
     fasp_dvec_alloc(ROW*nb2, &(diag.diag));
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     // get all the diagonal sub-blocks
@@ -268,7 +268,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat    *A,
     fasp_dvec_free(&(diag.diag));
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return status;
@@ -305,7 +305,7 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat    *A,
     precond pc;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: matrix size: %d %d %d\n", A->ROW, A->COL, A->NNZ);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
@@ -335,7 +335,7 @@ FINISHED:
     fasp_ilu_data_free(&LU);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return status;
@@ -383,7 +383,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat    *A,
     REAL solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     //--------------------------------------------------------------
@@ -468,7 +468,7 @@ FINISHED:
     fasp_amg_data_bsr_free(mgl);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if (status == ERROR_ALLOC_MEM) goto MEMORY_ERROR;
@@ -527,7 +527,7 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat    *A,
     REAL solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     //--------------------------------------------------------------
@@ -625,7 +625,7 @@ FINISHED:
     fasp_amg_data_bsr_free(mgl);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
 #if WITH_UMFPACK // use UMFPACK directly
@@ -688,7 +688,7 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat    *A,
     REAL solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     //--------------------------------------------------------------
@@ -782,7 +782,7 @@ FINISHED:
     fasp_amg_data_bsr_free(mgl);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if (status == ERROR_ALLOC_MEM) goto MEMORY_ERROR;
