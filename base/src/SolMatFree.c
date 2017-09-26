@@ -75,7 +75,7 @@ INT fasp_solver_itsolver (mxv_matfree  *mf,
     fasp_gettime(&solver_start);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
@@ -127,7 +127,7 @@ INT fasp_solver_itsolver (mxv_matfree  *mf,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return iter;
@@ -163,7 +163,7 @@ INT fasp_solver_krylov (mxv_matfree  *mf,
     REAL     solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
@@ -178,7 +178,7 @@ INT fasp_solver_krylov (mxv_matfree  *mf,
     }    
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return status;

@@ -107,7 +107,7 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     k[5] = (mu1-2.0*smu0*smu1+mu0)/(mu1+2.0*smu0*smu1+mu0);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     // Update 
@@ -138,7 +138,7 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
     fasp_mem_free(k);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return;
@@ -185,7 +185,7 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
 #endif
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     /* WORKING MEM */
@@ -292,8 +292,8 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
         //for (i=0; i < n ; ++i)
         //resk += r[i]*r[i];
         //resk=sqrt(resk);
-        //fprintf(stdout,"\nres0=%12.5g\n",res0);
-        //fprintf(stdout,"\nresk=%12.5g\n",resk);
+        //fprintf("\nres0=%12.5g\n",res0);
+        //fprintf("\nresk=%12.5g\n",resk);
         //res0=resk;
         //resk=0.0e0;
     }
@@ -304,7 +304,7 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
     fasp_mem_free(vsave);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return; 

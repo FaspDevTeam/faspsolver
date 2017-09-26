@@ -58,7 +58,7 @@ INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
     // local variables
     INT i;
     INT inroot = -10, nsizei = -10, nsizeall = -10, nlvl = 0;
-    INT *jb=NULL;
+    INT *jb = NULL;
     ivector MIS;
     
     // data for Schwarz method
@@ -69,7 +69,7 @@ INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
     INT flag = FASP_SUCCESS;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     // allocate memory
@@ -101,7 +101,7 @@ INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
     }
     
 #if DEBUG_MODE > 1
-    fprintf(stdout,"### DEBUG: nsizeall = %d\n",nsizeall);
+    fprintf("### DEBUG: nsizeall = %d\n", nsizeall);
 #endif
     
     // calculated the size of jblock up to here
@@ -123,7 +123,7 @@ INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
     nblk = MIS.row;
     
 #if DEBUG_MODE > 1
-    fprintf(stdout,"### DEBUG: nsizeall = %d, %d\n",nsizeall,iblock[nblk]);
+    fprintf("### DEBUG: nsizeall = %d, %d\n", nsizeall, iblock[nblk]);
 #endif
     
     /*-------------------------------------------*/
@@ -177,7 +177,7 @@ INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
     }
     
 #if DEBUG_MODE > 1
-    fprintf(stdout, "### DEBUG: n = %d, #blocks = %d, max block size = %d\n",
+    fprintf("### DEBUG: n = %d, #blocks = %d, max block size = %d\n",
             n, nblk, swzdata->maxbs);
 #endif
     
@@ -192,7 +192,7 @@ INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
     swzdata->SWZ_type = swzparam->SWZ_type;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return flag;

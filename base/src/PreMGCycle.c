@@ -78,7 +78,7 @@ void fasp_solver_mgcycle (AMG_data   *mgl,
     INT  num_lvl[MAX_AMG_LVL] = {0}, l = 0;
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: n=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.nnz);
 #endif
 
@@ -261,7 +261,7 @@ ForwardSweep:
     if ( l > 0 ) goto ForwardSweep;
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
 }
@@ -301,7 +301,7 @@ void fasp_solver_mgcycle_bsr (AMG_data_bsr  *mgl,
     }
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
 
 #if DEBUG_MODE > 1
@@ -541,7 +541,7 @@ ForwardSweep:
     if ( l > 0 ) goto ForwardSweep;
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
 }

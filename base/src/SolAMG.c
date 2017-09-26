@@ -60,7 +60,7 @@ void fasp_solver_amg (const dCSRmat  *A,
     REAL          AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     if ( prtlvl > PRINT_NONE ) fasp_gettime(&AMG_start);
@@ -133,7 +133,7 @@ void fasp_solver_amg (const dCSRmat  *A,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return;

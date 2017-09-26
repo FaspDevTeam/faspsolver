@@ -85,7 +85,7 @@ SHORT fasp_amg_coarsening_rs (dCSRmat    *A,
     INT         col         = 0;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
 #if DEBUG_MODE > 1
@@ -155,7 +155,7 @@ SHORT fasp_amg_coarsening_rs (dCSRmat    *A,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return FASP_SUCCESS;
@@ -477,7 +477,7 @@ static INT cfsplitting_cls (dCSRmat   *A,
     SHORT nthreads = 1, use_openmp = FALSE;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
 #ifdef _OPENMP
@@ -738,7 +738,7 @@ FINISHED:
     fasp_mem_free(work);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return col;
@@ -785,7 +785,7 @@ static INT cfsplitting_clsp (dCSRmat   *A,
     SHORT nthreads = 1, use_openmp = FALSE;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
 #ifdef _OPENMP
@@ -1000,7 +1000,7 @@ FINISHED:
     fasp_mem_free(work);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return col;
@@ -1425,7 +1425,7 @@ static INT cfsplitting_agg (dCSRmat   *A,
     iCSRmat ST, Sh, ShT;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     /************************************************************/
@@ -1646,7 +1646,7 @@ static INT cfsplitting_agg (dCSRmat   *A,
     fasp_mem_free(work);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return col;

@@ -89,7 +89,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat      *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling MinRes solver (CSR) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -435,7 +435,7 @@ FINISHED:  // finish iterative method
     fasp_mem_free(work);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if ( iter > MaxIt )
@@ -498,7 +498,7 @@ INT fasp_solver_dblc_pminres (dBLCmat     *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling MinRes solver (BLC) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -844,7 +844,7 @@ FINISHED:  // finish iterative method
     fasp_mem_free(work);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if ( iter > MaxIt )
@@ -904,7 +904,7 @@ INT fasp_solver_dstr_pminres (dSTRmat      *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling MinRes solver (STR) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -1250,7 +1250,7 @@ FINISHED:  // finish iterative method
     fasp_mem_free(work);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if ( iter > MaxIt )
@@ -1312,7 +1312,7 @@ INT fasp_solver_pminres (mxv_matfree  *mf,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling MinRes solver (MatFree) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -1644,7 +1644,7 @@ FINISHED:  // finish iterative method
     fasp_mem_free(work);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if (iter>MaxIt)

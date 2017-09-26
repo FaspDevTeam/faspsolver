@@ -16,7 +16,7 @@
 
 /**
  * \fn static inline INT endian_convert_int (const INT inum, const INT ilength,
- *                                    const SHORT EndianFlag)
+ *                                           const SHORT EndianFlag)
  *
  * \brief Swap order of an INT number
  *
@@ -30,15 +30,15 @@
  * \author Ziteng Wang
  * \date   2012-12-24
  */
-static inline INT endian_convert_int (const INT   inum,
-                                      const INT   ilength,
-                                      const INT   EndianFlag)
+static inline INT endian_convert_int (const INT  inum,
+                                      const INT  ilength,
+                                      const INT  EndianFlag)
 {
-    INT iretVal,i;
-    char *intToConvert = ( char* ) & inum;
-    char *returnInt = ( char* ) & iretVal;
+    INT iretVal = 0, i;
+    char *intToConvert = ( char * ) & inum;
+    char *returnInt = ( char * ) & iretVal;
     
-    if (EndianFlag==1) return inum;
+    if ( EndianFlag == 1 ) return inum;
     else {
         for (i = 0; i < ilength; i++) {
             returnInt[i] = intToConvert[ilength-i-1];

@@ -70,7 +70,7 @@ INT fasp_solver_dblc_itsolver (dBLCmat    *A,
     fasp_gettime(&solver_start);
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
 
@@ -113,7 +113,7 @@ INT fasp_solver_dblc_itsolver (dBLCmat    *A,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
     return iter;
@@ -146,7 +146,7 @@ INT fasp_solver_dblc_krylov (dBLCmat    *A,
     REAL solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
 
     // solver part
@@ -162,7 +162,7 @@ INT fasp_solver_dblc_krylov (dBLCmat    *A,
         fasp_cputime("Krylov method totally", solver_duration);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
     return status;
@@ -213,7 +213,7 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
 #endif
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
 
     /* setup preconditioner */
@@ -359,7 +359,7 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
     return status;
@@ -406,7 +406,7 @@ INT fasp_solver_dblc_krylov_block_4 (dBLCmat    *A,
 #endif
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
 
     /* setup preconditioner */
@@ -484,7 +484,7 @@ INT fasp_solver_dblc_krylov_block_4 (dBLCmat    *A,
 #endif
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
     return status;
@@ -533,7 +533,7 @@ INT fasp_solver_dblc_krylov_sweeping (dBLCmat    *A,
     void **local_LU = NULL;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
 #if WITH_UMFPACK
@@ -593,7 +593,7 @@ INT fasp_solver_dblc_krylov_sweeping (dBLCmat    *A,
 #endif
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
     return status;

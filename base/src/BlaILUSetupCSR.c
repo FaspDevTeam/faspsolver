@@ -55,7 +55,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
     SHORT  status = FASP_SUCCESS;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: m=%d, n=%d, nnz=%d\n", A->row, n, nnz);
 #endif
     
@@ -133,7 +133,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
     iludata->nwork = nwork;
     
 #if DEBUG_MODE > 1
-    printf("### DEBUG: iwk = %d, nzlu = %d\n",iwk,nzlu);
+    printf("### DEBUG: iwk = %d, nzlu = %d\n", iwk, nzlu);
 #endif    
     
     if (ierr!=0) {
@@ -168,7 +168,7 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
 FINISHED:     
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return status;

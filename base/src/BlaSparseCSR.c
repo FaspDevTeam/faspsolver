@@ -667,7 +667,7 @@ void fasp_dcsr_diagpref (dCSRmat *A)
 #endif
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
 #ifdef _OPENMP
@@ -737,7 +737,7 @@ void fasp_dcsr_diagpref (dCSRmat *A)
 #endif
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 }
 

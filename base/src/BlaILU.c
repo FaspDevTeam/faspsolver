@@ -81,8 +81,9 @@ void fasp_iluk (INT    n,
                 INT   *nzlu)
 {
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
+
     /*----------------------------------------------------------------------
      SPARSKIT ROUTINE ILUK -- ILU WITH LEVEL OF FILL-IN OF K (ILU(k))
      ----------------------------------------------------------------------
@@ -383,7 +384,7 @@ F100:
     fasp_mem_free(levs);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return;
@@ -476,8 +477,9 @@ void fasp_ilut (INT    n,
                 INT   *nz)
 {
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s (ILUt) ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
+
     /*--------------------------------------------------------------------*
      *** ILUT preconditioner ***                                      *
      incomplete LU factorization with dual truncation mechanism       *
@@ -821,7 +823,7 @@ F100:
     fasp_mem_free(tnorm);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return;
@@ -917,8 +919,9 @@ void fasp_ilutp (INT    n,
                  INT   *nz)
 {
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s (ILUtp) ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
+
     /*----------------------------------------------------------------------*
      *** ILUTP preconditioner -- ILUT with pivoting  ***              *
      incomplete LU factorization with dual truncation mechanism       *
@@ -1307,7 +1310,7 @@ F100:
     fasp_mem_free(w);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return;
@@ -1377,7 +1380,7 @@ void fasp_symbfactor (INT   n,
                       INT  *ierr)
 {
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     /**
@@ -1457,9 +1460,9 @@ void fasp_symbfactor (INT   n,
      =============                            *
      *
      lastcol(n):                              *
-		   The integer lastcol(k) is the row index of the last row     *
-		   to have a nonzero in column k, including the current        *
-		   row, and fill-in up to this point.  So for the matrix       *
+     The integer lastcol(k) is the row index of the last row     *
+     to have a nonzero in column k, including the current        *
+     row, and fill-in up to this point.  So for the matrix       *
      *
      |--------------------------|              *
      | 11   12           15     |              *
@@ -1483,48 +1486,48 @@ void fasp_symbfactor (INT   n,
      it is a nonzero in the original matrix, or was a fill.      *
      *
      rowll(n):                                *
-		   The integer vector rowll is used to keep a linked list of   *
-		   the nonzeros in the current row, allowing fill-in to be     *
+     The integer vector rowll is used to keep a linked list of   *
+     the nonzeros in the current row, allowing fill-in to be     *
      introduced sensibly.  rowll is initialized with the     *
-		   original nonzeros of the current row, and then sorted       *
-		   using a shell sort.  A pointer called head              *
-		   (what ingenuity) is  initialized.  Note that at any     *
-		   point rowll may contain garbage left over from previous     *
-		   rows, which the linked list structure skips over.       *
-		   For row 4 of the matrix above, first rowll is set to        *
+     original nonzeros of the current row, and then sorted       *
+     using a shell sort.  A pointer called head              *
+     (what ingenuity) is  initialized.  Note that at any     *
+     point rowll may contain garbage left over from previous     *
+     rows, which the linked list structure skips over.       *
+     For row 4 of the matrix above, first rowll is set to        *
      rowll() = [3  1  2  5  -  -], where - indicates any integer.    *
      Then the vector is sorted, which yields             *
      rowll() = [1  2  3  5  -  -].  The vector is then expanded  *
-		   to linked list form by setting head = 1  and                *
+     to linked list form by setting head = 1  and                *
      rowll() = [2  3  5  -  7  -], where 7 indicates termination.    *
      *
      ijlu(nzlu):                              *
-		   The returned nonzero structure for the LU factors.      *
-		   This is built up row by row in MSR format, with both L      *
-		   and U stored in the data structure.  Another vector, uptr(n),   *
-		   is used to give pointers to the beginning of the upper      *
-		   triangular part of the LU factors in ijlu.          *
+     The returned nonzero structure for the LU factors.      *
+     This is built up row by row in MSR format, with both L      *
+     and U stored in the data structure.  Another vector, uptr(n),   *
+     is used to give pointers to the beginning of the upper      *
+     triangular part of the LU factors in ijlu.          *
      *
      levels(n+2:nzlu):                            *
-		   This vector stores the fill level for each entry from       *
-		   all the previous rows, used to compute if the current entry *
-		   will exceed the allowed levels of fill.  The value in       *
-		   levels(m) is added to the level of fill for the element in  *
+     This vector stores the fill level for each entry from       *
+     all the previous rows, used to compute if the current entry *
+     will exceed the allowed levels of fill.  The value in       *
+     levels(m) is added to the level of fill for the element in  *
      the current row that is being reduced, to figure if         *
-		   a column entry is to be accepted as fill, or rejected.      *
-		   See the method explanation above.               *
+     a column entry is to be accepted as fill, or rejected.      *
+     See the method explanation above.               *
      *
      levels(1:n):                             *
-		   This vector stores the fill level number for the current    *
-		   row's entries.  If they were created as fill elements       *
-		   themselves, this number is added to the corresponding       *
-		   entry in levels(n+2:nzlu) to see if a particular column     *
+     This vector stores the fill level number for the current    *
+     row's entries.  If they were created as fill elements       *
+     themselves, this number is added to the corresponding       *
+     entry in levels(n+2:nzlu) to see if a particular column     *
      entry will                          *
-		   be created as new fill or not.  NOTE: in practice, the      *
-		   value in levels(1:n) is one larger than the "fill" level of *
-		   the corresponding row entry, except for the diagonal        *
-		   entry.  That is why the accept/reject test in the code      *
-		   is "if (levels(j) + levels(m) .le. levfill + 1)".       *
+     be created as new fill or not.  NOTE: in practice, the      *
+     value in levels(1:n) is one larger than the "fill" level of *
+     the corresponding row entry, except for the diagonal        *
+     entry.  That is why the accept/reject test in the code      *
+     is "if (levels(j) + levels(m) .le. levfill + 1)".       *
      *
      ========================================================================
      
@@ -1677,30 +1680,22 @@ void fasp_symbfactor (INT   n,
             //  array rowll with the column numbers for the original entries
             //  from row i:
             //  ------------------------------------------------------------
-            /*
-             #if DEBUG_MODE > 0
-             printf(" ### DEBUG %s  %d row (",__FUNCTION__, i);
-             #endif
-             */
+#if DEBUG_MODE > 0
+            printf("### DEBUG: %s %d row", __FUNCTION__, i);
+#endif
+
             for ( j = ibegin; j <= iend; ++j) {
                 icolindj = colind[j];
                 lastcol[icolindj] = i;
-                if (icolindj  !=  i) {
+                if (icolindj !=  i) {
                     levels[icolindj] = 1;
                     rowct = rowct + 1;
                     rowll[rowct] = icolindj;
                 }
-                /*
-                 #if DEBUG_MODE > 0
-                 printf(" %d", icolindj);
-                 #endif
-                 */
+#if DEBUG_MODE > 0
+                printf("### DEBUG: %d", icolindj);
+#endif
             }
-            /*
-             #if DEBUG_MODE > 0
-		          	printf(" ) DEBUG ## \n");
-             #endif
-             */
             
             //  ---------------------------------------------------------
             //  Sort the entries in rowll, so that the row has its column
@@ -1973,8 +1968,9 @@ F100:
     fasp_mem_free(levels);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s (ILUk) ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
+
     return;
     //======================== End of symbfac ==============================
 }
@@ -2081,8 +2077,8 @@ static void fasp_sortrow (INT   num,
                           INT  *q)
 {
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s (ILUk) ...... [Start]\n", __FUNCTION__);
-#endif
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
+    #endif
     /**
      ========================================================================
      
@@ -2158,7 +2154,7 @@ static void fasp_sortrow (INT   num,
     ++q;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     return;
 }
@@ -2180,7 +2176,7 @@ static void fasp_check_col_index (INT row,
                                   INT  *q)
 {
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     INT ii;
@@ -2195,7 +2191,7 @@ static void fasp_check_col_index (INT row,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return;

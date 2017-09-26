@@ -102,7 +102,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GMRes solver (CSR) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -335,7 +335,7 @@ FINISHED:
     fasp_mem_free(norms);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if ( iter >= MaxIt )
@@ -406,7 +406,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GMRes solver (BSR) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
 
@@ -640,7 +640,7 @@ FINISHED:
     fasp_mem_free(norms);
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
     if ( iter >= MaxIt )
@@ -711,7 +711,7 @@ INT fasp_solver_dblc_pgmres (dBLCmat     *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GMRes solver (BLC) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -944,7 +944,7 @@ FINISHED:
     fasp_mem_free(norms);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if ( iter >= MaxIt )
@@ -1015,7 +1015,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GMRes solver (STR) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -1248,7 +1248,7 @@ FINISHED:
     fasp_mem_free(norms);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if ( iter >= MaxIt )
@@ -1316,7 +1316,7 @@ INT fasp_solver_pgmres (mxv_matfree  *mf,
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GMRes solver (MatFree) ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
     
@@ -1522,7 +1522,7 @@ INT fasp_solver_pgmres (mxv_matfree  *mf,
     fasp_mem_free(norms);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     if (iter>=MaxIt)

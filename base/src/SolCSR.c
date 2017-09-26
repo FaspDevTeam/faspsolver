@@ -75,7 +75,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat    *A,
     fasp_gettime(&solver_start);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
@@ -133,7 +133,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat    *A,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return iter;
@@ -167,7 +167,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat    *A,
     REAL     solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
@@ -183,7 +183,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat    *A,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return status;
@@ -217,7 +217,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat    *A,
     REAL      solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
@@ -243,7 +243,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat    *A,
     fasp_dvec_free(&diag);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return status;
@@ -287,7 +287,7 @@ INT fasp_solver_dcsr_krylov_swz (dCSRmat    *A,
     INT status = FASP_SUCCESS;
 	
 #if DEBUG_MODE > 0
-	printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+	printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 	printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
 	printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
@@ -324,7 +324,7 @@ INT fasp_solver_dcsr_krylov_swz (dCSRmat    *A,
 	}
 	
 #if DEBUG_MODE > 0
-	printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+	printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 	
 	fasp_swz_data_free(&SWZ_data);
@@ -364,7 +364,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat    *A,
     REAL     solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
@@ -431,7 +431,7 @@ FINISHED:
     fasp_amg_data_free(mgl, amgparam);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return status;
@@ -467,7 +467,7 @@ INT fasp_solver_dcsr_krylov_ilu (dCSRmat    *A,
     REAL     solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
@@ -509,7 +509,7 @@ FINISHED:
     fasp_ilu_data_free(&LU);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return status;
@@ -551,7 +551,7 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat    *A,
     INT status = FASP_SUCCESS;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
@@ -593,7 +593,7 @@ FINISHED:
     fasp_ilu_data_free(&LU);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return status;
@@ -638,7 +638,7 @@ INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat    *A,
     REAL     solver_start, solver_end, solver_duration;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
@@ -712,7 +712,7 @@ FINISHED:
 #endif
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
     return status;

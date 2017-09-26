@@ -67,7 +67,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     SHORT   status = FASP_SUCCESS;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: m=%d, n=%d, nnz=%d\n", A->ROW, n, nnz);
 #endif
     
@@ -96,7 +96,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
     
 #if DEBUG_MODE > 1
-    printf("### DEBUG: symbolic factorization ... \n ");
+    printf("### DEBUG: symbolic factorization ... \n");
 #endif
     
     // ILU decomposition
@@ -106,7 +106,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
     
 #if DEBUG_MODE > 1
-    printf("### DEBUG: numerical factorization ... \n ");
+    printf("### DEBUG: numerical factorization ... \n");
 #endif
     
     // (2) numerical factoration
@@ -116,7 +116,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     nwork = 20*A->ROW*A->nb;
     iludata->nzlu  = nzlu;
     iludata->nwork = nwork;
-    iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu,sizeof(INT));
+    iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu, sizeof(INT));
     
     memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
     iludata->work = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
@@ -124,7 +124,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     
 #if DEBUG_MODE > 1
     printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
-    printf("### DEBUG: iwk = %d, nzlu = %d\n",iwk,nzlu);
+    printf("### DEBUG: iwk = %d, nzlu = %d\n", iwk, nzlu);
 #endif
     
     if ( ierr != 0 ) {
@@ -150,7 +150,7 @@ FINISHED:
     fasp_mem_free(uptr);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return status;
@@ -191,8 +191,8 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     SHORT   status = FASP_SUCCESS;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
-    printf("### DEBUG: m=%d, n=%d, nnz=%d\n",A->ROW,n,nnz);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
+    printf("### DEBUG: m=%d, n=%d, nnz=%d\n", A->ROW, n, nnz);
 #endif
     
     fasp_gettime(&setup_start);
@@ -218,7 +218,7 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
     
 #if DEBUG_MODE > 1
-    printf("### DEBUG: symbolic factorization ... \n ");
+    printf("### DEBUG: symbolic factorization ... \n");
 #endif
     
     // ILU decomposition
@@ -235,7 +235,7 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     fasp_darray_set(nzlu*nb2, iludata->luval, 0.0);
     
 #if DEBUG_MODE > 1
-    printf("### DEBUG: numerical factorization ... \n ");
+    printf("### DEBUG: numerical factorization ... \n");
 #endif
     
     // (2) numerical factoration
@@ -246,7 +246,7 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     
 #if DEBUG_MODE > 1
     printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
-    printf("### DEBUG: iwk = %d, nzlu = %d\n",iwk,nzlu);
+    printf("### DEBUG: iwk = %d, nzlu = %d\n", iwk, nzlu);
 #endif
     
     if ( ierr != 0 ) {
@@ -272,7 +272,7 @@ FINISHED:
     fasp_mem_free(uptr);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return status;
@@ -313,8 +313,8 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     SHORT   status = FASP_SUCCESS;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
-    printf("### DEBUG: m=%d, n=%d, nnz=%d\n",A->ROW,n,nnz);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
+    printf("### DEBUG: m=%d, n=%d, nnz=%d\n", A->ROW, n, nnz);
 #endif
     
     fasp_gettime(&setup_start);
@@ -340,7 +340,7 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
     
 #if DEBUG_MODE > 1
-    printf("### DEBUG: symbolic factorization ... \n ");
+    printf("### DEBUG: symbolic factorization ... \n");
 #endif
     
     fasp_gettime(&symbolic_start);
@@ -366,7 +366,7 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     topologic_sort_ILU(iludata);
     
 #if DEBUG_MODE > 1
-    printf("### DEBUG: numerical factorization ... \n ");
+    printf("### DEBUG: numerical factorization ... \n");
 #endif
     
     fasp_gettime(&numfac_start);
@@ -381,7 +381,7 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     
 #if DEBUG_MODE > 1
     printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
-    printf("### DEBUG: iwk = %d, nzlu = %d\n",iwk,nzlu);
+    printf("### DEBUG: iwk = %d, nzlu = %d\n", iwk, nzlu);
 #endif
     
     if ( ierr != 0 ) {
@@ -407,7 +407,7 @@ FINISHED:
     fasp_mem_free(uptr);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return status;

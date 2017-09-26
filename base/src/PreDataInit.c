@@ -257,8 +257,8 @@ void fasp_ilu_data_create (const INT   iwk,
                            ILU_data   *iludata)
 {
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
-    printf("### DEBUG: iwk=%d, nwork=%d \n",iwk,nwork);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
+    printf("### DEBUG: iwk=%d, nwork=%d \n", iwk, nwork);
 #endif
     
     iludata->ijlu=(INT*)fasp_mem_calloc(iwk, sizeof(INT));

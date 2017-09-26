@@ -203,8 +203,8 @@ int main (int argc, const char *argv[])
     const REAL rtol = 1.0e-6;
     const INT  prtlvl = PRINT_MORE;
     
-    INT        maxlevel = 8, dim = 3, method = 2;
-    INT        i, j, k, nx, ny, nz;
+    INT        maxlevel = 3, dim = 3, method = 2;
+    INT        i, j, k, nx = 8, ny = 8, nz = 8;
     REAL      *u, *b, h, error0;
     
     printf("Enter spatial dimension (1, 2 or 3):   ");

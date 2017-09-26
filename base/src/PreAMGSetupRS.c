@@ -72,7 +72,7 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
     if ( prtlvl > PRINT_NONE ) printf("\nSetting up Classical AMG ...\n");
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: n = %d, nnz = %d\n", mgl[0].A.row, mgl[0].A.nnz);
 #endif
 
@@ -308,7 +308,7 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
     }
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
 
     return status;

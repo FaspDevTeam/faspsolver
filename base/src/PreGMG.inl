@@ -1348,7 +1348,7 @@ static INT pcg1d (REAL        *u,
     REAL *q = (REAL *)malloc(level[1]*sizeof(REAL));
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     k = 0;
@@ -1425,7 +1425,7 @@ FINISHED:
     free(z);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return k+1;
@@ -1470,7 +1470,7 @@ static INT pcg2d (REAL        *u,
     REAL *q = (REAL *)malloc(level[1]*sizeof(REAL));
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     // initial residue and other vector
@@ -1545,7 +1545,7 @@ FINISHED:
     free(z);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return k+1;
@@ -1594,7 +1594,7 @@ static INT pcg3d (REAL        *u,
     REAL *q = (REAL *)malloc(level1*sizeof(REAL));
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     // initial residue and other vector
@@ -1668,7 +1668,7 @@ FINISHED:
     free(z);
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return k+1;

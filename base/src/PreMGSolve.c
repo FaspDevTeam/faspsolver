@@ -63,7 +63,7 @@ INT fasp_amg_solve (AMG_data   *mgl,
     INT   iter = 0;
 
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: nrow = %d, ncol = %d, nnz = %d\n",
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
@@ -108,7 +108,7 @@ INT fasp_amg_solve (AMG_data   *mgl,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return iter;
@@ -151,7 +151,7 @@ INT fasp_amg_solve_amli (AMG_data   *mgl,
     INT          iter = 0;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: nrow = %d, ncol = %d, nnz = %d\n",
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
@@ -192,7 +192,7 @@ INT fasp_amg_solve_amli (AMG_data   *mgl,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return iter;
@@ -234,7 +234,7 @@ INT fasp_amg_solve_namli (AMG_data   *mgl,
     INT           iter = 0;
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: nrow = %d, ncol = %d, nnz = %d\n",
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
@@ -272,7 +272,7 @@ INT fasp_amg_solve_namli (AMG_data   *mgl,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return iter;
@@ -303,7 +303,7 @@ void fasp_famg_solve (AMG_data   *mgl,
     REAL         relres1 = BIGREAL, absres;
         
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: nrow = %d, ncol = %d, nnz = %d\n",
            mgl[0].A.row, mgl[0].A.col, mgl[0].A.nnz);
 #endif
@@ -328,7 +328,7 @@ void fasp_famg_solve (AMG_data   *mgl,
     }
     
 #if DEBUG_MODE > 0
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return;
