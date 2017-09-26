@@ -54,7 +54,7 @@ void fasp_param_set (const int     argc,
         else if ( strcmp(argv[arg_index], "-ini") == 0 ) {
             arg_index++;
             if ( arg_index >= argc ) {
-                printf("### ERROR: Missing ini file name!\n");
+                printf("### ERROR: Missing ini filename! [%s]\n", __FUNCTION__);
                 print_usage = TRUE; break;
             }
             strcpy(iniparam->inifile, argv[arg_index]);
@@ -126,7 +126,7 @@ void fasp_param_set (const int     argc,
         else if ( strcmp(argv[arg_index], "-amgmaxit") == 0 ) {
             arg_index++;
             if ( arg_index >= argc ) {
-                printf("### ERROR: Expecting max number of iterations for AMG.\n");
+                printf("### ERROR: Expecting max num of iterations for AMG.\n");
                 print_usage = TRUE; break;
             }
             iniparam->AMG_maxit = atoi(argv[arg_index]);

@@ -353,7 +353,7 @@ ForwardSweep:
                         break;
                     default:
                         printf("### ERROR: Unknown smoother type %d!\n", smoother);
-                        fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
+                        fasp_chkerr(ERROR_SOLVER_TYPE, __FUNCTION__);
                 }
             }
         }
@@ -529,7 +529,7 @@ ForwardSweep:
                         break;
                     default:
                         printf("### ERROR: Unknown smoother type %d!\n", smoother);
-                        fasp_chkerr(ERROR_INPUT_PAR, __FUNCTION__);
+                        fasp_chkerr(ERROR_SOLVER_TYPE, __FUNCTION__);
                 }
             }
         }

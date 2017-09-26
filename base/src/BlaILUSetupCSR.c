@@ -137,13 +137,13 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
 #endif    
     
     if (ierr!=0) {
-        printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
+        printf("### ERROR: ILU setup failed (ierr=%d)! [%s]\n", ierr, __FUNCTION__);
         status = ERROR_SOLVER_ILUSETUP;
         goto FINISHED;
     }
     
     if (iwk<nzlu) {
-        printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
+        printf("### ERROR: ILU needs more RAM %d! [%s]\n", iwk-nzlu, __FUNCTION__);
         status = ERROR_SOLVER_ILUSETUP;
         goto FINISHED;
     }

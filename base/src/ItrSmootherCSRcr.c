@@ -75,7 +75,8 @@ void fasp_smoother_dcsr_gscr (INT   pt,
                             u[i]=t/d;
                         }
                         else {
-                            printf("### ERROR: Diagonal entry (%d,%e) close to 0!\n",i,d);
+                            printf("### ERROR: Diagonal entry_%d (%e) close to 0!\n",
+                                   i, d);
                             fasp_chkerr(ERROR_MISC, __FUNCTION__);
                         }
                     }

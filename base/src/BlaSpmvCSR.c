@@ -74,8 +74,8 @@ SHORT fasp_blas_dcsr_add (const dCSRmat  *A,
 #endif
     
     if (A->row != B->row || A->col != B->col) {
-        printf("### ERROR: Dimensions of A & B do not match! %s\n", __FUNCTION__);
-        status = ERROR_DATA_STRUCTURE;
+        printf("### ERROR: Matrix sizes do not match!\n");
+        status = ERROR_MAT_SIZE;
         goto FINISHED;
     }
     

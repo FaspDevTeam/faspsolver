@@ -425,7 +425,7 @@ void fasp_smat_inv_nc (REAL      *a,
         
         if (ABS(a[l]) < SMALLREAL) {
             printf("### ERROR: Diagonal entry is close to zero! ");
-            printf("diag_%d = %.2e\n", k, a[l]);
+            printf("diag_%d = %.2e! [%s]\n", k, a[l], __FUNCTION__);
             exit(ERROR_SOLVER_EXIT);
         }
         alinv = 1.0/a[l];

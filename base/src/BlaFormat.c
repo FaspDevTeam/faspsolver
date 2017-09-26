@@ -725,13 +725,15 @@ dBSRmat fasp_format_dcsr_dbsr (const dCSRmat  *A,
 {
 	// Safe-guard check
     if ((A->row)%nb!=0) {
-        printf("### ERROR: A.row=%d is not a multiplication of nb=%d!\n", A->row, nb);
-        exit(0);
+        printf("### ERROR: A.row=%d is not a multiplication of nb=%d!\n",
+               A->row, nb);
+        fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);
     }
     
     if ((A->col)%nb!=0) {
-        printf("### ERROR: A.col=%d is not a multiplication of nb=%d!\n", A->col, nb);
-        exit(0);
+        printf("### ERROR: A.col=%d is not a multiplication of nb=%d!\n",
+               A->col, nb);
+        fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);
     }
     
     INT i, j, k, ii, jj, kk, l, mod, nnz;

@@ -128,13 +128,13 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
 #endif
     
     if ( ierr != 0 ) {
-        printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
+        printf("### ERROR: ILU setup failed (ierr=%d)! [%s]\n", ierr, __FUNCTION__);
         status = ERROR_SOLVER_ILUSETUP;
         goto FINISHED;
     }
     
     if ( iwk < nzlu ) {
-        printf("### ERROR: Need more memory for ILU %d!\n", iwk-nzlu);
+        printf("### ERROR: ILU needs more RAM %d! [%s]\n", iwk-nzlu, __FUNCTION__);
         status = ERROR_SOLVER_ILUSETUP;
         goto FINISHED;
     }
@@ -142,7 +142,7 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;
-        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil,setup_duration);
+        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil, setup_duration);
     }
     
 FINISHED:
@@ -250,13 +250,13 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
 #endif
     
     if ( ierr != 0 ) {
-        printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
+        printf("### ERROR: ILU setup failed (ierr=%d)! [%s]\n", ierr, __FUNCTION__);
         status = ERROR_SOLVER_ILUSETUP;
         goto FINISHED;
     }
     
     if ( iwk < nzlu ) {
-        printf("### ERROR: ILU requires more memory %dB!\n", iwk-nzlu);
+        printf("### ERROR: ILU needs more RAM %d! [%s]\n", iwk-nzlu, __FUNCTION__);
         status = ERROR_SOLVER_ILUSETUP;
         goto FINISHED;
     }
@@ -264,7 +264,7 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;
-        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil,setup_duration);
+        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil, setup_duration);
     }
     
 FINISHED:
@@ -385,13 +385,13 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
 #endif
     
     if ( ierr != 0 ) {
-        printf("### ERROR: ILU setup failed (ierr=%d)!\n", ierr);
+        printf("### ERROR: ILU setup failed (ierr=%d)! [%s]\n", ierr, __FUNCTION__);
         status = ERROR_SOLVER_ILUSETUP;
         goto FINISHED;
     }
     
     if ( iwk < nzlu ) {
-        printf("### ERROR: ILU requires more memory %dB!\n", iwk-nzlu);
+        printf("### ERROR: ILU needs more RAM %d! [%s]\n", iwk-nzlu, __FUNCTION__);
         status = ERROR_SOLVER_ILUSETUP;
         goto FINISHED;
     }
@@ -399,7 +399,7 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;
-        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil,setup_duration);
+        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil, setup_duration);
     }
     
 FINISHED:

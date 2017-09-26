@@ -58,7 +58,7 @@ void fasp_blas_dvec_axpy (const REAL     a,
 #endif
     
     if ( y->row != m ) {
-        printf("### ERROR: Two vectors have different dimensions!\n");
+        printf("### ERROR: Vectors have different dimensions!\n");
         fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
@@ -103,7 +103,7 @@ void fasp_blas_dvec_axpyz (const REAL     a,
     REAL       *zpt = z->val;
     
     if ( y->row != m ) {
-        printf("### ERROR: Two vectors have different dimensions!\n");
+        printf("### ERROR: Vectors have different dimensions!\n");
         fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     
@@ -286,7 +286,7 @@ REAL fasp_blas_dvec_relerr (const dvector *x,
     INT   i;
     
     if ( length != y->row ) {
-        printf("### ERROR: Two vectors have different dimensions!\n");
+        printf("### ERROR: Vectors have different dimensions!\n");
         fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
     }
     

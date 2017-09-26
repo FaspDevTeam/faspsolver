@@ -191,7 +191,7 @@ static void remove_node (LinkList *LoL_head_ptr,
         list_ptr = list_ptr -> next_node;
     } while (list_ptr != NULL);
 
-    printf("### ERROR: This list is empty! %s : %d\n", __FILE__, __LINE__);
+    printf("### ERROR: This list is empty! [%s:%d]\n", __FILE__, __LINE__);
     return;
 }
 

@@ -57,15 +57,15 @@ void fasp_dcsr_subplot (const dCSRmat  *A,
                         const char     *filename,
                         INT             size);
 
-INT fasp_dcsr_plot (const dCSRmat  *A,
-                    const char     *fname);
+void fasp_dcsr_plot (const dCSRmat  *A,
+                     const char     *fname);
 
 void fasp_dbsr_subplot (const dBSRmat  *A,
                         const char     *filename,
                         INT             size);
 
-INT fasp_dbsr_plot (const dBSRmat  *A,
-                    const char     *fname);
+void fasp_dbsr_plot (const dBSRmat  *A,
+                     const char     *fname);
 
 void fasp_grid2d_plot (pgrid2d  pg,
                        INT      level);

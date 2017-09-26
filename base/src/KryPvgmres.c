@@ -128,9 +128,8 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat      *A,
     }
     
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for vGMRES %s : %s : %d!\n",
-               __FILE__, __FUNCTION__, __LINE__ );
-        exit(ERROR_ALLOC_MEM);
+        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
+        fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
     if ( PrtLvl > PRINT_MIN && Restart < restart ) {
@@ -174,7 +173,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat      *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -476,9 +475,8 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat      *A,
     }
 
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for vGMRES %s : %s : %d!\n",
-               __FILE__, __FUNCTION__, __LINE__ );
-        exit(ERROR_ALLOC_MEM);
+        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
+        fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
 
     if ( PrtLvl > PRINT_MIN && Restart < restart ) {
@@ -503,26 +501,26 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat      *A,
 
     // compute initial residuals
     switch (StopType) {
-            case STOP_REL_RES:
+        case STOP_REL_RES:
             absres0 = MAX(SMALLREAL,r_norm);
             relres  = r_norm/absres0;
             break;
-            case STOP_REL_PRECRES:
+        case STOP_REL_PRECRES:
             if ( pc == NULL )
-            fasp_darray_cp(n, p[0], r);
+                fasp_darray_cp(n, p[0], r);
             else
-            pc->fct(p[0], r, pc->data);
+                pc->fct(p[0], r, pc->data);
             r_normb = sqrt(fasp_blas_darray_dotprod(n,p[0],r));
             absres0 = MAX(SMALLREAL,r_normb);
             relres  = r_normb/absres0;
             break;
-            case STOP_MOD_REL_RES:
+        case STOP_MOD_REL_RES:
             normu   = MAX(SMALLREAL,fasp_blas_darray_norm2(n,x->val));
             absres0 = r_norm;
             relres  = absres0/normu;
             break;
-            default:
-            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
+        default:
+            printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
             goto FINISHED;
     }
 
@@ -570,9 +568,9 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat      *A,
 
             /* apply preconditioner */
             if (pc == NULL)
-            fasp_darray_cp(n, p[i-1], r);
+                fasp_darray_cp(n, p[i-1], r);
             else
-            pc->fct(p[i-1], r, pc->data);
+                pc->fct(p[i-1], r, pc->data);
 
             fasp_blas_dbsr_mxv(A, r, p[i]);
 
@@ -637,9 +635,9 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat      *A,
 
         /* apply preconditioner */
         if ( pc == NULL )
-        fasp_darray_cp(n, w, r);
+            fasp_darray_cp(n, w, r);
         else
-        pc->fct(w, r, pc->data);
+            pc->fct(w, r, pc->data);
 
         fasp_blas_darray_axpy(n, 1.0, r, x->val);
 
@@ -655,19 +653,19 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat      *A,
             r_norm = fasp_blas_darray_norm2(n, r);
 
             switch ( StopType ) {
-                    case STOP_REL_RES:
+                case STOP_REL_RES:
                     absres = r_norm;
                     relres = absres/absres0;
                     break;
-                    case STOP_REL_PRECRES:
+                case STOP_REL_PRECRES:
                     if ( pc == NULL )
-                    fasp_darray_cp(n, r, w);
+                        fasp_darray_cp(n, r, w);
                     else
-                    pc->fct(r, w, pc->data);
+                        pc->fct(r, w, pc->data);
                     absres = sqrt(fasp_blas_darray_dotprod(n,w,r));
                     relres = absres/absres0;
                     break;
-                    case STOP_MOD_REL_RES:
+                case STOP_MOD_REL_RES:
                     absres = r_norm;
                     normu  = MAX(SMALLREAL,fasp_blas_darray_norm2(n,x->val));
                     relres = absres/normu;
@@ -728,9 +726,9 @@ FINISHED:
 #endif
 
     if (iter>=MaxIt)
-    return ERROR_SOLVER_MAXIT;
+        return ERROR_SOLVER_MAXIT;
     else
-    return iter;
+        return iter;
 }
 
 /**
@@ -821,9 +819,8 @@ INT fasp_solver_dblc_pvgmres (dBLCmat     *A,
     }
     
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for vGMRES %s : %s : %d!\n",
-               __FILE__, __FUNCTION__, __LINE__ );
-        exit(ERROR_ALLOC_MEM);
+        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
+        fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
     if ( PrtLvl > PRINT_MIN && Restart < restart ) {
@@ -867,7 +864,7 @@ INT fasp_solver_dblc_pvgmres (dBLCmat     *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -1169,9 +1166,8 @@ INT fasp_solver_dstr_pvgmres (dSTRmat      *A,
     }
     
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for vGMRES %s : %s : %d!\n",
-               __FILE__, __FUNCTION__, __LINE__ );
-        exit(ERROR_ALLOC_MEM);
+        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
+        fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
     if ( PrtLvl > PRINT_MIN && Restart < restart ) {
@@ -1215,7 +1211,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat      *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -1515,9 +1511,8 @@ INT fasp_solver_pvgmres (mxv_matfree  *mf,
     }
     
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for vGMRES %s : %s : %d!\n",
-               __FILE__, __FUNCTION__, __LINE__ );
-        exit(ERROR_ALLOC_MEM);
+        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
+        fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
     if ( PrtLvl > PRINT_MIN && Restart < restart ) {

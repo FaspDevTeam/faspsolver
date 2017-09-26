@@ -390,31 +390,31 @@ F100:
     
     // incomprehensible error. Matrix must be wrong.
 F995:
-    printf("### ERROR: incomprehensible error. Matrix must be wrong.\n");
+    printf("### ERROR: Incomprehensible error. [%s]\n", __FUNCTION__);
     *ierr = -1;
     goto F100;
     
     // insufficient storage in L.
 F996:
-    printf("### ERROR: insufficient storage in L.\n");
+    printf("### ERROR: Insufficient storage in L. [%s]\n", __FUNCTION__);
     *ierr = -2;
     goto F100;
     
     // insufficient storage in U.
 F997:
-    printf("### ERROR: insufficient storage in U.\n");
+    printf("### ERROR: Insufficient storage in U. [%s]\n", __FUNCTION__);
     *ierr = -3;
     goto F100;
     
     // illegal lfil entered.
 F998:
-    printf("### ERROR: illegal lfil entered\n");
+    printf("### ERROR: Illegal lfil entered. [%s]\n", __FUNCTION__);
     *ierr = -4;
     return;
     
     // zero row encountered in A or U.
 F999:
-    printf("### ERROR: zero row encountered in A or U.\n");
+    printf("### ERROR: Zero row encountered in A or U. [%s]\n", __FUNCTION__);
     *ierr = -5;
     goto F100;
     /*----------------end-of-iluk--------------------------------------------
@@ -827,23 +827,23 @@ F100:
     return;
     
 F995:    // incomprehensible error. Matrix must be wrong.
-    printf("### ERROR: input matrix may be wrong \n");
+    printf("### ERROR: Input matrix may be wrong. [%s]\n", __FUNCTION__);
     *ierr = -1;
     goto F100;
     
 F996:    // insufficient storage in L.
-    printf("### ERROR: insufficient storage in L\n");
+    printf("### ERROR: Insufficient storage in L. [%s]\n", __FUNCTION__);
     *ierr = -2;
     goto F100;
     
 F997:    // insufficient storage in U.
-    printf("### ERROR: insufficient storage in U\n");
+    printf("### ERROR: Insufficient storage in U. [%s]\n", __FUNCTION__);
     *ierr = -3;
     goto F100;
     
 F998:    // illegal lfil entered.
     *ierr = -4;
-    printf("### ERROR: illegal lfil entered\n");
+    printf("### ERROR: Illegal lfil entered. [%s]\n", __FUNCTION__);
     return;
     /*----------------end-of-ilut--------------------------------------------
      -----------------------------------------------------------------------*/
@@ -1313,28 +1313,28 @@ F100:
     return;
     
 F995:    // incomprehensible error. Matrix must be wrong.
-    printf("### ERROR: input matrix may be wrong \n");
+    printf("### ERROR: Input matrix may be wrong. [%s]\n", __FUNCTION__);
     *ierr = -1;
     goto F100;
     
 F996:    // insufficient storage in L.
-    printf("### ERROR: insufficient storage in L\n");
+    printf("### ERROR: Insufficient storage in L. [%s]\n", __FUNCTION__);
     *ierr = -2;
     goto F100;
     
 F997:    // insufficient storage in U.
-    printf("### ERROR: insufficient storage in U\n");
+    printf("### ERROR: Insufficient storage in U. [%s]\n", __FUNCTION__);
     *ierr = -3;
     goto F100;
     
 F998:    // illegal lfil entered.
-    printf("### ERROR: illegal lfil entered\n");
+    printf("### ERROR: Illegal lfil entered. [%s]\n", __FUNCTION__);
     *ierr = -4;
     // goto F100;
     return;
     
 F999:    // zero row encountered
-    printf("### ERROR: zero row encountered\n");
+    printf("### ERROR: Zero row encountered. [%s]\n", __FUNCTION__);
     *ierr = -5;
     goto F100;
     //----------------end-of-ilutp-------------------------------------------
@@ -1904,7 +1904,7 @@ void fasp_symbfactor (INT   n,
             //  sparsity pattern into the ijlu and uptr data structures.
             //  ---------------------------------------------------------
             if (*nzlu  >  nzmax) {
-                printf("### ERROR: More storage needed!\n");
+                printf("### ERROR: More storage needed! [%s]\n", __FUNCTION__);
                 *ierr = 1;
                 goto F100;
             }
@@ -2188,10 +2188,9 @@ static void fasp_check_col_index (INT row,
     
     for ( ii = 0; ii < num_1; ++ii ) {
         if ( q[ii] == q[ii+1] ) {
-            printf("### ERROR: Multiple entries with same col indices (row: %d, col: %d %d)!\n",
-                   row, q[ii], q[ii+1]);
-            printf("### ERROR: %s ...... [Stoped]\n", __FUNCTION__);
-            exit(0);
+            printf("### ERROR: Multiple entries with same col indices!\n");
+            printf("### ERROR: row = %d, col = %d, %d!\n", row, q[ii], q[ii+1]);
+            fasp_chkerr(ERROR_SOLVER_ILUSETUP, __FUNCTION__);
         }
     }
     

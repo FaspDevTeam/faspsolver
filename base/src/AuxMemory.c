@@ -205,7 +205,7 @@ SHORT fasp_mem_iludata_check (const ILU_data *iludata)
         return FASP_SUCCESS;
     }
     else {
-        printf("### ERROR: ILU needs %d RAM, only %d allocated!\n",
+        printf("### ERROR: ILU needs %d RAM, only %d available!\n",
                memneed, iludata->nwork);
         return ERROR_ALLOC_MEM;
     }

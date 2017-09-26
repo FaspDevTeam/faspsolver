@@ -114,7 +114,9 @@ INT fasp_solver_itsolver (mxv_matfree  *mf,
             break;
             
         default:
-            printf("### ERROR: Unknown iterative solver type %d!\n", itsolver_type);
+            printf("### ERROR: Unknown iterative solver type %d! [%s]\n",
+                   itsolver_type, __FUNCTION__);
+            return ERROR_SOLVER_TYPE;
             
     } 
     

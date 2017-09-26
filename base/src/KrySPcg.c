@@ -118,7 +118,7 @@ INT fasp_solver_dcsr_spcg (const dCSRmat  *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -451,7 +451,7 @@ INT fasp_solver_dblc_spcg (const dBLCmat  *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
             goto FINISHED;
     }
     
@@ -784,7 +784,7 @@ INT fasp_solver_dstr_spcg (const dSTRmat  *A,
             relres  = absres0/normu;
             break;
         default:
-            printf("### ERROR: Unknown stopping type for %s!\n", __FUNCTION__);
+            printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
             goto FINISHED;
     }
     
