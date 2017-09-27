@@ -13,7 +13,7 @@
       89 ./base/src/PreAMGAggregationCSR.inl
     1294 ./base/src/PreAMGAggregationUA.inl
      296 ./base/src/PreAMGUtil.inl
-    1679 ./base/src/PreGMG.inl
+    1668 ./base/src/PreGMG.inl
      223 ./base/src/PreMGRecurAMLI.inl
      219 ./base/src/PreMGSmoother.inl
       61 ./base/src/PreMGUtil.inl
@@ -43,13 +43,13 @@
      783 ./base/src/BlaSmallMatInv.c
      178 ./base/src/BlaSmallMatLU.c
       55 ./base/src/BlaSparseBLC.c
-    2186 ./base/src/BlaSparseBSR.c
+    2176 ./base/src/BlaSparseBSR.c
      161 ./base/src/BlaSparseCOO.c
     1636 ./base/src/BlaSparseCSR.c
       81 ./base/src/BlaSparseCSRL.c
      351 ./base/src/BlaSparseCheck.c
      184 ./base/src/BlaSparseSTR.c
-     964 ./base/src/BlaSparseUtil.c
+     963 ./base/src/BlaSparseUtil.c
      282 ./base/src/BlaSpmvBLC.c
     5469 ./base/src/BlaSpmvBSR.c
     2097 ./base/src/BlaSpmvCSR.c
@@ -74,7 +74,7 @@
     1416 ./base/src/KrySPgmres.c
     1393 ./base/src/KrySPminres.c
     1568 ./base/src/KrySPvgmres.c
-     437 ./base/src/PreAMGCoarsenCR.c
+     394 ./base/src/PreAMGCoarsenCR.c
     2088 ./base/src/PreAMGCoarsenRS.c
      879 ./base/src/PreAMGInterp.c
      839 ./base/src/PreAMGInterpEM.c
@@ -103,4 +103,4 @@
      238 ./base/src/SolMatFree.c
      411 ./base/src/SolSTR.c
      322 ./base/src/SolWrapper.c
-   85343 total
+   85278 total

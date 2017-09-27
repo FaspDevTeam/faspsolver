@@ -8,6 +8,8 @@
  *
  *  \note  See KrySPbcgs.c for a safer version
  *
+ *  \warning Not used any more! Deprecated in the future versions.
+ *
  *  Reference:
  *         Y. Saad 2003
  *         Iterative methods for sparse linear systems (2nd Edition), SIAM

@@ -10,7 +10,7 @@
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
- *  // TODO: Revisit implementation for efficiency! --Chensong
+ *  // TODO: Revisit implementation for efficiency! Not optimal! --Chensong
  */
 
 /*---------------------------------*/
@@ -243,20 +243,17 @@ static void ay1d (REAL       *x,
                   const INT  *level,
                   const INT   k)
 {
-    INT   i,n;
-    REAL *btemp = (REAL *)malloc(level[k+1]*sizeof(REAL));
-    
-    for (i = 0; i < level[k+1]; i++) {
-        btemp[i] = 0.0;
-    }
-    
-    // compute (-x)
+    const INT levelk = level[k], levelk1 = level[k+1];
+    REAL *btemp = (REAL *)malloc(levelk1*sizeof(REAL));
+
+    INT   i;
+
+    for (i = levelk; i < levelk1; i++) btemp[i] = 0.0;
+
     residual1d(y, btemp, x, k, level);
-    n = level[k+1]-level[k];
-    for (i = 0; i < n; i++) {
-        x[level[k]+i] = (-1)*x[level[k]+i]; // TODO: Optimize loop --Chensong
-    }
-    
+
+    for (i = levelk; i < levelk1; i++) x[i] = - x[i];
+
     free(btemp);
 }
 
@@ -282,19 +279,16 @@ static void ay2d (REAL       *x,
                   const INT  *nxk,
                   const INT  *nyk)
 {
-    INT   i,n;
-    REAL *btemp = (REAL *)malloc(level[k+1]*sizeof(REAL));
-    
-    for (i = 0; i < level[k+1]; i++) {
-        btemp[i] = 0.0;
-    }
-    
-    // compute (-x)
+    const INT levelk = level[k], levelk1 = level[k+1];
+    REAL *btemp = (REAL *)malloc(levelk1*sizeof(REAL));
+
+    INT   i;
+
+    for (i = levelk; i < levelk1; i++) btemp[i] = 0.0;
+
     residual2d(y, btemp, x, k, level, nxk, nyk);
-    n = level[k+1]-level[k];
-    for (i = 0; i < n; i++) {
-        x[level[k]+i] = (-1)*x[level[k]+i];
-    }
+
+    for (i = levelk; i < levelk1; i++) x[i] = - x[i];
     
     free(btemp);
 }
@@ -323,21 +317,16 @@ static void ay3d (REAL       *x,
                   const INT  *nyk,
                   const INT  *nzk)
 {
-    const INT levelk  = level[k];
-    const INT levelk1 = level[k+1];
-    
-    INT   i,n;
+    const INT levelk = level[k], levelk1 = level[k+1];
     REAL *btemp = (REAL *)malloc(levelk1*sizeof(REAL));
-    
-    for (i = levelk; i < levelk1; i++) {
-        btemp[i] = 0.0;
-    }
-    // compute (-x)
+
+    INT   i;
+
+    for (i = levelk; i < levelk1; i++) btemp[i] = 0.0;
+
     residual3d(y, btemp, x, k, level, nxk, nyk, nzk);
-    n = level[k+1]-level[k];
-    for (i = 0; i < n; i++) {
-        x[levelk+i] = (-1)*x[levelk+i];
-    }
+
+    for (i = levelk; i < levelk1; i++) x[i] = - x[i];
     
     free(btemp);
 }

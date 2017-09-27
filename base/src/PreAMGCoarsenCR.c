@@ -11,7 +11,6 @@
  *---------------------------------------------------------------------------------
  *
  *  // TODO: Not completed! --Chensong
- *  // TODO: Fix Doxygen issues in this file! --Chensong
  */
 
 #include <math.h>
@@ -52,7 +51,7 @@ static INT indset(INT, INT, INT, INT *, INT *, INT, INT *, REAL *);
  * \param param     Pointer to AMG_param: AMG parameters
  *
  * \return          Number of coarse level points
- * 
+ *
  * \author James Brannick
  * \date   04/21/2010
  *
@@ -80,13 +79,6 @@ INT fasp_amg_coarsening_cr (const INT   i_0,
     /* WORKING MEMORY -- b not needed, remove later */
     REAL *b=NULL,*u=NULL,*ma=NULL;
 
-#ifdef _OPENMP
-    // variables for OpenMP
-    INT myid, mybegin, myend;
-    REAL sub_temp0 = 0.;
-    INT nthreads = fasp_get_num_threads();
-#endif
-    
     ia = A->IA;
     ja = A->JA;
     a  = A->val;
@@ -99,20 +91,21 @@ INT fasp_amg_coarsening_cr (const INT   i_0,
     
     /* CF, RHS, INITIAL GUESS, and MEAS. ARRAY */
     cf = (INT*)fasp_mem_calloc(in1,sizeof(INT));
-    b  = (REAL*)fasp_mem_calloc(in1,sizeof(REAL));   
-    u  = (REAL*)fasp_mem_calloc(in1,sizeof(REAL));   
-    ma = (REAL*)fasp_mem_calloc(in1,sizeof(REAL));   
+    b  = (REAL*)fasp_mem_calloc(in1,sizeof(REAL));
+    u  = (REAL*)fasp_mem_calloc(in1,sizeof(REAL));
+    ma = (REAL*)fasp_mem_calloc(in1,sizeof(REAL));
     
 #ifdef _OPENMP
 #pragma omp parallel for if(i_n>OPENMP_HOLDS) 
 #endif
     for(i=i_0;i<=i_n;++i) {
         b[i] = 0.0e0; // ZERO RHS
-        cf[i] = fpt;  // ALL FPTS 
+        cf[i] = fpt;  // ALL FPTS
     }
     
     /** CR STAGES */
     while(1) {
+
         nc = 0;
 #ifdef _OPENMP
 #pragma omp parallel for if(i_n>OPENMP_HOLDS) 
@@ -124,33 +117,18 @@ INT fasp_amg_coarsening_cr (const INT   i_0,
             } else {
                 u[i] = 1.0e0;
             }
-        } 
-#ifdef _OPENMP
-#pragma omp parallel for private(myid,mybegin,myend,i,j,sub_temp0) if(nu>OPENMP_HOLDS) 
-        for (myid=0; myid<nthreads; ++myid) {
-            fasp_get_start_end(myid, nthreads, nu-i_0+1, &mybegin, &myend);
-            mybegin += i_0; myend += i_0;
-            for (i=mybegin; i<myend; ++i) {
-#else
-            for (i=i_0;i<=nu;++i) {
-#endif
-                if (i == num1)
-                    for (j = i_0; j<= i_n; ++j) {
-                        if (cf[j] == fpt) {
-#ifdef _OPENMP
-                            sub_temp0 += u[j]*u[j];
-#else
-                            temp0 += u[j]*u[j];
-#endif
-                        }
-                    }
-                    fasp_smoother_dcsr_gscr(fpt,i_n,u,ia,ja,a,b,1,cf);
-            }
-#ifdef _OPENMP
-#pragma omp critical(temp0)
-        temp0 += sub_temp0;
         }
-#endif
+
+        for (i=i_0;i<=nu;++i) {
+
+            if (i == num1)
+                for (j = i_0; j<= i_n; ++j) {
+                    if (cf[j] == fpt) {
+                        temp0 += u[j]*u[j];
+                    }
+                }
+            fasp_smoother_dcsr_gscr(fpt,i_n,u,ia,ja,a,b,1,cf);
+        }
 
 #ifdef _OPENMP
 #pragma omp parallel for reduction(+:temp1) if(i_n>OPENMP_HOLDS)
@@ -161,13 +139,13 @@ INT fasp_amg_coarsening_cr (const INT   i_0,
             }
         }
         rho = sqrt(temp1)/sqrt(temp0);
-        temp0 = 0.0e0; 
+        temp0 = 0.0e0;
         temp1 = 0.0e0;
         
         if ( prtlvl > PRINT_MIN ) printf("rho=%2.13lf\n",rho);
-    
+
         if ( rho > tg ) {
-            /* FORM CAND. SET & COMPUTE IND SET */ 
+            /* FORM CAND. SET & COMPUTE IND SET */
             temp0 = 0.0e0;
 
             for (i = i_0; i<= i_n; ++i) {
@@ -193,20 +171,21 @@ INT fasp_amg_coarsening_cr (const INT   i_0,
             temp1 = 0.0e0;
             indset(cand,cpt,fpt,ia,ja,i_n,cf,ma);
             ns++;
-        } else { 
-            /* back to fasp labeling */ 
+        }
+        else {
+            /* back to fasp labeling */
 
 #ifdef _OPENMP
 #pragma omp parallel for if(i_n>OPENMP_HOLDS)
 #endif
             for (i = i_0; i<= i_n; ++i) {
                 if (cf[i] == cpt) {
-                    cf[i] = 1; // cpt 
+                    cf[i] = 1; // cpt
                 } else {
                     cf[i] = 0; // fpt
                 }
                 // printf("cf[%i] = %i\n",i,cf[i]);
-            }  
+            }
             vertices->row=i_n;
             if ( prtlvl >= PRINT_MORE ) printf("vertices = %i\n",vertices->row);
             vertices->val= cf;
@@ -274,7 +253,7 @@ static INT GraphRemove (Link   *list,
 }
 
 /**
- * \fn static INT indset (INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n, 
+ * \fn static INT indset (INT cand, INT cpt, INT fpt, INT *ia, INT *ja, INT n,
  *                        INT *cf, REAL *ma)
  * \brief Find independent set of the graph
  *
@@ -284,8 +263,8 @@ static INT GraphRemove (Link   *list,
  * \param ia
  * \param ja
  * \param n
- * \param cf contains CF list  
- * \param ma contains candidate set info. 
+ * \param cf contains CF list
+ * \param ma contains candidate set info.
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/14/2012
  */
@@ -305,62 +284,40 @@ static INT indset (INT   cand,
     INT  *head, *head_mem;
     INT  *tail, *tail_mem;
     
-    INT i, ji, jj, jl, index, istack, stack_size;    
+    INT i, ji, jj, jl, index, istack, stack_size;
 
-#ifdef _OPENMP
-    // variables for OpenMP
-    INT myid, mybegin, myend;
-    INT sub_istack = 0;
-    INT nthreads = fasp_get_num_threads();
-#endif
-    
-    istack = 0;
+    for (istack = i = 0; i < n; ++i) {
 
-#ifdef _OPENMP
-#pragma omp parallel for private(myid,mybegin,myend,i,ji,jj,sub_istack) if(n>OPENMP_HOLDS)
-    for (myid=0; myid<nthreads; ++myid) {
-        fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-        for (i=mybegin; i<myend; ++i) {
-#else 
-        for (i = 0; i < n; ++i) {
-#endif
-            if (cf[i] == cand) {
-                ma[i] = 1;
-                for (ji = ia[i]+1; ji < ia[i+1]; ++ji) {
-                    jj = ja[ji];
-                    if (cf[jj] != cpt) {
-                        ma[i]++;
-                    }
+        if (cf[i] == cand) {
+            ma[i] = 1;
+            for (ji = ia[i]+1; ji < ia[i+1]; ++ji) {
+                jj = ja[ji];
+                if (cf[jj] != cpt) {
+                    ma[i]++;
                 }
-#ifdef _OPENMP
-                if (ma[i] > sub_istack) {
-                    sub_istack = (INT) ma[i];
-                }
-#else
-                if (ma[i] > istack) {
-                    istack = (INT) ma[i];
-                }
-#endif
-            } else if (cf[i] == cpt) {
-                ma[i] = -1;
-            } else {
-                ma[i] = 0;
+            }
+
+            if (ma[i] > istack) {
+                istack = (INT) ma[i];
             }
         }
-#ifdef _OPENMP
-#pragma omp critical(istack)
-     if (sub_istack > istack) istack = sub_istack;    
+        else if (cf[i] == cpt) {
+            ma[i] = -1;
+        }
+        else {
+            ma[i] = 0;
+        }
     }
-#endif
+
     stack_size = 2*istack;
-    
+
     /* INITIALIZE GRAPH */
     list = (Link*)fasp_mem_calloc(n,sizeof(Link));
     head_mem = (INT*)fasp_mem_calloc(stack_size,sizeof(INT));
     tail_mem = (INT*)fasp_mem_calloc(stack_size,sizeof(INT));
-    head = head_mem + stack_size; 
+    head = head_mem + stack_size;
     tail = tail_mem + stack_size;
-    
+
 #ifdef _OPENMP
 #pragma omp parallel for if(stack_size>OPENMP_HOLDS) 
 #endif
@@ -377,7 +334,7 @@ static INT indset (INT   cand,
             GraphAdd(list, head, tail, i, (INT) ma[i]);
         }
     }
-    
+
     while (istack > 0) {
         /* i with maximal measure is at the head of the stacks */
         i = head[-istack];
@@ -386,7 +343,7 @@ static INT indset (INT   cand,
         ma[i] = -1;
         /* remove i from graph */
         GraphRemove(list, head, tail, i);
-    
+
         /* update neighbors and neighbors-of-neighbors */
         for (ji = ia[i]+1; ji < ia[i+1]; ++ji) {
             jj = ja[ji];
@@ -399,7 +356,7 @@ static INT indset (INT   cand,
                 /* make jj an f-point and mark "decided" */
                 cf[jj] = fpt;
                 ma[jj] = -1;
-    
+
                 for (jl = ia[jj]+1; jl < ia[jj+1]; jl++) {
                     index = ja[jl];
                     /* if a candidate, increase likehood of being chosen */
@@ -415,20 +372,20 @@ static INT indset (INT   cand,
                 }
             }
         }
-        
+
         /* reset istack to point to the biggest non-empty stack */
-        for ( ; istack > 0; istack--) {
+        for ( ; istack > 0; istack-- ) {
             /* if non-negative, break */
             if (head[-istack] > -1) {
                 break;
             }
         }
     }
-    
+
     fasp_mem_free(list);
     fasp_mem_free(head_mem);
     fasp_mem_free(tail_mem);
-    
+
     return 0;
 }
 

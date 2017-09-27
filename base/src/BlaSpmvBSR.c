@@ -4654,7 +4654,7 @@ void fasp_blas_dbsr_mxm (const dBSRmat  *A,
     const INT nb  = A->nb;
     const INT nb2 = nb*nb;
     
-    // /TODO: check A and B see if there are compatible for multiplication!! -- Xiaozhe
+    // check A and B see if there are compatible for multiplication
     if ( (A->COL != B->ROW) && (A->nb != B->nb ) ) {
         printf("### ERROR: Matrix sizes do not match!\n");
         fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);

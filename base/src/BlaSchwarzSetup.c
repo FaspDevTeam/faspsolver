@@ -85,8 +85,8 @@ INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
     
     maxa[0]=0;
     
-    // select root nodes.
-    MIS = fasp_sparse_MIS(&A);
+    // select root nodes
+    MIS = fasp_sparse_mis(&A);
     
     /*-------------------------------------------*/
     // find the blocks

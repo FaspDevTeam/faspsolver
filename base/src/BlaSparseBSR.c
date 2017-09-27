@@ -350,7 +350,6 @@ SHORT fasp_dbsr_getblk (const dBSRmat  *A,
     B->val = (REAL*)fasp_mem_calloc(nnz*nb2,sizeof(REAL));
     
     // second pass: copy data to B
-    // TODO: No need to do the following loop, need to be modified!!  --Xiaozhe
     nnz = 0;
     for ( i=0; i<m; ++i)  {
         for ( k=A->IA[Is[i]]; k<A->IA[Is[i]+1]; ++k ) {
@@ -575,8 +574,6 @@ dvector fasp_dbsr_getdiaginv (const dBSRmat *A)
     return (diaginv);
 }
 
-// TODO: Need to clean up fasp_dbsr_diaginv* functions
-
 /**
  * \fn dBSRmat fasp_dbsr_diaginv (const dBSRmat *A)
  *
@@ -590,35 +587,38 @@ dvector fasp_dbsr_getdiaginv (const dBSRmat *A)
  * \note Works for general nb (Xiaozhe)
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/25/2012
+ * Modified by Chensong Zhang on 09/27/2017
  */
 dBSRmat fasp_dbsr_diaginv (const dBSRmat *A)
 {
     // members of A
-    const INT     ROW = A->ROW;
-    const INT     COL = A->COL;
-    const INT     NNZ = A->NNZ;
-    const INT     nb  = A->nb;
-    const INT     nb2 = nb*nb;
-    const INT    size = ROW*nb2;
-    const INT    *IA  = A->IA;
-    const INT    *JA  = A->JA;
-    REAL         *val = A->val;
+    const INT     ROW  = A->ROW;
+    const INT     COL  = A->COL;
+    const INT     NNZ  = A->NNZ;
+    const INT     nb   = A->nb;
+    const INT     nb2  = nb*nb;
+    const INT     size = ROW*nb2;
+    const INT    *IA   = A->IA;
+    const INT    *JA   = A->JA;
+    REAL         *val  = A->val;
     
-    dBSRmat B;
-    INT    *IAb  = NULL;
-    INT    *JAb  = NULL;
-    REAL   *valb = NULL;
+    // create a dBSRmat B
+    dBSRmat B    = fasp_dbsr_create(ROW, COL, NNZ, nb, 0);
+    INT    *IAb  = B.IA;
+    INT    *JAb  = B.JA;
+    REAL   *valb = B.val;
+
+    INT     i, j, k, m, l;
     
-    // Create a dBSRmat 'B'
-    B = fasp_dbsr_create(ROW, COL, NNZ, nb, 0);
+    // variables for OpenMP
+    SHORT   nthreads = 1, use_openmp = FALSE;
+    INT     myid, mybegin, myend;
+
+    memcpy(IAb, IA, (ROW+1)*sizeof(INT));
+    memcpy(JAb, JA, NNZ*sizeof(INT));
     
-    REAL *diaginv = NULL;
-    
-    INT i,j,k,m,l;
-    
-    // Variables for OpenMP
-    SHORT nthreads = 1, use_openmp = FALSE;
-    INT myid, mybegin, myend;
+    // allocate memory
+    REAL *diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
     
 #ifdef _OPENMP
     if (ROW > OPENMP_HOLDS) {
@@ -626,17 +626,7 @@ dBSRmat fasp_dbsr_diaginv (const dBSRmat *A)
         nthreads = fasp_get_num_threads();
     }
 #endif
-    
-    IAb  = B.IA;
-    JAb  = B.JA;
-    valb = B.val;
-    
-    memcpy(IAb, IA, (ROW+1)*sizeof(INT));
-    memcpy(JAb, JA, NNZ*sizeof(INT));
-    
-    // allocate memory
-    diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
-    
+
     // get all the diagonal sub-blocks
     if (use_openmp) {
 #ifdef _OPENMP
