@@ -110,10 +110,10 @@ SHORT fasp_amg_coarsening_rs (dCSRmat    *A,
         case COARSE_AC: // Aggressive coarsening
             col = cfsplitting_agg(A, S, vertices, agg_path); break;
             
-        case COARSE_CR: // Compatible relaxation // TODO: fix! --Chensong
+        case COARSE_CR: // Compatible relaxation
             col = fasp_amg_coarsening_cr(0, row-1, A, vertices, param); break;
             
-        case COARSE_MIS: // Maximal independent set // TODO: fix! --Chensong
+        case COARSE_MIS: // Maximal independent set
         {
             ivector order = fasp_ivec_create(row);
             compress_S(S);

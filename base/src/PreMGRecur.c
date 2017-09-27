@@ -6,12 +6,12 @@
  *         AuxArray.c, AuxMessage.c, AuxVector.c, BlaSpmvCSR.c, ItrSmootherCSR.c,
  *         ItrSmootherCSRpoly.c, KryPcg.c, KrySPcg.c, and KrySPvgmres.c
  *
+ *  \warning Not used any more! Deprecated in the future versions.
+ *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
- *
- *  TODO: Not used any more. Will be removed! --Chensong
  */
 
 #include <time.h>

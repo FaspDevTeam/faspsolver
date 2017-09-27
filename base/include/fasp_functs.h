@@ -1117,7 +1117,7 @@ void fasp_sparse_rapcmp_ (INT  *ir,
                           REAL *ac,
                           INT  *idummy);
 
-ivector fasp_sparse_MIS (dCSRmat *A);
+ivector fasp_sparse_mis (dCSRmat *A);
 
 
 /*-------- In file: BlaSpmvBLC.c --------*/
@@ -2243,12 +2243,12 @@ void fasp_precond_sweeping (REAL *r,
 /*-------- In file: PreBSR.c --------*/
 
 void fasp_precond_dbsr_diag (REAL *r,
-                             REAL *z, 
-                             void *data) ;
+                             REAL *z,
+                             void *data);
 
 void fasp_precond_dbsr_diag_nc2 (REAL *r,
                                  REAL *z,
-                                 void *data) ;
+                                 void *data);
 
 void fasp_precond_dbsr_diag_nc3 (REAL *r,
                                  REAL *z,
@@ -2259,15 +2259,15 @@ void fasp_precond_dbsr_diag_nc5 (REAL *r,
                                  void *data);
 
 void fasp_precond_dbsr_diag_nc7 (REAL *r, 
-                                 REAL *z, 
-                                 void *data) ;
+                                 REAL *z,
+                                 void *data);
 
 void fasp_precond_dbsr_ilu (REAL *r, 
-                            REAL *z, 
+                            REAL *z,
                             void *data);
 
 void fasp_precond_dbsr_ilu_mc_omp (REAL *r, 
-                                   REAL *z, 
+                                   REAL *z,
                                    void *data);
 
 void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
@@ -2275,7 +2275,7 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
                                    void *data);
 
 void fasp_precond_dbsr_amg (REAL *r, 
-                            REAL *z, 
+                            REAL *z,
                             void *data);
 
 void fasp_precond_dbsr_namli (REAL *r, 
