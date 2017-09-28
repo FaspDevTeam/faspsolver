@@ -240,7 +240,6 @@ static void form_pairwise (const dCSRmat  *A,
 
         if ( vertices->val[i] != UNPT ) continue;
 
-        aij = 0.0;
         min_mu = BIGREAL;
 
         row_start = AIA[i]; row_end = AIA[i+1];

@@ -614,12 +614,15 @@ dBSRmat fasp_dbsr_diaginv (const dBSRmat *A)
     SHORT   nthreads = 1, use_openmp = FALSE;
     INT     myid, mybegin, myend;
 
-    memcpy(IAb, IA, (ROW+1)*sizeof(INT));
-    memcpy(JAb, JA, NNZ*sizeof(INT));
-    
     // allocate memory
     REAL *diaginv = (REAL *)fasp_mem_calloc(size, sizeof(REAL));
-    
+
+    if ( IAb ) memcpy(IAb, IA, (ROW+1)*sizeof(INT));
+    else goto FINISHED;
+
+    if ( JAb ) memcpy(JAb, JA, NNZ*sizeof(INT));
+    else goto FINISHED;
+
 #ifdef _OPENMP
     if (ROW > OPENMP_HOLDS) {
         use_openmp = TRUE;
@@ -725,6 +728,7 @@ dBSRmat fasp_dbsr_diaginv (const dBSRmat *A)
         }
     }
     
+FINISHED:
     fasp_mem_free(diaginv);
     
     return (B);
@@ -783,9 +787,12 @@ dBSRmat fasp_dbsr_diaginv2 (const dBSRmat *A,
     JAb  = B.JA;
     valb = B.val;
     
-    memcpy(IAb, IA, (ROW+1)*sizeof(INT));
-    memcpy(JAb, JA, NNZ*sizeof(INT));
-    
+    if (IAb) memcpy(IAb, IA, (ROW+1)*sizeof(INT));
+    else goto FINISHED;
+
+    if (JAb) memcpy(JAb, JA, NNZ*sizeof(INT));
+    else goto FINISHED;
+
     // compute D^{-1}*A
     if (use_openmp) {
 #ifdef _OPENMP
@@ -826,7 +833,8 @@ dBSRmat fasp_dbsr_diaginv2 (const dBSRmat *A,
             }
         }
     }
-    
+
+FINISHED:
     return (B);
 }
 
@@ -871,7 +879,7 @@ dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A,
     SHORT   use_openmp = FALSE;
     
 #ifdef _OPENMP
-    INT myid, mybegin, myend, stride_i, nthreads;
+    INT myid, mybegin, myend, stride_i, nthreads = 1;
     if ( ROW > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = fasp_get_num_threads();
@@ -936,7 +944,6 @@ dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A,
                     // compute D^{-1}*A
                     for (k = IA[i]+1; k < IA[i+1]; ++k) {
                         m = k*4;
-                        j = JA[k];
                         fasp_blas_smat_mul_nc2(diaginv+i*4, val+m, valb+m);
                     }
                 }// end of main loop
@@ -1244,9 +1251,12 @@ dBSRmat fasp_dbsr_diaginv4 (const dBSRmat *A,
     JAb  = B.JA;
     valb = B.val;
     
-    memcpy(IAb, IA, (ROW+1)*sizeof(INT));
-    memcpy(JAb, JA, NNZ*sizeof(INT));
-    
+    if (IAb) memcpy(IAb, IA, (ROW+1)*sizeof(INT));
+    else goto FINISHED;
+
+    if (JAb) memcpy(JAb, JA, NNZ*sizeof(INT));
+    else goto FINISHED;
+
     switch (nb) {
             
         case 2:
@@ -1476,7 +1486,8 @@ dBSRmat fasp_dbsr_diaginv4 (const dBSRmat *A,
             
             break;
     }
-    
+
+FINISHED:
     return (B);
 }
 

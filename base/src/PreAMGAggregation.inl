@@ -67,8 +67,8 @@ static SHORT aggregation_vmb (dCSRmat    *A,
     
     REAL   strongly_coupled, strongly_coupled2;
     INT    i, j, index, row_start, row_end;
-    INT  * NIA = NULL, * NJA = NULL;
-    REAL * Nval = NULL;
+    INT  * NIA, * NJA;
+    REAL * Nval;
     
     dvector diag;
     fasp_dcsr_getdiag(0, A, &diag);  // get the diagonal entries
@@ -115,8 +115,7 @@ static SHORT aggregation_vmb (dCSRmat    *A,
     
     NIA  = Neigh->IA;
     NJA  = Neigh->JA;
-    Nval = Neigh->val;
-    
+
     fasp_dvec_free(&diag);
     
     /*------------------------------------------*/

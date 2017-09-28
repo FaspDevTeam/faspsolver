@@ -263,6 +263,7 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
                     status = fasp_amg_setup_rs(mgl[i], amgparam); break;
             }
 
+            fasp_chkerr(status, __FUNCTION__);
         }
         
     }

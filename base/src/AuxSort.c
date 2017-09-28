@@ -43,25 +43,20 @@ INT fasp_aux_BiSearch (const INT   nlist,
                        const INT  *list,
                        const INT   value)
 {
-    INT not_found = 1;
     INT low, high, m;
-    
+
     low = 0;
     high = nlist - 1;
-    while (not_found && low <= high)
-    {
+
+    while (low <= high) {
         m = (low + high) / 2;
-        if (value < list[m])
-        {
+        if (value < list[m]) {
             high = m - 1;
         }
-        else if (value > list[m])
-        {
+        else if (value > list[m]) {
             low = m + 1;
         }
-        else
-        {
-            not_found = 0;
+        else {
             return m;
         }
     }

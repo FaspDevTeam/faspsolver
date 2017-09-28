@@ -442,8 +442,8 @@ SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
     dCSRmat pp, Ap1;
     dBSRmat A_LU;
     
-    if (iluparam->ILU_lfil==0) {
-        mgl[0].A = fasp_dcsr_sympart(Ap);  //for ILU0
+    if (iluparam->ILU_lfil==0) {  //for ILU0
+        mgl[0].A = fasp_dcsr_sympart(Ap);
     }
     else if (iluparam->ILU_lfil==1) {  // for ILU1
         Ap1 = fasp_dcsr_create(Ap->row,Ap->col, Ap->nnz);
@@ -1270,7 +1270,7 @@ static void generate_S_theta (dCSRmat *A,
  * \brief Coloring vertices of adjacency graph of A
  *
  * \param mgl      Pointer to input matrix
- * \param theta    Threshold
+ * \param theta    Threshold in [0,1]
  * \param rowmax   Pointer to number of each color
  * \param groups   Pointer to index array
  *
@@ -1285,18 +1285,22 @@ static void multicoloring (AMG_data *mgl,
     INT k, i, j, pre, group, iend;
     INT icount;
     INT front, rear;
-    INT *IA,*JA;
+    INT *IA, *JA;
     
     const INT n = mgl->A.row;
     dCSRmat   A = mgl->A;
     iCSRmat   S;
-    
-    if (theta > 0 && theta < 1.0) {
+
+    S.IA = S.JA = NULL; S.val = NULL;
+
+    theta = MAX(0.0, MIN(1.0, theta));
+
+    if (theta > 0.0 && theta < 1.0) {
         generate_S_theta(&A, &S, theta);
         IA = S.IA;
         JA = S.JA;
     }
-    else if (theta == 1.0 ) {
+    else if (theta == 1.0) {
         
         mgl->ic = (INT*)malloc(sizeof(INT)*2);
         mgl->icmap = (INT *)malloc(sizeof(INT)*(n+1));
@@ -1308,11 +1312,11 @@ static void multicoloring (AMG_data *mgl,
         *groups = 1;
         *rowmax = 1;
         
-        printf("### WARNING: Theta = %lf \n", theta);
+        printf("### WARNING: Theta = %lf! [%s]\n", theta, __FUNCTION__);
         
         return;
-        
-    } else{
+    }
+    else {
         IA = A.IA;
         JA = A.JA;
     }
@@ -1323,11 +1327,11 @@ static void multicoloring (AMG_data *mgl,
 #ifdef _OPENMP
 #pragma omp parallel for private(k)
 #endif
-    for(k=0;k<n;k++) {
+    for (k=0;k<n;k++) {
         cq[k]= k;
     }
     group = 0;
-    for(k=0;k<n;k++) {
+    for (k=0;k<n;k++) {
         if ((A.IA[k+1] - A.IA[k]) > group ) group = A.IA[k+1] - A.IA[k];
     }
     *rowmax = group;
@@ -1364,7 +1368,7 @@ static void multicoloring (AMG_data *mgl,
 #endif
                 iend = IA[i+1];
             
-            for(j= IA[i]; j< iend; j++)  newr[JA[j]] = group;
+            for (j= IA[i]; j< iend; j++)  newr[JA[j]] = group;
         }
         else if (newr[i] == group) {
             //rear = (rear +1)%n;
@@ -1380,7 +1384,7 @@ static void multicoloring (AMG_data *mgl,
             else
 #endif
                 iend = IA[i+1];
-            for(j = IA[i]; j< iend; j++)  newr[JA[j]] =  group;
+            for (j = IA[i]; j< iend; j++)  newr[JA[j]] =  group;
         }
         pre=i;
         
@@ -1393,11 +1397,9 @@ static void multicoloring (AMG_data *mgl,
     free(cq);
     free(newr);
     
-    if (theta >0 ){
-        fasp_mem_free(S.IA);
-        fasp_mem_free(S.JA);
-    }
-    
+    fasp_mem_free(S.IA);
+    fasp_mem_free(S.JA);
+
     return;
 }
 

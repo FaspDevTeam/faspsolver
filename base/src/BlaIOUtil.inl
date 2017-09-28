@@ -191,10 +191,15 @@ static inline void fasp_dcoo_read_b (FILE        *fp,
     size_t  status;
     
     status = fread(&m, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     m = endian_convert_int(m, ilength, EndianFlag);
+
     status = fread(&n, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     n = endian_convert_int(n, ilength, EndianFlag);
+
     status = fread(&nnz, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     nnz = endian_convert_int(nnz, ilength, EndianFlag);
     
     dCOOmat Atmp=fasp_dcoo_create(m,n,nnz);
@@ -202,9 +207,13 @@ static inline void fasp_dcoo_read_b (FILE        *fp,
     for (k = 0; k < nnz; k++) {
         if ( fread(&index, ilength, 1, fp) !=EOF ) {
             Atmp.rowind[k] = endian_convert_int(index, ilength, EndianFlag);
+
             status = fread(&index, ilength, 1, fp);
+            fasp_chkerr(status, __FUNCTION__);
             Atmp.colind[k] = endian_convert_int(index, ilength, EndianFlag);
+
             status = fread(&value, sizeof(REAL), 1, fp);
+            fasp_chkerr(status, __FUNCTION__);
             Atmp.val[k] = endian_convert_real(value, sizeof(REAL), EndianFlag);
         }
         else {
@@ -214,8 +223,6 @@ static inline void fasp_dcoo_read_b (FILE        *fp,
     
     fasp_format_dcoo_dcsr(&Atmp, A);
     fasp_dcoo_free(&Atmp);
-
-    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dbsr_read_s (FILE        *fp,
@@ -227,12 +234,15 @@ static inline void fasp_dbsr_read_s (FILE        *fp,
     int   status;
     
     status = fscanf(fp, "%d %d %d", &ROW,&COL,&NNZ); // read dimension of the problem
+    fasp_chkerr(status, __FUNCTION__);
     A->ROW = ROW; A->COL = COL; A->NNZ = NNZ;
     
     status = fscanf(fp, "%d", &nb); // read the size
+    fasp_chkerr(status, __FUNCTION__);
     A->nb = nb;
     
     status = fscanf(fp, "%d", &storage_manner); // read the storage_manner
+    fasp_chkerr(status, __FUNCTION__);
     A->storage_manner = storage_manner;
     
     // allocate memory space
@@ -240,26 +250,34 @@ static inline void fasp_dbsr_read_s (FILE        *fp,
     
     // read IA
     status = fscanf(fp, "%d", &n);
+    fasp_chkerr(status, __FUNCTION__);
+
     for ( i = 0; i < n; ++i ) {
         status = fscanf(fp, "%d", &index);
+        fasp_chkerr(status, __FUNCTION__);
         A->IA[i] = index;
     }
     
     // read JA
     status = fscanf(fp, "%d", &n);
+    fasp_chkerr(status, __FUNCTION__);
+
     for ( i = 0; i < n; ++i ){
         status = fscanf(fp, "%d", &index);
+        fasp_chkerr(status, __FUNCTION__);
         A->JA[i] = index;
     }
     
     // read val
     status = fscanf(fp, "%d", &n);
+    fasp_chkerr(status, __FUNCTION__);
+
     for ( i = 0; i < n; ++i ) {
         status = fscanf(fp, "%le", &value);
+        fasp_chkerr(status, __FUNCTION__);
         A->val[i] = value;
     }
     
-    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dbsr_read_b (FILE        *fp,
@@ -273,16 +291,23 @@ static inline void fasp_dbsr_read_b (FILE        *fp,
     
     // read dimension of the problem
     status = fread(&ROW, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     A->ROW = endian_convert_int(ROW, ilength, EndianFlag);
+
     status = fread(&COL, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     A->COL = endian_convert_int(COL, ilength, EndianFlag);
+
     status = fread(&NNZ, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     A->NNZ = endian_convert_int(NNZ, ilength, EndianFlag);
     
     status = fread(&nb, ilength, 1, fp); // read the size
+    fasp_chkerr(status, __FUNCTION__);
     A->nb = endian_convert_int(nb, ilength, EndianFlag);
     
     status = fread(&storage_manner, 1, ilength, fp); // read the storage manner
+    fasp_chkerr(status, __FUNCTION__);
     A->storage_manner = endian_convert_int(storage_manner, ilength, EndianFlag);
     
     // allocate memory space
@@ -290,26 +315,31 @@ static inline void fasp_dbsr_read_b (FILE        *fp,
     
     // read IA
     status = fread(&n, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     for ( i = 0; i < n; i++ ) {
         status = fread(&index, 1, ilength, fp);
+        fasp_chkerr(status, __FUNCTION__);
         A->IA[i] = endian_convert_int(index, ilength, EndianFlag);
     }
     
     // read JA
     status = fread(&n, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     for ( i = 0; i < n; i++ ) {
         status = fread(&index, ilength, 1, fp);
+        fasp_chkerr(status, __FUNCTION__);
         A->JA[i] = endian_convert_int(index, ilength, EndianFlag);
     }
     
     // read val
     status = fread(&n, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     for ( i = 0; i < n; i++ ) {
         status = fread(&value, sizeof(REAL), 1, fp);
+        fasp_chkerr(status, __FUNCTION__);
         A->val[i] = endian_convert_real(value, sizeof(REAL), EndianFlag);
     }
 
-    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dstr_read_s (FILE        *fp,
@@ -321,24 +351,29 @@ static inline void fasp_dstr_read_s (FILE        *fp,
     int   status;
     
     status = fscanf(fp,"%d %d %d",&nx,&ny,&nz); // read dimension of the problem
+    fasp_chkerr(status, __FUNCTION__);
     A->nx = nx; A->ny = ny; A->nz = nz;
     
     nxy = nx*ny; ngrid = nxy*nz;
     A->nxy = nxy; A->ngrid = ngrid;
     
     status = fscanf(fp,"%d",&nc); // read number of components
+    fasp_chkerr(status, __FUNCTION__);
     A->nc = nc;
     
     status = fscanf(fp,"%d",&nband); // read number of bands
+    fasp_chkerr(status, __FUNCTION__);
     A->nband = nband;
     
     A->offsets=(INT*)fasp_mem_calloc(nband, ilength);
     
     // read diagonal
     status = fscanf(fp, "%d", &n);
+    fasp_chkerr(status, __FUNCTION__);
     A->diag=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
     for ( i = 0; i < n; ++i ) {
         status = fscanf(fp, "%le", &value);
+        fasp_chkerr(status, __FUNCTION__);
         A->diag[i] = value;
     }
     
@@ -347,16 +382,17 @@ static inline void fasp_dstr_read_s (FILE        *fp,
     A->offdiag=(REAL **)fasp_mem_calloc(nband, sizeof(REAL *));
     while ( k-- ) {
         status = fscanf(fp,"%d %d",&offset,&n); // read number band k
+        fasp_chkerr(status, __FUNCTION__);
         A->offsets[nband-k-1]=offset;
         
         A->offdiag[nband-k-1]=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
         for ( i = 0; i < n; ++i ) {
             status = fscanf(fp, "%le", &value);
+            fasp_chkerr(status, __FUNCTION__);
             A->offdiag[nband-k-1][i] = value;
         }
     }
     
-    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dstr_read_b (FILE        *fp,
@@ -370,10 +406,15 @@ static inline void fasp_dstr_read_b (FILE        *fp,
     
     // read dimension of the problem
     status = fread(&nx, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     A->nx = endian_convert_int(nx, ilength, EndianFlag);
+
     status = fread(&ny, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     A->ny = endian_convert_int(ny, ilength, EndianFlag);
+
     status = fread(&nz, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     A->nz = endian_convert_int(nz, ilength, EndianFlag);
     
     nxy = nx*ny; ngrid = nxy*nz;
@@ -381,40 +422,48 @@ static inline void fasp_dstr_read_b (FILE        *fp,
     
     // read number of components
     status = fread(&nc, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     A->nc = nc;
     
     // read number of bands
     status = fread(&nband, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     A->nband = nband;
     
     A->offsets=(INT*)fasp_mem_calloc(nband, ilength);
     
     // read diagonal
     status = fread(&n, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     n = endian_convert_int(n, ilength, EndianFlag);
     A->diag=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
+
     for ( i = 0; i < n; i++ ) {
         status = fread(&value, sizeof(REAL), 1, fp);
+        fasp_chkerr(status, __FUNCTION__);
         A->diag[i]=endian_convert_real(value, sizeof(REAL), EndianFlag);
     }
     
     // read offdiags
     k = nband;
     A->offdiag=(REAL **)fasp_mem_calloc(nband, sizeof(REAL *));
+
     while ( k-- ) {
         status = fread(&offset, ilength, 1, fp);
+        fasp_chkerr(status, __FUNCTION__);
         A->offsets[nband-k-1]=endian_convert_int(offset, ilength, EndianFlag);;
         
         status = fread(&n, ilength, 1, fp);
+        fasp_chkerr(status, __FUNCTION__);
         n = endian_convert_int(n, ilength, EndianFlag);
         A->offdiag[nband-k-1]=(REAL *)fasp_mem_calloc(n, sizeof(REAL));
         for ( i = 0; i < n; i++ ) {
             status = fread(&value, sizeof(REAL), 1, fp);
+            fasp_chkerr(status, __FUNCTION__);
             A->offdiag[nband-k-1][i]=endian_convert_real(value, sizeof(REAL), EndianFlag);
         }
     }
 
-    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dmtx_read_s (FILE        *fp,
@@ -460,10 +509,15 @@ static inline void fasp_dmtx_read_b (FILE        *fp,
     size_t  status;
     
     status = fread(&m, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     m = endian_convert_int(m, ilength, EndianFlag);
+
     status = fread(&n, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     n = endian_convert_int(n, ilength, EndianFlag);
+
     status = fread(&nnz, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     nnz = endian_convert_int(nnz, ilength, EndianFlag);
     
     dCOOmat Atmp=fasp_dcoo_create(m,n,nnz);
@@ -471,9 +525,13 @@ static inline void fasp_dmtx_read_b (FILE        *fp,
     for (k = 0; k < nnz; k++) {
         if ( fread(&index, ilength, 1, fp) !=EOF ) {
             Atmp.rowind[k] = endian_convert_int(index, ilength, EndianFlag)-1;
+
             status = fread(&index, ilength, 1, fp);
+            fasp_chkerr(status, __FUNCTION__);
             Atmp.colind[k] = endian_convert_int(index, ilength, EndianFlag)-1;
+
             status = fread(&value, sizeof(REAL), 1, fp);
+            fasp_chkerr(status, __FUNCTION__);
             Atmp.val[k] = endian_convert_real(value, sizeof(REAL), EndianFlag);
         }
         else {
@@ -484,7 +542,6 @@ static inline void fasp_dmtx_read_b (FILE        *fp,
     fasp_format_dcoo_dcsr(&Atmp, A);
     fasp_dcoo_free(&Atmp);
 
-    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dmtxsym_read_s (FILE        *fp,
@@ -541,12 +598,16 @@ static inline void fasp_dmtxsym_read_b (FILE        *fp,
     size_t  status;
     
     status = fread(&m, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     m = endian_convert_int(m, ilength, EndianFlag);
+
     status = fread(&n, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     n = endian_convert_int(n, ilength, EndianFlag);
+
     status = fread(&nnz, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     nnz = endian_convert_int(nnz, ilength, EndianFlag);
-    
     nnz = 2*(nnz-m) + m; // adjust for sym problem
     
     dCOOmat Atmp=fasp_dcoo_create(m,n,nnz);
@@ -561,7 +622,9 @@ static inline void fasp_dmtxsym_read_b (FILE        *fp,
                 Atmp.rowind[innz] = endian_convert_int(indextemp, ilength, EndianFlag)-1;
                 indextemp = index[1];
                 Atmp.colind[innz] = endian_convert_int(indextemp, ilength, EndianFlag)-1;
+
                 status = fread(&value, sizeof(REAL), 1, fp);
+                fasp_chkerr(status, __FUNCTION__);
                 Atmp.val[innz] = endian_convert_real(value, sizeof(REAL), EndianFlag);
                 innz = innz + 1;
             }
@@ -572,7 +635,9 @@ static inline void fasp_dmtxsym_read_b (FILE        *fp,
                 indextemp = index[1];
                 Atmp.colind[innz] = endian_convert_int(indextemp, ilength, EndianFlag)-1;
                 Atmp.colind[innz+1] = Atmp.colind[innz];
+
                 status = fread(&value, sizeof(REAL), 1, fp);
+                fasp_chkerr(status, __FUNCTION__);
                 Atmp.val[innz] = endian_convert_real(value, sizeof(REAL), EndianFlag);
                 Atmp.val[innz+1] = Atmp.val[innz];
                 innz = innz + 2;
@@ -586,8 +651,6 @@ static inline void fasp_dmtxsym_read_b (FILE        *fp,
     
     fasp_format_dcoo_dcsr(&Atmp,A);
     fasp_dcoo_free(&Atmp);
-
-    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dcsr_write_s (FILE        *fp,
@@ -890,18 +953,22 @@ static inline void fasp_dvecind_read_b (FILE        *fp,
     size_t  status;
     
     status = fread(&n, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
+
     n = endian_convert_int(n, ilength, EndianFlag);
     fasp_dvec_alloc(n,b);
     
     for ( i = 0; i < n; i++ ) {
         status = fread(&index, ilength, 1, fp);
+        fasp_chkerr(status, __FUNCTION__);
+
         status = fread(&value, dlength, 1, fp);
+        fasp_chkerr(status, __FUNCTION__);
+
         index = endian_convert_int(index, ilength, EndianFlag);
         value = endian_convert_real(value, ilength, EndianFlag);
         b->val[index] = value;
     }
-
-    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_ivecind_read_s (FILE        *fp,
@@ -911,14 +978,15 @@ static inline void fasp_ivecind_read_s (FILE        *fp,
     int   status;
     
     status = fscanf(fp,"%d",&n);
+    fasp_chkerr(status, __FUNCTION__);
+
     fasp_ivec_alloc(n,b);
     
     for ( i = 0; i < n; ++i ) {
         status = fscanf(fp, "%d %d", &index, &value);
+        fasp_chkerr(status, __FUNCTION__);
         b->val[index] = value;
     }
-
-    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_ivecind_read_b (FILE        *fp,
@@ -929,18 +997,21 @@ static inline void fasp_ivecind_read_b (FILE        *fp,
     size_t  status;
     
     status = fread(&n, ilength, 1, fp);
+    fasp_chkerr(status, __FUNCTION__);
     n = endian_convert_int(n, ilength, EndianFlag);
     fasp_ivec_alloc(n,b);
     
     for ( i = 0; i < n; i++ ) {
         status = fread(&index, ilength, 1, fp);
+        fasp_chkerr(status, __FUNCTION__);
+
         status = fread(&value, dlength, 1, fp);
+        fasp_chkerr(status, __FUNCTION__);
+
         index = endian_convert_int(index, ilength, EndianFlag);
         value = endian_convert_real(value, dlength, EndianFlag);
         b->val[index] = value;
     }
-
-    fasp_chkerr(status, __FUNCTION__);
 }
 
 static inline void fasp_dvec_write_s (FILE        *fp,

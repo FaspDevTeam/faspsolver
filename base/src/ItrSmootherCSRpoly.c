@@ -439,29 +439,31 @@ static REAL DinvAnorminf (dCSRmat *Amat,
 #ifdef _OPENMP
     // variables for OpenMP
     INT myid, mybegin, myend;
-    REAL sub_norm = 0.;
+    REAL sub_norm = 0.0;
     INT nthreads = fasp_get_num_threads();
 #endif
     
+    norm = 0.0;
+
     // get the infinity norm of Dinv*A
-    norm = 0.;
 #ifdef _OPENMP
 #pragma omp parallel for private(myid,mybegin,myend,i,temp,sub_norm) if(n>OPENMP_HOLDS)
     for (myid=0; myid<nthreads; ++myid) {
         fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
+        sub_norm = 0.0;
         for (i=mybegin; i<myend; ++i) {
 #else
         for (i=0; i<n; i++) {
 #endif
-            temp=0.;
+            temp = 0.0;
             for (j=ia[i]; j<ia[i+1]; j++) {
                 temp += ABS(a[j]);
             }
             temp *= Dinv[i]; // temp is the L1 norm of the ith row of Dinv*A;
 #ifdef _OPENMP
-            sub_norm  = MAX(sub_norm, temp);
+            sub_norm = MAX(sub_norm, temp);
 #else
-            norm  = MAX(norm, temp);
+            norm = MAX(norm, temp);
 #endif
         }
 #ifdef _OPENMP

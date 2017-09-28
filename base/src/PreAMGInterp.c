@@ -262,7 +262,7 @@ static void interp_DIR (dCSRmat    *A,
     
     // a_minus and a_plus for Neighbors and Prolongation support
     REAL    amN, amP, apN, apP;
-    REAL    alpha, beta, aii = 0;
+    REAL    alpha, beta, aii = 0.0;
     
     // indices of C-nodes
     INT    *cindex = (INT *)fasp_mem_calloc(row, sizeof(INT));
@@ -288,52 +288,54 @@ num_threads(nthreads)
         {
             myid = omp_get_thread_num();
             mybegin = myid*stride_i;
-            if(myid < nthreads-1) myend = mybegin+stride_i;
+            if (myid < nthreads-1) myend = mybegin+stride_i;
             else myend = row;
-            for (i=mybegin; i<myend; ++i){
+            aii = 0.0;
+            
+            for (i=mybegin; i<myend; ++i) {
                 begin_row=A->IA[i]; end_row=A->IA[i+1]-1;
-                for(idiag=begin_row;idiag<=end_row;idiag++){
+                for (idiag=begin_row;idiag<=end_row;idiag++) {
                     if (A->JA[idiag]==i) {
                         aii=A->val[idiag];
                         break;
                     }
                 }
-                if(vec[i]==0){  // if node i is on fine grid
+                if (vec[i]==0){  // if node i is on fine grid
                     amN=0, amP=0, apN=0, apP=0,  num_pcouple=0;
-                    for(j=begin_row;j<=end_row;++j){
+                    for (j=begin_row;j<=end_row;++j) {
                         if(j==idiag) continue;
-                        for(k=P->IA[i];k<P->IA[i+1];++k) {
-                            if(P->JA[k]==A->JA[j]) break;
+                        for (k=P->IA[i];k<P->IA[i+1];++k) {
+                            if (P->JA[k]==A->JA[j]) break;
                         }
-                        if(A->val[j]>0) {
+                        if (A->val[j]>0) {
                             apN+=A->val[j];
-                            if(k<P->IA[i+1]) {
+                            if (k<P->IA[i+1]) {
                                 apP+=A->val[j];
                                 num_pcouple++;
                             }
                         }
                         else {
                             amN+=A->val[j];
-                            if(k<P->IA[i+1]) {
+                            if (k<P->IA[i+1]) {
                                 amP+=A->val[j];
                             }
                         }
                     } // j
                     
                     alpha=amN/amP;
-                    if(num_pcouple>0) {
+                    if (num_pcouple>0) {
                         beta=apN/apP;
                     }
                     else {
                         beta=0;
                         aii+=apN;
                     }
-                    for(j=P->IA[i];j<P->IA[i+1];++j){
+                    for (j=P->IA[i];j<P->IA[i+1];++j) {
                         k=P->JA[j];
-                        for(l=A->IA[i];l<A->IA[i+1];l++){
-                            if(A->JA[l]==k) break;
+                        for (l=A->IA[i];l<A->IA[i+1];l++) {
+                            if (A->JA[l]==k) break;
                         }
-                        if(A->val[l]>0){
+                        if (A->val[l]>0) {
                             P->val[j]=-beta*A->val[l]/aii;
                         }
                         else {
@@ -341,7 +343,7 @@ num_threads(nthreads)
                         }
                     }
                 }
-                else if(vec[i]==2) // if node i is a special fine node
+                else if (vec[i]==2) // if node i is a special fine node
                 {
                     
                 }

@@ -71,7 +71,7 @@ INT fasp_poisson_gmg1d (REAL         *u,
     }
     
     // set level
-    level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    level = (INT *)malloc((maxlevel+2)*sizeof(INT));
     level[0] = 0; level[1] = nx+1;
     for (i = 1; i < maxlevel; i++) {
         level[i+1] = level[i]+(level[i]-level[i-1]+1)/2;
@@ -205,7 +205,7 @@ INT fasp_poisson_gmg2d (REAL         *u,
     }
     
     // set level
-    level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    level = (INT *)malloc((maxlevel+2)*sizeof(INT));
     level[0] = 0; level[1] = (nx+1)*(ny+1);
     for (i = 1; i < maxlevel; i++) {
         level[i+1] = level[i]+(nx/pow(2.0,i)+1)*(ny/pow(2.0,i)+1);
@@ -345,7 +345,7 @@ INT fasp_poisson_gmg3d (REAL         *u,
     }
     
     // set level
-    level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    level = (INT *)malloc((maxlevel+2)*sizeof(INT));
     level[0] = 0; level[1] = (nx+1)*(ny+1)*(nz+1);
     for (i = 1; i < maxlevel; i++) {
         level[i+1] = level[i]+(nx/pow(2.0,i)+1)*(ny/pow(2.0,i)+1)*(nz/pow(2.0,i)+1);
@@ -463,7 +463,7 @@ void fasp_poisson_fgmg1d (REAL         *u,
     }
     
     // set level
-    level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    level = (INT *)malloc((maxlevel+2)*sizeof(INT));
     level[0] = 0; level[1] = nx+1;
     for (i = 1; i < maxlevel; i++) {
         level[i+1] = level[i]+(level[i]-level[i-1]+1)/2;
@@ -561,13 +561,13 @@ void fasp_poisson_fgmg2d (REAL         *u,
     nyk = (INT *)malloc(maxlevel*sizeof(INT));
     
     nxk[0] = nx+1; nyk[0] = ny+1;
-    for(k=1;k<maxlevel;k++){
+    for(k=1;k<maxlevel;k++) {
         nxk[k] = (int) (nxk[k-1]+1)/2;
         nyk[k] = (int) (nyk[k-1]+1)/2;
     }
     
     // set level
-    level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    level = (INT *)malloc((maxlevel+2)*sizeof(INT));
     level[0] = 0; level[1] = (nx+1)*(ny+1);
     for (i = 1; i < maxlevel; i++) {
         level[i+1] = level[i]+(nx/pow(2.0,i)+1)*(ny/pow(2.0,i)+1);
@@ -677,7 +677,7 @@ void fasp_poisson_fgmg3d (REAL         *u,
     }
     
     // set level
-    level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    level = (INT *)malloc((maxlevel+2)*sizeof(INT));
     level[0] = 0; level[1] = (nx+1)*(ny+1)*(nz+1);
     for (i = 1; i < maxlevel; i++) {
         level[i+1] = level[i]+(nx/pow(2.0,i)+1)*(ny/pow(2.0,i)+1)*(nz/pow(2.0,i)+1);
@@ -773,7 +773,7 @@ INT fasp_poisson_gmgcg1d (REAL         *u,
         printf("Num of DOF's: %d\n", (nx+1));
     }
     // set level
-    level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    level = (INT *)malloc((maxlevel+2)*sizeof(INT));
     level[0] = 0; level[1] = nx+1;
     for (i = 1; i < maxlevel; i++) {
         level[i+1] = level[i]+(level[i]-level[i-1]+1)/2;
@@ -872,13 +872,13 @@ INT fasp_poisson_gmgcg2d (REAL         *u,
     nyk = (INT *)malloc(maxlevel*sizeof(INT));
     
     nxk[0] = nx+1; nyk[0] = ny+1;
-    for(k=1;k<maxlevel;k++){
+    for (k=1;k<maxlevel;k++) {
         nxk[k] = (int) (nxk[k-1]+1)/2;
         nyk[k] = (int) (nyk[k-1]+1)/2;
     }
     
     // set level
-    level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    level = (INT *)malloc((maxlevel+2)*sizeof(INT));
     level[0] = 0; level[1] = (nx+1)*(ny+1);
     for (i = 1; i < maxlevel; i++) {
         level[i+1] = level[i]+(nx/pow(2.0,i)+1)*(ny/pow(2.0,i)+1);
@@ -992,7 +992,7 @@ INT fasp_poisson_gmgcg3d (REAL         *u,
     }
     
     // set level
-    level = (INT *)malloc((maxlevel+2)*sizeof(REAL));
+    level = (INT *)malloc((maxlevel+2)*sizeof(INT));
     level[0] = 0; level[1] = (nx+1)*(ny+1)*(nz+1);
     for (i = 1; i < maxlevel; i++) {
         level[i+1] = level[i]+(nx/pow(2.0,i)+1)*(ny/pow(2.0,i)+1)*(nz/pow(2.0,i)+1);

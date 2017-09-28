@@ -82,7 +82,7 @@ INT fasp_amg_coarsening_cr (const INT   i_0,
     ia = A->IA;
     ja = A->JA;
     a  = A->val;
-    cf = vertices->val;
+
     if (i_0 == 0) {
         in1 = i_n+1;
     } else {
@@ -104,7 +104,7 @@ INT fasp_amg_coarsening_cr (const INT   i_0,
     }
     
     /** CR STAGES */
-    while(1) {
+    while (TRUE) {
 
         nc = 0;
 #ifdef _OPENMP
@@ -139,9 +139,7 @@ INT fasp_amg_coarsening_cr (const INT   i_0,
             }
         }
         rho = sqrt(temp1)/sqrt(temp0);
-        temp0 = 0.0e0;
-        temp1 = 0.0e0;
-        
+
         if ( prtlvl > PRINT_MIN ) printf("rho=%2.13lf\n",rho);
 
         if ( rho > tg ) {
@@ -154,7 +152,6 @@ INT fasp_amg_coarsening_cr (const INT   i_0,
                     temp0 = temp1; // max.
                 }
             }
-            temp1 = 0.0e0;
             if (ns == 1) {
                 temp1 = pow(0.3, nu);
             } else {
