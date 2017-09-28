@@ -35,6 +35,7 @@
 #define ERROR_AMG_SMOOTH_TYPE -31  /**< unknown smoother type */
 #define ERROR_AMG_COARSE_TYPE -32  /**< unknown coarsening type */
 #define ERROR_AMG_COARSEING   -33  /**< coarsening step failed to complete */
+#define ERROR_AMG_SETUP       -39  /**< AMG setup failed to complete */
 //---------------------------------------------------------------------------------
 #define ERROR_SOLVER_TYPE     -40  /**< unknown solver type */
 #define ERROR_SOLVER_PRECTYPE -41  /**< unknown precond type */

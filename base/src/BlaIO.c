@@ -716,12 +716,15 @@ void fasp_dbsr_read (const char  *filename,
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
     status = fscanf(fp, "%d %d %d", &ROW,&COL,&NNZ); // read dimension of the problem
+    fasp_chkerr(status, filename);
     A->ROW = ROW; A->COL = COL; A->NNZ = NNZ;
     
     status = fscanf(fp, "%d", &nb); // read the size of each block
+    fasp_chkerr(status, filename);
     A->nb = nb;
     
-    status = fscanf(fp, "%d", &storage_manner); // read the storage_manner of each block
+    status = fscanf(fp, "%d", &storage_manner); // read the storage_manner
+    fasp_chkerr(status, filename);
     A->storage_manner = storage_manner;
     
     // allocate memory space
@@ -729,27 +732,32 @@ void fasp_dbsr_read (const char  *filename,
     
     // read IA
     status = fscanf(fp, "%d", &n);
+    fasp_chkerr(status, filename);
     for ( i = 0; i < n; ++i ) {
         status = fscanf(fp, "%d", &index);
+        fasp_chkerr(status, filename);
         A->IA[i] = index;
     }
     
     // read JA
     status = fscanf(fp, "%d", &n);
+    fasp_chkerr(status, filename);
     for ( i = 0; i < n; ++i ){
         status = fscanf(fp, "%d", &index);
+        fasp_chkerr(status, filename);
         A->JA[i] = index;
     }
     
     // read val
     status = fscanf(fp, "%d", &n);
+    fasp_chkerr(status, filename);
     for ( i = 0; i < n; ++i ) {
         status = fscanf(fp, "%le", &value);
+        fasp_chkerr(status, filename);
         A->val[i] = value;
     }
     
     fclose(fp);
-    fasp_chkerr(status, filename);
 }
 
 /**
@@ -1598,8 +1606,13 @@ void fasp_matrix_read (const char  *filename,
         
         fclose(fp);
         fp = fopen(filename,"r"); // reopen file of reading file in ASCII
+
         status = fscanf(fp,"%d\n",&flag); // jump over the first line
+        fasp_chkerr(status, __FUNCTION__);
+
         status = fscanf(fp,"%d\n",&flag); // reading the format information
+        fasp_chkerr(status, __FUNCTION__);
+
         flag = (INT) flag/100;
         
         switch (flag) {
@@ -1848,9 +1861,9 @@ void fasp_matrix_write (const char *filename,
 void fasp_vector_read (const char *filerhs,
                        void       *b)
 {
-    INT   index,flag;
-    int   status;
-    SHORT EndianFlag;
+    INT      index, flag;
+    SHORT    EndianFlag;
+    size_t   status;
 
     FILE *fp = fopen(filerhs,"rb");
     
@@ -1859,13 +1872,16 @@ void fasp_vector_read (const char *filerhs,
     printf("%s: reading file %s...\n", __FUNCTION__, filerhs);
     
     status = fread(&index, sizeof(INT), 1, fp);
-    
+    fasp_chkerr(status, filerhs);
+
     // vector stored in ASCII
     if (index==808464432) {
+
         fclose(fp);
         fp = fopen(filerhs,"r");
-        status = fscanf(fp,"%d\n",&flag);
-        status = fscanf(fp,"%d\n",&flag);
+        fscanf(fp,"%d\n",&flag);
+        fscanf(fp,"%d\n",&flag);
+
         flag = (int) flag/100;
         
         switch (flag) {
@@ -1889,6 +1905,8 @@ void fasp_vector_read (const char *filerhs,
     // vector stored in binary
     EndianFlag = index;
     status = fread(&index, sizeof(INT), 1, fp);
+    fasp_chkerr(status, filerhs);
+
     index = endian_convert_int(index, sizeof(INT), EndianFlag);
     flag = (int) index/100;
     ilength = (int) (index-100*flag)/10;
@@ -1913,7 +1931,6 @@ void fasp_vector_read (const char *filerhs,
     }
     
     fclose(fp);
-    fasp_chkerr(status, filerhs);
 }
 
 /**

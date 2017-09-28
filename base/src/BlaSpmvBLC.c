@@ -129,12 +129,14 @@ void fasp_blas_dblc_aAxpy (const REAL      alpha,
             
             for (i=0; i<brow; i++) {
                 
-                for (j=0; j<brow; j++){
+                for (j=0; j<brow; j++) {
                     
-                    if (A->blocks[i*brow+j]){
-                        fasp_blas_dcsr_aAxpy(alpha, A->blocks[i*brow+j], &(x[start_col]), &(y[start_row]));
+                    if (A->blocks[i*brow+j]) {
+                        fasp_blas_dcsr_aAxpy(alpha, A->blocks[i*brow+j],
+                                             &(x[start_col]), &(y[start_row]));
                     }
                     start_col = start_col + A->blocks[j*brow+j]->col;
+
                 }
                 
                 start_row = start_row + A->blocks[i*brow+i]->row;

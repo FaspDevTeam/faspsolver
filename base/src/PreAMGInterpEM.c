@@ -257,10 +257,12 @@ static SHORT gentisquare_nomass (dCSRmat  *A,
     
     REAL *ms = (REAL *)fasp_mem_calloc(mm*mm,sizeof(REAL));
     
-    status = get_block(A,mm,mm,Ii,Ii,ms,mask);
+    get_block(A,mm,mm,Ii,Ii,ms,mask);
+
     status = invden(mm,ms,ima);
     
     fasp_mem_free(ms);
+
     return status;
 }
 

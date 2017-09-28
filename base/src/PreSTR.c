@@ -142,7 +142,6 @@ void fasp_precond_dstr_ilu0 (REAL *r,
     
         for (i=1;i<m;++i) {
             ic=i*nc;
-            ic2=i*nc2;
     
             fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);
             fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
@@ -189,8 +188,7 @@ void fasp_precond_dstr_ilu0 (REAL *r,
     
         for (i=1;i<m;++i) {
             ic=i*nc;
-            ic2=i*nc2;
-    
+
             fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);
             fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
             if (i>=nline) {
@@ -237,8 +235,7 @@ void fasp_precond_dstr_ilu0 (REAL *r,
     
         for (i=1;i<m;++i) {
             ic=i*nc;
-            ic2=i*nc2;
-    
+
             fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);
             fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
             if (i>=nline) {
@@ -283,8 +280,7 @@ void fasp_precond_dstr_ilu0 (REAL *r,
         fasp_darray_cp(nc,&(zr[0]),&(zz[0]));
         for (i=1;i<m;++i) {
             ic=i*nc;
-            ic2=i*nc2;
-    
+
             fasp_blas_smat_mxv(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc,nc);
             fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
     
@@ -442,8 +438,7 @@ void fasp_precond_dstr_ilu1 (REAL *r,
     
         for (i=1;i<m;++i) {
             ic=i*nc;
-            ic2=ic*nc;
-    
+
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv_nc3(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);           
             fasp_blas_darray_axpy_nc3(-1,tc,&(zr[ic]));
@@ -537,8 +532,7 @@ void fasp_precond_dstr_ilu1 (REAL *r,
     
         for (i=1;i<m;++i) {
             ic=i*nc;
-            ic2=ic*nc;
-    
+
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv_nc5(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);           
             fasp_blas_darray_axpy_nc5(-1,tc,&(zr[ic]));
@@ -632,8 +626,7 @@ void fasp_precond_dstr_ilu1 (REAL *r,
     
         for (i=1;i<m;++i) {
             ic=i*nc;
-            ic2=ic*nc;
-    
+
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv_nc7(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc);           
             fasp_blas_darray_axpy_nc7(-1,tc,&(zr[ic]));
@@ -726,7 +719,6 @@ void fasp_precond_dstr_ilu1 (REAL *r,
          
         for (i=1;i<m;++i) {
             ic=i*nc;
-            ic2=ic*nc;
             //zz[i]=zr[i]-ILU_data->offdiag[0][i-1]*zz[i-1];
             fasp_blas_smat_mxv(&(ILU_data->offdiag[0][(i-1)*nc2]),&(zz[(i-1)*nc]),tc,nc);           
             fasp_blas_darray_axpy(nc,-1,tc,&(zr[ic]));
