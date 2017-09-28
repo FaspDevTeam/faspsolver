@@ -252,6 +252,8 @@ static void smooth_agg_bsr1 (const dBSRmat    *A,
 static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
                                             AMG_param *param)
 {
+    const SHORT CondType = 1; // Condensation method used for AMG
+
     const SHORT prtlvl     = param->print_level;
     const SHORT csolver    = param->coarse_solver;
     const SHORT min_cdof   = MAX(param->coarse_dof,50);
@@ -340,10 +342,14 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         /*-- get the diagonal inverse --*/
         mgl[lvl].diaginv = fasp_dbsr_getdiaginv(&mgl[lvl].A);
 
-        /*-- Aggregation --*/
-        //mgl[lvl].PP =  condenseBSR(&mgl[lvl].A);
-        mgl[lvl].PP = condenseBSRLinf(&mgl[lvl].A);
+        switch ( CondType ) {
+            case 2:
+                mgl[lvl].PP = condenseBSR(&mgl[lvl].A); break;
+            default:
+                mgl[lvl].PP = condenseBSRLinf(&mgl[lvl].A); break;
+        }
 
+        /*-- Aggregation --*/
         switch ( param->aggregation_type ) {
 
             case VMB: // VMB aggregation

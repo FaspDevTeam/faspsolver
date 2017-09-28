@@ -257,16 +257,18 @@ static INT GraphRemove (Link   *list,
  *                        INT *cf, REAL *ma)
  * \brief Find independent set of the graph
  *
- * \param cand
- * \param cpt
- * \param fpt
- * \param ia
- * \param ja
- * \param n
+ * \param cand ???
+ * \param cpt ???
+ * \param fpt ???
+ * \param ia ???
+ * \param ja ???
+ * \param n ???
  * \param cf contains CF list
  * \param ma contains candidate set info.
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/14/2012
+ *
+ * TODO: Fix the missing Doxygen parameters
  */
 static INT indset (INT   cand,
                    INT   cpt,
