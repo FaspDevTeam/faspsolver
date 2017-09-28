@@ -27,10 +27,16 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
+#ifdef _OPENMP
+
+#if ILU_MC_OMP
 static inline void perm (const INT, const INT, const REAL *, const INT *, REAL *);
 static inline void invperm (const INT, const INT, const REAL *, const INT *, REAL *);
+#endif
 
-REAL ilu_solve_omp = 0.0; /**< ILU time for the SOLVE phase */
+#endif
+
+REAL ilu_solve_time = 0.0; /**< ILU time for the SOLVE phase */
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -1595,14 +1601,14 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     fasp_gettime(&end);
 #endif
     
-    ilu_solve_omp += end-start;
+    ilu_solve_time += end-start;
     
 #else
     
     fasp_gettime(&start);
     fasp_precond_dbsr_ilu(zr,z,iludata);
     fasp_gettime(&end);
-    ilu_solve_omp += end-start;
+    ilu_solve_time += end-start;
     
 #endif
     
@@ -1620,6 +1626,10 @@ MEMERR:
 /*---------------------------------*/
 /*--      Private Functions      --*/
 /*---------------------------------*/
+
+#ifdef _OPENMP
+
+#if ILU_MC_OMP
 
 /**
  * \fn static inline void perm (const INT n, const INT nb, const REAL*x,
@@ -1690,6 +1700,10 @@ static inline void invperm (const INT    n,
         }
     }
 }
+
+#endif // end of ILU_MC_OMP
+
+#endif // end of _OPENMP
 
 /*---------------------------------*/
 /*--        End of File          --*/

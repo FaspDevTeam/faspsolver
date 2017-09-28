@@ -92,20 +92,21 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr  *mgl,
 static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr   *mgl,
                                                 AMG_param      *param)
 {
-    
+    const SHORT CondType = 1; // Condensation method used for AMG
+
     const SHORT prtlvl   = param->print_level;
     const SHORT csolver  = param->coarse_solver;
     const SHORT min_cdof = MAX(param->coarse_dof,50);
     const INT   m        = mgl[0].A.ROW;
     const INT   nb       = mgl[0].A.nb;
 
-    SHORT     max_levels=param->max_levels;
-    SHORT     i, lvl=0, status=FASP_SUCCESS;
+    SHORT     max_levels = param->max_levels;
+    SHORT     i, lvl = 0, status = FASP_SUCCESS;
     REAL      setup_start, setup_end;
     
     AMG_data *mgl_csr=fasp_amg_data_create(max_levels);
     
-    dCSRmat temp1, temp2;
+    dCSRmat   temp1, temp2;
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -130,11 +131,10 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr   *mgl,
 
     for ( i=0; i<max_levels; ++i ) num_aggs[i] = 0;
 
-    /*-----------------------*/
-    /*-- setup null spaces --*/
-    /*-----------------------*/
+    /*------------------------------------------*/
+    /*-- setup null spaces for whole Jacobian --*/
+    /*------------------------------------------*/
 
-    // null space for whole Jacobian
     /*
      mgl[0].near_kernel_dim   = 1;
      mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim, sizeof(REAL*));
@@ -181,11 +181,13 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr   *mgl,
         
         /*-- get the diagonal inverse --*/
         mgl[lvl].diaginv = fasp_dbsr_getdiaginv(&mgl[lvl].A);
-        
-        // TODO: Try different way to form the scalar block!  -- Xiaozhe
-        // TODO: Use a generic interface for condensation!    -- Chensong
-        //       mgl[lvl].PP = condenseBSR(&mgl[lvl].A);
-        mgl[lvl].PP = condenseBSRLinf(&mgl[lvl].A);
+
+        switch ( CondType ) {
+            case 2:
+                mgl[lvl].PP = condenseBSR(&mgl[lvl].A); break;
+            default:
+                mgl[lvl].PP = condenseBSRLinf(&mgl[lvl].A); break;
+        }
 
         /*-- Aggregation --*/
         switch ( param->aggregation_type ) {

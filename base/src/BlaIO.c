@@ -1580,11 +1580,11 @@ void fasp_matrix_read (const char  *filename,
                        void        *A)
 {
     
-    INT   index, flag;
-    int   status;
-    SHORT EndianFlag;
+    INT      index, flag;
+    size_t   status;
+    SHORT    EndianFlag;
 
-    FILE *fp = fopen(filename,"rb");
+    FILE    *fp = fopen(filename,"rb");
     
     if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
     
