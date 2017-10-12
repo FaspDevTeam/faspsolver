@@ -27,8 +27,8 @@
 /*---------------------------------*/
 
 /**
- * \fn int fasp_solver_pardiso (dCSRmat *ptrA, dvector *b, dvector *u,
- *                            const SHORT prtlvl)
+ * \fn INT fasp_solver_pardiso (dCSRmat *ptrA, dvector *b, dvector *u,
+ *                              const SHORT prtlvl)
  *
  * \brief Solve Ax=b by PARDISO directly. Each row of A should be
  *        in ascending order w.r.t. column indices.
@@ -125,10 +125,6 @@ INT fasp_solver_pardiso (dCSRmat * ptrA,
     
 #else
     
-#if DEBUG_MODE
-    printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
-#endif
-    
     printf("### ERROR: PARDISO is not available!\n");
     return ERROR_SOLVER_EXIT;
     
@@ -210,6 +206,7 @@ INT fasp_pardiso_factorize (dCSRmat *ptrA,
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
+
     return status;
 }
 
