@@ -1,10 +1,11 @@
 File Name: CHANGES
 
-09/28/2017 FASP 2.0.4:
+10/12/2017 FASP 2.0.4:
 - Format ERROR messages for all functions.
 - Format DEBUG messages for all functions.
 - Fix several TODO's listed in the functions.
 - Get rid of ALL warnings in DEBUG mode.
+- Replace Direct with Pardiso; Direct.lib is NOT used any more on Windows.
 
 09/24/2017 FASP 2.0.3:
 - Add testgs.c; preparing for testing new sparse matrix data structures.

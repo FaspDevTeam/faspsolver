@@ -41,6 +41,8 @@
  * \date   11/05/2009
  *
  * Modified by Chensong Zhang on 02/27/2013 for new FASP function names.
+ *
+ * \note  Factorization and solution are combined together!!! Not efficient!!!
  */
 int fasp_solver_superlu (dCSRmat *ptrA,
                          dvector *b,
