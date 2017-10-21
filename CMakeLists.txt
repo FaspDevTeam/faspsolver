@@ -1,6 +1,7 @@
 ############################################################
 # CMakeLists for FASP 
-# Modified   2015-08-08   --ltz
+# Modified   2015-08-08   --Ludmil Zikatanov
+# Modified   2017-10-20   --Chensong Zhang
 ############################################################
 cmake_minimum_required (VERSION 2.8)
 
@@ -13,8 +14,9 @@ set(GDB 1 CACHE BOOL "debugging or not")
 set(OPENMP 0 CACHE BOOL "Openmp use")
 set(USE_MUMPS 0 CACHE BOOL "MUMPS use")
 
-#### include compiler and project name settings###################################. 
-# Search for C compilers in the specified order. That will determine the rest.
+#######################################################################
+# Search for C compilers in the specified order.
+#######################################################################
 if(DEFINED ENV{CC}) 
 	find_program(THE_C NAMES $ENV{CC} gcc-mp-5 gcc-mp-4.9 gcc-mp-4.8
 	             gcc-mp-4.6 gcc46 gcc45 gcc44 gcc icc clang)
@@ -34,45 +36,48 @@ project(FASP C )
 set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
 
 ########### try to find matching c++ and fortran compilers ############
+# Fortran compiler is needed for Fortran examples and demos
+#######################################################################
 include(get_cxx_fc_compilers)
 
 ########### check the prefix for installation #########################
 include(install_prefix)
  
-#
+#######################################################################
 # OpenMP : defined on command line in the top Makefile
-#
+#######################################################################
 if(USE_OPENMP)
-       find_package(OpenMP)
+    cmake_policy(SET "CMP0054" NEW)
+    find_package(OpenMP)
 
-       if(OPENMP_FOUND)
-          set (CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
-	  	  "${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}} ${OpenMP_C_FLAGS}")	 
-          set (CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE} 
-	       "${CMAKE_CXX_FLAGS_${CMAKE_CBUILD_TYPE}} ${OpenMP_CXX_FLAGS}")
-          set (CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE} 
-	       "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${OpenMP_C_FLAGS}")
-          set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
-       else(OPENMP_FOUND)
-          message(" WARNING: OpenMP was requested but not supported!")
-       endif(OPENMP_FOUND)
+    if(OPENMP_FOUND)
+        set (CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
+             "${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}} ${OpenMP_C_FLAGS}")	 
+        set (CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE} 
+	     "${CMAKE_CXX_FLAGS_${CMAKE_CBUILD_TYPE}} ${OpenMP_CXX_FLAGS}")
+        set (CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE} 
+	     "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${OpenMP_C_FLAGS}")
+        set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+    else(OPENMP_FOUND)
+        message(" WARNING: OpenMP was requested but not supported!")
+    endif(OPENMP_FOUND)
 endif(USE_OPENMP)
 
 ########## Additional compiler flags (not defined by the build
-
+#
 if(ADD_CFLAGS)
-          set (CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
-	  	  "${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CFLAGS}")	 
+    set (CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
+	 "${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CFLAGS}")	 
 endif(ADD_CFLAGS)
-
+#
 if(ADD_CXXFLAGS)
-          set (CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE} 
-	  	  "${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CXXFLAGS}")
+    set (CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE} 
+	 "${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CXXFLAGS}")
 endif(ADD_CXXFLAGS)
-
+#
 if(ADD_FFLAGS)
-          set (CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE} 
-	  	  "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_FFLAGS}")	 
+    set (CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE} 
+	 "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_FFLAGS}")	 
 endif(ADD_FFLAGS)
 #
     set(CMAKE_INSTALL_PREFIX "${FASP_SOURCE_DIR}" )
@@ -80,21 +85,21 @@ endif(ADD_FFLAGS)
     set(FASP_INSTALL TRUE)
 #
     if(SHARED) 
-	   set(FASP_LIBRARY_TYPE SHARED)
+	set(FASP_LIBRARY_TYPE SHARED)
     else(SHARED)
-	   set(FASP_LIBRARY_TYPE STATIC)
+	set(FASP_LIBRARY_TYPE STATIC)
     endif(SHARED)   
 #
 if(APPLE)
     cmake_policy(SET "CMP0042" NEW)
 endif(APPLE)
 
-# NOT SURE IF WE NEED THIS: 
-## FOR MAC OS X to find shared libs in install location
-        set(CMAKE_INSTALL_NAME_DIR 
-		${CMAKE_INSTALL_PREFIX}/lib CACHE PATH "path for apple")
+# FOR MAC OS X to find shared libs in install location
+    set(CMAKE_INSTALL_NAME_DIR 
+	${CMAKE_INSTALL_PREFIX}/lib CACHE PATH "path for apple")
 # FOR LINUX to find shared libs in install location
-        set(CMAKE_INSTALL_RPATH ${CMAKE_INSTALL_NAME_DIR} CACHE PATH "path for Linux")
+    set(CMAKE_INSTALL_RPATH
+        ${CMAKE_INSTALL_NAME_DIR} CACHE PATH "path for Linux")
 ### NOT SURE IF WE NEED THIS (POLICY CMP 00042)
 file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR} 
 	  		    ${FASP_SOURCE_DIR}/base/src/*.c 
@@ -111,7 +116,7 @@ add_custom_target(headers ${FASP_SOURCE_DIR}/util/fhead.sh "${FASP_SOURCE_DIR}/b
 ##################################################################
 # For UMFPACK
 ##################################################################
-if (USE_UMFPACK)
+if(USE_UMFPACK)
 
    # set some path to the UMFPACK pacakge
    # metis is not part of suitesparse, so theremay be also some other metis dir. 
@@ -130,7 +135,7 @@ endif(USE_UMFPACK)
 ##################################################################
 # For SuperLU
 ##################################################################
-if (USE_SUPERLU)
+if(USE_SUPERLU)
 
    # set the path to find specific modules
    set(CMAKE_MODULE_PATH "${FASP_SOURCE_DIR}/modules")
@@ -152,7 +157,7 @@ endif(USE_SUPERLU)
 ##################################################################
 # For MUMPS 
 ##################################################################
-if (USE_MUMPS)
+if(USE_MUMPS)
 
    # set the path to find specific modules
    set(CMAKE_MODULE_PATH "${FASP_SOURCE_DIR}/modules")
@@ -171,11 +176,10 @@ if (USE_MUMPS)
 
 endif(USE_MUMPS)
 
-
 ##################################################################
 # For Intel MKL PARDISO
 ##################################################################
-if (USE_PARDISO)
+if(USE_PARDISO)
 
    # set the path to find specific modules
    set(CMAKE_MODULE_PATH "${FASP_SOURCE_DIR}/modules")
@@ -203,9 +207,8 @@ find_package(Doxygen)
 if(DOXYGEN_FOUND)
     if(EXISTS ${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in)
     configure_file(
-		${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in
-	    ${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf @ONLY
-		)
+	${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in
+        ${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf @ONLY)
     set(DOXY_EXEC "${DOXYGEN_EXECUTABLE}")
     if(DOXYWIZARD)
         find_program(WIZARD doxywizard)
@@ -238,17 +241,16 @@ if(NOT (CMAKE_Fortran_COMPILER_ID STREQUAL CMAKE_C_COMPILER_ID))
 ) 
 endif(NOT (CMAKE_Fortran_COMPILER_ID STREQUAL CMAKE_C_COMPILER_ID))
 
-########################################
-##set FASP library name for the library
-         set(FASP_LIBRARY_NAME fasp)
-##########################################
+##################################################################
+# set FASP library name for the library
+    set(FASP_LIBRARY_NAME fasp)
+##################################################################
 # Recursively look for CMakeLists.txt in the library subdir.
     add_subdirectory("base")
 # write the configuration
     include(write_config)
-##########################################
+##################################################################
 # only the library will be installed with "make" The rest of the
-#  targets must be installed separately, so we do EXCLUDE_FROM_ALL
-
+# targets must be installed separately, so we do EXCLUDE_FROM_ALL
     add_subdirectory("test" EXCLUDE_FROM_ALL)
     add_subdirectory("tutorial" EXCLUDE_FROM_ALL)

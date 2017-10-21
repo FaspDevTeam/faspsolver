@@ -1,22 +1,22 @@
     1208 ./base/include/fasp.h
      405 ./base/include/fasp_block.h
-     262 ./base/include/fasp_const.h
+     263 ./base/include/fasp_const.h
     2868 ./base/include/fasp_functs.h
       51 ./base/include/fasp_grid.h
-    1047 ./base/src/BlaIOUtil.inl
+    1118 ./base/src/BlaIOUtil.inl
      115 ./base/src/BlaSpmvMatFree.inl
      196 ./base/src/ItrAuxiliary.inl
      593 ./base/src/ItrSmootherRBGS.inl
-     107 ./base/src/KryUtil.inl
-     231 ./base/src/PreAMGAggregation.inl
+     109 ./base/src/KryUtil.inl
+     230 ./base/src/PreAMGAggregation.inl
      292 ./base/src/PreAMGAggregationBSR.inl
       89 ./base/src/PreAMGAggregationCSR.inl
-    1294 ./base/src/PreAMGAggregationUA.inl
+    1293 ./base/src/PreAMGAggregationUA.inl
      296 ./base/src/PreAMGUtil.inl
     1668 ./base/src/PreGMG.inl
      223 ./base/src/PreMGRecurAMLI.inl
      219 ./base/src/PreMGSmoother.inl
-      61 ./base/src/PreMGUtil.inl
+      62 ./base/src/PreMGUtil.inl
      193 ./base/src/AuxArray.c
       99 ./base/src/AuxConvert.c
       86 ./base/src/AuxGivens.c
@@ -25,7 +25,7 @@
      216 ./base/src/AuxMemory.c
      295 ./base/src/AuxMessage.c
     1023 ./base/src/AuxParam.c
-     402 ./base/src/AuxSort.c
+     397 ./base/src/AuxSort.c
      177 ./base/src/AuxThreads.c
       48 ./base/src/AuxTiming.c
      452 ./base/src/AuxVector.c
@@ -33,33 +33,33 @@
       79 ./base/src/BlaEigen.c
     1008 ./base/src/BlaFormat.c
     2202 ./base/src/BlaILU.c
-    1523 ./base/src/BlaILUSetupBSR.c
+    1525 ./base/src/BlaILUSetupBSR.c
      179 ./base/src/BlaILUSetupCSR.c
     1271 ./base/src/BlaILUSetupSTR.c
-    2253 ./base/src/BlaIO.c
+    2270 ./base/src/BlaIO.c
      197 ./base/src/BlaOrderingCSR.c
      601 ./base/src/BlaSchwarzSetup.c
      966 ./base/src/BlaSmallMat.c
      783 ./base/src/BlaSmallMatInv.c
      178 ./base/src/BlaSmallMatLU.c
       55 ./base/src/BlaSparseBLC.c
-    2176 ./base/src/BlaSparseBSR.c
+    2187 ./base/src/BlaSparseBSR.c
      161 ./base/src/BlaSparseCOO.c
     1636 ./base/src/BlaSparseCSR.c
       81 ./base/src/BlaSparseCSRL.c
      351 ./base/src/BlaSparseCheck.c
      184 ./base/src/BlaSparseSTR.c
      963 ./base/src/BlaSparseUtil.c
-     282 ./base/src/BlaSpmvBLC.c
+     284 ./base/src/BlaSpmvBLC.c
     5469 ./base/src/BlaSpmvBSR.c
     2097 ./base/src/BlaSpmvCSR.c
      133 ./base/src/BlaSpmvCSRL.c
     1859 ./base/src/BlaSpmvSTR.c
      318 ./base/src/BlaVector.c
-    1696 ./base/src/ItrSmootherBSR.c
+    1710 ./base/src/ItrSmootherBSR.c
     1517 ./base/src/ItrSmootherCSR.c
       94 ./base/src/ItrSmootherCSRcr.c
-     647 ./base/src/ItrSmootherCSRpoly.c
+     649 ./base/src/ItrSmootherCSRpoly.c
     1902 ./base/src/ItrSmootherSTR.c
     1685 ./base/src/KryPbcgs.c
     1527 ./base/src/KryPcg.c
@@ -74,28 +74,28 @@
     1416 ./base/src/KrySPgmres.c
     1393 ./base/src/KrySPminres.c
     1568 ./base/src/KrySPvgmres.c
-     394 ./base/src/PreAMGCoarsenCR.c
+     393 ./base/src/PreAMGCoarsenCR.c
     2088 ./base/src/PreAMGCoarsenRS.c
-     879 ./base/src/PreAMGInterp.c
-     839 ./base/src/PreAMGInterpEM.c
+     881 ./base/src/PreAMGInterp.c
+     841 ./base/src/PreAMGInterpEM.c
      134 ./base/src/PreAMGSetupCR.c
      320 ./base/src/PreAMGSetupRS.c
      782 ./base/src/PreAMGSetupSA.c
-     525 ./base/src/PreAMGSetupSABSR.c
+     531 ./base/src/PreAMGSetupSABSR.c
      407 ./base/src/PreAMGSetupUA.c
-     381 ./base/src/PreAMGSetupUABSR.c
+     383 ./base/src/PreAMGSetupUABSR.c
     1067 ./base/src/PreBLC.c
     1145 ./base/src/PreBSR.c
      674 ./base/src/PreCSR.c
      360 ./base/src/PreDataInit.c
-     551 ./base/src/PreMGCycle.c
+     552 ./base/src/PreMGCycle.c
      364 ./base/src/PreMGCycleFull.c
      167 ./base/src/PreMGRecur.c
      779 ./base/src/PreMGRecurAMLI.c
      339 ./base/src/PreMGSolve.c
-    1804 ./base/src/PreSTR.c
+    1796 ./base/src/PreSTR.c
      144 ./base/src/SolAMG.c
-     604 ./base/src/SolBLC.c
+     605 ./base/src/SolBLC.c
      798 ./base/src/SolBSR.c
      723 ./base/src/SolCSR.c
      116 ./base/src/SolFAMG.c
@@ -103,4 +103,4 @@
      238 ./base/src/SolMatFree.c
      411 ./base/src/SolSTR.c
      322 ./base/src/SolWrapper.c
-   85278 total
+   85399 total
