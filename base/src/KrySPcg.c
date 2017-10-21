@@ -6,7 +6,8 @@
  *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxVector.c, BlaArray.c,
  *         BlaSpmvBLC.c, BlaSpmvCSR.c, BlaSpmvSTR.c, and BlaVector.c
  *
- *  \note  See KryPcg.c for a version without safety net
+ *  \note  The `best' iterative solution will be saved and used upon exit;
+ *         See KryPcg.c for a version without safety net
  *
  *  Reference:
  *         Y. Saad 2003
@@ -74,7 +75,7 @@ INT fasp_solver_dcsr_spcg (const dCSRmat  *A,
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, infnormu;
+    REAL         reldiff, factor, normuinf;
     REAL         alpha, beta, temp1, temp2;
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
@@ -179,7 +180,7 @@ INT fasp_solver_dcsr_spcg (const dCSRmat  *A,
         // output iteration information if needed
         fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
-        // If the solution is NAN, restrore the best solution
+        // if the solution is NAN, restore the best solution
         if ( fasp_dvec_isnan(u) ) {
             absres = BIGREAL;
             goto RESTORE_BESTSOL;
@@ -193,14 +194,14 @@ INT fasp_solver_dcsr_spcg (const dCSRmat  *A,
         }
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
-        infnormu = fasp_blas_darray_norminf(m, u->val);
-        if ( infnormu <= sol_inf_tol ) {
+        normuinf = fasp_blas_darray_norminf(m, u->val);
+        if ( normuinf <= sol_inf_tol ) {
             if ( PrtLvl > PRINT_MIN ) ITS_ZEROSOL;
             iter = ERROR_SOLVER_SOLSTAG;
             break;
         }
         
-        //  Check II: if staggenated, try to restart
+        // Check II: if staggenated, try to restart
         normu   = fasp_blas_dvec_norm2(u);
         
         // compute relative difference
@@ -407,7 +408,7 @@ INT fasp_solver_dblc_spcg (const dBLCmat  *A,
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, infnormu;
+    REAL         reldiff, factor, normuinf;
     REAL         alpha, beta, temp1, temp2;
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
@@ -512,7 +513,7 @@ INT fasp_solver_dblc_spcg (const dBLCmat  *A,
         // output iteration information if needed
         fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
-        // If the solution is NAN, restrore the best solution
+        // if the solution is NAN, restore the best solution
         if ( fasp_dvec_isnan(u) ) {
             absres = BIGREAL;
             goto RESTORE_BESTSOL;
@@ -526,14 +527,14 @@ INT fasp_solver_dblc_spcg (const dBLCmat  *A,
         }
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
-        infnormu = fasp_blas_darray_norminf(m, u->val);
-        if ( infnormu <= sol_inf_tol ) {
+        normuinf = fasp_blas_darray_norminf(m, u->val);
+        if ( normuinf <= sol_inf_tol ) {
             if ( PrtLvl > PRINT_MIN ) ITS_ZEROSOL;
             iter = ERROR_SOLVER_SOLSTAG;
             break;
         }
         
-        //  Check II: if staggenated, try to restart
+        // Check II: if staggenated, try to restart
         normu   = fasp_blas_dvec_norm2(u);
         
         // compute relative difference
@@ -740,7 +741,7 @@ INT fasp_solver_dstr_spcg (const dSTRmat  *A,
     INT          iter = 0, stag = 1, more_step = 1, restart_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, infnormu;
+    REAL         reldiff, factor, normuinf;
     REAL         alpha, beta, temp1, temp2;
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
@@ -845,7 +846,7 @@ INT fasp_solver_dstr_spcg (const dSTRmat  *A,
         // output iteration information if needed
         fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
-        // If the solution is NAN, restrore the best solution
+        // if the solution is NAN, restore the best solution
         if ( fasp_dvec_isnan(u) ) {
             absres = BIGREAL;
             goto RESTORE_BESTSOL;
@@ -859,14 +860,14 @@ INT fasp_solver_dstr_spcg (const dSTRmat  *A,
         }
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
-        infnormu = fasp_blas_darray_norminf(m, u->val);
-        if ( infnormu <= sol_inf_tol ) {
+        normuinf = fasp_blas_darray_norminf(m, u->val);
+        if ( normuinf <= sol_inf_tol ) {
             if ( PrtLvl > PRINT_MIN ) ITS_ZEROSOL;
             iter = ERROR_SOLVER_SOLSTAG;
             break;
         }
         
-        //  Check II: if staggenated, try to restart
+        // Check II: if staggenated, try to restart
         normu   = fasp_blas_dvec_norm2(u);
         
         // compute relative difference

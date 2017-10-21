@@ -1,5 +1,13 @@
 File Name: CHANGES
 
+10/22/2017 FASP 2.0.5:
+- Try to unify itsolver and itsolver_s. 
+- Add regression tests for itsolver_s (iterative methods with safe-net).
+- Update regression test results.
+- New TODO list.
+- Update user's guide for the recent changes.
+- Update webpage documentation zip file.
+
 10/21/2017 FASP 2.0.4:
 - Format WARNING messages for all functions.
 - Format ERROR messages for all functions.

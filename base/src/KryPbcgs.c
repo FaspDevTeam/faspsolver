@@ -135,7 +135,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
     maxstagsteps = 3;
     
     // loop over maxit iterations (unless convergence or failure)
-    for(iter=1;iter <= MaxIt;iter++){
+    for (iter=1;iter <= MaxIt;iter++) {
         
         rho1 = rho;
         rho  = fasp_blas_darray_dotprod(m,rt,r);
@@ -211,7 +211,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
             fasp_blas_dcsr_aAxpy(-1.0,A,xhalf,s);
             normr_act = fasp_blas_darray_norm2(m,s);
             
-            if (normr_act <= tolb){
+            if (normr_act <= tolb) {
                 // x = xhalf;
                 fasp_darray_cp(m,xhalf,x);    // x = xhalf;
                 flag = 0;
@@ -223,10 +223,10 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
                 goto FINISHED;
             }
             else {
-                if ((stag >= maxstagsteps) && (moresteps == 0))  stag = 0;
+                if ((stag >= maxstagsteps) && (moresteps == 0)) stag = 0;
                 
                 moresteps = moresteps + 1;
-                if (moresteps >= maxmsteps){
+                if (moresteps >= maxmsteps) {
                     // if ~warned
                     flag = 3;
                     fasp_darray_cp(m,xhalf,x);
@@ -235,12 +235,12 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
             }
         }
         
-        if ( stag >= maxstagsteps){
+        if ( stag >= maxstagsteps ) {
             flag = 3;
             goto FINISHED;
         }
         
-        if (normr_act < normrmin )      // update minimal norm quantities
+        if ( normr_act < normrmin ) // update minimal norm quantities
         {
             normrmin = normr_act;
             fasp_darray_cp(m,xhalf,xmin);
@@ -335,11 +335,12 @@ FINISHED:  // finish iterative method
         fasp_blas_dcsr_aAxpy(-1.0,A,xmin,r);
         normr = fasp_blas_darray_norm2(m,r);
         
-        if ( normr <= normr_act)  {
+        if ( normr <= normr_act) {
             fasp_darray_cp(m, xmin,x);
             iter = imin;
             relres = normr/n2b;
-        }else {
+        }
+        else {
             iter = iter;
             relres = normr_act/n2b;
         }
@@ -461,7 +462,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
     maxstagsteps = 3;
     
     // loop over maxit iterations (unless convergence or failure)
-    for(iter=1;iter <= MaxIt;iter++){
+    for (iter=1;iter <= MaxIt;iter++) {
         
         rho1 = rho;
         rho  = fasp_blas_darray_dotprod(m,rt,r);
@@ -498,14 +499,14 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
         fasp_blas_dbsr_mxv(A,ph,v);
         rtv = fasp_blas_darray_dotprod(m,rt,v);
         
-        if (( rtv==0.0 )||( ABS(rtv) > DBL_MAX )){
+        if (( rtv==0.0 )||( ABS(rtv) > DBL_MAX )) {
             flag = 4;
             goto FINISHED;
         }
         
         alpha = rho/rtv;
         
-        if ( ABS(alpha) > DBL_MAX ){
+        if ( ABS(alpha) > DBL_MAX ) {
             flag = 4;
             ITS_DIVZERO;
             goto FINISHED;
@@ -537,7 +538,7 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
             fasp_blas_dbsr_aAxpy(-1.0,A,xhalf,s);
             normr_act = fasp_blas_darray_norm2(m,s);
             
-            if (normr_act <= tolb){
+            if (normr_act <= tolb) {
                 // x = xhalf;
                 fasp_darray_cp(m,xhalf,x);    // x = xhalf;
                 flag = 0;
@@ -561,12 +562,12 @@ INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
             }
         }
         
-        if ( stag >= maxstagsteps){
+        if ( stag >= maxstagsteps ) {
             flag = 3;
             goto FINISHED;
         }
         
-        if (normr_act < normrmin )      // update minimal norm quantities
+        if ( normr_act < normrmin ) // update minimal norm quantities
         {
             normrmin = normr_act;
             fasp_darray_cp(m,xhalf,xmin);
@@ -661,11 +662,12 @@ FINISHED:  // finish iterative method
         fasp_blas_dbsr_aAxpy(-1.0,A,xmin,r);
         normr = fasp_blas_darray_norm2(m,r);
         
-        if ( normr <= normr_act)  {
+        if ( normr <= normr_act) {
             fasp_darray_cp(m, xmin,x);
             iter = imin;
             relres = normr/n2b;
-        }else {
+        }
+        else {
             iter = iter;
             relres = normr_act/n2b;
         }
@@ -787,7 +789,7 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
     maxstagsteps = 3;
     
     // loop over maxit iterations (unless convergence or failure)
-    for(iter=1;iter <= MaxIt;iter++){
+    for (iter=1;iter <= MaxIt;iter++) {
         
         rho1 = rho;
         rho  = fasp_blas_darray_dotprod(m,rt,r);
@@ -824,14 +826,14 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
         fasp_blas_dblc_mxv(A,ph,v);
         rtv = fasp_blas_darray_dotprod(m,rt,v);
         
-        if (( rtv==0.0 )||( ABS(rtv) > DBL_MAX )){
+        if (( rtv==0.0 )||( ABS(rtv) > DBL_MAX )) {
             flag = 4;
             goto FINISHED;
         }
         
         alpha = rho/rtv;
         
-        if ( ABS(alpha) > DBL_MAX ){
+        if ( ABS(alpha) > DBL_MAX ) {
             flag = 4;
             ITS_DIVZERO;
             goto FINISHED;
@@ -863,7 +865,7 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
             fasp_blas_dblc_aAxpy(-1.0,A,xhalf,s);
             normr_act = fasp_blas_darray_norm2(m,s);
             
-            if (normr_act <= tolb){
+            if (normr_act <= tolb) {
                 // x = xhalf;
                 fasp_darray_cp(m,xhalf,x);    // x = xhalf;
                 flag = 0;
@@ -878,7 +880,7 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
                 if ((stag >= maxstagsteps) && (moresteps == 0))  stag = 0;
                 
                 moresteps = moresteps + 1;
-                if (moresteps >= maxmsteps){
+                if (moresteps >= maxmsteps) {
                     // if ~warned
                     flag = 3;
                     fasp_darray_cp(m,xhalf,x);
@@ -887,12 +889,12 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
             }
         }
         
-        if ( stag >= maxstagsteps){
+        if ( stag >= maxstagsteps ) {
             flag = 3;
             goto FINISHED;
         }
         
-        if (normr_act < normrmin )      // update minimal norm quantities
+        if ( normr_act < normrmin ) // update minimal norm quantities
         {
             normrmin = normr_act;
             fasp_darray_cp(m,xhalf,xmin);
@@ -987,11 +989,12 @@ FINISHED:  // finish iterative method
         fasp_blas_dblc_aAxpy(-1.0,A,xmin,r);
         normr = fasp_blas_darray_norm2(m,r);
         
-        if ( normr <= normr_act)  {
+        if ( normr <= normr_act) {
             fasp_darray_cp(m, xmin,x);
             iter = imin;
             relres = normr/n2b;
-        }else {
+        }
+        else {
             iter = iter;
             relres = normr_act/n2b;
         }
@@ -1113,7 +1116,7 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
     maxstagsteps = 3;
     
     // loop over maxit iterations (unless convergence or failure)
-    for(iter=1;iter <= MaxIt;iter++){
+    for (iter=1;iter <= MaxIt;iter++) {
         
         rho1 = rho;
         rho  = fasp_blas_darray_dotprod(m,rt,r);
@@ -1150,14 +1153,14 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
         fasp_blas_dstr_mxv(A,ph,v);
         rtv = fasp_blas_darray_dotprod(m,rt,v);
         
-        if (( rtv==0.0 )||( ABS(rtv) > DBL_MAX )){
+        if (( rtv==0.0 )||( ABS(rtv) > DBL_MAX )) {
             flag = 4;
             goto FINISHED;
         }
         
         alpha = rho/rtv;
         
-        if ( ABS(alpha) > DBL_MAX ){
+        if ( ABS(alpha) > DBL_MAX ) {
             flag = 4;
             ITS_DIVZERO;
             goto FINISHED;
@@ -1213,12 +1216,12 @@ INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
             }
         }
         
-        if ( stag >= maxstagsteps){
+        if ( stag >= maxstagsteps ) {
             flag = 3;
             goto FINISHED;
         }
         
-        if (normr_act < normrmin )      // update minimal norm quantities
+        if ( normr_act < normrmin )      // update minimal norm quantities
         {
             normrmin = normr_act;
             fasp_darray_cp(m,xhalf,xmin);
@@ -1313,11 +1316,12 @@ FINISHED:  // finish iterative method
         fasp_blas_dstr_aAxpy(-1.0,A,xmin,r);
         normr = fasp_blas_darray_norm2(m,r);
         
-        if ( normr <= normr_act)  {
+        if ( normr <= normr_act ) {
             fasp_darray_cp(m, xmin,x);
             iter = imin;
             relres = normr/n2b;
-        }else {
+        }
+        else {
             iter = iter;
             relres = normr_act/n2b;
         }
@@ -1442,7 +1446,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
     maxstagsteps = 3;
     
     // loop over maxit iterations (unless convergence or failure)
-    for(iter=1;iter <= MaxIt;iter++){
+    for (iter=1;iter <= MaxIt;iter++) {
         
         rho1 = rho;
         rho  = fasp_blas_darray_dotprod(m,rt,r);
@@ -1479,14 +1483,14 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
         mf->fct(mf->data, ph, v);
         rtv = fasp_blas_darray_dotprod(m,rt,v);
         
-        if (( rtv==0.0 )||( ABS(rtv) > DBL_MAX )){
+        if (( rtv==0.0 )||( ABS(rtv) > DBL_MAX )) {
             flag = 4;
             goto FINISHED;
         }
         
         alpha = rho/rtv;
         
-        if ( ABS(alpha) > DBL_MAX ){
+        if ( ABS(alpha) > DBL_MAX ) {
             flag = 4;
             ITS_DIVZERO;
             goto FINISHED;
@@ -1543,12 +1547,12 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
             }
         }
         
-        if ( stag >= maxstagsteps){
+        if ( stag >= maxstagsteps ) {
             flag = 3;
             goto FINISHED;
         }
         
-        if (normr_act < normrmin )      // update minimal norm quantities
+        if ( normr_act < normrmin ) // update minimal norm quantities
         {
             normrmin = normr_act;
             fasp_darray_cp(m,xhalf,xmin);
@@ -1571,7 +1575,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
         mf->fct(mf->data, sh, t);
         // tt = t' * t;
         tt = fasp_blas_darray_dotprod(m,t,t);
-        if ((tt == 0) ||( tt >= DBL_MAX )){
+        if ((tt == 0) ||( tt >= DBL_MAX )) {
             flag = 4;
             goto FINISHED;
         }
@@ -1598,7 +1602,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
         normr_act = normr;
         
         // check for convergence
-        if ( (normr <= tolb)||(stag >= maxstagsteps)||moresteps)
+        if ( (normr <= tolb)||(stag >= maxstagsteps)||moresteps )
         {
             // normr_act = norm(r);
             // r = b-A*x
@@ -1612,7 +1616,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
             }
             else
             {
-                if ((stag >= maxstagsteps) && (moresteps == 0))       stag = 0;
+                if ((stag >= maxstagsteps) && (moresteps == 0)) stag = 0;
                 
                 moresteps = moresteps + 1;
                 if (moresteps >= maxmsteps)
@@ -1623,7 +1627,7 @@ INT fasp_solver_pbcgs (mxv_matfree *mf,
             }
         }
         
-        if (normr_act < normrmin)       // update minimal norm quantities
+        if (normr_act < normrmin) // update minimal norm quantities
         {
             normrmin = normr_act;
             fasp_darray_cp(m,x,xmin);
@@ -1651,11 +1655,12 @@ FINISHED:  // finish iterative method
         fasp_blas_darray_axpby(m, 1.0, bval, -1.0, r);
         normr = fasp_blas_darray_norm2(m,r);
         
-        if ( normr <= normr_act)  {
+        if ( normr <= normr_act ) {
             fasp_darray_cp(m, xmin,x);
             iter = imin;
             relres = normr/n2b;
-        }else {
+        }
+        else {
             iter = iter;
             relres = normr_act/n2b;
         }

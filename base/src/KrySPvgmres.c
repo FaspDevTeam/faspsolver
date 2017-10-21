@@ -7,7 +7,8 @@
  *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxVector.c, BlaArray.c,
  *         BlaSpmvBLC.c, BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
  *
- *  \note See KryPvgmres.c a version without safety net
+ *  \note  The `best' iterative solution will be saved and used upon exit;
+ *         See KryPvgmres.c a version without safety net
  *
  *  Reference:
  *         A.H. Baker, E.R. Jessup, and Tz.V. Kolev
