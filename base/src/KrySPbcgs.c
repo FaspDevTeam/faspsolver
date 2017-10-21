@@ -6,7 +6,8 @@
  *         AuxArray.c, AuxMemory.c, AuxMessage.c, AuxVector.c, BlaArray.c,
  *         BlaSpmvBLC.c, BlaSpmvBSR.c, BlaSpmvCSR.c, and BlaSpmvSTR.c
  *
- *  \note See KryPbcgs.c for a version without safety net
+ *  \note  The `best' iterative solution will be saved and used upon exit;
+ *         See KryPbcgs.c for a version without safety net
  *
  *  Reference:
  *         Y. Saad 2003
@@ -77,7 +78,7 @@ INT fasp_solver_dcsr_spbcgs (const dCSRmat  *A,
     REAL         alpha, beta, omega, temp1, temp2;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, normd, tempr, infnormu;
+    REAL         reldiff, factor, normd, tempr, normuinf;
     REAL         *uval = u->val, *bval = b->val;
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
@@ -253,8 +254,8 @@ INT fasp_solver_dcsr_spbcgs (const dCSRmat  *A,
         fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
-        infnormu = fasp_blas_darray_norminf(m, uval);
-        if ( infnormu <= sol_inf_tol ) {
+        normuinf = fasp_blas_darray_norminf(m, uval);
+        if ( normuinf <= sol_inf_tol ) {
             if ( PrtLvl > PRINT_MIN ) ITS_ZEROSOL;
             iter = ERROR_SOLVER_SOLSTAG;
             goto FINISHED;
@@ -468,7 +469,7 @@ INT fasp_solver_dbsr_spbcgs (const dBSRmat  *A,
     REAL         alpha, beta, omega, temp1, temp2;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, normd, tempr, infnormu;
+    REAL         reldiff, factor, normd, tempr, normuinf;
     REAL         *uval = u->val, *bval = b->val;
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
@@ -644,8 +645,8 @@ INT fasp_solver_dbsr_spbcgs (const dBSRmat  *A,
         fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
-        infnormu = fasp_blas_darray_norminf(m, uval);
-        if ( infnormu <= sol_inf_tol ) {
+        normuinf = fasp_blas_darray_norminf(m, uval);
+        if ( normuinf <= sol_inf_tol ) {
             if ( PrtLvl > PRINT_MIN ) ITS_ZEROSOL;
             iter = ERROR_SOLVER_SOLSTAG;
             goto FINISHED;
@@ -859,7 +860,7 @@ INT fasp_solver_dblc_spbcgs (const dBLCmat  *A,
     REAL         alpha, beta, omega, temp1, temp2;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, normd, tempr, infnormu;
+    REAL         reldiff, factor, normd, tempr, normuinf;
     REAL         *uval = u->val, *bval = b->val;
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
@@ -1035,8 +1036,8 @@ INT fasp_solver_dblc_spbcgs (const dBLCmat  *A,
         fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
-        infnormu = fasp_blas_darray_norminf(m, uval);
-        if ( infnormu <= sol_inf_tol ) {
+        normuinf = fasp_blas_darray_norminf(m, uval);
+        if ( normuinf <= sol_inf_tol ) {
             if ( PrtLvl > PRINT_MIN ) ITS_ZEROSOL;
             iter = ERROR_SOLVER_SOLSTAG;
             goto FINISHED;
@@ -1250,7 +1251,7 @@ INT fasp_solver_dstr_spbcgs (const dSTRmat  *A,
     REAL         alpha, beta, omega, temp1, temp2;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
     REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, normd, tempr, infnormu;
+    REAL         reldiff, factor, normd, tempr, normuinf;
     REAL         *uval = u->val, *bval = b->val;
     INT          iter_best = 0; // initial best known iteration
     REAL         absres_best = BIGREAL; // initial best known residual
@@ -1426,8 +1427,8 @@ INT fasp_solver_dstr_spbcgs (const dSTRmat  *A,
         fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         // Check I: if soultion is close to zero, return ERROR_SOLVER_SOLSTAG
-        infnormu = fasp_blas_darray_norminf(m, uval);
-        if ( infnormu <= sol_inf_tol ) {
+        normuinf = fasp_blas_darray_norminf(m, uval);
+        if ( normuinf <= sol_inf_tol ) {
             if ( PrtLvl > PRINT_MIN ) ITS_ZEROSOL;
             iter = ERROR_SOLVER_SOLSTAG;
             goto FINISHED;

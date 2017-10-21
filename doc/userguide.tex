@@ -71,7 +71,7 @@
 
 \author{FASP Developers}
 
-\date{\vfill Version 2.0.3} % Activate to display a given date or no date
+\date{\vfill Version 2.0.5} % Activate to display a given date or no date
 
 \begin{document}
 
@@ -1241,13 +1241,13 @@ The names of the input arguments explain themselves mostly and they are explaine
 
 We briefly discuss how to call this function; and, once you understand PCG, you can easily call other Krylov-type iterative methods.
 %
-\lstinputlisting[firstnumber=476,firstline=476,lastline=489]{../base/src/SolCSR.c}
+\lstinputlisting[firstnumber=477,firstline=477,lastline=490]{../base/src/SolCSR.c}
 %
 Now we explain this code segment a little bit:
 \begin{itemize}
-\item Line 477--478 performs the setup phase for ILU method. The particular type of ILU method is determined by ``\verb|iluparam|''; see \S\ref{sec:parameters}. Line 7 performs a simple memory check for ILU.
-\item Line 484--486 defines the preconditioner data structure ``\verb|pc|'', which contains two parts: one is the actual preconditioning action ``\verb|pc.fct|'', the other is the auxiliary data which is needed to perform the preconditioning action ``\verb|pc.data|''.
-\item Line 489 calls iterative methods. ``A'' is the matrix in dCSRmat format; ``b'' and ``x'' are the right-hand side and the solution vectors, respectively. Similar to ILU setup, the type of iterative methods is determined by ``\verb|itparam|''.
+\item Line 478--479 performs the setup phase for ILU method. The particular type of ILU method is determined by ``\verb|iluparam|''; see \S\ref{sec:parameters}. Line 7 performs a simple memory check for ILU.
+\item Line 485--487 defines the preconditioner data structure ``\verb|pc|'', which contains two parts: one is the actual preconditioning action ``\verb|pc.fct|'', the other is the auxiliary data which is needed to perform the preconditioning action ``\verb|pc.data|''.
+\item Line 490 calls iterative methods. ``A'' is the matrix in dCSRmat format; ``b'' and ``x'' are the right-hand side and the solution vectors, respectively. Similar to ILU setup, the type of iterative methods is determined by ``\verb|itparam|''.
 \end{itemize}
 
 Apparently, we should now explain the data structure ``\verb|itparam|''.
@@ -1256,7 +1256,7 @@ Apparently, we should now explain the data structure ``\verb|itparam|''.
 %
 Possible ``\verb|itsolver_type|'' includes:
 %
-\lstinputlisting[language=C,numbers=none,firstline=96,lastline=120]{../base/include/fasp_const.h}
+\lstinputlisting[language=C,numbers=none,firstline=97,lastline=120]{../base/include/fasp_const.h}
 %
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1309,7 +1309,7 @@ OpenMP\footnote{Official website: \url{http://openmp.org/}} (Open Multiprocessin
 NOTE: By default, OpenMP is disabled in FASP. In order to turn it on, you need to modify FASP.mk slightly as follows.
 \end{snugshade}
 
-To enable OpenMP support in FASP, you can simply use the config option
+To enable OpenMP support in FASP, you can simply use the following option during the configuration stage of cmake:
 %
 \begin{lstlisting}[numbers=none]
 $ make config openmp=yes
@@ -1321,10 +1321,15 @@ If you do not have ``FASP.mk'' file, just copy ``FASP.mk.example'' to
 ``FASP.mk''. Then set ``openmp'' to ``yes'' on line 44 ``FASP.mk'':
 \lstinputlisting[language=sh,firstnumber=37,firstline=37,lastline=45]{../FASP.mk.example}
 
-After you build FASP with ``openmp=yes'', OpenMP is turned on and the number of threads is determined by the environment variable OMP\_NUM\_THREADS. For example, to use 8 threads in {\color{red} sh/bash}, you need to set:
+After you build FASP with ``openmp=yes'', OpenMP is turned on and the number of threads is determined by the environment variable OMP\_NUM\_THREADS. For example, to use 8 threads in {\color{red} sh/bash} on a Linux or Mac OS X machine, you need to set:
 \begin{lstlisting}[numbers=none]
 $ export OMP_NUM_THREADS=8
 \end{lstlisting}
+On a Windows computer, you need to use 
+\begin{lstlisting}[numbers=none]
+C:\FASP> set OMP_NUM_THREADS=8
+\end{lstlisting}
+in order to use eight threads for the current sessions. In case you need to use eight threads by default, you should set it as a system environment variable. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Predefined constants}\label{sec:const}

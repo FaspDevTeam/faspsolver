@@ -339,7 +339,7 @@ int main (int argc, const char * argv[])
             check_solu(&x, &sol, tolerance);
         }
         
-        if ( indp==1 || indp==2 ) {
+        if ( indp==1 || indp==2 || indp==3 ) {
             /* CG */
             printf("------------------------------------------------------------------\n");
             printf("CG solver ...\n");  
@@ -354,7 +354,22 @@ int main (int argc, const char * argv[])
             
             check_solu(&x, &sol, tolerance);
         }
-        
+
+        if ( indp==1 || indp==2 || indp==3 ) {
+            /* CG safe */
+            printf("------------------------------------------------------------------\n");
+            printf("CG solver with safe-net ...\n");
+
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            itparam.maxit         = 5000;
+            itparam.tol           = 1e-12;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_s(&A, &b, &x, &itparam);
+
+            check_solu(&x, &sol, tolerance);
+        }
+
         if ( indp==1 || indp==2 ) {
             /* BiCGstab */
             printf("------------------------------------------------------------------\n");
@@ -371,7 +386,7 @@ int main (int argc, const char * argv[])
             
             check_solu(&x, &sol, tolerance);
         }
-        
+
         if ( indp==1 || indp==2 ) {
             /* MINRES */
             printf("------------------------------------------------------------------\n");
@@ -386,6 +401,23 @@ int main (int argc, const char * argv[])
             itparam.print_level   = print_level;
             fasp_solver_dcsr_krylov(&A, &b, &x, &itparam);
             
+            check_solu(&x, &sol, tolerance);
+        }
+
+        if ( indp==1 || indp==2 ) {
+            /* MINRES safe */
+            printf("------------------------------------------------------------------\n");
+            printf("MINRES solver with safe-net ...\n");
+
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            itparam.precond_type  = PREC_NULL;
+            itparam.itsolver_type = SOLVER_MinRes;
+            itparam.maxit         = 5000;
+            itparam.tol           = 1e-12;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_s(&A, &b, &x, &itparam);
+
             check_solu(&x, &sol, tolerance);
         }
 
@@ -405,7 +437,24 @@ int main (int argc, const char * argv[])
             
             check_solu(&x, &sol, tolerance);
         }
-        
+
+        if ( indp==1 || indp==2 ) {
+            /* GMRES safe */
+            printf("------------------------------------------------------------------\n");
+            printf("GMRES solver with safe-net ...\n");
+
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            itparam.precond_type  = PREC_NULL;
+            itparam.itsolver_type = SOLVER_GMRES;
+            itparam.maxit         = 5000;
+            itparam.tol           = 1e-12;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_s(&A, &b, &x, &itparam);
+
+            check_solu(&x, &sol, tolerance);
+        }
+
         if ( indp==1 || indp==2 ) {
             /* VGMRES */
             printf("------------------------------------------------------------------\n");
@@ -423,6 +472,23 @@ int main (int argc, const char * argv[])
             check_solu(&x, &sol, tolerance);
         }
         
+        if ( indp==1 || indp==2 ) {
+            /* VGMRES safe */
+            printf("------------------------------------------------------------------\n");
+            printf("VGMRES solver with safe-net ...\n");
+
+            fasp_dvec_set(b.row, &x, 0.0); // reset initial guess
+            fasp_param_solver_init(&itparam);
+            itparam.precond_type  = PREC_NULL;
+            itparam.itsolver_type = SOLVER_VGMRES;
+            itparam.maxit         = 5000;
+            itparam.tol           = 1e-12;
+            itparam.print_level   = print_level;
+            fasp_solver_dcsr_krylov_s(&A, &b, &x, &itparam);
+
+            check_solu(&x, &sol, tolerance);
+        }
+
         if ( indp==1 || indp==2 ) {
             /* VFGMRES */
             printf("------------------------------------------------------------------\n");

@@ -8,7 +8,8 @@
  *
  *  \note  See also pgmres.c for a variable restarting version.
  *
- *  \note  See KryPgmres.c for a version without safety net
+ *  \note  The `best' iterative solution will be saved and used upon exit;
+ *         See KryPgmres.c for a version without safety net
  *
  *  Reference:
  *         Y. Saad 2003

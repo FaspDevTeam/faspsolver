@@ -4,7 +4,7 @@
  *
  *  \note  This file contains Level-5 (Sol) functions. It requires:
  *         AuxMemory.c, AuxMessage.c, AuxParam.c, AuxTiming.c, AuxVector.c,
- *         BlaILUSetupCSR.c, BlaSchwarzSetup.c, BlaSparseCheck.c, BlaSparseCSR.c, 
+ *         BlaILUSetupCSR.c, BlaSchwarzSetup.c, BlaSparseCheck.c, BlaSparseCSR.c,
  *         KryPbcgs.c, KryPcg.c, KryPgcg.c, KryPgcr.c, KryPgmres.c, KryPminres.c,
  *         KryPvfgmres.c, KryPvgmres.c, PreAMGSetupRS.c, PreAMGSetupSA.c,
  *         PreAMGSetupUA.c, PreCSR.c, and PreDataInit.c
@@ -52,8 +52,6 @@
  *
  * \author Chensong Zhang
  * \date   09/25/2009
- *
- * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
 INT fasp_solver_dcsr_itsolver (dCSRmat    *A,
                                dvector    *b,
@@ -140,6 +138,97 @@ INT fasp_solver_dcsr_itsolver (dCSRmat    *A,
 }
 
 /**
+ * \fn INT fasp_solver_dcsr_itsolver_s (dCSRmat *A, dvector *b, dvector *x,
+ *                                      precond *pc, ITS_param *itparam)
+ *
+ * \brief Solve Ax=b by preconditioned Krylov methods with safe-net for CSR matrices
+ *
+ * \note  This is an abstract interface for iterative methods.
+ *
+ * \param A        Pointer to the coeff matrix in dCSRmat format
+ * \param b        Pointer to the right hand side in dvector format
+ * \param x        Pointer to the approx solution in dvector format
+ * \param pc       Pointer to the preconditioning action
+ * \param itparam  Pointer to parameters for iterative solvers
+ *
+ * \return         Iteration number if converges; ERROR otherwise.
+ *
+ * \author Chensong Zhang
+ * \date   10/21/2017
+ */
+INT fasp_solver_dcsr_itsolver_s (dCSRmat    *A,
+                                 dvector    *b,
+                                 dvector    *x,
+                                 precond    *pc,
+                                 ITS_param  *itparam)
+{
+    const SHORT prtlvl        = itparam->print_level;
+    const SHORT itsolver_type = itparam->itsolver_type;
+    const SHORT stop_type     = itparam->stop_type;
+    const SHORT restart       = itparam->restart;
+    const INT   MaxIt         = itparam->maxit;
+    const REAL  tol           = itparam->tol;
+
+    /* Local Variables */
+    REAL solver_start, solver_end, solver_duration;
+    INT iter;
+
+    fasp_gettime(&solver_start);
+
+#if DEBUG_MODE > 0
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
+    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
+#endif
+
+    /* check matrix data */
+    fasp_check_dCSRmat(A);
+
+    /* Safe-guard checks on parameters */
+    ITS_CHECK ( MaxIt, tol );
+
+    /* Choose a desirable Krylov iterative solver */
+    switch ( itsolver_type ) {
+        case SOLVER_CG:
+            iter = fasp_solver_dcsr_spcg(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
+            break;
+
+        case SOLVER_BiCGstab:
+            iter = fasp_solver_dcsr_spbcgs(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
+            break;
+
+        case SOLVER_MinRes:
+            iter = fasp_solver_dcsr_spminres(A, b, x, pc, tol, MaxIt, stop_type, prtlvl);
+            break;
+
+        case SOLVER_GMRES:
+            iter = fasp_solver_dcsr_spgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
+            break;
+
+        case SOLVER_VGMRES:
+            iter = fasp_solver_dcsr_spvgmres(A, b, x, pc, tol, MaxIt, restart, stop_type, prtlvl);
+            break;
+
+        default:
+            printf("### ERROR: Unknown iterative solver type %d! [%s]\n",
+                   itsolver_type, __FUNCTION__);
+            return ERROR_SOLVER_TYPE;
+
+    }
+
+    if ( (prtlvl >= PRINT_SOME) && (iter >= 0) ) {
+        fasp_gettime(&solver_end);
+        solver_duration = solver_end - solver_start;
+        fasp_cputime("Iterative method", solver_duration);
+    }
+
+#if DEBUG_MODE > 0
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
+#endif
+
+    return iter;
+}
+
+/**
  * \fn INT fasp_solver_dcsr_krylov (dCSRmat *A, dvector *b, dvector *x,
  *                                  ITS_param *itparam)
  *
@@ -186,6 +275,56 @@ INT fasp_solver_dcsr_krylov (dCSRmat    *A,
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
+    return status;
+}
+
+/**
+ * \fn INT fasp_solver_dcsr_krylov_s (dCSRmat *A, dvector *b, dvector *x,
+ *                                    ITS_param *itparam)
+ *
+ * \brief Solve Ax=b by standard Krylov methods with safe-net for CSR matrices
+ *
+ * \param A        Pointer to the coeff matrix in dCSRmat format
+ * \param b        Pointer to the right hand side in dvector format
+ * \param x        Pointer to the approx solution in dvector format
+ * \param itparam  Pointer to parameters for iterative solvers
+ *
+ * \return         Iteration number if converges; ERROR otherwise.
+ *
+ * \author Chensong Zhang
+ * \date   10/22/2017
+ */
+INT fasp_solver_dcsr_krylov_s (dCSRmat    *A,
+                               dvector    *b,
+                               dvector    *x,
+                               ITS_param  *itparam)
+{
+    const SHORT prtlvl = itparam->print_level;
+
+    /* Local Variables */
+    INT      status = FASP_SUCCESS;
+    REAL     solver_start, solver_end, solver_duration;
+
+#if DEBUG_MODE > 0
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
+    printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
+    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
+#endif
+
+    fasp_gettime(&solver_start);
+
+    status = fasp_solver_dcsr_itsolver_s (A,b,x,NULL,itparam);
+
+    if ( prtlvl >= PRINT_MIN ) {
+        fasp_gettime(&solver_end);
+        solver_duration = solver_end - solver_start;
+        fasp_cputime("Krylov method totally", solver_duration);
+    }
+
+#if DEBUG_MODE > 0
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
+#endif
+
     return status;
 }
 
@@ -279,57 +418,57 @@ INT fasp_solver_dcsr_krylov_swz (dCSRmat    *A,
     swzparam.SWZ_maxlvl    = schparam->SWZ_maxlvl;
     swzparam.SWZ_type      = schparam->SWZ_type;
     swzparam.SWZ_blksolver = schparam->SWZ_blksolver;
-        
+
     const SHORT prtlvl = itparam->print_level;
-	
+
     REAL setup_start, setup_end, setup_duration;
     REAL solver_start, solver_end, solver_duration;
     INT status = FASP_SUCCESS;
-	
+
 #if DEBUG_MODE > 0
-	printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
-	printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
-	printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
+    printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
+    printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
-	fasp_gettime(&setup_start);
+    fasp_gettime(&setup_start);
     
-	// setup preconditioner
-	SWZ_data SWZ_data;
-	
-	// symmetrize the matrix (get rid of this later)
-	SWZ_data.A = fasp_dcsr_sympart(A);
-	
-	// construct Schwarz precondtioner
-	fasp_dcsr_shift (&SWZ_data.A, 1);
-	fasp_swz_dcsr_setup (&SWZ_data, &swzparam);
-	
-	fasp_gettime (&setup_end);
-	setup_duration = setup_end - setup_start;
+    // setup preconditioner
+    SWZ_data SWZ_data;
+
+    // symmetrize the matrix (get rid of this later)
+    SWZ_data.A = fasp_dcsr_sympart(A);
+
+    // construct Schwarz precondtioner
+    fasp_dcsr_shift (&SWZ_data.A, 1);
+    fasp_swz_dcsr_setup (&SWZ_data, &swzparam);
+
+    fasp_gettime (&setup_end);
+    setup_duration = setup_end - setup_start;
     printf("SWZ_Krylov method setup %f seconds.\n", setup_duration);
-	
-	precond prec;
-	prec.data = &SWZ_data;
-	prec.fct  = fasp_precond_swz;
-	
-	fasp_gettime(&solver_start);
-	
-	// solver part
-	status = fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);
-	
-	if ( prtlvl > PRINT_NONE ) {
+
+    precond prec;
+    prec.data = &SWZ_data;
+    prec.fct  = fasp_precond_swz;
+
+    fasp_gettime(&solver_start);
+
+    // solver part
+    status = fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);
+
+    if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&solver_end);
         solver_duration = solver_end - solver_start;
         printf("SWZ_Krylov method totally %f seconds.\n", solver_duration);
-	}
-	
+    }
+
 #if DEBUG_MODE > 0
-	printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
-	
-	fasp_swz_data_free(&SWZ_data);
-	
-	return status;
+
+    fasp_swz_data_free(&SWZ_data);
+
+    return status;
 }
 
 /**

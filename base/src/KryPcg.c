@@ -112,8 +112,8 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
     // local variables
     INT          iter = 0, stag = 1, more_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
-    REAL         relres  = BIGREAL, unorm2 = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, unorminf;
+    REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, normuinf;
     REAL         alpha, beta, temp1, temp2;
     
     // allocate temp memory (need 4*m REAL numbers)
@@ -151,8 +151,8 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
             break;
         case STOP_MOD_REL_RES:
             absres0 = fasp_blas_darray_norm2(m,r);
-            unorm2  = MAX(SMALLREAL,fasp_blas_darray_norm2(m,u->val));
-            relres  = absres0/unorm2;
+            normu   = MAX(SMALLREAL,fasp_blas_darray_norm2(m,u->val));
+            relres  = absres0/normu;
             break;
         default:
             printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
@@ -206,7 +206,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
                 break;
             case STOP_MOD_REL_RES:
                 absres = fasp_blas_darray_norm2(m,r);
-                relres = absres/unorm2;
+                relres = absres/normu;
                 break;
         }
         
@@ -216,21 +216,21 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
         // output iteration information if needed
         fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
-        if ( factor > 0.9 ) {
+        if ( factor > 0.9 ) { // Only check when converge slowly
             
             // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
-            unorminf = fasp_blas_darray_norminf(m, u->val);
-            if ( unorminf <= sol_inf_tol ) {
+            normuinf = fasp_blas_darray_norminf(m, u->val);
+            if ( normuinf <= sol_inf_tol ) {
                 if ( PrtLvl > PRINT_MIN ) ITS_ZEROSOL;
                 iter = ERROR_SOLVER_SOLSTAG;
                 break;
             }
             
             // Check II: if stagnated, try to restart
-            unorm2 = fasp_blas_darray_norm2(m, u->val);
+            normu = fasp_blas_darray_norm2(m, u->val);
             
             // compute relative difference
-            reldiff = ABS(alpha)*fasp_blas_darray_norm2(m,p)/unorm2;
+            reldiff = ABS(alpha)*fasp_blas_darray_norm2(m,p)/normu;
             if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
                 
                 if ( PrtLvl >= PRINT_MORE ) {
@@ -258,7 +258,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
                         break;
                     case STOP_MOD_REL_RES:
                         absres = fasp_blas_darray_norm2(m,r);
-                        relres = absres/unorm2;
+                        relres = absres/normu;
                         break;
                 }
                 
@@ -306,7 +306,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
                     break;
                 case STOP_MOD_REL_RES:
                     absres = fasp_blas_darray_norm2(m,r);
-                    relres = absres/unorm2;
+                    relres = absres/normu;
                     break;
             }
             
@@ -404,8 +404,8 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
     // local variables
     INT          iter = 0, stag = 1, more_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
-    REAL         relres  = BIGREAL, unorm2 = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, unorminf;
+    REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, normuinf;
     REAL         alpha, beta, temp1, temp2;
     
     // allocate temp memory (need 4*m REAL numbers)
@@ -443,8 +443,8 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
             break;
         case STOP_MOD_REL_RES:
             absres0 = fasp_blas_darray_norm2(m,r);
-            unorm2  = MAX(SMALLREAL,fasp_blas_darray_norm2(m,u->val));
-            relres  = absres0/unorm2;
+            normu   = MAX(SMALLREAL,fasp_blas_darray_norm2(m,u->val));
+            relres  = absres0/normu;
             break;
         default:
             printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
@@ -498,7 +498,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
                 break;
             case STOP_MOD_REL_RES:
                 absres = fasp_blas_darray_norm2(m,r);
-                relres = absres/unorm2;
+                relres = absres/normu;
                 break;
         }
         
@@ -508,21 +508,21 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
         // output iteration information if needed
         fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
-        if ( factor > 0.9 ) {
-            
+        if ( factor > 0.9 ) { // Only check when converge slowly
+
             // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
-            unorminf = fasp_blas_darray_norminf(m, u->val);
-            if ( unorminf <= sol_inf_tol ) {
+            normuinf = fasp_blas_darray_norminf(m, u->val);
+            if ( normuinf <= sol_inf_tol ) {
                 if ( PrtLvl > PRINT_MIN ) ITS_ZEROSOL;
                 iter = ERROR_SOLVER_SOLSTAG;
                 break;
             }
             
             // Check II: if stagnated, try to restart
-            unorm2 = fasp_blas_darray_norm2(m, u->val);
+            normu = fasp_blas_darray_norm2(m, u->val);
             
             // compute relative difference
-            reldiff = ABS(alpha)*fasp_blas_darray_norm2(m,p)/unorm2;
+            reldiff = ABS(alpha)*fasp_blas_darray_norm2(m,p)/normu;
             if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
                 
                 if ( PrtLvl >= PRINT_MORE ) {
@@ -550,7 +550,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
                         break;
                     case STOP_MOD_REL_RES:
                         absres = fasp_blas_darray_norm2(m,r);
-                        relres = absres/unorm2;
+                        relres = absres/normu;
                         break;
                 }
                 
@@ -598,7 +598,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
                     break;
                 case STOP_MOD_REL_RES:
                     absres = fasp_blas_darray_norm2(m,r);
-                    relres = absres/unorm2;
+                    relres = absres/normu;
                     break;
             }
             
@@ -698,8 +698,8 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
     // local variables
     INT          iter = 0, stag = 1, more_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
-    REAL         relres  = BIGREAL, unorm2 = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, unorminf;
+    REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, normuinf;
     REAL         alpha, beta, temp1, temp2;
     
     // allocate temp memory (need 4*m REAL numbers)
@@ -737,8 +737,8 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
             break;
         case STOP_MOD_REL_RES:
             absres0 = fasp_blas_darray_norm2(m,r);
-            unorm2  = MAX(SMALLREAL,fasp_blas_darray_norm2(m,u->val));
-            relres  = absres0/unorm2;
+            normu   = MAX(SMALLREAL,fasp_blas_darray_norm2(m,u->val));
+            relres  = absres0/normu;
             break;
         default:
             printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
@@ -792,7 +792,7 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
                 break;
             case STOP_MOD_REL_RES:
                 absres = fasp_blas_darray_norm2(m,r);
-                relres = absres/unorm2;
+                relres = absres/normu;
                 break;
         }
         
@@ -802,21 +802,21 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
         // output iteration information if needed
         fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
-        if ( factor > 0.9 ) {
-            
+        if ( factor > 0.9 ) { // Only check when converge slowly
+
             // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
-            unorminf = fasp_blas_darray_norminf(m, u->val);
-            if ( unorminf <= sol_inf_tol ) {
+            normuinf = fasp_blas_darray_norminf(m, u->val);
+            if ( normuinf <= sol_inf_tol ) {
                 if ( PrtLvl > PRINT_MIN ) ITS_ZEROSOL;
                 iter = ERROR_SOLVER_SOLSTAG;
                 break;
             }
             
             // Check II: if stagnated, try to restart
-            unorm2 = fasp_blas_darray_norm2(m, u->val);
+            normu = fasp_blas_darray_norm2(m, u->val);
             
             // compute relative difference
-            reldiff = ABS(alpha)*fasp_blas_darray_norm2(m,p)/unorm2;
+            reldiff = ABS(alpha)*fasp_blas_darray_norm2(m,p)/normu;
             if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
                 
                 if ( PrtLvl >= PRINT_MORE ) {
@@ -844,7 +844,7 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
                         break;
                     case STOP_MOD_REL_RES:
                         absres = fasp_blas_darray_norm2(m,r);
-                        relres = absres/unorm2;
+                        relres = absres/normu;
                         break;
                 }
                 
@@ -892,7 +892,7 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
                     break;
                 case STOP_MOD_REL_RES:
                     absres = fasp_blas_darray_norm2(m,r);
-                    relres = absres/unorm2;
+                    relres = absres/normu;
                     break;
             }
             
@@ -992,8 +992,8 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
     // local variables
     INT          iter = 0, stag = 1, more_step = 1;
     REAL         absres0 = BIGREAL, absres = BIGREAL;
-    REAL         relres  = BIGREAL, unorm2 = BIGREAL, normr0 = BIGREAL;
-    REAL         reldiff, factor, unorminf;
+    REAL         relres  = BIGREAL, normu  = BIGREAL, normr0 = BIGREAL;
+    REAL         reldiff, factor, normuinf;
     REAL         alpha, beta, temp1, temp2;
     
     // allocate temp memory (need 4*m REAL numbers)
@@ -1031,8 +1031,8 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
             break;
         case STOP_MOD_REL_RES:
             absres0 = fasp_blas_darray_norm2(m,r);
-            unorm2  = MAX(SMALLREAL,fasp_blas_darray_norm2(m,u->val));
-            relres  = absres0/unorm2;
+            normu   = MAX(SMALLREAL,fasp_blas_darray_norm2(m,u->val));
+            relres  = absres0/normu;
             break;
         default:
             printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
@@ -1086,7 +1086,7 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
                 break;
             case STOP_MOD_REL_RES:
                 absres = fasp_blas_darray_norm2(m,r);
-                relres = absres/unorm2;
+                relres = absres/normu;
                 break;
         }
         
@@ -1096,21 +1096,21 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
         // output iteration information if needed
         fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
-        if ( factor > 0.9 ) {
-            
+        if ( factor > 0.9 ) { // Only check when converge slowly
+
             // Check I: if solution is close to zero, return ERROR_SOLVER_SOLSTAG
-            unorminf = fasp_blas_darray_norminf(m, u->val);
-            if ( unorminf <= sol_inf_tol ) {
+            normuinf = fasp_blas_darray_norminf(m, u->val);
+            if ( normuinf <= sol_inf_tol ) {
                 if ( PrtLvl > PRINT_MIN ) ITS_ZEROSOL;
                 iter = ERROR_SOLVER_SOLSTAG;
                 break;
             }
             
             // Check II: if stagnated, try to restart
-            unorm2 = fasp_blas_darray_norm2(m, u->val);
+            normu = fasp_blas_darray_norm2(m, u->val);
             
             // compute relative difference
-            reldiff = ABS(alpha)*fasp_blas_darray_norm2(m,p)/unorm2;
+            reldiff = ABS(alpha)*fasp_blas_darray_norm2(m,p)/normu;
             if ( (stag <= MaxStag) & (reldiff < maxdiff) ) {
                 
                 if ( PrtLvl >= PRINT_MORE ) {
@@ -1138,7 +1138,7 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
                         break;
                     case STOP_MOD_REL_RES:
                         absres = fasp_blas_darray_norm2(m,r);
-                        relres = absres/unorm2;
+                        relres = absres/normu;
                         break;
                 }
                 
@@ -1186,7 +1186,7 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
                     break;
                 case STOP_MOD_REL_RES:
                     absres = fasp_blas_darray_norm2(m,r);
-                    relres = absres/unorm2;
+                    relres = absres/normu;
                     break;
             }
             

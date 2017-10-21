@@ -2555,10 +2555,21 @@ INT fasp_solver_dcsr_itsolver (dCSRmat    *A,
                                precond    *pc,
                                ITS_param  *itparam);
 
+INT fasp_solver_dcsr_itsolver_s (dCSRmat    *A,
+                                 dvector    *b,
+                                 dvector    *x,
+                                 precond    *pc,
+                                 ITS_param  *itparam);
+
 INT fasp_solver_dcsr_krylov (dCSRmat    *A,
                              dvector    *b,
                              dvector    *x,
                              ITS_param  *itparam);
+
+INT fasp_solver_dcsr_krylov_s (dCSRmat    *A,
+                               dvector    *b,
+                               dvector    *x,
+                               ITS_param  *itparam);
 
 INT fasp_solver_dcsr_krylov_diag (dCSRmat    *A,
                                   dvector    *b,

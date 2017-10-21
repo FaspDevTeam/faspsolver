@@ -24,7 +24,7 @@ Documentation
 [ 1.2.4 ] add details for building and installation using cmake and VS
 [ 1.8.1 ] update all the sample codes with the new version
 [ 1.9.8 ] add pairwise aggregation AMG methods as a tutorial example
-[   *   ] add details for the OMP version
+[ 2.0.5 ] add instructions on using the OMP version on Linux/OSX/Windows
 [   *   ] generate a sequence of FASP courses
 
 ========================
@@ -50,10 +50,10 @@ Structure
 [ 1.9.6 ] add Xcode support for faspsolver
 [ 2.0.4 ] format output messages: error, warning, message
 [ 2.0.4 ] format debug messages: DEBUG_MODE
-[   *   ] add subrouties for general purpose tests on matrices and vectors
 [   *   ] add the new sparse matrix data structure: TCSR
 [   *   ] add support for symmetric TCSR format
 [       ] optimize the way for allocating memory in I/O functions
+[       ] add subroutines for general-purpose tests on matrices and vectors
 
 ========================
 GMG 	
@@ -74,26 +74,26 @@ AMG
 [ 1.6.2 ] maximal independent set based on a strength matrix
 [ 1.7.6 ] replace Schwarz smoother by a C version
 [   *   ] matrix-free AMG code
-[   *   ] AMG based on mesh information
-[       ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
-[       ] Tarjan algorithm and other orderings (Xiaozhe)
-[       ] strength matrix based on (polynomial) smoothers (Xiaozhe)
+[       ] AMG based on mesh information
+[       ] polynomial smoothers -- 1/x and Chevbshev
+[       ] Tarjan algorithm and other orderings
+[       ] strength matrix based on (polynomial) smoothers
 
 [ 0.9.0 ] aggressive coarsening strategies
 [ 1.5.0 ] Notay's aggregation scheme
-[       ] aggregation based on MIS (Xiaozhe)
-[       ] cleanup the compatible coarsening (Xiaozhe)
-[       ] LAMG's aggregation scheme (Xiaozhe)
+[       ] aggregation based on MIS
+[       ] cleanup the compatible coarsening
+[       ] LAMG's aggregation scheme
 
 [ 0.8.6 ] standard interpolation
-[       ] polynomial interpolation -- vector preserve (Xiaozhe)
+[       ] polynomial interpolation -- vector preserve
 [       ] multi-pass interpolation
 [       ] long-distance interpolation
 [       ] fix bootstrap interpolation
 
-[       ] estimation of extreme eigenvalues (Xiaozhe)
-[       ] smoothing interpolation by polynomial smoothers (Xiaozhe)
-[       ] interpolation can preserve more kernel vectors (Xiaozhe)
+[       ] estimation of extreme eigenvalues
+[       ] smoothing interpolation by polynomial smoothers
+[       ] interpolation can preserve more kernel vectors
 
 ========================
 Iterative Methods
@@ -106,9 +106,9 @@ Iterative Methods
 [ 1.3.5 ] add safer Krylov iterative methods and improve efficiency
 [ 1.8.6 ] replace the ILU smoothers from SPARSEKIT ver2.0
 [ 1.9.0 ] remove the ILU smoothers from SPARSEKIT ver2.0
-[   *   ] unify KSMs for different data formats
-[   *   ] update KSMs with safe-guard
-[       ] options to replace the standard BLAS
+[   *   ] replace BiCGstab with safe-net (Chunsheng)
+[   *   ] unify KSMs for different data formats using general spmv
+[       ] options to use the standard BLAS
 
 [ 1.1.2 ] add matrix-free iterative methods
 [   *   ] fix stagnation in GCG and check other methods as well
@@ -123,13 +123,11 @@ Performance
 ========================
 
 [ 0.5.0 ] profile and optimize a few core functions: RS, EM
-[   *   ] profile and optimize a few core functions: SA, UA
-
 [ 1.4.6 ] compare performance with hypre
 [ 1.4.6 ] compare performance with SAMG
 [ 1.4.6 ] compare performance with AGMG
-[       ] compare performance with various of compilers on different systems
-[       ] compare performance for different compiler options
+[ 2.0.0 ] compare performance for different compiler options
+[   *   ] profile and optimize a few core functions: SA, UA
 
 ========================
 OpenMP Support
@@ -140,8 +138,8 @@ OpenMP Support
 [ 0.9.5 ] make a uniform OpenMP version
 [ 0.9.5 ] profile and optimize OMP code
 [ 1.1.4 ] Finish OpenMP vesion for some subroutines, such as fasp_blas_dcsr_rap_agg
-[ 1.1.4 ] add black-red smoothing to OMP version
-[       ] add black-red smoothing based on greedy multicolor algorithms (Chunsheng)
+[ 1.1.4 ] add red-black smoothing to OMP version
+[       ] add red-black smoothing based on greedy multicolor algorithms (Chunsheng)
 [       ] add OpenMP for aggregation-type AMG methods
 [       ] reconstruct OMP version: some parts could be simplified
 
@@ -155,7 +153,7 @@ Test and Debug
 [ 1.6.9 ] finish the debug environment construction
 [ 1.9.8 ] add automatic build and test tool on BitBucket
 [ 2.0.3 ] add testgs.c for testing sparse matrix formats
-[       ] look for possible memory leaks and divide-by-zero (Chensong)
+[ 2.0.3 ] look for possible memory leaks and divide-by-zero
 
 ========================
 Examples
@@ -170,7 +168,6 @@ Examples
 [ 0.9.0 ] make online help pages for several tutorial examples
 [ 1.1.2 ] add a test example for matrix-free iterative methods
 [ 1.3.4 ] add a GMG V-cycle tutorial example 
-[       ] add hierachical basis for Poisson (Chensong)
 [       ] add P2-P0 for Stokes (Xiaozhe)
 [       ] add MAC for Stokes (Xiaozhe)
 [       ] add linear elasticity
@@ -201,4 +198,4 @@ Important Bug Fixes
 [ 1.9.9 ] ILUtp setup fails for Matrix-Market Prob 9
 [ 1.9.9 ] fix matrix format problem for Matrix-Market Prob 9
 [ 1.9.9 ] AMG does not pass Matrix-Market Prob 7
-[ 2.0.1 ] Uninitialized parameter which causes OpenMP problem
+[ 2.0.1 ] uninitialized parameter which causes OpenMP problem
