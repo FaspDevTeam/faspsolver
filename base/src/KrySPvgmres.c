@@ -126,12 +126,12 @@ INT fasp_solver_dcsr_spvgmres (const dCSRmat  *A,
     while ( (work == NULL) && (restart > 5 ) ) {
         restart = restart - 5 ;
         work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
-        printf("### WARNING: vGMRES restart number set to %d!\n", restart );
+        printf("### WARNING: vGMRES restart number set to %d!\n", restart);
         restart1 = restart + 1;
     }
     
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
+        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__);
         fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
@@ -507,12 +507,12 @@ INT fasp_solver_dbsr_spvgmres (const dBSRmat  *A,
     while ( (work == NULL) && (restart > 5 ) ) {
         restart = restart - 5 ;
         work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
-        printf("### WARNING: vGMRES restart number set to %d!\n", restart );
+        printf("### WARNING: vGMRES restart number set to %d!\n", restart);
         restart1 = restart + 1;
     }
 
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
+        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__);
         fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
 
@@ -887,12 +887,12 @@ INT fasp_solver_dblc_spvgmres (const dBLCmat  *A,
     while ( (work == NULL) && (restart > 5 ) ) {
         restart = restart - 5 ;
         work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
-        printf("### WARNING: vGMRES restart number set to %d!\n", restart );
+        printf("### WARNING: vGMRES restart number set to %d!\n", restart);
         restart1 = restart + 1;
     }
     
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
+        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__);
         fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
@@ -1268,12 +1268,12 @@ INT fasp_solver_dstr_spvgmres (const dSTRmat  *A,
     while ( (work == NULL) && (restart > 5 ) ) {
         restart = restart - 5 ;
         work = (REAL *) fasp_mem_calloc((restart+4)*(restart+n)+1, sizeof(REAL));
-        printf("### WARNING: vGMRES restart number set to %d!\n", restart );
+        printf("### WARNING: vGMRES restart number set to %d!\n", restart);
         restart1 = restart + 1;
     }
     
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
+        printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__);
         fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     

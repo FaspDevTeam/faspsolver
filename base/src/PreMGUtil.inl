@@ -52,7 +52,8 @@ static inline void fasp_coarse_itsolver (const dCSRmat  *A,
     }
     
     if ( status < 0 && PrtLvl >= PRINT_MORE ) {
-        printf("### WARNING: Coarse level solver failed to converge!\n");
+        printf("### WARNING: Coarse level solver did not converge!\n");
+        printf("### WARNING: Consider to increase maxit to %d!\n", 2*maxit);
     }
 }
 

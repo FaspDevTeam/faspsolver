@@ -48,12 +48,12 @@ Structure
 [ 1.8.4 ] add Intel MKL PARDISO as a direct solver
 [ 1.9.2 ] change filenames according to	package	structure
 [ 1.9.6 ] add Xcode support for faspsolver
+[ 2.0.4 ] format output messages: error, warning, message
+[ 2.0.4 ] format debug messages: DEBUG_MODE
 [   *   ] add subrouties for general purpose tests on matrices and vectors
-[   *   ] format debug messages: DEBUG_MODE
 [   *   ] add the new sparse matrix data structure: TCSR
 [   *   ] add support for symmetric TCSR format
-[       ] format output messages: error, warning, message
-[       ] change the way for allocating memory in I/O functions
+[       ] optimize the way for allocating memory in I/O functions
 
 ========================
 GMG 	
@@ -73,11 +73,11 @@ AMG
 [ 0.8.5 ] non-overlapping/overlapping Schwarz smoother
 [ 1.6.2 ] maximal independent set based on a strength matrix
 [ 1.7.6 ] replace Schwarz smoother by a C version
+[   *   ] matrix-free AMG code
 [   *   ] AMG based on mesh information
 [       ] polynomial smoothers -- 1/x and Chevbshev (Xiaozhe)
 [       ] Tarjan algorithm and other orderings (Xiaozhe)
 [       ] strength matrix based on (polynomial) smoothers (Xiaozhe)
-[       ] matrix-free AMG code
 
 [ 0.9.0 ] aggressive coarsening strategies
 [ 1.5.0 ] Notay's aggregation scheme

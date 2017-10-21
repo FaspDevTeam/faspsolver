@@ -2145,7 +2145,7 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
                             // add jj col to j
                             for ( ii=0; ii <nb2; ii++ )
                                 A_data[j*nb2 +ii] += A_data[ jj*nb2+ii];
-                            printf("### WARNING: Same col indices at %d, col %d (%d %d)\n",
+                            printf("### WARNING: Same col indices at %d, col %d (%d %d)!\n",
                                    i, A_j[j], j, jj );
                             A_j[jj] = -1;
                             count ++;
