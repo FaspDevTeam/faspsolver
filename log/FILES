@@ -1,7 +1,7 @@
     1208 ./base/include/fasp.h
      405 ./base/include/fasp_block.h
      263 ./base/include/fasp_const.h
-    2868 ./base/include/fasp_functs.h
+    2879 ./base/include/fasp_functs.h
       51 ./base/include/fasp_grid.h
     1118 ./base/src/BlaIOUtil.inl
      115 ./base/src/BlaSpmvMatFree.inl
@@ -61,19 +61,19 @@
       94 ./base/src/ItrSmootherCSRcr.c
      649 ./base/src/ItrSmootherCSRpoly.c
     1902 ./base/src/ItrSmootherSTR.c
-    1685 ./base/src/KryPbcgs.c
+    1690 ./base/src/KryPbcgs.c
     1527 ./base/src/KryPcg.c
      350 ./base/src/KryPgcg.c
      460 ./base/src/KryPgcr.c
     1664 ./base/src/KryPgmres.c
-    1658 ./base/src/KryPminres.c
+    1670 ./base/src/KryPminres.c
     1342 ./base/src/KryPvfgmres.c
     1737 ./base/src/KryPvgmres.c
-    1605 ./base/src/KrySPbcgs.c
-    1039 ./base/src/KrySPcg.c
-    1416 ./base/src/KrySPgmres.c
-    1393 ./base/src/KrySPminres.c
-    1568 ./base/src/KrySPvgmres.c
+    1606 ./base/src/KrySPbcgs.c
+    1040 ./base/src/KrySPcg.c
+    1417 ./base/src/KrySPgmres.c
+    1394 ./base/src/KrySPminres.c
+    1569 ./base/src/KrySPvgmres.c
      393 ./base/src/PreAMGCoarsenCR.c
     2088 ./base/src/PreAMGCoarsenRS.c
      881 ./base/src/PreAMGInterp.c
@@ -97,10 +97,10 @@
      144 ./base/src/SolAMG.c
      605 ./base/src/SolBLC.c
      798 ./base/src/SolBSR.c
-     723 ./base/src/SolCSR.c
+     862 ./base/src/SolCSR.c
      116 ./base/src/SolFAMG.c
     1048 ./base/src/SolGMGPoisson.c
      238 ./base/src/SolMatFree.c
      411 ./base/src/SolSTR.c
      322 ./base/src/SolWrapper.c
-   85399 total
+   85571 total
