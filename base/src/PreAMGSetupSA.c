@@ -279,7 +279,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data   *mgl,
     ivector *vertices = (ivector *)fasp_mem_calloc(max_levels,sizeof(ivector));
 
     // each elvel stores the information of the number of aggregations
-    INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
+    INT *num_aggs = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
 
     // each level stores the information of the strongly coupled neighbourhood
     dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
@@ -288,7 +288,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data   *mgl,
     dCSRmat *tentp = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
 
     // Initialize level information
-    for ( i = 0; i < max_levels; ++i ) num_aggregations[i] = 0;
+    for ( i = 0; i < max_levels; ++i ) num_aggs[i] = 0;
 
     mgl[0].near_kernel_dim   = 1;
     mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(REAL*));
@@ -371,7 +371,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data   *mgl,
 
         /*-- Aggregation --*/
         status = aggregation_vmb(&mgl[lvl].A, &vertices[lvl], param, lvl+1,
-                                 &Neighbor[lvl], &num_aggregations[lvl]);
+                                 &Neighbor[lvl], &num_aggs[lvl]);
 
         // Check 1: Did coarsening step succeed?
         if ( status < 0 ) {
@@ -387,7 +387,7 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data   *mgl,
 
         /* -- Form Tentative prolongation --*/
         form_tentative_p(&vertices[lvl], &tentp[lvl], mgl[0].near_kernel_basis,
-                         lvl+1, num_aggregations[lvl]);
+                         lvl+1, num_aggs[lvl]);
 
         /* -- Form smoothed prolongation -- */
         smooth_agg(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param, lvl+1,
@@ -511,10 +511,10 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data   *mgl,
         fasp_cputime("Smoothed aggregation setup", setup_end - setup_start);
     }
 
-    fasp_mem_free(vertices);
-    fasp_mem_free(num_aggregations);
-    fasp_mem_free(Neighbor);
-    fasp_mem_free(tentp);
+    fasp_mem_free(vertices); vertices = NULL;
+    fasp_mem_free(num_aggs); num_aggs = NULL;
+    fasp_mem_free(Neighbor); Neighbor = NULL;
+    fasp_mem_free(tentp);    tentp    = NULL;
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -564,7 +564,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data   *mgl,
     ivector *vertices = (ivector *)fasp_mem_calloc(max_levels,sizeof(ivector));
 
     // each level stores the information of the number of aggregations
-    INT *num_aggregations = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
+    INT *num_aggs = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
 
     // each level stores the information of the strongly coupled neighbourhood
     dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
@@ -573,7 +573,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data   *mgl,
     dCSRmat *tentp = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
     dCSRmat *tentr = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
 
-    for ( i = 0; i < max_levels; ++i ) num_aggregations[i] = 0;
+    for ( i = 0; i < max_levels; ++i ) num_aggs[i] = 0;
 
     mgl[0].near_kernel_dim   = 1;
 
@@ -641,7 +641,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data   *mgl,
 
         /*-- Aggregation --*/
         status = aggregation_vmb(&mgl[lvl].A, &vertices[lvl], param, lvl+1,
-                                 &Neighbor[lvl], &num_aggregations[lvl]);
+                                 &Neighbor[lvl], &num_aggs[lvl]);
 
         // Check 1: Did coarsening step succeeded?
         if ( status < 0 ) {
@@ -654,7 +654,7 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data   *mgl,
 
         /* -- Form Tentative prolongation --*/
         form_tentative_p(&vertices[lvl], &tentp[lvl], mgl[0].near_kernel_basis,
-                         lvl+1, num_aggregations[lvl]);
+                         lvl+1, num_aggs[lvl]);
 
         /* -- Form smoothed prolongation -- */
         smooth_agg(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param, lvl+1,
@@ -764,11 +764,11 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data   *mgl,
         fasp_cputime("Smoothed aggregation 1/2 setup", setup_end - setup_start);
     }
 
-    fasp_mem_free(vertices);
-    fasp_mem_free(num_aggregations);
-    fasp_mem_free(Neighbor);
-    fasp_mem_free(tentp);
-    fasp_mem_free(tentr);
+    fasp_mem_free(vertices); vertices = NULL;
+    fasp_mem_free(num_aggs); num_aggs = NULL;
+    fasp_mem_free(Neighbor); Neighbor = NULL;
+    fasp_mem_free(tentp);    tentp    = NULL;
+    fasp_mem_free(tentr);    tentr    = NULL;
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);

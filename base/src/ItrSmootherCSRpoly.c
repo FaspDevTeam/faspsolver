@@ -129,20 +129,19 @@ void fasp_smoother_dcsr_poly (dCSRmat *Amat,
 #endif   
     
     // free memory
-    fasp_mem_free(Dinv);
-    fasp_mem_free(r);
-    fasp_mem_free(rbar);
-    fasp_mem_free(v0);
-    fasp_mem_free(v1);
-    fasp_mem_free(error);
-    fasp_mem_free(k);
+    fasp_mem_free(Dinv);  Dinv  = NULL;
+    fasp_mem_free(r);     r     = NULL;
+    fasp_mem_free(rbar);  rbar  = NULL;
+    fasp_mem_free(v0);    v0    = NULL;
+    fasp_mem_free(v1);    v1    = NULL;
+    fasp_mem_free(error); error = NULL;
+    fasp_mem_free(k);     k     = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
     return;
-    
 }
 
 /**
@@ -298,10 +297,10 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
         //resk=0.0e0;
     }
     
-    fasp_mem_free(v);
-    fasp_mem_free(v0);
-    fasp_mem_free(r);
-    fasp_mem_free(vsave);
+    fasp_mem_free(v);     v     = NULL;
+    fasp_mem_free(v0);    v0    = NULL;
+    fasp_mem_free(r);     r     = NULL;
+    fasp_mem_free(vsave); vsave = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);

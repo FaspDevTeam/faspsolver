@@ -378,10 +378,10 @@ F100:
     ++a;
     ++levs;
     
-    fasp_mem_free(w);
-    fasp_mem_free(ju);
-    fasp_mem_free(jw);
-    fasp_mem_free(levs);
+    fasp_mem_free(w);     w    = NULL;
+    fasp_mem_free(ju);    ju   = NULL;
+    fasp_mem_free(jw);    jw   = NULL;
+    fasp_mem_free(levs);  levs = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -817,10 +817,10 @@ F100:
     ++ja;
     ++a;
     
-    fasp_mem_free(ju);
-    fasp_mem_free(jw);
-    fasp_mem_free(w);
-    fasp_mem_free(tnorm);
+    fasp_mem_free(ju);     ju    = NULL;
+    fasp_mem_free(jw);     jw    = NULL;
+    fasp_mem_free(w);      w     = NULL;
+    fasp_mem_free(tnorm);  tnorm = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -1305,9 +1305,9 @@ F100:
     ++ja;
     ++a;
     
-    fasp_mem_free(ju);
-    fasp_mem_free(jw);
-    fasp_mem_free(w);
+    fasp_mem_free(ju);  ju = NULL;
+    fasp_mem_free(jw);  jw = NULL;
+    fasp_mem_free(w);   w  = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -1963,9 +1963,10 @@ F100:
     ++rwptr;
     ++ijlu;
     ++uptr;
-    fasp_mem_free(rowll);
-    fasp_mem_free(lastcol);
-    fasp_mem_free(levels);
+
+    fasp_mem_free(rowll);    rowll   = NULL;
+    fasp_mem_free(lastcol);  lastcol = NULL;
+    fasp_mem_free(levels);   levels  = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);

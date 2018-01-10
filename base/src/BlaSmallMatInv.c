@@ -547,7 +547,7 @@ void fasp_smat_invp_nc (REAL      *a,
             for ( k=0; k<n; k++ ) SWAP(a[k*n+indxr[l]],a[k*n+indxc[l]]);
     } // And we are done.
     
-    fasp_mem_free(work);
+    fasp_mem_free(work); work = NULL;
 }
 
 /**

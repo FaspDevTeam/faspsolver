@@ -146,8 +146,8 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     }
     
 FINISHED:
-    fasp_mem_free(ijlu);
-    fasp_mem_free(uptr);
+    fasp_mem_free(ijlu);  ijlu = NULL;
+    fasp_mem_free(uptr);  uptr = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -268,8 +268,8 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     }
     
 FINISHED:
-    fasp_mem_free(ijlu);
-    fasp_mem_free(uptr);
+    fasp_mem_free(ijlu);  ijlu = NULL;
+    fasp_mem_free(uptr);  uptr = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -403,8 +403,8 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     }
     
 FINISHED:
-    fasp_mem_free(ijlu);
-    fasp_mem_free(uptr);
+    fasp_mem_free(ijlu);  ijlu = NULL;
+    fasp_mem_free(uptr);  uptr = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -766,9 +766,9 @@ static INT numfactor (dBSRmat   *A,
             }
     }
     
-    fasp_mem_free(colptrs);
-    fasp_mem_free(mult);
-    fasp_mem_free(mult1);
+    fasp_mem_free(colptrs);  colptrs = NULL;
+    fasp_mem_free(mult);     mult    = NULL;
+    fasp_mem_free(mult1);    mult1   = NULL;
     
     return status;
 }
@@ -859,7 +859,7 @@ static INT numfactor_mulcol (dBSRmat   *A,
                         colptrs[k] =  0;
                         luval[k] = 1.0/luval[k];
                     }
-                    fasp_mem_free(colptrs);
+                    fasp_mem_free(colptrs); colptrs = NULL;
                 }
             }
             
@@ -906,9 +906,9 @@ static INT numfactor_mulcol (dBSRmat   *A,
                         colptrs[k] =  0;
                         fasp_smat_inv_nc2(&(luval[k*nb2]));
                     }
-                    fasp_mem_free(colptrs);
-                    fasp_mem_free(mult);
-                    fasp_mem_free(mult1);
+                    fasp_mem_free(colptrs); colptrs = NULL;
+                    fasp_mem_free(mult);    mult    = NULL;
+                    fasp_mem_free(mult1);   mult1   = NULL;
                 }
             }
             break;
@@ -954,9 +954,9 @@ static INT numfactor_mulcol (dBSRmat   *A,
                         colptrs[k] =  0;
                         fasp_smat_inv_nc3(&(luval[k*nb2]));
                     }
-                    fasp_mem_free(colptrs);
-                    fasp_mem_free(mult);
-                    fasp_mem_free(mult1);
+                    fasp_mem_free(colptrs); colptrs = NULL;
+                    fasp_mem_free(mult);    mult    = NULL;
+                    fasp_mem_free(mult1);   mult1   = NULL;
                 }
             }
             break;
@@ -1060,7 +1060,7 @@ static INT numfactor_levsch (dBSRmat *A,
                         colptrs[k] =  0;
                         luval[k] = 1.0/luval[k];
                     }
-                    fasp_mem_free(colptrs);
+                    fasp_mem_free(colptrs); colptrs = NULL;
                 }
             }
             
@@ -1107,9 +1107,9 @@ static INT numfactor_levsch (dBSRmat *A,
                         colptrs[k] =  0;
                         fasp_smat_inv_nc2(&(luval[k*nb2]));
                     }
-                    fasp_mem_free(colptrs);
-                    fasp_mem_free(mult);
-                    fasp_mem_free(mult1);
+                    fasp_mem_free(colptrs); colptrs = NULL;
+                    fasp_mem_free(mult);    mult    = NULL;
+                    fasp_mem_free(mult1);   mult1   = NULL;
                 }
             }
             break;
@@ -1156,9 +1156,9 @@ static INT numfactor_levsch (dBSRmat *A,
                         colptrs[k] =  0;
                         fasp_smat_inv_nc3(&(luval[k*nb2]));
                     }
-                    fasp_mem_free(colptrs);
-                    fasp_mem_free(mult);
-                    fasp_mem_free(mult1);
+                    fasp_mem_free(colptrs); colptrs = NULL;
+                    fasp_mem_free(mult);    mult    = NULL;
+                    fasp_mem_free(mult1);   mult1   = NULL;
                 }
             }
             break;
@@ -1397,8 +1397,8 @@ static void multicoloring (AMG_data *mgl,
     free(cq);
     free(newr);
     
-    fasp_mem_free(S.IA);
-    fasp_mem_free(S.JA);
+    fasp_mem_free(S.IA); S.IA = NULL;
+    fasp_mem_free(S.JA); S.JA = NULL;
 
     return;
 }
@@ -1481,7 +1481,7 @@ static void topologic_sort_ILU (ILU_data *iludata)
     iludata->nlevL = nlevL+1; iludata->ilevL = ilevL;iludata->jlevL = jlevL;
     iludata->nlevU = nlevU+1; iludata->ilevU = ilevU;iludata->jlevU = jlevU;
     
-    fasp_mem_free(level);
+    fasp_mem_free(level); level = NULL;
 }
 
 /**

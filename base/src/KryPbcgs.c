@@ -353,7 +353,7 @@ FINISHED:  // finish iterative method
                flag,stag,imin,half_step);
     
     // clean up temp memory
-    fasp_mem_free(work);
+    fasp_mem_free(work); work = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -680,7 +680,7 @@ FINISHED:  // finish iterative method
                flag,stag,imin,half_step);
     
     // clean up temp memory
-    fasp_mem_free(work);
+    fasp_mem_free(work); work = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -1007,7 +1007,7 @@ FINISHED:  // finish iterative method
                flag,stag,imin,half_step);
     
     // clean up temp memory
-    fasp_mem_free(work);
+    fasp_mem_free(work); work = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -1334,7 +1334,7 @@ FINISHED:  // finish iterative method
                flag,stag,imin,half_step);
     
     // clean up temp memory
-    fasp_mem_free(work);
+    fasp_mem_free(work); work = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -1673,7 +1673,7 @@ FINISHED:  // finish iterative method
                flag,stag,imin,half_step);
     
     // clean up temp memory
-    fasp_mem_free(work);
+    fasp_mem_free(work); work = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);

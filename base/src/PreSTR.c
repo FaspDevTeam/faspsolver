@@ -323,9 +323,9 @@ void fasp_precond_dstr_ilu0 (REAL *r,
         }// end for (i=m-2;i>=0;i--)
     } // end else   
     
-    fasp_mem_free(zr);
-    fasp_mem_free(zz);
-    fasp_mem_free(tc);
+    fasp_mem_free(zr); zr = NULL;
+    fasp_mem_free(zz); zz = NULL;
+    fasp_mem_free(tc); tc = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -802,9 +802,9 @@ void fasp_precond_dstr_ilu1 (REAL *r,
         }
     }  // end else
     
-    fasp_mem_free(zr);
-    fasp_mem_free(zz);
-    fasp_mem_free(tc);
+    fasp_mem_free(zr); zr = NULL;
+    fasp_mem_free(zz); zz = NULL;
+    fasp_mem_free(tc); tc = NULL;
     
     return;
 }
@@ -965,9 +965,9 @@ void fasp_precond_dstr_ilu0_forward (REAL *r,
     
     memcpy(z,zz,(size)*sizeof(REAL));
     
-    fasp_mem_free(zr);
-    fasp_mem_free(zz);
-    fasp_mem_free(tc);
+    fasp_mem_free(zr); zr = NULL;
+    fasp_mem_free(zz); zz = NULL;
+    fasp_mem_free(tc); tc = NULL;
     
     return;
 }
@@ -1147,8 +1147,8 @@ void fasp_precond_dstr_ilu0_backward (REAL *r,
             }// end for (i=m-2;i>=0;i--)
         } // end else   
     
-    fasp_mem_free(zz);
-    fasp_mem_free(tc);
+    fasp_mem_free(zz); zz = NULL;
+    fasp_mem_free(tc); tc = NULL;
     
     return;
 }
@@ -1412,9 +1412,9 @@ void fasp_precond_dstr_ilu1_forward (REAL *r,
     
     memcpy(z,zz,(size)*sizeof(REAL));
     
-    fasp_mem_free(zr);
-    fasp_mem_free(zz);
-    fasp_mem_free(tc);
+    fasp_mem_free(zr); zr = NULL;
+    fasp_mem_free(zz); zz = NULL;
+    fasp_mem_free(tc); tc = NULL;
     
     return;
 }
@@ -1694,8 +1694,8 @@ void fasp_precond_dstr_ilu1_backward (REAL *r,
         }
     }  // end else
     
-    fasp_mem_free(zz);
-    fasp_mem_free(tc);
+    fasp_mem_free(zz); zz = NULL;
+    fasp_mem_free(tc); tc = NULL;
     
     return;
 }

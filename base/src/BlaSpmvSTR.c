@@ -215,7 +215,7 @@ INT fasp_blas_dstr_diagscale (const dSTRmat  *A,
         
     }
     
-    fasp_mem_free(diag);
+    fasp_mem_free(diag); diag = NULL;
     
     return (0);
 }

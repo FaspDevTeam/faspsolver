@@ -831,7 +831,7 @@ void fasp_blas_dcsr_mxm (const dCSRmat  *A,
         fasp_iarray_set(countJD, JD, -1);
     }
     
-    fasp_mem_free(JD);
+    fasp_mem_free(JD); JD = NULL;
     
     // step 3: Find the structure A of C
     C->val=(REAL*)fasp_mem_calloc(C->IA[C->row],sizeof(REAL));
@@ -1133,7 +1133,7 @@ i2, jj3, r_a_p_product, i3)
     RAP->JA = RAP_j;
     RAP->val = RAP_data;
     
-    fasp_mem_free(Ps_marker);
+    fasp_mem_free(Ps_marker); Ps_marker = NULL;
 }
 
 /**
@@ -1398,7 +1398,7 @@ ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
     RAP->JA = RAP_j;
     RAP->val = RAP_data;
     
-    fasp_mem_free(Ps_marker);
+    fasp_mem_free(Ps_marker); Ps_marker = NULL;
 }
 
 /**
@@ -1573,11 +1573,11 @@ void fasp_blas_dcsr_rap_agg1 (const dCSRmat  *R,
     B->row=row; B->col=col;
     B->IA=iac; B->JA=jac; B->val=acj;
     B->nnz=B->IA[B->row]-B->IA[0];
-    
-    fasp_mem_free(temp);
-    fasp_mem_free(index);
-    fasp_mem_free(iindex);
-    fasp_mem_free(BTindex);
+
+    fasp_mem_free(temp);    temp    = NULL;
+    fasp_mem_free(index);   index   = NULL;
+    fasp_mem_free(iindex);  iindex  = NULL;
+    fasp_mem_free(BTindex); BTindex = NULL;
 }
 
 /**
@@ -2081,11 +2081,12 @@ j, istart, length, end_rowR, jj, end_rowA, k)
         B->JA  = jac;
         B->val = acj;
         B->nnz = B->IA[B->row] - B->IA[0];
-        fasp_mem_free(temps);
-        fasp_mem_free(iindexs);
-        fasp_mem_free(part_end);
-        fasp_mem_free(iindex_array);
-        fasp_mem_free(index_array);
+
+        fasp_mem_free(temps);        temps        = NULL;
+        fasp_mem_free(iindexs);      iindexs      = NULL;
+        fasp_mem_free(part_end);     part_end     = NULL;
+        fasp_mem_free(iindex_array); iindex_array = NULL;
+        fasp_mem_free(index_array);  index_array  = NULL;
     }
     else {
         fasp_blas_dcsr_rap (R, A, P, B);

@@ -160,8 +160,8 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
         // Check 1: Did coarsening step succeeded?
         if ( status < 0 ) {
             /*-- Clean up Scouple generated in coarsening --*/
-            fasp_mem_free(Scouple.IA);
-            fasp_mem_free(Scouple.JA);
+            fasp_mem_free(Scouple.IA); Scouple.IA = NULL;
+            fasp_mem_free(Scouple.JA); Scouple.JA = NULL;
 
             // When error happens, stop at the current multigrid level!
             if ( prtlvl > PRINT_MIN ) {
@@ -174,8 +174,8 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
         // Check 2: Is coarse sparse too small?
         if ( mgl[lvl].P.col < MIN_CDOF ) {
             /*-- Clean up Scouple generated in coarsening --*/
-            fasp_mem_free(Scouple.IA);
-            fasp_mem_free(Scouple.JA);
+            fasp_mem_free(Scouple.IA); Scouple.IA = NULL;
+            fasp_mem_free(Scouple.JA); Scouple.JA = NULL;
             break;
         }
 
@@ -188,8 +188,8 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
             }
 
             /*-- Clean up Scouple generated in coarsening --*/
-            fasp_mem_free(Scouple.IA);
-            fasp_mem_free(Scouple.JA);
+            fasp_mem_free(Scouple.IA); Scouple.IA = NULL;
+            fasp_mem_free(Scouple.JA); Scouple.JA = NULL;
             break;
         }
 
@@ -213,8 +213,8 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
         fasp_blas_dcsr_rap(&mgl[lvl].R, &mgl[lvl].A, &mgl[lvl].P, &mgl[lvl+1].A);
 
         /*-- Clean up Scouple generated in coarsening --*/
-        fasp_mem_free(Scouple.IA);
-        fasp_mem_free(Scouple.JA);
+        fasp_mem_free(Scouple.IA); Scouple.IA = NULL;
+        fasp_mem_free(Scouple.JA); Scouple.JA = NULL;
 
         ++lvl;
 

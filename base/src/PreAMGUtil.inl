@@ -80,7 +80,7 @@ typedef ListElement *LinkList; /**< linked list */
  */
 static void dispose_node (LinkList node_ptr)
 {
-    if (node_ptr) fasp_mem_free( node_ptr );
+    fasp_mem_free(node_ptr); node_ptr = NULL;
 }
 
 /**

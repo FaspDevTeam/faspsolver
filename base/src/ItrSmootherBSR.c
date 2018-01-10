@@ -147,7 +147,8 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
     }
     
     fasp_smoother_dbsr_jacobi1(A, b, u, diaginv);
-    fasp_mem_free(diaginv);
+
+    fasp_mem_free(diaginv); diaginv = NULL;
 }
 
 /**
@@ -353,7 +354,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
             }
         }
         
-        fasp_mem_free(b_tmp);
+        fasp_mem_free(b_tmp); b_tmp = NULL;
     }
     else if (nb > 1) {
         if (use_openmp) {
@@ -399,7 +400,7 @@ void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
             }
             
         }
-        fasp_mem_free(b_tmp);
+        fasp_mem_free(b_tmp); b_tmp = NULL;
     }
     else {
         printf("### ERROR: nb is illegal! [%s:%d]\n", __FILE__, __LINE__);
@@ -522,7 +523,8 @@ void fasp_smoother_dbsr_gs (dBSRmat *A,
     }
     
     fasp_smoother_dbsr_gs1(A, b, u, order, mark, diaginv);
-    fasp_mem_free(diaginv);
+
+    fasp_mem_free(diaginv); diaginv = NULL;
 }
 
 /**
@@ -629,7 +631,7 @@ void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
             fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
         }
         
-        fasp_mem_free(b_tmp);
+        fasp_mem_free(b_tmp); b_tmp = NULL;
     }
     else {
         printf("### ERROR: nb is illegal! [%s:%d]\n", __FILE__, __LINE__);
@@ -701,7 +703,7 @@ void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A,
             memcpy(u_val+pb, b_tmp, nb*sizeof(REAL));
         }
         
-        fasp_mem_free(b_tmp);
+        fasp_mem_free(b_tmp); b_tmp = NULL;
     }
     else {
         printf("### ERROR: nb is illegal! [%s:%d]\n", __FILE__, __LINE__);
@@ -771,7 +773,7 @@ void fasp_smoother_dbsr_gs_descend (dBSRmat *A,
             fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
         }
         
-        fasp_mem_free(b_tmp);
+        fasp_mem_free(b_tmp); b_tmp = NULL;
     }
     else {
         printf("### ERROR: nb is illegal! [%s:%d]\n", __FILE__, __LINE__);
@@ -844,7 +846,7 @@ void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
             memcpy(u_val+pb, b_tmp, nb*sizeof(REAL));
         }
         
-        fasp_mem_free(b_tmp);
+        fasp_mem_free(b_tmp); b_tmp = NULL;
     }
     else {
         printf("### ERROR: nb is illegal! [%s:%d]\n", __FILE__, __LINE__);
@@ -918,7 +920,7 @@ void fasp_smoother_dbsr_gs_order1 (dBSRmat *A,
             fasp_blas_smat_mxv(diaginv+nb2*i, b_tmp, u_val+pb, nb);
         }
         
-        fasp_mem_free(b_tmp);
+        fasp_mem_free(b_tmp); b_tmp = NULL;
     }
     else {
         fasp_chkerr(ERROR_NUM_BLOCKS, __FUNCTION__);
@@ -1121,7 +1123,8 @@ void fasp_smoother_dbsr_sor (dBSRmat *A,
     }
     
     fasp_smoother_dbsr_sor1(A, b, u, order, mark, diaginv, weight);
-    fasp_mem_free(diaginv);
+
+    fasp_mem_free(diaginv); diaginv = NULL;
 }
 
 /**
@@ -1266,7 +1269,7 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
                     fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb, one_minus_weight, u_val+pb, nb);
                 }
             }
-            fasp_mem_free(b_tmp);
+            fasp_mem_free(b_tmp); b_tmp = NULL;
         }
         else {
 #endif
@@ -1281,7 +1284,7 @@ void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
                 }
                 fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
             }
-            fasp_mem_free(b_tmp);
+            fasp_mem_free(b_tmp); b_tmp = NULL;
 #ifdef _OPENMP
         }
 #endif
@@ -1391,7 +1394,7 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
                     fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb, one_minus_weight, u_val+pb, nb);
                 }
             }
-            fasp_mem_free(b_tmp);
+            fasp_mem_free(b_tmp); b_tmp = NULL;
         }
         else {
 #endif
@@ -1406,7 +1409,7 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
                 }
                 fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
             }
-            fasp_mem_free(b_tmp);
+            fasp_mem_free(b_tmp); b_tmp = NULL;
 #ifdef _OPENMP
         }
 #endif
@@ -1519,7 +1522,7 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
                     fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb, one_minus_weight, u_val+pb, nb);
                 }
             }
-            fasp_mem_free(b_tmp);
+            fasp_mem_free(b_tmp); b_tmp = NULL;
         }
         else {
 #endif
@@ -1535,7 +1538,7 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
                 }
                 fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
             }
-            fasp_mem_free(b_tmp);
+            fasp_mem_free(b_tmp); b_tmp = NULL;
 #ifdef _OPENMP
         }
 #endif
@@ -1593,8 +1596,8 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     fasp_gettime(&end);
     
     invperm(A->ROW, A->nb, tz, iludata->jlevL, z);
-    fasp_mem_free(tzr);
-    fasp_mem_free(tz);
+    fasp_mem_free(tzr); tzr = NULL;
+    fasp_mem_free(tz);  tz  = NULL;
 #else
     fasp_gettime(&start);
     fasp_precond_dbsr_ilu_levsch_omp(zr,z,iludata);

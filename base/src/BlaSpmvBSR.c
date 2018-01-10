@@ -4724,7 +4724,7 @@ void fasp_blas_dbsr_mxm (const dBSRmat  *A,
         fasp_iarray_set(countJD, JD, -1);
     }
     
-    fasp_mem_free(JD);
+    fasp_mem_free(JD); JD = NULL;
     
     // step 3: Find the structure A of C
     C->val=(REAL*)fasp_mem_calloc((C->IA[C->ROW])*nb2,sizeof(REAL));
@@ -4747,7 +4747,7 @@ void fasp_blas_dbsr_mxm (const dBSRmat  *A,
     
     C->NNZ = C->IA[C->ROW]-C->IA[0];
     
-    fasp_mem_free(temp);
+    fasp_mem_free(temp); temp = NULL;
     
 }
 
@@ -4933,11 +4933,12 @@ void fasp_blas_dbsr_rap1 (const dBSRmat  *R,
     
     B->nb=A->nb;
     B->storage_manner = A->storage_manner;
-    fasp_mem_free(temp);
-    fasp_mem_free(index);
-    fasp_mem_free(iindex);
-    fasp_mem_free(BTindex);
-    fasp_mem_free(smat_tmp);
+
+    fasp_mem_free(temp);     temp     = NULL;
+    fasp_mem_free(index);    index    = NULL;
+    fasp_mem_free(iindex);   iindex   = NULL;
+    fasp_mem_free(BTindex);  BTindex  = NULL;
+    fasp_mem_free(smat_tmp); smat_tmp = NULL;
 }
 
 /**
@@ -5203,8 +5204,9 @@ jj3, i3, smat_tmp)
     B->NNZ=B->IA[B->ROW]-B->IA[0];
     B->nb=A->nb;
     B->storage_manner = A->storage_manner;
-    if(Ps_marker) fasp_mem_free(Ps_marker);
-    if(tmp) fasp_mem_free(tmp);
+
+    fasp_mem_free(Ps_marker); Ps_marker = NULL;
+    fasp_mem_free(tmp);       tmp       = NULL;
 }
 
 /**
@@ -5461,7 +5463,8 @@ counter, i, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
     B->NNZ=B->IA[B->ROW]-B->IA[0];
     B->nb=A->nb;
     B->storage_manner = A->storage_manner;
-    if(Ps_marker) fasp_mem_free(Ps_marker);
+
+    fasp_mem_free(Ps_marker); Ps_marker = NULL;
 }
 
 /*---------------------------------*/

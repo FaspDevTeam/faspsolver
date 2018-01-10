@@ -138,7 +138,7 @@ INT fasp_check_diagdom (const dCSRmat *A)
     printf("Percentage of the diagonal-dominant rows is %3.2lf%s\n", 
            100.0*(REAL)(nn-k)/(REAL)nn,"%");
     
-    fasp_mem_free(rowp);
+    fasp_mem_free(rowp); rowp = NULL;
     
     return k;
 }
@@ -259,14 +259,14 @@ INT fasp_check_symm (const dCSRmat *A)
         break;
     }
     
-    fasp_mem_free(rowp);
-    fasp_mem_free(rows[1]);
-    fasp_mem_free(cols[1]);
-    fasp_mem_free(vals[1]);    
-    fasp_mem_free(rows[0]);
-    fasp_mem_free(cols[0]);
-    fasp_mem_free(vals[0]);
-    
+    fasp_mem_free(rowp);    rowp    = NULL;
+    fasp_mem_free(rows[0]); rows[0] = NULL;
+    fasp_mem_free(rows[1]); rows[1] = NULL;
+    fasp_mem_free(cols[0]); cols[0] = NULL;
+    fasp_mem_free(cols[1]); cols[1] = NULL;
+    fasp_mem_free(vals[0]); vals[0] = NULL;
+    fasp_mem_free(vals[1]); vals[1] = NULL;
+
     return type;
 }
 

@@ -87,7 +87,7 @@ SHORT fasp_amg_setup_cr (AMG_data   *mgl,
            then gather the list */
         /* 2. COEFFICIENTS -- Form P */ 
         // energymin(mgl[level].A, &vertices[level], mgl[level].P, param);
-        // fasp_mem_free(vertices[level].val);
+        // fasp_mem_free(vertices[level].val); vertices[level].val = NULL;
     
         /*-- Form coarse level stiffness matrix --*/
         // fasp_dcsr_trans(mgl[level].P, mgl[level].R);

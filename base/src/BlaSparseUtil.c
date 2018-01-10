@@ -952,7 +952,7 @@ ivector fasp_sparse_mis (dCSRmat *A)
     MIS.val = work;
     
     // clean
-    fasp_mem_free (flag);
+    fasp_mem_free(flag); flag = NULL;
     
     //return
     return MIS;

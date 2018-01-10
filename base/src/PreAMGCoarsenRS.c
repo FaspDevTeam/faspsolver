@@ -731,11 +731,11 @@ static INT cfsplitting_cls (dCSRmat   *A,
         LoL_head->prev_node = NULL;
         LoL_head->next_node = NULL;
         LoL_head = list_ptr->next_node;
-        fasp_mem_free(list_ptr);
+        fasp_mem_free(list_ptr); list_ptr = NULL;
     }
     
 FINISHED:
-    fasp_mem_free(work);
+    fasp_mem_free(work); work = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -978,7 +978,7 @@ static INT cfsplitting_clsp (dCSRmat   *A,
         LoL_head->prev_node = NULL;
         LoL_head->next_node = NULL;
         LoL_head = list_ptr->next_node;
-        fasp_mem_free(list_ptr);
+        fasp_mem_free(list_ptr); list_ptr = NULL;
     }
     
     // Enforce F-C connections. Adding this step helps for the ExxonMobil test
@@ -997,7 +997,7 @@ static INT cfsplitting_clsp (dCSRmat   *A,
     fasp_mem_free(S->JA); S->JA = Stemp.JA;
     
 FINISHED:
-    fasp_mem_free(work);
+    fasp_mem_free(work);  work  = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -1175,7 +1175,7 @@ static void strong_couplings_agg1 (dCSRmat   *A,
         
     } // end for ci
     
-    fasp_mem_free(visited);
+    fasp_mem_free(visited); visited = NULL;
 }
 
 /**
@@ -1374,7 +1374,7 @@ static void strong_couplings_agg2 (dCSRmat   *A,
         
     } // end for ci
     
-    fasp_mem_free(visited);
+    fasp_mem_free(visited); visited = NULL;
 }
 
 /**
@@ -1635,7 +1635,7 @@ static INT cfsplitting_agg (dCSRmat   *A,
         LoL_head->prev_node = NULL;
         LoL_head->next_node = NULL;
         LoL_head = list_ptr->next_node;
-        fasp_mem_free(list_ptr);
+        fasp_mem_free(list_ptr); list_ptr = NULL;
     }
     
     fasp_ivec_free(&CGPT_index);
@@ -1643,7 +1643,7 @@ static INT cfsplitting_agg (dCSRmat   *A,
     fasp_icsr_free(&Sh);
     fasp_icsr_free(&ST);
     fasp_icsr_free(&ShT);
-    fasp_mem_free(work);
+    fasp_mem_free(work); work = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -1741,7 +1741,7 @@ static INT clean_ff_couplings (iCSRmat   *S,
         
     } // end for i
     
-    fasp_mem_free(cindex);
+    fasp_mem_free(cindex); cindex = NULL;
     
     return col;
 }
@@ -1983,7 +1983,7 @@ static void form_P_pattern_std (dCSRmat   *P,
     }
     
     // clean up
-    fasp_mem_free(visited);
+    fasp_mem_free(visited); visited = NULL;
 }
 
 /**

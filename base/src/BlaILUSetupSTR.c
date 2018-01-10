@@ -308,7 +308,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat  *A,
     
     }
     
-    fasp_mem_free(smat);
+    fasp_mem_free(smat); smat = NULL;
     
     return;
 }
@@ -1260,8 +1260,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat  *A,
     
     } // end else
     
-    fasp_mem_free(smat);
-    fasp_mem_free(tc);
+    fasp_mem_free(smat); smat = NULL;
+    fasp_mem_free(tc);   tc   = NULL;
     
     return;
 }

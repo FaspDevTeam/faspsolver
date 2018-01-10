@@ -162,8 +162,8 @@ void fasp_smoother_dcsr_jacobi (dvector    *u,
         
     } // end while
     
-    fasp_mem_free(t);
-    fasp_mem_free(d);
+    fasp_mem_free(t); t = NULL;
+    fasp_mem_free(d); d = NULL;
     
     return;
 }
@@ -1392,8 +1392,8 @@ void fasp_smoother_dcsr_L1diag (dvector    *u,
         
     } // end while
     
-    fasp_mem_free(t);
-    fasp_mem_free(d);
+    fasp_mem_free(t); t = NULL;
+    fasp_mem_free(d); d = NULL;
     
     return;
 }
@@ -1504,7 +1504,7 @@ static dCSRmat form_contractor (dCSRmat    *A,
     fasp_dcsr_trans(&D, &C);
     
     // clean up
-    fasp_mem_free(work);
+    fasp_mem_free(work); work = NULL;
     fasp_dcsr_free(&B);
     fasp_dcsr_free(&D);
     

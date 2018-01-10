@@ -146,7 +146,7 @@ void fasp_dvec_free (dvector *u)
 {    
     if ( u == NULL ) return;
     
-    fasp_mem_free(u->val); u->row = 0;
+    fasp_mem_free(u->val); u->val = NULL; u->row = 0;
 }
 
 /**
@@ -165,7 +165,7 @@ void fasp_ivec_free (ivector *u)
 {    
     if ( u == NULL ) return;
     
-    fasp_mem_free(u->val); u->row = 0;
+    fasp_mem_free(u->val); u->val = NULL; u->row = 0;
 }
 
 /**
