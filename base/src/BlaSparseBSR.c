@@ -148,9 +148,9 @@ void fasp_dbsr_free (dBSRmat *A)
 {
     if (A==NULL) return;
     
-    fasp_mem_free(A->IA);
-    fasp_mem_free(A->JA);
-    fasp_mem_free(A->val);
+    fasp_mem_free(A->IA);  A->IA  = NULL;
+    fasp_mem_free(A->JA);  A->JA  = NULL;
+    fasp_mem_free(A->val); A->val = NULL;
     
     A->ROW = 0;
     A->COL = 0;
@@ -362,7 +362,7 @@ SHORT fasp_dbsr_getblk (const dBSRmat  *A,
         } /* end for k */
     } /* end for i */
     
-    fasp_mem_free(col_flag);
+    fasp_mem_free(col_flag); col_flag = NULL;
     
     return(status);
 }
@@ -436,7 +436,7 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
                 }
             }
         }
-        fasp_mem_free(tempd);
+        fasp_mem_free(tempd); tempd = NULL;
     }
     else {
 #endif
@@ -463,7 +463,7 @@ SHORT fasp_dbsr_diagpref (dBSRmat *A)
             A_j    += row_size;
             A_data += row_size*nb2;
         }
-        fasp_mem_free(tempd);
+        fasp_mem_free(tempd); tempd = NULL;
 #ifdef _OPENMP
     }
 #endif
@@ -729,7 +729,7 @@ dBSRmat fasp_dbsr_diaginv (const dBSRmat *A)
     }
     
 FINISHED:
-    fasp_mem_free(diaginv);
+    fasp_mem_free(diaginv); diaginv = NULL;
     
     return (B);
 }
@@ -2076,7 +2076,7 @@ dBSRmat fasp_dbsr_perm (const dBSRmat *A,
         }
     }
     
-    fasp_mem_free(Pt);
+    fasp_mem_free(Pt); Pt = NULL;
     
     return(Aperm);
 }
@@ -2174,7 +2174,7 @@ INT fasp_dbsr_merge_col (dBSRmat *A)
             A_i[i+1]	= jj;
         }
         A-> NNZ = jj;
-        fasp_mem_free(tempA_i);
+        fasp_mem_free(tempA_i); tempA_i = NULL;
         
         printf("### WARNING: %d col indices have been merged!\n", count);
     }

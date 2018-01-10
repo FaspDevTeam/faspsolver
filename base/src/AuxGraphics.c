@@ -87,7 +87,7 @@ void fasp_dcsr_subplot (const dCSRmat  *A,
     
     write_bmp16(filename, size, size, map);
     
-    fasp_mem_free(map);
+    fasp_mem_free(map); map = NULL;
 }
 
 /**
@@ -232,7 +232,7 @@ void fasp_dcsr_plot (const dCSRmat  *A,
 
 FINISH: if (fp != NULL) fclose(fp);
     
-    fasp_mem_free(map);
+    fasp_mem_free(map); map = NULL;
 }
 
 /**
@@ -312,7 +312,7 @@ void fasp_dbsr_subplot (const dBSRmat  *A,
     
     write_bmp16(filename, size, size, map);
     
-    fasp_mem_free(map);
+    fasp_mem_free(map); map = NULL;
 }
 
 /**
@@ -468,7 +468,7 @@ void fasp_dbsr_plot (const dBSRmat  *A,
     
 FINISH: if (fp != NULL) fclose(fp);
     
-    fasp_mem_free(map);
+    fasp_mem_free(map); map = NULL;
 }
 
 /*!

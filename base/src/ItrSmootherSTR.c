@@ -70,7 +70,7 @@ void fasp_smoother_dstr_jacobi (dSTRmat *A,
     
     fasp_smoother_dstr_jacobi1(A, b, u, diaginv);
     
-    fasp_mem_free(diaginv);
+    fasp_mem_free(diaginv); diaginv = NULL;
 }
 
 
@@ -187,7 +187,8 @@ void fasp_smoother_dstr_jacobi1 (dSTRmat *A,
         printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
-    fasp_mem_free(b_tmp);
+
+    fasp_mem_free(b_tmp); b_tmp = NULL;
 }
 
 /**
@@ -245,7 +246,7 @@ void fasp_smoother_dstr_gs (dSTRmat    *A,
     
     fasp_smoother_dstr_gs1(A, b, u, order, mark, diaginv);
     
-    fasp_mem_free(diaginv);
+    fasp_mem_free(diaginv); diaginv = NULL;
 }
 
 /**
@@ -415,7 +416,8 @@ void fasp_smoother_dstr_gs_ascend (dSTRmat *A,
         printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
-    fasp_mem_free(vec_tmp);
+
+    fasp_mem_free(vec_tmp); vec_tmp = NULL;
 }
 
 /**
@@ -531,7 +533,8 @@ void fasp_smoother_dstr_gs_descend (dSTRmat *A,
         printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
-    fasp_mem_free(vec_tmp);
+
+    fasp_mem_free(vec_tmp); vec_tmp = NULL;
 }
 
 /**
@@ -651,7 +654,8 @@ void fasp_smoother_dstr_gs_order (dSTRmat *A,
         printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
-    fasp_mem_free(vec_tmp);
+
+    fasp_mem_free(vec_tmp); vec_tmp = NULL;
 }
 
 /**
@@ -838,7 +842,8 @@ void fasp_smoother_dstr_gs_cf (dSTRmat    *A,
         printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
-    fasp_mem_free(vec_tmp);
+
+    fasp_mem_free(vec_tmp); vec_tmp = NULL;
 }
 
 /**
@@ -898,7 +903,7 @@ void fasp_smoother_dstr_sor (dSTRmat    *A,
     
     fasp_smoother_dstr_sor1(A, b, u, order, mark, diaginv, weight);
     
-    fasp_mem_free(diaginv);
+    fasp_mem_free(diaginv); diaginv = NULL;
 }
 
 /**
@@ -1074,7 +1079,8 @@ void fasp_smoother_dstr_sor_ascend (dSTRmat *A,
         printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
-    fasp_mem_free(vec_tmp);
+
+    fasp_mem_free(vec_tmp); vec_tmp = NULL;
 }
 
 /**
@@ -1194,7 +1200,8 @@ void fasp_smoother_dstr_sor_descend (dSTRmat *A,
         printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
-    fasp_mem_free(vec_tmp);
+
+    fasp_mem_free(vec_tmp); vec_tmp = NULL;
 }
 
 /**
@@ -1321,7 +1328,7 @@ void fasp_smoother_dstr_sor_order (dSTRmat *A,
         return;
     }
     
-    fasp_mem_free(vec_tmp);
+    fasp_mem_free(vec_tmp); vec_tmp = NULL;
 }
 
 /**
@@ -1515,7 +1522,8 @@ void fasp_smoother_dstr_sor_cf (dSTRmat    *A,
         printf("### ERROR: nc is illegal! [%s:%d]\n", __FILE__, __LINE__);
         return;
     }
-    fasp_mem_free(vec_tmp);
+
+    fasp_mem_free(vec_tmp); vec_tmp = NULL;
 }
 
 /**

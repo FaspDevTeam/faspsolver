@@ -455,7 +455,7 @@ num_threads(nthreads)
     }
     
     // clean up
-    fasp_mem_free(cindex);
+    fasp_mem_free(cindex); cindex = NULL;
     
     // Step 3. Truncate the prolongation operator to reduce cost
     amg_interp_trunc(P, param);
@@ -654,16 +654,16 @@ static void interp_STD (dCSRmat    *A,
     }
     
     // clean up
-    fasp_mem_free(cindex);
-    fasp_mem_free(rindi);
-    fasp_mem_free(rindk);
-    fasp_mem_free(nsum);
-    fasp_mem_free(csum);
-    fasp_mem_free(diag);
-    fasp_mem_free(Ahat);
+    fasp_mem_free(cindex); cindex = NULL;
+    fasp_mem_free(rindi);  rindi  = NULL;
+    fasp_mem_free(rindk);  rindk  = NULL;
+    fasp_mem_free(nsum);   nsum   = NULL;
+    fasp_mem_free(csum);   csum   = NULL;
+    fasp_mem_free(diag);   diag   = NULL;
+    fasp_mem_free(Ahat);   Ahat   = NULL;
     
 #if RS_C1
-    fasp_mem_free(psum);
+    fasp_mem_free(psum);   psum   = NULL;
 #endif
     
     // Step 3. Truncate the prolongation operator to reduce cost
@@ -860,16 +860,16 @@ static void interp_EXT (dCSRmat    *A,
     }
     
     // clean up
-    fasp_mem_free(cindex);
-    fasp_mem_free(rindi);
-    fasp_mem_free(rindk);
-    fasp_mem_free(nsum);
-    fasp_mem_free(csum);
-    fasp_mem_free(diag);
-    fasp_mem_free(Ahat);
+    fasp_mem_free(cindex); cindex = NULL;
+    fasp_mem_free(rindi);  rindi  = NULL;
+    fasp_mem_free(rindk);  rindk  = NULL;
+    fasp_mem_free(nsum);   nsum   = NULL;
+    fasp_mem_free(csum);   csum   = NULL;
+    fasp_mem_free(diag);   diag   = NULL;
+    fasp_mem_free(Ahat);   Ahat   = NULL;
     
 #if RS_C1
-    fasp_mem_free(psum);
+    fasp_mem_free(psum);   psum   = NULL;
 #endif
     
     // Step 3. Truncate the prolongation operator to reduce cost

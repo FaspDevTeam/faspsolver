@@ -651,7 +651,7 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
                         zz[ibstart+1] = zr[ibstart+1];
                     }
 
-                    fasp_mem_free(mult);
+                    fasp_mem_free(mult); mult = NULL;
                 }
             }
 
@@ -677,7 +677,8 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
                         fasp_blas_smat_mxv_nc2(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
 
                     }
-                    fasp_mem_free(mult);
+
+                    fasp_mem_free(mult); mult = NULL;
                 }
             }
 
@@ -707,7 +708,7 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
                         zz[ibstart+2] = zr[ibstart+2];
                     }
 
-                    fasp_mem_free(mult);
+                    fasp_mem_free(mult); mult = NULL;
                 }
             }
 
@@ -733,7 +734,8 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
                         fasp_blas_smat_mxv_nc3(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
 
                     }
-                    fasp_mem_free(mult);
+
+                    fasp_mem_free(mult); mult = NULL;
                 }
             }
 
@@ -861,7 +863,7 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
                         zz[ibstart+1] = zr[ibstart+1];
                     }
 
-                    fasp_mem_free(mult);
+                    fasp_mem_free(mult); mult = NULL;
                 }
             }
 
@@ -888,7 +890,8 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
                         fasp_blas_smat_mxv_nc2(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
 
                     }
-                    fasp_mem_free(mult);
+
+                    fasp_mem_free(mult); mult = NULL;
                 }
             }
 
@@ -919,7 +922,7 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
                         zz[ibstart+2] = zr[ibstart+2];
                     }
 
-                    fasp_mem_free(mult);
+                    fasp_mem_free(mult); mult = NULL;
                 }
             }
 
@@ -946,7 +949,8 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
                         fasp_blas_smat_mxv_nc3(&(lu[ibstart]),&(zz[ibstart1]),&(z[ibstart1]));
 
                     }
-                    fasp_mem_free(mult);
+
+                    fasp_mem_free(mult); mult = NULL;
                 }
             }
 

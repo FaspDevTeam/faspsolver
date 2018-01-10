@@ -354,7 +354,7 @@ FINISHED:  // finish iterative method
     if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
-    fasp_mem_free(work);
+    fasp_mem_free(work); work = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -646,8 +646,8 @@ FINISHED:  // finish iterative method
     if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
-    fasp_mem_free(work);
-    
+    fasp_mem_free(work); work = NULL;
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
@@ -940,8 +940,8 @@ FINISHED:  // finish iterative method
     if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
-    fasp_mem_free(work);
-    
+    fasp_mem_free(work); work = NULL;
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
@@ -1234,8 +1234,8 @@ FINISHED:  // finish iterative method
     if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
-    fasp_mem_free(work);
-    
+    fasp_mem_free(work); work = NULL;
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
@@ -1510,8 +1510,8 @@ FINISHED:  // finish iterative method
     if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
-    fasp_mem_free(work);
-    
+    fasp_mem_free(work); work = NULL;
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif

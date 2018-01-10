@@ -308,7 +308,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
         if ( (REAL)mgl[lvl].P.col > mgl[lvl].P.row * MIN_CRATE ) {
             param->quality_bound *= 2.0;
         }
-        
+
     } // end of the main while loop
 
     // Setup coarse level systems for direct solvers
@@ -362,8 +362,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
         mgl[lvl].b          = fasp_dvec_create(mm);
         mgl[lvl].x          = fasp_dvec_create(mm);
 
-        mgl[lvl].cycle_type     = cycle_type; // initialize cycle type!
-        mgl[lvl].ILU_levels     = param->ILU_levels - lvl; // initialize ILU levels!
+        mgl[lvl].cycle_type = cycle_type; // initialize cycle type!
+        mgl[lvl].ILU_levels = param->ILU_levels - lvl; // initialize ILU levels!
         mgl[lvl].SWZ_levels = param->SWZ_levels -lvl; // initialize Schwarz!
 
         if ( cycle_type == NL_AMLI_CYCLE )
@@ -390,10 +390,10 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
         fasp_amgcomplexity(mgl,prtlvl);
         fasp_cputime("Unsmoothed aggregation setup", setup_end - setup_start);
     }
-
-    fasp_mem_free(Neighbor);
-    fasp_mem_free(vertices);
-    fasp_mem_free(num_aggs);
+    
+    fasp_mem_free(Neighbor); Neighbor = NULL;
+    fasp_mem_free(vertices); vertices = NULL;
+    fasp_mem_free(num_aggs); num_aggs = NULL;
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);

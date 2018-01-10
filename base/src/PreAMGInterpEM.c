@@ -86,7 +86,7 @@ void fasp_amg_interp_em (dCSRmat    *A,
     }
     
     // clean up memory
-    fasp_mem_free(CoarseIndex);
+    fasp_mem_free(CoarseIndex); CoarseIndex = NULL;
     
     // main part
     getiteval(A, P);
@@ -150,9 +150,9 @@ static SHORT invden (INT    nn,
     }
 #endif
     
-    fasp_mem_free(pivot);
-    fasp_mem_free(rhs);
-    fasp_mem_free(sol);
+    fasp_mem_free(pivot); pivot = NULL;
+    fasp_mem_free(rhs);   rhs   = NULL;
+    fasp_mem_free(sol);   sol   = NULL;
     
     return status;
 }
@@ -261,7 +261,7 @@ static SHORT gentisquare_nomass (dCSRmat  *A,
 
     status = invden(mm,ms,ima);
     
-    fasp_mem_free(ms);
+    fasp_mem_free(ms); ms = NULL;
 
     return status;
 }
@@ -467,12 +467,12 @@ static SHORT orderone (INT   **mat,
     lengths[1]=nns[1];
     lengths[2]=tniz;
     
-    fasp_mem_free(rows[0]);
-    fasp_mem_free(rows[1]);
-    fasp_mem_free(cols[0]);
-    fasp_mem_free(cols[1]);
-    fasp_mem_free(vals[0]);
-    fasp_mem_free(vals[1]);
+    fasp_mem_free(rows[0]); rows[0] = NULL;
+    fasp_mem_free(rows[1]); rows[1] = NULL;
+    fasp_mem_free(cols[0]); cols[0] = NULL;
+    fasp_mem_free(cols[1]); cols[1] = NULL;
+    fasp_mem_free(vals[0]); vals[0] = NULL;
+    fasp_mem_free(vals[1]); vals[1] = NULL;
     
     return(status);
 }
@@ -686,21 +686,22 @@ static SHORT genintval (dCSRmat  *A,
         
     }
     
-    fasp_mem_free(ima);
-    fasp_mem_free(pex);
-    fasp_mem_free(Ii);
-    fasp_mem_free(mask);
-    fasp_mem_free(iz);
-    fasp_mem_free(izs);
-    fasp_mem_free(izt);
-    fasp_mem_free(izts);
-    fasp_mem_free(mat[0]);
-    fasp_mem_free(mat[1]);
-    fasp_mem_free(mat);
-    fasp_mem_free(matval[0]);
-    fasp_mem_free(matval);
-    for (i=0;i<nc;++i) fasp_mem_free(imas[i]);
-    fasp_mem_free(imas);
+    fasp_mem_free(ima); ima = NULL;
+    fasp_mem_free(pex); pex = NULL;
+    fasp_mem_free(Ii); Ii = NULL;
+    fasp_mem_free(mask); mask = NULL;
+    fasp_mem_free(iz); iz = NULL;
+    fasp_mem_free(izs); izs = NULL;
+    fasp_mem_free(izt); izt = NULL;
+    fasp_mem_free(izts); izts = NULL;
+    fasp_mem_free(mat[0]); mat[0] = NULL;
+    fasp_mem_free(mat[1]); mat[1] = NULL;
+    fasp_mem_free(mat); mat = NULL;
+    fasp_mem_free(matval[0]); matval[0] = NULL;
+    fasp_mem_free(matval); matval = NULL;
+    for ( i=0; i<nc; ++i ) {fasp_mem_free(imas[i]); imas[i] = NULL;}
+    fasp_mem_free(imas); imas = NULL;
+
     fasp_dcsr_free(&T);
     fasp_dvec_free(&rhs);
     fasp_dvec_free(&sol);
@@ -821,17 +822,17 @@ static SHORT getiteval (dCSRmat  *A,
 #endif
     for (i=0;i<ittniz;++i) it->val[i]=vals[1][i];
     
-    fasp_mem_free(isol);
-    fasp_mem_free(itmat[0]);
-    fasp_mem_free(itmat[1]);
-    fasp_mem_free(itmatval[0]);
-    fasp_mem_free(itmatval);
-    fasp_mem_free(rows[0]);
-    fasp_mem_free(rows[1]);
-    fasp_mem_free(cols[0]);
-    fasp_mem_free(cols[1]);
-    fasp_mem_free(vals[0]);
-    fasp_mem_free(vals[1]);
+    fasp_mem_free(isol); isol = NULL;
+    fasp_mem_free(itmat[0]); itmat[0] = NULL;
+    fasp_mem_free(itmat[1]); itmat[1] = NULL;
+    fasp_mem_free(itmatval[0]); itmatval[0] = NULL;
+    fasp_mem_free(itmatval); itmatval = NULL;
+    fasp_mem_free(rows[0]); rows[0] = NULL;
+    fasp_mem_free(rows[1]); rows[1] = NULL;
+    fasp_mem_free(cols[0]); cols[0] = NULL;
+    fasp_mem_free(cols[1]); cols[1] = NULL;
+    fasp_mem_free(vals[0]); vals[0] = NULL;
+    fasp_mem_free(vals[1]); vals[1] = NULL;
     
     return status;
 }

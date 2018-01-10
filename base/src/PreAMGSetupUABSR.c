@@ -367,9 +367,9 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr   *mgl,
         fasp_cputime("Unsmoothed aggregation (BSR) setup", setup_end - setup_start);
     }
     
-    fasp_mem_free(vertices);
-    fasp_mem_free(num_aggs);
-    fasp_mem_free(Neighbor);
+    fasp_mem_free(vertices); vertices = NULL;
+    fasp_mem_free(num_aggs); num_aggs = NULL;
+    fasp_mem_free(Neighbor); Neighbor = NULL;
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);

@@ -149,6 +149,8 @@ void * fasp_mem_realloc (void           *oldmem,
  *
  * \author Chensong Zhang
  * \date   2010/12/24
+ *
+ * Modified on 2018/01/10 by Chensong: Add output when mem is NULL
  */
 void fasp_mem_free (void *mem)
 {
@@ -160,11 +162,14 @@ void fasp_mem_free (void *mem)
 #else
         free(mem);
 #endif
-        
-        mem = NULL;
-        
+
 #if DEBUG_MODE > 1
         total_alloc_count--;
+#endif
+    }
+    else {
+#if DEBUG_MODE > 1
+        printf("### WARNING: Trying to free an empty pointer!\n");
 #endif
     }
 }

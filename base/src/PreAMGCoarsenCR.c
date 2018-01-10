@@ -191,9 +191,9 @@ INT fasp_amg_coarsening_cr (const INT   i_0,
         }
     }
     
-    fasp_mem_free(u);
-    fasp_mem_free(b);
-    fasp_mem_free(ma);
+    fasp_mem_free(u);   u  = NULL;
+    fasp_mem_free(b);   b  = NULL;
+    fasp_mem_free(ma);  ma = NULL;
     
     return nc;
 }
@@ -262,6 +262,8 @@ static INT GraphRemove (Link   *list,
  * \param n ???
  * \param cf contains CF list
  * \param ma contains candidate set info.
+ *
+ * \return ???
  *
  * Modified by Chunsheng Feng, Zheng Li on 10/14/2012
  *
@@ -381,9 +383,9 @@ static INT indset (INT   cand,
         }
     }
 
-    fasp_mem_free(list);
-    fasp_mem_free(head_mem);
-    fasp_mem_free(tail_mem);
+    fasp_mem_free(list);     list     = NULL;
+    fasp_mem_free(head_mem); head_mem = NULL;
+    fasp_mem_free(tail_mem); tail_mem = NULL;
 
     return 0;
 }

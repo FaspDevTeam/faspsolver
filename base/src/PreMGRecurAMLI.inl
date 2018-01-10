@@ -83,7 +83,7 @@ static SHORT Kcycle_dcsr_pgcg (dCSRmat   *A,
     // otherwise, another one pgcg iteration will do.
     if (relres < 0.2) {
         fasp_blas_darray_ax(m, beta1, x);
-        fasp_mem_free(work);
+        fasp_mem_free(work); work = NULL;
         return FASP_SUCCESS;
     }
     
@@ -115,7 +115,7 @@ static SHORT Kcycle_dcsr_pgcg (dCSRmat   *A,
     
     fasp_blas_darray_axpy(m, beta4, x1, x);
     
-    fasp_mem_free(work);
+    fasp_mem_free(work); work = NULL;
     return FASP_SUCCESS;
 }
 
@@ -183,7 +183,7 @@ static SHORT Kcycle_dcsr_pgcr (dCSRmat   *A,
     // otherwise, another one pgcr iteration will do.
     if (relres < 0.2) {
         fasp_blas_darray_ax(m, alpha, x);
-        fasp_mem_free(work);
+        fasp_mem_free(work); work = NULL;
         return FASP_SUCCESS;
     }
     
@@ -214,7 +214,7 @@ static SHORT Kcycle_dcsr_pgcr (dCSRmat   *A,
     fasp_blas_darray_axpy(m, alpha4, x1, x);
     
     // free
-    fasp_mem_free(work);
+    fasp_mem_free(work); work = NULL;
     return FASP_SUCCESS;
 }
 

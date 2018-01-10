@@ -91,9 +91,9 @@ static void pair_aggregate_init (const dCSRmat  *A,
         }
     }
 
-    fasp_mem_free(colsum);
-    fasp_mem_free(colmax);
-    fasp_mem_free(abscolsum);
+    fasp_mem_free(colsum);    colsum    = NULL;
+    fasp_mem_free(colmax);    colmax    = NULL;
+    fasp_mem_free(abscolsum); abscolsum = NULL;
 }
 
 /**
@@ -276,7 +276,7 @@ static void form_pairwise (const dCSRmat  *A,
         *NumAggregates += 1;
     }
 
-    fasp_mem_free(s);
+    fasp_mem_free(s); s = NULL;
 }
 
 /**
@@ -934,7 +934,7 @@ static void usympair_1stpass (const dCSRmat * A,
 
     *NumAggregates = nc;
 
-    fasp_mem_free(iperm);
+    fasp_mem_free(iperm); iperm = NULL;
 }
 
 /**
@@ -1172,9 +1172,9 @@ static void usympair_2ndpass (const dCSRmat  *A,
 
     *NumAggregates = nc;
 
-    fasp_mem_free(s);
-    fasp_mem_free(Tnode);
-    fasp_mem_free(Tval);
+    fasp_mem_free(s);      s     = NULL;
+    fasp_mem_free(Tnode);  Tnode = NULL;
+    fasp_mem_free(Tval);   Tval  = NULL;
 }
 
 /**
@@ -1282,7 +1282,7 @@ static SHORT aggregation_usympair (AMG_data   *mgl,
 
     fasp_ivec_free(&map1);
     fasp_ivec_free(&map2);
-    fasp_mem_free(s);
+    fasp_mem_free(s); s = NULL;
 
 END:
     return status;

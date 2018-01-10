@@ -217,10 +217,10 @@ static SHORT aggregation_vmb (dCSRmat    *A,
         }
     }
     
-    fasp_mem_free(num_each_agg);
+    fasp_mem_free(num_each_agg); num_each_agg = NULL;
     
 END:
-    fasp_mem_free(temp_C);
+    fasp_mem_free(temp_C); temp_C = NULL;
     
     return status;
 }

@@ -353,7 +353,7 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
     /* diagonal blocks are solved by AMG */
     else if ( precond_type > 30 && precond_type < 40 ) {
         for (i=0; i<3; i++) fasp_amg_data_free(mgl[i], amgparam);
-        if (mgl) fasp_mem_free(mgl);
+        fasp_mem_free(mgl); mgl = NULL;
     }
     else {
         fasp_chkerr(ERROR_SOLVER_PRECTYPE, __FUNCTION__);

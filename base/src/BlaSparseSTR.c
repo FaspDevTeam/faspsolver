@@ -137,11 +137,13 @@ void fasp_dstr_free (dSTRmat *A)
 {    
     INT i;
     
-    fasp_mem_free(A->offsets);
-    fasp_mem_free(A->diag);
+    fasp_mem_free(A->offsets); A->offsets = NULL;
+    fasp_mem_free(A->diag);    A->diag    = NULL;
     
-    for (i=0;i<A->nband;++i) fasp_mem_free(A->offdiag[i]);
-    
+    for ( i = 0; i < A->nband; ++i ) {
+        fasp_mem_free(A->offdiag[i]); A->offdiag[i] = NULL;
+    }
+
     A->nx = A->ny = A->nz = A->nxy=0;
     A->ngrid = A->nband = A->nc=0;
 }

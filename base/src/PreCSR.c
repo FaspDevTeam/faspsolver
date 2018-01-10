@@ -636,7 +636,7 @@ void fasp_precond_free (const SHORT   precond_type,
 
         fasp_amg_data_free(((precond_data*)(pc->data))->mgl_data, NULL);
         fasp_mem_free((precond_data*)(pc->data));
-        fasp_mem_free(pc);
+        fasp_mem_free(pc); pc = NULL;
             
         break;
             
@@ -644,21 +644,21 @@ void fasp_precond_free (const SHORT   precond_type,
             
         fasp_amg_data_free(((precond_data*)(pc->data))->mgl_data, NULL);
         fasp_mem_free((precond_data*)(pc->data));
-        fasp_mem_free(pc);
+        fasp_mem_free(pc); pc = NULL;
             
         break;
             
     case PREC_ILU: // ILU preconditioner
             
         fasp_ilu_data_free((ILU_data*)(pc->data));
-        fasp_mem_free(pc);
+        fasp_mem_free(pc); pc = NULL;
             
         break;
             
     case PREC_DIAG: // Diagonal preconditioner
             
         fasp_dvec_free((dvector*)(pc->data));
-        fasp_mem_free(pc);
+        fasp_mem_free(pc); pc = NULL;
             
         break;
             

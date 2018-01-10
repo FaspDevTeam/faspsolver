@@ -60,7 +60,7 @@ SHORT fasp_format_dcoo_dcsr (const dCOOmat  *A,
         ind[iind]    = ++jind;
     }
     
-    fasp_mem_free(ind);
+    fasp_mem_free(ind); ind = NULL;
     
     return FASP_SUCCESS;
 }
@@ -342,8 +342,8 @@ dCSRmat fasp_format_dblc_dcsr (const dBLCmat *Ab)
         
     } // end for i
     
-    fasp_mem_free(row);
-    fasp_mem_free(col);
+    fasp_mem_free(row); row = NULL;
+    fasp_mem_free(col); col = NULL;
     
     return(A);
 }
@@ -823,7 +823,7 @@ dBSRmat fasp_format_dcsr_dbsr (const dCSRmat  *A,
     B.JA = ja;
     B.val = bval;
     
-    fasp_mem_free(col_flag);
+    fasp_mem_free(col_flag); col_flag = NULL;
     
     return B;
 }

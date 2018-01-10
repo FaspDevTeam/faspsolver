@@ -369,10 +369,10 @@ FINISHED:
     /*-------------------------------------------
      * Free some stuff
      *------------------------------------------*/
-    fasp_mem_free(work);
-    fasp_mem_free(p);
-    fasp_mem_free(hh);
-    fasp_mem_free(norms);
+    fasp_mem_free(work);  work  = NULL;
+    fasp_mem_free(p);     p     = NULL;
+    fasp_mem_free(hh);    hh    = NULL;
+    fasp_mem_free(norms); norms = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -716,10 +716,10 @@ FINISHED:
     /*-------------------------------------------
      * Free some stuff
      *------------------------------------------*/
-    fasp_mem_free(work);
-    fasp_mem_free(p);
-    fasp_mem_free(hh);
-    fasp_mem_free(norms);
+    fasp_mem_free(work);  work  = NULL;
+    fasp_mem_free(p);     p     = NULL;
+    fasp_mem_free(hh);    hh    = NULL;
+    fasp_mem_free(norms); norms = NULL;
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -1060,10 +1060,10 @@ FINISHED:
     /*-------------------------------------------
      * Free some stuff
      *------------------------------------------*/
-    fasp_mem_free(work);
-    fasp_mem_free(p);
-    fasp_mem_free(hh);
-    fasp_mem_free(norms);
+    fasp_mem_free(work);  work  = NULL;
+    fasp_mem_free(p);     p     = NULL;
+    fasp_mem_free(hh);    hh    = NULL;
+    fasp_mem_free(norms); norms = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -1407,10 +1407,10 @@ FINISHED:
     /*-------------------------------------------
      * Free some stuff
      *------------------------------------------*/
-    fasp_mem_free(work);
-    fasp_mem_free(p);
-    fasp_mem_free(hh);
-    fasp_mem_free(norms);
+    fasp_mem_free(work);  work  = NULL;
+    fasp_mem_free(p);     p     = NULL;
+    fasp_mem_free(hh);    hh    = NULL;
+    fasp_mem_free(norms); norms = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -1550,10 +1550,10 @@ INT fasp_solver_pvgmres (mxv_matfree  *mf,
         rs[0] = r_norm;
         r_norm_old = r_norm;
         if (r_norm == 0.0) {
-            fasp_mem_free(work);
-            fasp_mem_free(p);
-            fasp_mem_free(hh);
-            fasp_mem_free(norms);
+            fasp_mem_free(work);  work  = NULL;
+            fasp_mem_free(p);     p     = NULL;
+            fasp_mem_free(hh);    hh    = NULL;
+            fasp_mem_free(norms); norms = NULL;
             return iter;
         }
         
@@ -1717,10 +1717,10 @@ INT fasp_solver_pvgmres (mxv_matfree  *mf,
     /*-------------------------------------------
      * Free some stuff
      *------------------------------------------*/
-    fasp_mem_free(work);
-    fasp_mem_free(p);
-    fasp_mem_free(hh);
-    fasp_mem_free(norms);
+    fasp_mem_free(work);  work  = NULL;
+    fasp_mem_free(p);     p     = NULL;
+    fasp_mem_free(hh);    hh    = NULL;
+    fasp_mem_free(norms); norms = NULL;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);

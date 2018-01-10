@@ -763,7 +763,7 @@ void fasp_amg_amli_coef (const REAL  lambda_max,
         coef[degree] = -a*coef_k[degree-1];
         
         // clean memory
-        if (work) fasp_mem_free(work);
+        fasp_mem_free(work); work = NULL;
     }
     
     else {

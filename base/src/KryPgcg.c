@@ -173,8 +173,8 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
     if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
-    fasp_mem_free(work);
-    
+    fasp_mem_free(work); work = NULL;
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
@@ -333,8 +333,8 @@ INT fasp_solver_pgcg (mxv_matfree *mf,
     if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
     
     // clean up temp memory
-    fasp_mem_free(work);
-    
+    fasp_mem_free(work); work = NULL;
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif

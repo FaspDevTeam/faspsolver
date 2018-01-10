@@ -182,6 +182,7 @@ int main (int argc, const char * argv[])
     fasp_dvec_free(&uh_heat);
     fasp_dvec_free(&u0);
     fasp_dvec_free(&x);
+    
     fasp_mem_free(rhs_pro);
     fasp_mem_free(l2error);
     

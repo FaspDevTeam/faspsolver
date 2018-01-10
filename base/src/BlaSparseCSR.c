@@ -177,9 +177,9 @@ void fasp_dcsr_free (dCSRmat *A)
 {
     if ( A == NULL ) return;
     
-    fasp_mem_free(A->IA);
-    fasp_mem_free(A->JA);
-    fasp_mem_free(A->val);
+    fasp_mem_free(A->IA);  A->IA  = NULL;
+    fasp_mem_free(A->JA);  A->JA  = NULL;
+    fasp_mem_free(A->val); A->val = NULL;
     A->col = 0;
     A->row = 0;
     A->nnz = 0;
@@ -201,9 +201,9 @@ void fasp_icsr_free (iCSRmat *A)
 {
     if ( A == NULL ) return;
     
-    fasp_mem_free(A->IA);
-    fasp_mem_free(A->JA);
-    fasp_mem_free(A->val);
+    fasp_mem_free(A->IA);  A->IA  = NULL;
+    fasp_mem_free(A->JA);  A->JA  = NULL;
+    fasp_mem_free(A->val); A->val = NULL;
     A->col = 0;
     A->row = 0;
     A->nnz = 0;
@@ -222,9 +222,9 @@ void fasp_icsr_free (iCSRmat *A)
  */
 INT fasp_dcsr_bandwidth (const dCSRmat  *A)
 {
-    const INT row = A->row;
-    const INT *ia = A->IA;
-    INT i, max;
+    const INT  row = A->row;
+    const INT *ia  = A->IA;
+    INT        i, max;
     
     for ( max = i = 0; i < row; ++i ) max = MAX(max, ia[i+1]-ia[i]);
     
@@ -346,7 +346,7 @@ dCSRmat fasp_dcsr_perm (dCSRmat *A,
         }
     }
     
-    fasp_mem_free(Pt);
+    fasp_mem_free(Pt); Pt = NULL;
     
     return(Aperm);
 }
@@ -394,9 +394,9 @@ void fasp_dcsr_sort (dCSRmat *A)
     }
     
     // clean up memory
-    fasp_mem_free(index);
-    fasp_mem_free(ja);
-    fasp_mem_free(a);
+    fasp_mem_free(index); index = NULL;
+    fasp_mem_free(ja);    ja    = NULL;
+    fasp_mem_free(a);     a     = NULL;
 }
 
 /**
@@ -486,7 +486,7 @@ SHORT fasp_dcsr_getblk (const dCSRmat  *A,
     B->JA=(INT*)fasp_mem_realloc(B->JA, sizeof(INT)*nnz);
     B->val=(REAL*)fasp_mem_realloc(B->val, sizeof(REAL)*nnz);
     
-    fasp_mem_free(col_flag);
+    fasp_mem_free(col_flag); col_flag = NULL;
     
     return(status);
 }
@@ -1031,8 +1031,8 @@ void fasp_dcsr_transpose (INT   *row[2],
         izc[m]++;
     }
     
-    fasp_mem_free(izc);
-    fasp_mem_free(izcaux);
+    fasp_mem_free(izc);    izc    = NULL;
+    fasp_mem_free(izcaux); izcaux = NULL;
 }
 
 /**
@@ -1111,7 +1111,7 @@ void fasp_dcsr_compress (const dCSRmat *A,
         }
     }
     
-    fasp_mem_free(index);
+    fasp_mem_free(index); index = NULL;
 }
 
 /**
@@ -1311,7 +1311,7 @@ void fasp_dcsr_symdiagscale (dCSRmat       *A,
     }
     
     // free work space
-    if (work) fasp_mem_free(work);
+    fasp_mem_free(work); work = NULL;
 }
 
 /**
