@@ -38,7 +38,7 @@
 /**
  * \brief FASP base version information
  */
-#define FASP_VERSION     1.9 /**< faspsolver version */
+#define FASP_VERSION     2.0 /**< faspsolver version */
 
 /**
  * \brief For external software package support
