@@ -1172,16 +1172,6 @@ typedef struct {
 /*
  * OpenMP definitions and declarations
  */
-#define FASP_GSRB 0  /**< Use Red-Black Gauss Seidel Smoother on level 0 */
-
-#if FASP_GSRB
-extern INT  nx_rb ;  /**< Red Black Gs Smoother Nx */
-extern INT  ny_rb ;  /**< Red Black Gs Smoother Ny */
-extern INT  nz_rb ;  /**< Red Black Gs Smoother Nz */
-extern INT *IMAP;    /**< Red Black Gs Smoother imap */
-extern INT  MAXIMAP; /**< Red Black Gs Smoother max DOFs of reservoir */
-#endif
-
 extern INT  count;   /**< Counter for multiple calls */
 
 #ifdef _OPENMP

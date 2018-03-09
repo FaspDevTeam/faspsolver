@@ -293,8 +293,8 @@ FINISHED:
  * \author Zheng Li
  * \date   12/04/2016
  *
- * \note Only works for 1, 2, 3 nb (Zheng)
- * \note Modified by Chunsheng Feng on 09/06/2017 for iludata->type not inited.
+ * \note Only works for nb = 1, 2, 3 (Zheng)
+ * \note Modified by Chunsheng Feng on 09/06/2017 for iludata->type not inited
  */
 SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
                                       ILU_data   *iludata,
