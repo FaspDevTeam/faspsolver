@@ -1600,7 +1600,7 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     fasp_mem_free(tz);  tz  = NULL;
 #else
     fasp_gettime(&start);
-    fasp_precond_dbsr_ilu_levsch_omp(zr,z,iludata);
+    fasp_precond_dbsr_ilu_ls_omp(zr,z,iludata);
     fasp_gettime(&end);
 #endif
     

@@ -27,14 +27,6 @@
 #include "PreMGUtil.inl"
 #include "PreMGSmoother.inl"
 
-#if FASP_GSRB // TODO: Need to check this path! --Chensong
-INT  nx_rb   = 1 ;   /**< Red Black GS Smoother Nx */
-INT  ny_rb   = 1 ;   /**< Red Black GS Smoother Ny */
-INT  nz_rb   = 1 ;   /**< Red Black GS Smoother Nz */
-INT  MAXIMAP = 1;    /**< Red Black GS Smoother max dofs of reservoir */
-INT *IMAP    = NULL; /**< Red Black GS Smoother imap */
-#endif
-
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
@@ -114,20 +106,9 @@ ForwardSweep:
 
         // or pre-smoothing with standard smoothers
         else {
-#if FASP_GSRB
-            if ( (l==0) && (nx_rb>1) )
-                fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b,
-                                           param->presmooth_iter, 1, IMAP, MAXIMAP,
-                                           nx_rb, ny_rb, nz_rb);
-            else
-                fasp_dcsr_presmoothing(smoother, &mgl[l].A, &mgl[l].b, &mgl[l].x,
-                                       param->presmooth_iter, 0, mgl[l].A.row-1, 1,
-                                       relax, ndeg, smooth_order, mgl[l].cfmark.val);
-#else
             fasp_dcsr_presmoothing(smoother, &mgl[l].A, &mgl[l].b, &mgl[l].x,
                                    param->presmooth_iter, 0, mgl[l].A.row-1, 1,
                                    relax, ndeg, smooth_order, mgl[l].cfmark.val);
-#endif
         }
 
         // form residual r = b - A x
@@ -237,21 +218,9 @@ ForwardSweep:
 
         // post-smoothing with standard methods
         else {
-
-#if FASP_GSRB
-            if ( (l==0) && (nx_rb>1) )
-                fasp_smoother_dcsr_gs_rb3d(&mgl[l].x, &mgl[l].A, &mgl[l].b,
-                                           param->presmooth_iter, -1, IMAP, MAXIMAP,
-                                           nx_rb, ny_rb, nz_rb);
-            else
-                fasp_dcsr_postsmoothing(smoother, &mgl[l].A, &mgl[l].b, &mgl[l].x,
-                                        param->postsmooth_iter, 0, mgl[l].A.row-1, -1,
-                                        relax, ndeg, smooth_order,mgl[l].cfmark.val);
-#else
             fasp_dcsr_postsmoothing(smoother, &mgl[l].A, &mgl[l].b, &mgl[l].x,
                                     param->postsmooth_iter, 0, mgl[l].A.row-1, -1,
                                     relax, ndeg, smooth_order, mgl[l].cfmark.val);
-#endif
         }
 
         if ( num_lvl[l] < cycle_type ) break;

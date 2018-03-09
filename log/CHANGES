@@ -1,9 +1,10 @@
 File Name: CHANGES
 
-02/11/2018 FASP 2.0.6:
+03/09/2018 FASP 2.0.6:
 - Fix a bug in fasp_mem_free. Set all memory pointers to NULL by hand.
 - Update documentation and fasp webpage.
-- Update VS10 settings for OMP version in Windows 7. 
+- Update VS10 settings for OMP version in Windows 7.
+- Try to remove unused parts in OMP and look for bugs causing divergence.
 
 01/04/2018 FASP 2.0.5:
 - Try to unify itsolver and itsolver_s. 
