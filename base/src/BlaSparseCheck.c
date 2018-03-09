@@ -99,16 +99,14 @@ SHORT fasp_check_diagzero (const dCSRmat *A)
 /**
  * INT fasp_check_diagdom (const dCSRmat *A)
  *
- * \brief Check whether a matrix is diagonal dominant.
+ * \brief Check whether a matrix is diagonally dominant.
  *
  * \param A   Pointer to the dCSRmat matrix
  *
- * \return Number of the rows which are diagonal dominant
+ * \return Number of the rows which are not diagonally dominant
  *
- * \note The routine chechs whether the sparse matrix is diagonal dominant on every row.
- *         It will print out the percentage of the rows which are diagonal dominant and 
- *       which are not; the routine will return the number of the rows which are diagonal 
- *       dominant.
+ * \note The routine chechs whether the sparse matrix is diagonally dominant each row.
+ *       It will print out the percentage of the rows which are diagonally dominant.
  *
  * \author Shuo Zhang
  * \date   03/29/2009
@@ -123,16 +121,16 @@ INT fasp_check_diagdom (const dCSRmat *A)
     INT *rowp = (INT *)fasp_mem_calloc(nnz,sizeof(INT));
     
     for ( i=0; i<nn; ++i ) {
-        for (j=A->IA[i];j<A->IA[i+1];++j) rowp[j]=i;
+        for ( j=A->IA[i]; j<A->IA[i+1]; ++j ) rowp[j]=i;
     }
     
     for ( k=0, i=0; i<nn; ++i ) {
-        sum=0.0;
-        for (j=A->IA[i];j<A->IA[i+1];++j) {
-            if (A->JA[j]==i) sum=sum+A->val[j];
-            if (A->JA[j]!=i) sum=sum-fabs(A->val[j]);
+        sum = 0.0;
+        for ( j=A->IA[i]; j<A->IA[i+1]; ++j ) {
+            if ( A->JA[j]==i ) sum += A->val[j];
+            if ( A->JA[j]!=i ) sum -= fabs(A->val[j]);
         }
-        if (sum<-SMALLREAL) ++k;
+        if ( sum<-SMALLREAL ) ++k;
     }
     
     printf("Percentage of the diagonal-dominant rows is %3.2lf%s\n", 

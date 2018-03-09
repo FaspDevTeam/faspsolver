@@ -5,6 +5,7 @@ File Name: CHANGES
 - Update documentation and fasp webpage.
 - Update VS10 settings for OMP version in Windows 7.
 - Try to remove unused parts in OMP and look for bugs causing divergence.
+- Update the diagonally dominant check function. 
 
 01/04/2018 FASP 2.0.5:
 - Try to unify itsolver and itsolver_s. 
