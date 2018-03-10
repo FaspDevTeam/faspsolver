@@ -214,6 +214,14 @@ void fasp_solver_amli (AMG_data   *mgl,
     else { // coarsest level solver
         
         switch (coarse_solver) {
+
+#if WITH_PARDISO
+            case SOLVER_PARDISO: {
+                /* use Intel MKL PARDISO direct solver on the coarsest level */
+                fasp_pardiso_solve(A0, b0, e0, &mgl[level].pdata, 0);
+                break;
+            }
+#endif
                 
 #if WITH_SuperLU
             case SOLVER_SUPERLU:
@@ -235,14 +243,6 @@ void fasp_solver_amli (AMG_data   *mgl,
                 mgl[level].mumps.job = 2;
                 fasp_solver_mumps_steps(A0, b0, e0, &mgl[level].mumps);
                 break;
-#endif
-                
-#if WITH_PARDISO
-            case SOLVER_PARDISO: {
-                // user Intel MKL PARDISO direct solver on the coarsest level
-                fasp_pardiso_solve(A0, b0, e0, &mgl[level].pdata, 0);
-                break;
-            }
 #endif
                 
             default:
@@ -453,6 +453,14 @@ void fasp_solver_namli (AMG_data   *mgl,
     else { // coarsest level solver
         
         switch (coarse_solver) {
+
+#if WITH_PARDISO
+            case SOLVER_PARDISO: {
+                /* use Intel MKL PARDISO direct solver on the coarsest level */
+                fasp_pardiso_solve(A0, b0, e0, &mgl[level].pdata, 0);
+                break;
+            }
+#endif
                 
 #if WITH_SuperLU
             case SOLVER_SUPERLU:
@@ -474,14 +482,6 @@ void fasp_solver_namli (AMG_data   *mgl,
                 mgl[level].mumps.job = 2;
                 fasp_solver_mumps_steps(A0, b0, e0, &mgl[level].mumps);
                 break;
-#endif
-                
-#if WITH_PARDISO
-            case SOLVER_PARDISO: {
-                // user Intel MKL PARDISO direct solver on the coarsest level
-                fasp_pardiso_solve(A0, b0, e0, &mgl[level].pdata, 0);
-                break;
-            }
 #endif
                 
             default:
@@ -659,6 +659,14 @@ void fasp_solver_namli_bsr (AMG_data_bsr  *mgl,
         
         switch (coarse_solver) {
                 
+#if WITH_PARDISO
+            case SOLVER_PARDISO: {
+                /* use Intel MKL PARDISO direct solver on the coarsest level */
+                fasp_pardiso_solve(&mgl[level].Ac, b0, e0, &mgl[level].pdata, 0);
+                break;
+            }
+#endif
+
 #if WITH_SuperLU
             case SOLVER_SUPERLU:
                 /* use SuperLU direct solver on the coarsest level */
@@ -680,15 +688,7 @@ void fasp_solver_namli_bsr (AMG_data_bsr  *mgl,
                 fasp_solver_mumps_steps(&mgl[level].Ac, b0, e0, &mgl[level].mumps);
                 break;
 #endif
-                
-#if WITH_PARDISO
-            case SOLVER_PARDISO: {
-                // user Intel MKL PARDISO direct solver on the coarsest level
-                fasp_pardiso_solve(&mgl[level].Ac, b0, e0, &mgl[level].pdata, 0);
-                break;
-            }
-#endif
-                
+
             default:
                 /* use iterative solver on the coarsest level */
                 fasp_coarse_itsolver(&mgl[level].Ac, b0, e0, tol, prtlvl);

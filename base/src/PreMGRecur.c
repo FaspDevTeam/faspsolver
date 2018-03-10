@@ -117,39 +117,38 @@ void fasp_solver_mgrecur (AMG_data   *mgl,
     else { // coarsest level solver
         
         switch (coarse_solver) {
-                
-#if WITH_SuperLU
-            /* use SuperLU direct solver on the coarsest level */
-            case SOLVER_SUPERLU:
-                fasp_solver_superlu(A0, b0, e0, 0);
-                break;
-#endif
-                
-#if WITH_UMFPACK
-            /* use UMFPACK direct solver on the coarsest level */
-            case SOLVER_UMFPACK:
-                //fasp_solver_umfpack(A0, b0, e0, 0);
-                fasp_umfpack_solve(A0, b0, e0, mgl[level].Numeric, 0);
-                break;
-#endif
-                
-#if WITH_MUMPS
-            /* use MUMPS direct solver on the coarsest level */
-            case SOLVER_MUMPS:
-                mgl[level].mumps.job = 2;
-                fasp_solver_mumps_steps(A0, b0, e0, &mgl[level].mumps);
-                break;
-#endif
-                
+
 #if WITH_PARDISO
             case SOLVER_PARDISO: {
-                // user Intel MKL PARDISO direct solver on the coarsest level
+                /* use Intel MKL PARDISO direct solver on the coarsest level */
                 fasp_pardiso_solve(A0, b0, e0, &mgl[level].pdata, 0);
                 break;
             }
 #endif
 
-                /* use iterative solver on the coarsest level */
+#if WITH_SuperLU
+            case SOLVER_SUPERLU:
+                /* use SuperLU direct solver on the coarsest level */
+                fasp_solver_superlu(A0, b0, e0, 0);
+                break;
+#endif
+                
+#if WITH_UMFPACK
+            case SOLVER_UMFPACK:
+                /* use UMFPACK direct solver on the coarsest level */
+                fasp_umfpack_solve(A0, b0, e0, mgl[level].Numeric, 0);
+                break;
+#endif
+                
+#if WITH_MUMPS
+            case SOLVER_MUMPS:
+                /* use MUMPS direct solver on the coarsest level */
+                mgl[level].mumps.job = 2;
+                fasp_solver_mumps_steps(A0, b0, e0, &mgl[level].mumps);
+                break;
+#endif
+
+            /* use iterative solver on the coarsest level */
             default:
                 fasp_coarse_itsolver(A0, b0, e0, tol, prtlvl);
                 
