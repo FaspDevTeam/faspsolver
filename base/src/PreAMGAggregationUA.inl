@@ -1223,7 +1223,8 @@ static SHORT aggregation_usympair (AMG_data   *mgl,
     for ( i = 1; i <= pair_number; ++i ) {
 
         if ( i == 1 ) {
-            usympair_1stpass(ptrA, quality_bound, order, &vertices[lvl], &map1, s, &num_agg);
+            usympair_1stpass(ptrA, quality_bound, order, &vertices[lvl], &map1,
+                             s, &num_agg);
         }
         else {
             usympair_2ndpass(&mgl[level].A, ptrA, quality_bound, i, order, &map1,

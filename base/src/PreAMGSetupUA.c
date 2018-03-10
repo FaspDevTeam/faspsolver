@@ -227,14 +227,14 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
 
             case VMB: // VMB aggregation
 
-                status = aggregation_vmb (&mgl[lvl].A, &vertices[lvl], param,
-                                          lvl+1, &Neighbor[lvl], &num_aggs[lvl]);
+                status = aggregation_vmb (&mgl[lvl].A, &vertices[lvl], param, lvl+1,
+                                          &Neighbor[lvl], &num_aggs[lvl]);
 
                 /*-- Choose strength threshold adaptively --*/
-                if ( num_aggs[lvl]*4 > mgl[lvl].A.row )
-                    param->strong_coupled /= 2;
-                else if ( num_aggs[lvl]*1.25 < mgl[lvl].A.row )
-                    param->strong_coupled *= 2;
+                if ( num_aggs[lvl] * 4.0 > mgl[lvl].A.row )
+                    param->strong_coupled /= 2.0;
+                else if ( num_aggs[lvl] * 1.25 < mgl[lvl].A.row )
+                    param->strong_coupled *= 2.0;
 
                 break;
 
@@ -248,7 +248,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
             default: // symmetric pairwise matching aggregation
 
                 status = aggregation_symmpair (mgl, param, lvl, vertices,
-                                              &num_aggs[lvl]);
+                                               &num_aggs[lvl]);
 
                 break;
         }
@@ -266,8 +266,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
         }
 
         /*-- Form Prolongation --*/
-        form_tentative_p(&vertices[lvl], &mgl[lvl].P, mgl[0].near_kernel_basis,
-                         lvl+1, num_aggs[lvl]);
+        form_tentative_p (&vertices[lvl], &mgl[lvl].P, mgl[0].near_kernel_basis,
+                          lvl+1, num_aggs[lvl]);
 
         // Check 2: Is coarse sparse too small?
         if ( mgl[lvl].P.col < MIN_CDOF ) {
