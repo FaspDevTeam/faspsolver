@@ -134,19 +134,19 @@ ForwardSweep:
     // call the coarse space solver:
     switch ( coarse_solver ) {
 
+#if WITH_PARDISO
+        case SOLVER_PARDISO: {
+            /* use Intel MKL PARDISO direct solver on the coarsest level */
+            fasp_pardiso_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].pdata, 0);
+            break;
+        }
+#endif
+
 #if WITH_MUMPS
         case SOLVER_MUMPS: {
             // use MUMPS direct solver on the coarsest level
             mgl[nl-1].mumps.job = 2;
             fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].mumps);
-            break;
-        }
-#endif
-
-#if WITH_SuperLU
-        case SOLVER_SUPERLU: {
-            // use SuperLU direct solver on the coarsest level
-            fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
             break;
         }
 #endif
@@ -159,11 +159,11 @@ ForwardSweep:
         }
 #endif
 
-#if WITH_PARDISO
-        case SOLVER_PARDISO: {
-             // user Intel MKL PARDISO direct solver on the coarsest level
-             fasp_pardiso_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].pdata, 0);
-             break;
+#if WITH_SuperLU
+        case SOLVER_SUPERLU: {
+            // use SuperLU direct solver on the coarsest level
+            fasp_solver_superlu(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, 0);
+            break;
         }
 #endif
 
@@ -329,6 +329,7 @@ ForwardSweep:
 
         // extra kernel solve
         if (mgl[l].A_nk != NULL) {
+
             //--------------------------------------------
             // extra kernel solve
             //--------------------------------------------
@@ -366,6 +367,14 @@ ForwardSweep:
     // call the coarse space solver:
     switch ( coarse_solver ) {
 
+#if WITH_PARDISO
+        case SOLVER_PARDISO: {
+            /* use Intel MKL PARDISO direct solver on the coarsest level */
+            fasp_pardiso_solve(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].pdata, 0);
+            break;
+        }
+#endif
+
 #if WITH_MUMPS
         case SOLVER_MUMPS:
             /* use MUMPS direct solver on the coarsest level */
@@ -386,14 +395,6 @@ ForwardSweep:
             /* use SuperLU direct solver on the coarsest level */
             fasp_solver_superlu(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, 0);
             break;
-#endif
-
-#if WITH_PARDISO
-        case SOLVER_PARDISO: {
-             // user Intel MKL PARDISO direct solver on the coarsest level
-             fasp_pardiso_solve(&mgl[nl-1].Ac, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].pdata, 0);
-             break;
-            }
 #endif
 
         default: {

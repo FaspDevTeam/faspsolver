@@ -99,6 +99,14 @@ void fasp_solver_fmgcycle (AMG_data   *mgl,
 
         switch (coarse_solver) {
 
+#if WITH_PARDISO
+            case SOLVER_PARDISO: {
+                /* use Intel MKL PARDISO direct solver on the coarsest level */
+                fasp_pardiso_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].pdata, 0);
+                break;
+            }
+#endif
+
 #if WITH_SuperLU
             case SOLVER_SUPERLU:
                 /* use SuperLU direct solver on the coarsest level */
@@ -119,14 +127,6 @@ void fasp_solver_fmgcycle (AMG_data   *mgl,
                 mgl[nl-1].mumps.job = 2;
                 fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].mumps);
                 break;
-#endif
-
-#if WITH_PARDISO
-            case SOLVER_PARDISO: {
-                 // user Intel MKL PARDISO direct solver on the coarsest level
-                 fasp_pardiso_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].pdata, 0);
-                 break;
-                }
 #endif
 
             default:
@@ -144,6 +144,14 @@ void fasp_solver_fmgcycle (AMG_data   *mgl,
         // Coarse Space Solver:
         switch (coarse_solver) {
 
+#if WITH_PARDISO
+            case SOLVER_PARDISO: {
+                /* use Intel MKL PARDISO direct solver on the coarsest level */
+                fasp_pardiso_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].pdata, 0);
+                break;
+            }
+#endif
+
 #if WITH_SuperLU
             case SOLVER_SUPERLU:
                 /* use SuperLU direct solver on the coarsest level */
@@ -164,14 +172,6 @@ void fasp_solver_fmgcycle (AMG_data   *mgl,
                 mgl[nl-1].mumps.job = 2;
                 fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].mumps);
                 break;
-#endif
-
-#if WITH_PARDISO
-            case SOLVER_PARDISO: {
-                 // user Intel MKL PARDISO direct solver on the coarsest level
-                 fasp_pardiso_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].pdata, 0);
-                 break;
-                }
 #endif
 
             default:
@@ -263,6 +263,14 @@ void fasp_solver_fmgcycle (AMG_data   *mgl,
             // CoarseSpaceSolver:
             switch (coarse_solver) {
 
+#if WITH_PARDISO
+                case SOLVER_PARDISO: {
+                    /* use Intel MKL PARDISO direct solver on the coarsest level */
+                    fasp_pardiso_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].pdata, 0);
+                    break;
+                }
+#endif
+
 #if WITH_SuperLU
                 case SOLVER_SUPERLU:
                     /* use SuperLU direct solver on the coarsest level */
@@ -283,14 +291,6 @@ void fasp_solver_fmgcycle (AMG_data   *mgl,
                     mgl[nl-1].mumps.job = 2;
                     fasp_solver_mumps_steps(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].mumps);
                     break;
-#endif
-
-#if WITH_PARDISO
-            case SOLVER_PARDISO: {
-                 // user Intel MKL PARDISO direct solver on the coarsest level
-                 fasp_pardiso_solve(&mgl[nl-1].A, &mgl[nl-1].b, &mgl[nl-1].x, &mgl[nl-1].pdata, 0);
-                 break;
-                }
 #endif
 
                 default:
