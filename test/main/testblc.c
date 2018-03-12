@@ -3,7 +3,7 @@
  *  \brief The main test function for FASP solvers -- BLC format
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2014--2017 by the FASP team. All rights reserved.
+ *  Copyright (C) 2014--2018 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */

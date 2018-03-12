@@ -217,9 +217,9 @@
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
-      <Optimization>MaxSpeedHighLevel</Optimization>
-      <FloatingPointModel>Fast2</FloatingPointModel>
+      <FloatingPointModel>Strict</FloatingPointModel>
       <C99Support>true</C99Support>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions3</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
@@ -252,9 +252,9 @@
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
       <OpenMP>GenerateParallelCode</OpenMP>
-      <Optimization>MaxSpeedHighLevel</Optimization>
-      <FloatingPointModel>Fast2</FloatingPointModel>
+      <FloatingPointModel>Strict</FloatingPointModel>
       <C99Support>true</C99Support>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions3</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
@@ -289,8 +289,7 @@
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
-      <Optimization>MaxSpeedHighLevel</Optimization>
-      <FloatingPointModel>Fast2</FloatingPointModel>
+      <FloatingPointModel>Strict</FloatingPointModel>
       <C99Support>true</C99Support>
     </ClCompile>
     <Link>
@@ -326,11 +325,11 @@
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
-      <Optimization>MaxSpeedHighLevel</Optimization>
-      <FloatingPointModel>Fast2</FloatingPointModel>
+      <FloatingPointModel>Strict</FloatingPointModel>
       <OpenMP>GenerateParallelCode</OpenMP>
       <C99Support>true</C99Support>
       <BufferSecurityCheck>true</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions3</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>

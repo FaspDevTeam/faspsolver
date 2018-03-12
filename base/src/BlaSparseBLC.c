@@ -6,7 +6,7 @@
  *         AuxMemory.c and BlaSparseCSR.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -37,10 +37,10 @@
  */
 void fasp_dblc_free (dBLCmat *A)
 {
-    if (A == NULL) return; // Nothing need to be freed!
-    
     INT i;
     INT num_blocks = (A->brow)*(A->bcol);
+    
+	if (A == NULL) return; // Nothing need to be freed!
     
     for ( i=0; i<num_blocks; i++ ) {
         fasp_dcsr_free(A->blocks[i]);

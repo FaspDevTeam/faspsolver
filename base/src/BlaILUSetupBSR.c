@@ -8,7 +8,7 @@
  *         BlaSpmvCSR.c, and PreDataInit.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2010--2017 by the FASP team. All rights reserved.
+ *  Copyright (C) 2010--2018 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -1286,6 +1286,7 @@ static void multicoloring (AMG_data *mgl,
     INT icount;
     INT front, rear;
     INT *IA, *JA;
+	INT *cq, *newr;
     
     const INT n = mgl->A.row;
     dCSRmat   A = mgl->A;
@@ -1321,17 +1322,16 @@ static void multicoloring (AMG_data *mgl,
         JA = A.JA;
     }
     
-    INT *cq = (INT *)malloc(sizeof(INT)*(n+1));
-    INT *newr = (INT *)malloc(sizeof(INT)*(n+1));
+    cq = (INT *)malloc(sizeof(INT)*(n+1));
+    newr = (INT *)malloc(sizeof(INT)*(n+1));
     
 #ifdef _OPENMP
 #pragma omp parallel for private(k)
 #endif
-    for (k=0;k<n;k++) {
-        cq[k]= k;
-    }
+    for ( k=0; k<n; k++ ) cq[k]= k;
+
     group = 0;
-    for (k=0;k<n;k++) {
+    for ( k=0; k<n; k++ ) {
         if ((A.IA[k+1] - A.IA[k]) > group ) group = A.IA[k+1] - A.IA[k];
     }
     *rowmax = group;
@@ -1415,16 +1415,19 @@ static void multicoloring (AMG_data *mgl,
  */
 static void topologic_sort_ILU (ILU_data *iludata)
 {
-    int i, j, k, l;
-    int nlevL, nlevU;
+    INT i, j, k, l;
+    INT nlevL, nlevU;
     
-    int n = iludata->row;
-    int *ijlu = iludata->ijlu;
+    INT n = iludata->row;
+    INT *ijlu = iludata->ijlu;
     
-    int *level = (int*)fasp_mem_calloc(n, sizeof(int));
-    int *jlevL = (int*)fasp_mem_calloc(n, sizeof(int));
-    int *ilevL = (int*)fasp_mem_calloc(n+1, sizeof(int));
-    
+    INT *level = (INT *)fasp_mem_calloc(n, sizeof(INT));
+    INT *jlevL = (INT *)fasp_mem_calloc(n, sizeof(INT));
+    INT *ilevL = (INT *)fasp_mem_calloc(n+1, sizeof(INT));
+
+    INT *jlevU = (INT *)fasp_mem_calloc(n, sizeof(INT));
+    INT *ilevU = (INT *)fasp_mem_calloc(n+1, sizeof(INT));
+        
     nlevL = 0;
     ilevL[0] = 0;
     
@@ -1445,14 +1448,11 @@ static void topologic_sort_ILU (ILU_data *iludata)
         ilevL[level[i]-1]++;
     }
     
-    for (i=nlevL-1; i>0; i--) ilevL[i] = ilevL[i-1];
+    for ( i=nlevL-1; i>0; i-- ) ilevL[i] = ilevL[i-1];
     
     // form level for each row of upper trianguler matrix.
     nlevU = 0;
     ilevL[0] = 0;
-    
-    int *jlevU = (int*)fasp_mem_calloc(n, sizeof(int));
-    int *ilevU = (int*)fasp_mem_calloc(n+1, sizeof(int));
     
     for (i=0; i<n; i++) level[i] = 0;
     

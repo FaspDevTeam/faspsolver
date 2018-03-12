@@ -6,7 +6,7 @@
  *         AuxMemory.c and AuxMessage.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -115,17 +115,16 @@ void fasp_param_input (const char   *fname,
     char     buffer[500]; // Note: max number of char for each line!
     int      val;
     SHORT    status = FASP_SUCCESS;
-    
+    FILE    *fp;
+
     // set default input parameters
     fasp_param_input_init(inparam);
 
     // if input file is not specified, use the default values
     if (fname==NULL) return;
     
-    FILE *fp = fopen(fname,"r");
-    if (fp==NULL) {
-        fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
-    }
+    fp = fopen(fname,"r");
+    if (fp==NULL) fasp_chkerr(ERROR_OPEN_FILE, __FUNCTION__);
     
     while ( status == FASP_SUCCESS ) {
         int     ibuff;
