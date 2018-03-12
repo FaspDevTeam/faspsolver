@@ -7,7 +7,7 @@
  *         and BlaArray.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -333,7 +333,7 @@ void fasp_ilu_dstr_setup0 (dSTRmat  *A,
 void fasp_ilu_dstr_setup1 (dSTRmat  *A,
                            dSTRmat  *LU)
 {
-    INT LUnband = 12;
+    const INT LUnband = 12;
     
     const INT nc=A->nc, nc2=nc*nc;
     const INT nx=A->nx;
@@ -343,7 +343,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat  *A,
     const INT nband=A->nband;
     const INT ngrid=A->ngrid;
     INT nline, nplane;
-    
+    INT LUoffsets[LUnband];
+
     INT i,j,i1,ix,ixy,ixyx,ix1,ixy1,ic,i1c,ixc,ix1c,ixyc,ixy1c,ixyxc;
     register REAL *smat,t,*tc;
     
@@ -368,8 +369,18 @@ void fasp_ilu_dstr_setup1 (dSTRmat  *A,
     
     tc=(REAL *)fasp_mem_calloc(nc2,sizeof(REAL));
     
-    INT LUoffsets[]={-1,1,1-nline,nline-1,-nline,nline,nline-nplane,\
-                     nplane-nline,1-nplane,nplane-1,-nplane,nplane};
+    LUoffsets[0] = -1;
+	LUoffsets[1] = 1;
+	LUoffsets[2] = 1-nline;
+	LUoffsets[3] = nline-1;
+	LUoffsets[4] = -nline;
+	LUoffsets[5] = nline;
+	LUoffsets[6] = nline-nplane;
+	LUoffsets[7] = nplane-nline;
+	LUoffsets[8] = 1-nplane;
+	LUoffsets[9] = nplane-1;
+	LUoffsets[10] = -nplane;
+	LUoffsets[11] = nplane;
     
     fasp_dstr_alloc(nx,A->ny,A->nz,nxy,ngrid,LUnband,nc,LUoffsets,LU);
     

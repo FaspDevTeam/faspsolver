@@ -8,7 +8,7 @@
  *  Translated from SparseKit (Fortran code) by Chunsheng Feng, 09/03/2016
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2016--2017 by the FASP team. All rights reserved.
+ *  Copyright (C) 2016--2018 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */

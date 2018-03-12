@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+03/12/2018 FASP 2.0.7:
+- Update copyright information.
+- Fix some ANSI C uncompatible problems; a lot more still there.
+
 03/09/2018 FASP 2.0.6:
 - Fix a bug in fasp_mem_free. Set all memory pointers to NULL by hand.
 - Update documentation and fasp webpage.

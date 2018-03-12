@@ -6,7 +6,7 @@
  *  https://software.intel.com/en-us/node/470282
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2015--2017 by the FASP team. All rights reserved.
+ *  Copyright (C) 2015--2018 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -66,6 +66,7 @@ INT fasp_solver_pardiso (dCSRmat * ptrA,
     REAL * x = u->val;     /* Solution vector. */
     void *pt[64];          /* Internal solver memory pointer pt. */
     double ddum;           /* Double dummy */
+    clock_t start_time = clock();
     
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
@@ -78,8 +79,6 @@ INT fasp_solver_pardiso (dCSRmat * ptrA,
     mnum = 1;             /* Which factorization to use. */
     msglvl = 0;           /* Do not print statistical information in file */
     error = 0;            /* Initialize error flag */
-    
-    clock_t start_time = clock();
     
     phase = 11; /* Reordering and symbolic factorization. */
     PARDISO (pt, &maxfct, &mnum, &mtype, &phase,
@@ -159,8 +158,6 @@ INT fasp_pardiso_factorize (dCSRmat *ptrA,
     MKL_INT *ja = ptrA->JA;
     REAL *a = ptrA->val;
     
-    pdata->mtype = 11;    /* Real unsymmetric matrix */
-    
     double  ddum;         /* Double dummy */
     MKL_INT nrhs = 1;     /* Number of right hand sides. */
     MKL_INT idum;         /* Integer dummy. */
@@ -171,6 +168,8 @@ INT fasp_pardiso_factorize (dCSRmat *ptrA,
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
     
+    pdata->mtype = 11;    /* Real unsymmetric matrix */
+
     PARDISOINIT(pdata->pt, &(pdata->mtype), pdata->iparm); /* Initialize. */
     pdata->iparm[34] = 1;  /* Use 0-based indexing. */
     pdata->maxfct = 1;     /* Maximum number of numerical factorizations. */
@@ -191,8 +190,7 @@ INT fasp_pardiso_factorize (dCSRmat *ptrA,
     phase = 22; /* Numerical factorization. */
     PARDISO (pdata->pt, &(pdata->maxfct), &(pdata->mnum), &(pdata->mtype), &phase,
              &n, a, ia, ja, &idum, &nrhs, pdata->iparm, &msglvl, &ddum, &ddum, &error);
-    if ( error != 0 )
-    {
+    if ( error != 0 ) {
         printf ("\n### ERROR: Numerical factorization failed %d!\n", error);
         exit (2);
     }

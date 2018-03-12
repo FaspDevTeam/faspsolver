@@ -6,7 +6,7 @@
  *         AuxMemory.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -58,16 +58,16 @@ void fasp_dcsr_subplot (const dCSRmat  *A,
                         const char     *filename,
                         INT             size)
 {
-    INT m = A->row;
-    INT n = A->col;
-    INT i, j, k, minmn=MIN(m,n);
-    
-    if (size>minmn) size=minmn;
+    INT m = A->row, n = A->col, minmn = MIN(m,n);
+    INT i, j, k;
+	char *map; 
+
+    if ( size>minmn ) size = minmn;
+	map = (char *)fasp_mem_calloc(size * size, sizeof(char));
     
     printf("Writing matrix pattern to `%s'...\n",filename);
     
-    char *map = (char *)fasp_mem_calloc(size * size, sizeof(char));
-    memset(map, 0x0F, size * size);
+    memset((void *)map, 0x0F, size * size);
     
     for (i = 0; i < size; ++i) {
         for (j = A->IA[i]; j < A->IA[i+1]; ++j) {
@@ -119,15 +119,11 @@ void fasp_dcsr_plot (const dCSRmat  *A,
 {
     FILE *fp;
     INT offset, bmsize, i, j, b;
-    INT n,m;
+    INT n = A->col, m = A->row;
     INT size;
     
     INT col;
     REAL val;
-    
-    m = A->row;
-    n = A->col;
-    
     char *map;
     
     size = ( (n+7)/8 )*8;
@@ -271,14 +267,15 @@ void fasp_dbsr_subplot (const dBSRmat  *A,
     INT offset;
     INT row, col, i, j, k, l, minmn=nb*MIN(m,n);
     REAL val;
-    
+    char *map;
+
     if (size>minmn) size=minmn;
     
     printf("Writing matrix pattern to `%s'...\n",filename);
     
-    char *map = (char *)fasp_mem_calloc(size * size, sizeof(char));
+    map = (char *)fasp_mem_calloc(size * size, sizeof(char));
     
-    memset(map, 0x0F, size * size);
+    memset((void *)map, 0x0F, size * size);
     
     for ( i = 0; i < size/nb; i++ ) {
         
@@ -344,23 +341,19 @@ void fasp_dbsr_plot (const dBSRmat  *A,
 {
     FILE *fp;
     INT offset, bmsize, i, j, b;
-    INT n,m;
     INT size;
     INT nb = A->nb;
     INT nb2 = nb*nb;
-    INT col,k,l;
+    INT n = A->COL*A->nb, m = A->ROW*A->nb;
+	INT col,k,l;
     REAL val;
-    
-    m = A->ROW*A->nb;
-    n = A->COL*A->nb;
-    
     char *map;
     
     size = ( (n+7)/8 )*8;
     
     map = (char *)fasp_mem_calloc(size, sizeof(char));
     
-    memset(map, 0x0F, size);
+    memset((void *)map, 0x0F, size);
     
     if (!(1 <= m && m <= 32767))
         printf("### ERROR: Invalid num of rows %d! [%s]\n", m, __FUNCTION__);

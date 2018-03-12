@@ -7,7 +7,7 @@
  *         AuxVector.c, and BlaSpmvCSR.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -511,9 +511,9 @@ void fasp_dcsr_getdiag (INT            n,
 {
     INT i,k,j,ibegin,iend;
     
-    if ( n==0 || n>A->row || n>A->col ) n = MIN(A->row,A->col);
-    
     SHORT nthreads = 1, use_openmp = FALSE;
+    
+    if ( n==0 || n>A->row || n>A->col ) n = MIN(A->row,A->col);
     
 #ifdef _OPENMP
     if ( n > OPENMP_HOLDS ) {
@@ -1086,7 +1086,6 @@ void fasp_dcsr_compress (const dCSRmat *A,
         B->IA[i+1]=k;
     } /* end of i */
     B->nnz=k;
-    
     B->JA=(INT*)fasp_mem_calloc(B->nnz,sizeof(INT));
     B->val=(REAL*)fasp_mem_calloc(B->nnz,sizeof(REAL));
     
@@ -1247,8 +1246,12 @@ void fasp_dcsr_symdiagscale (dCSRmat       *A,
     const INT *IA  = A->IA;
     const INT *JA  = A->JA;
     REAL      *val = A->val;
-    
+    REAL      *work;
+
     SHORT nthreads = 1, use_openmp = FALSE;
+    
+    // local variables
+    INT i, j, k, row_start, row_end;
     
 #ifdef _OPENMP
     if ( n > OPENMP_HOLDS ) {
@@ -1257,16 +1260,13 @@ void fasp_dcsr_symdiagscale (dCSRmat       *A,
     }
 #endif
     
-    // local variables
-    INT i, j, k, row_start, row_end;
-    
     if (diag->row != n) {
         printf("### ERROR: Size of diag = %d != size of matrix = %d!", diag->row, n);
         fasp_chkerr(ERROR_MISC, __FUNCTION__);
     }
     
     // work space
-    REAL *work = (REAL *)fasp_mem_calloc(n, sizeof(REAL));
+    work = (REAL *)fasp_mem_calloc(n, sizeof(REAL));
     
     if (use_openmp) {
         INT myid, mybegin, myend;

@@ -6,7 +6,7 @@
  *         SolGMGPoisson.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2013--2017 by the FASP team. All rights reserved.
+ *  Copyright (C) 2013--2018 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *

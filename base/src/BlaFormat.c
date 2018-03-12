@@ -7,7 +7,7 @@
  *         and BlaSparseCSRL.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -723,7 +723,18 @@ dCSRmat fasp_format_dbsr_dcsr (const dBSRmat *B)
 dBSRmat fasp_format_dcsr_dbsr (const dCSRmat  *A,
                                const INT       nb)
 {
-	// Safe-guard check
+    INT i, j, k, ii, jj, kk, l, mod, nnz;
+    INT row   = A->row/nb;
+    INT col   = A->col/nb;
+    INT nb2   = nb*nb;
+    INT *IA   = A->IA;
+    INT *JA   = A->JA;
+    REAL *val = A->val;
+	
+    dBSRmat B;	// Safe-guard check
+	INT *col_flag, *ia, *ja;
+	REAL *bval;
+
     if ((A->row)%nb!=0) {
         printf("### ERROR: A.row=%d is not a multiplication of nb=%d!\n",
                A->row, nb);
@@ -736,24 +747,14 @@ dBSRmat fasp_format_dcsr_dbsr (const dCSRmat  *A,
         fasp_chkerr(ERROR_MAT_SIZE, __FUNCTION__);
     }
     
-    INT i, j, k, ii, jj, kk, l, mod, nnz;
-    INT row   = A->row/nb;
-    INT col   = A->col/nb;
-    INT nb2   = nb*nb;
-    INT *IA   = A->IA;
-    INT *JA   = A->JA;
-    REAL *val = A->val;
-	
-    dBSRmat B;
     B.ROW = row;
     B.COL = col;
     B.nb  = nb;
     B.storage_manner = 0;
     
-    INT *col_flag = (INT *)fasp_mem_calloc(col, sizeof(INT));
-    
-    // allocate ia for B
-    INT *ia = (INT *) fasp_mem_calloc(row+1, sizeof(INT));
+    // allocate memory for B
+	col_flag = (INT *)fasp_mem_calloc(col, sizeof(INT));
+    ia = (INT *) fasp_mem_calloc(row+1, sizeof(INT));
     
     fasp_iarray_set(col, col_flag, -1);
     
@@ -761,9 +762,9 @@ dBSRmat fasp_format_dcsr_dbsr (const dCSRmat  *A,
     nnz = 0;
 	for (i=0; i<row; ++i) {
         ii = nb*i;
-        for(j=0; j<nb; ++j) {
+        for (j=0; j<nb; ++j) {
             jj = ii+j;
-            for(k=IA[jj]; k<IA[jj+1]; ++k) {
+            for (k=IA[jj]; k<IA[jj+1]; ++k) {
                 kk = JA[k]/nb;
                 if (col_flag[kk]!=0) {
                     col_flag[kk] = 0;
@@ -780,8 +781,8 @@ dBSRmat fasp_format_dcsr_dbsr (const dCSRmat  *A,
     B.NNZ = nnz;
 	
     // allocate ja and bval
-    INT *ja = (INT*)fasp_mem_calloc(nnz, sizeof(INT));
-    REAL *bval = (REAL*)fasp_mem_calloc(nnz*nb2, sizeof(REAL));
+    ja = (INT*)fasp_mem_calloc(nnz, sizeof(INT));
+    bval = (REAL*)fasp_mem_calloc(nnz*nb2, sizeof(REAL));
 
     // Get ja for BSR format
     nnz = 0;
@@ -805,9 +806,9 @@ dBSRmat fasp_format_dcsr_dbsr (const dCSRmat  *A,
     // Get non-zeros of BSR
 	for (i=0; i<row; ++i) {
 		ii = nb*i;
-        for(j=0; j<nb; ++j) {
+        for (j=0; j<nb; ++j) {
 			jj = ii+j;
-			for(k=IA[jj]; k<IA[jj+1]; ++k) {
+			for (k=IA[jj]; k<IA[jj+1]; ++k) {
 				for (l=ia[i]; l<ia[i+1]; ++l) {
 					if (JA[k]/nb ==ja[l]) {
                         mod = JA[k]%nb;

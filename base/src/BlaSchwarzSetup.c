@@ -7,7 +7,7 @@
  *         and KryPvgmres.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2017 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -53,7 +53,6 @@ INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
     
     INT  blksolver = swzparam->SWZ_blksolver;
     INT  maxlev = swzparam->SWZ_maxlvl;
-    swzdata->swzparam = swzparam;
     
     // local variables
     INT i;
@@ -68,6 +67,8 @@ INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
     // return
     INT flag = FASP_SUCCESS;
     
+	swzdata->swzparam = swzparam;
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif

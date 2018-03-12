@@ -37,16 +37,16 @@
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <InterproceduralOptimization>true</InterproceduralOptimization>
-    <PlatformToolset>Intel C++ Compiler XE 15.0</PlatformToolset>
     <UseIntelMKL>Sequential</UseIntelMKL>
+    <PlatformToolset>Intel C++ Compiler XE 15.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OMP|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <InterproceduralOptimization>true</InterproceduralOptimization>
-    <PlatformToolset>Intel C++ Compiler XE 15.0</PlatformToolset>
     <UseIntelMKL>Parallel</UseIntelMKL>
+    <PlatformToolset>Intel C++ Compiler XE 15.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -58,16 +58,16 @@
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <InterproceduralOptimization>true</InterproceduralOptimization>
-    <PlatformToolset>Intel C++ Compiler XE 15.0</PlatformToolset>
     <UseIntelMKL>Sequential</UseIntelMKL>
+    <PlatformToolset>Intel C++ Compiler XE 15.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OMP|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <InterproceduralOptimization>true</InterproceduralOptimization>
-    <PlatformToolset>Intel C++ Compiler XE 15.0</PlatformToolset>
     <UseIntelMKL>Parallel</UseIntelMKL>
+    <PlatformToolset>Intel C++ Compiler XE 15.0</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -195,9 +195,9 @@
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
-      <Optimization>MaxSpeedHighLevel</Optimization>
-      <FloatingPointModel>Fast2</FloatingPointModel>
+      <FloatingPointModel>Strict</FloatingPointModel>
       <C99Support>true</C99Support>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions3</EnableEnhancedInstructionSet>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)\$(ProjectName)-vs10.lib</OutputFile>
@@ -223,9 +223,9 @@
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
       <OpenMP>GenerateParallelCode</OpenMP>
-      <Optimization>MaxSpeedHighLevel</Optimization>
-      <FloatingPointModel>Fast2</FloatingPointModel>
+      <FloatingPointModel>Strict</FloatingPointModel>
       <C99Support>true</C99Support>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions3</EnableEnhancedInstructionSet>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -253,8 +253,7 @@
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
-      <Optimization>MaxSpeedHighLevel</Optimization>
-      <FloatingPointModel>Fast2</FloatingPointModel>
+      <FloatingPointModel>Strict</FloatingPointModel>
       <C99Support>true</C99Support>
     </ClCompile>
     <Lib>
@@ -283,8 +282,7 @@
       <InterproceduralOptimization>SingleFile</InterproceduralOptimization>
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
-      <Optimization>MaxSpeedHighLevel</Optimization>
-      <FloatingPointModel>Fast2</FloatingPointModel>
+      <FloatingPointModel>Strict</FloatingPointModel>
       <OpenMP>GenerateParallelCode</OpenMP>
       <C99Support>true</C99Support>
       <BufferSecurityCheck>true</BufferSecurityCheck>
