@@ -1,9 +1,12 @@
 File Name: CHANGES
 
-03/12/2018 FASP 2.0.7:
+03/15/2018 FASP 2.0.7:
 - Update copyright information.
 - Fix some ANSI C uncompatible problems; a lot more still there.
-- Update VS10 setting: FP model set to /precise now. 
+- Update VS10 setting: set FP model to '/precise' in order to get same results in Windows.
+- Locate the parameter difference in OpenMP version.
+- Move definition ILU_MC_OMP from fasp_const.h to fasp.h.
+- Modify README: MS VC compiler does not work for our C code if we do not change .c to .cpp.
 
 03/09/2018 FASP 2.0.6:
 - Fix a bug in fasp_mem_free. Set all memory pointers to NULL by hand.

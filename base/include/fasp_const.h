@@ -229,7 +229,6 @@
  */
 #define NO_ORDER                0  /**< Natural order smoothing */
 #define CF_ORDER                1  /**< C/F order smoothing */
-#define ILU_MC_OMP              0  /**< Using multicolor smoothing or not */ //test by Chensong March/08/2018!!!
 
 /**
  * \brief Type of ordering for smoothers
