@@ -1138,8 +1138,8 @@ typedef struct {
     SHORT AMG_polynomial_degree;   /**< degree of the polynomial smoother */
     SHORT AMG_presmooth_iter;      /**< number of presmoothing */
     SHORT AMG_postsmooth_iter;     /**< number of postsmoothing */
-    INT AMG_coarse_dof;            /**< max number of coarsest level DOF */
     REAL AMG_tol;                  /**< tolerance for AMG if used as preconditioner */
+    INT AMG_coarse_dof;            /**< max number of coarsest level DOF */
     INT AMG_maxit;                 /**< number of iterations for AMG used as preconditioner */
     SHORT AMG_ILU_levels;          /**< how many levels use ILU smoother */
     SHORT AMG_coarse_solver;       /**< coarse solver type */
@@ -1178,9 +1178,11 @@ extern INT  count;   /**< Counter for multiple calls */
 
 #include "omp.h"
 
-extern INT THDs_AMG_GS;  /**< AMG GS smoothing threads  */
-extern INT THDs_CPR_lGS; /**< Reservoir GS smoothing threads */
-extern INT THDs_CPR_gGS; /**< Global matrix GS smoothing threads  */
+#define ILU_MC_OMP       OFF   /**< Use multicolor smoothing or not, default is not */
+
+extern INT THDs_AMG_GS;        /**< AMG GS smoothing threads  */
+extern INT THDs_CPR_lGS;       /**< Reservoir GS smoothing threads */
+extern INT THDs_CPR_gGS;       /**< Global matrix GS smoothing threads  */
 #ifdef DETAILTIME
 extern REAL total_linear_time; /**< Total used time of linear solvers */
 extern REAL total_start_time;  /**< Total used time */
