@@ -385,7 +385,7 @@
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
       <OpenMP>GenerateParallelCode</OpenMP>
       <C99Support>true</C99Support>
-      <Parallelization>false</Parallelization>
+      <Parallelization>true</Parallelization>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions3</EnableEnhancedInstructionSet>
       <BufferSecurityCheck>true</BufferSecurityCheck>
     </ClCompile>
