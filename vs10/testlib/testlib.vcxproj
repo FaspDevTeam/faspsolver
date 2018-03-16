@@ -255,6 +255,7 @@
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
       <FloatingPointModel>Strict</FloatingPointModel>
       <C99Support>true</C99Support>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions3</EnableEnhancedInstructionSet>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)\$(ProjectName)-vs10.lib</OutputFile>
@@ -286,6 +287,7 @@
       <OpenMP>GenerateParallelCode</OpenMP>
       <C99Support>true</C99Support>
       <BufferSecurityCheck>true</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions3</EnableEnhancedInstructionSet>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)\$(ProjectName)-omp-vs10.lib</OutputFile>
