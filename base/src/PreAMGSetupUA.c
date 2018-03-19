@@ -267,7 +267,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
 
         /*-- Form Prolongation --*/
         form_tentative_p (&vertices[lvl], &mgl[lvl].P, mgl[0].near_kernel_basis,
-                          lvl+1, num_aggs[lvl]);
+                          num_aggs[lvl]);
 
         // Check 2: Is coarse sparse too small?
         if ( mgl[lvl].P.col < MIN_CDOF ) {

@@ -38,7 +38,7 @@
 
 static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *, AMG_param *);
 static void smooth_agg_bsr (const dBSRmat *, dBSRmat *, dBSRmat *, const AMG_param *,
-                            const INT, const dCSRmat *);
+                            const dCSRmat *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -79,8 +79,7 @@ SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr  *mgl,
 
 /**
  * \fn static void smooth_agg_bsr (const dBSRmat *A, dBSRmat *tentp, dBSRmat *P,
- *                                 const AMG_param *param, const INT NumLevels,
- *                                 const dCSRmat *N)
+ *                                 const AMG_param *param, const dCSRmat *N)
  *
  * \brief Smooth the tentative prolongation
  *
@@ -88,7 +87,6 @@ SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr  *mgl,
  * \param tentp       Pointer to the tentative prolongation operators (dBSRmat)
  * \param P           Pointer to the prolongation operators (dBSRmat)
  * \param param       Pointer to AMG parameters
- * \param NumLevels   Current level number
  * \param N           Pointer to strongly coupled neighbors
  *
  * \author Xiaozhe Hu
@@ -98,7 +96,6 @@ static void smooth_agg_bsr (const dBSRmat    *A,
                             dBSRmat          *tentp,
                             dBSRmat          *P,
                             const AMG_param  *param,
-                            const INT         NumLevels,
                             const dCSRmat    *N)
 {
     const SHORT filter = param->smooth_filter;
@@ -380,17 +377,16 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
 
         /* -- Form Tentative prolongation --*/
         if (lvl == 0 && mgl[0].near_kernel_dim >0 ){
-            form_tentative_p_bsr1(&vertices[lvl], &tentp[lvl], &mgl[0], lvl+1,
+            form_tentative_p_bsr1(&vertices[lvl], &tentp[lvl], &mgl[0],
                                   num_aggs[lvl], mgl[0].near_kernel_dim,
                                   mgl[0].near_kernel_basis);
         }
         else{
-            form_boolean_p_bsr(&vertices[lvl], &tentp[lvl], &mgl[0], lvl+1, num_aggs[lvl]);
+            form_boolean_p_bsr(&vertices[lvl], &tentp[lvl], &mgl[0], num_aggs[lvl]);
         }
 
         /* -- Smoothing -- */
-        smooth_agg_bsr(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param, lvl+1,
-                       &Neighbor[lvl]);
+        smooth_agg_bsr(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param, &Neighbor[lvl]);
 
         /*-- Form restriction --*/
         fasp_dbsr_trans(&mgl[lvl].P, &mgl[lvl].R);

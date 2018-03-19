@@ -38,7 +38,7 @@
 
 static SHORT amg_setup_smoothP_smoothR (AMG_data *, AMG_param *);
 static SHORT amg_setup_smoothP_unsmoothR (AMG_data *, AMG_param *);
-static void smooth_agg (dCSRmat *, dCSRmat *, dCSRmat *, AMG_param *, INT, dCSRmat *);
+static void smooth_agg (dCSRmat *, dCSRmat *, dCSRmat *, AMG_param *, dCSRmat *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -96,7 +96,7 @@ SHORT fasp_amg_setup_sa (AMG_data   *mgl,
 
 /**
  * \fn static void smooth_agg (dCSRmat *A, dCSRmat *tentp, dCSRmat *P,
- *                             AMG_param *param, INT levelNum, dCSRmat *N)
+ *                             AMG_param *param, dCSRmat *N)
  *
  * \brief Smooth the tentative prolongation
  *
@@ -104,7 +104,6 @@ SHORT fasp_amg_setup_sa (AMG_data   *mgl,
  * \param tentp     Pointer to the tentative prolongation operators
  * \param P         Pointer to the prolongation operators
  * \param param     Pointer to AMG parameters
- * \param levelNum  Current level number
  * \param N         Pointer to strongly coupled neighbors
  *
  * \author Xiaozhe Hu
@@ -117,7 +116,6 @@ static void smooth_agg (dCSRmat    *A,
                         dCSRmat    *tentp,
                         dCSRmat    *P,
                         AMG_param  *param,
-                        INT         levelNum,
                         dCSRmat    *N)
 {
     const SHORT filter = param->smooth_filter;
@@ -387,11 +385,10 @@ static SHORT amg_setup_smoothP_smoothR (AMG_data   *mgl,
 
         /* -- Form Tentative prolongation --*/
         form_tentative_p(&vertices[lvl], &tentp[lvl], mgl[0].near_kernel_basis,
-                         lvl+1, num_aggs[lvl]);
+                         num_aggs[lvl]);
 
         /* -- Form smoothed prolongation -- */
-        smooth_agg(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param, lvl+1,
-                   &Neighbor[lvl]);
+        smooth_agg(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param, &Neighbor[lvl]);
 
         // Check 2: Is coarse sparse too small?
         if ( mgl[lvl].P.col < MIN_CDOF ) {
@@ -654,11 +651,10 @@ static SHORT amg_setup_smoothP_unsmoothR (AMG_data   *mgl,
 
         /* -- Form Tentative prolongation --*/
         form_tentative_p(&vertices[lvl], &tentp[lvl], mgl[0].near_kernel_basis,
-                         lvl+1, num_aggs[lvl]);
+                         num_aggs[lvl]);
 
         /* -- Form smoothed prolongation -- */
-        smooth_agg(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param, lvl+1,
-                   &Neighbor[lvl]);
+        smooth_agg(&mgl[lvl].A, &tentp[lvl], &mgl[lvl].P, param, &Neighbor[lvl]);
 
         // Check 2: Is coarse sparse too small?
         if ( mgl[lvl].P.col < MIN_CDOF ) break;

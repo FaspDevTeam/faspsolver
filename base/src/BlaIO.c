@@ -703,11 +703,11 @@ void fasp_dstr_read (const char  *filename,
 void fasp_dbsr_read (const char  *filename,
                      dBSRmat     *A)
 {
-    int  ROW, COL, NNZ, nb, storage_manner;
-    int  i, n;
-    int  index;
-    REAL value;
-    int  status;
+    INT     ROW, COL, NNZ, nb, storage_manner;
+    INT     i, n;
+    INT     index;
+    REAL    value;
+    size_t  status;
     
     FILE *fp = fopen(filename,"r");
 
@@ -780,12 +780,11 @@ void fasp_dbsr_read (const char  *filename,
 void fasp_dvecind_read (const char  *filename,
                         dvector     *b)
 {
-    INT   i, n;
-    INT   index;
-    REAL  value;
-    FILE *fp = fopen(filename,"r");
+    INT     i, n, index;
+    REAL    value;
+    size_t  status;
     
-    int   status;
+	FILE   *fp = fopen(filename,"r");
     
     if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
     
@@ -830,9 +829,9 @@ void fasp_dvecind_read (const char  *filename,
 void fasp_dvec_read (const char  *filename,
                      dvector     *b)
 {
-    int   i, n;
-    REAL  value;
-    int   status;
+    INT     i, n;
+    REAL    value;
+    size_t  status;
     
     FILE *fp = fopen(filename,"r");
 
@@ -880,8 +879,8 @@ void fasp_dvec_read (const char  *filename,
 void fasp_ivecind_read (const char  *filename,
                         ivector     *b)
 {
-    int   i, n, index, value;
-    int   status;
+    INT     i, n, index, value;
+    size_t  status;
 
     FILE *fp = fopen(filename,"r");
     
@@ -919,8 +918,8 @@ void fasp_ivecind_read (const char  *filename,
 void fasp_ivec_read (const char  *filename,
                      ivector     *b)
 {
-    int   i, n, value;
-    int   status;
+    INT     i, n, value;
+    size_t  status;
 
     FILE *fp = fopen(filename,"r");
     
@@ -1138,9 +1137,9 @@ void fasp_dstr_write (const char  *filename,
     const INT nx = A->nx, ny = A->ny, nz = A->nz;
     const INT ngrid = A->ngrid, nband = A->nband, nc = A->nc;
     
-    INT *offsets=A->offsets;
+    INT *offsets = A->offsets;
     
-    unsigned INT i, k, n;
+    INT i, k, n;
     
     FILE *fp = fopen(filename,"w");
 
@@ -1197,7 +1196,7 @@ void fasp_dbsr_write (const char *filename,
     INT  *ja  = A->JA;
     REAL *val = A->val;
     
-    unsigned INT i, n;
+    INT i, n;
     
     FILE *fp = fopen(filename,"w");
 
@@ -1212,7 +1211,7 @@ void fasp_dbsr_write (const char *filename,
     fprintf(fp,"%d\n",storage_manner); // write storage manner of each block
     
     // write A->IA
-    n = ROW+1; // length of A->IA
+    n = ROW + 1; // length of A->IA
     fprintf(fp,"%d\n",n); // length of A->IA
     for ( i = 0; i < n; ++i ) fprintf(fp, "%d\n", ia[i]);
     
@@ -1340,8 +1339,8 @@ void fasp_ivec_write (const char  *filename,
 void fasp_dvec_print (const INT  n,
                       dvector   *u)
 {
-    unsigned INT i;
-    unsigned INT NumPrint = n;
+    INT i;
+    INT NumPrint = n;
     
     if ( n <= 0 ) NumPrint = u->row; // print all
     
@@ -1362,8 +1361,8 @@ void fasp_dvec_print (const INT  n,
 void fasp_ivec_print (const INT  n,
                       ivector   *u)
 {
-    unsigned INT i;
-    unsigned INT NumPrint = n;
+    INT i;
+    INT NumPrint = n;
     
     if ( n <= 0 ) NumPrint = u->row; // print all
     
@@ -1589,8 +1588,8 @@ void fasp_matrix_read (const char  *filename,
 {
     
     INT      index, flag;
-    size_t   status;
     SHORT    EndianFlag;
+	size_t   status;
 
     FILE    *fp = fopen(filename,"rb");
     
@@ -1696,9 +1695,9 @@ void fasp_matrix_read (const char  *filename,
 void fasp_matrix_read_bin (const char *filename,
                            void       *A)
 {
-    size_t  status;
     INT     index, flag;
     SHORT   EndianFlag = 1;
+	size_t  status;
 
     FILE   *fp = fopen(filename, "rb");
 

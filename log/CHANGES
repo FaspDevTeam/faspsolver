@@ -1,5 +1,11 @@
 File Name: CHANGES
 
+03/19/2018 FASP 2.0.8:
+- Remove unused arguments in several functions.
+- Remove unused OMP counter from fasp.h.
+- Change interger definitions of a few local variables.
+- Update function decrorations in fasp_functs.h.
+
 03/15/2018 FASP 2.0.7:
 - Update copyright information.
 - Fix some ANSI C uncompatible problems; a lot more still there.

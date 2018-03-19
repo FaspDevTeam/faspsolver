@@ -34,8 +34,8 @@
  */
 INT fasp_check_diagpos (const dCSRmat *A)
 {
-    const INT      m = A->row;
-    unsigned INT   i, num_neg;
+    const INT m = A->row;
+    INT i, num_neg;
     
 #if DEBUG_MODE > 1
     printf("### DEBUG: nr = %d, nc = %d, nnz = %d\n", A->row, A->col, A->nnz);

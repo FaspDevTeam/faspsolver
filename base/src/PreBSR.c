@@ -75,7 +75,7 @@ void fasp_precond_dbsr_diag (REAL *r,
             REAL *diagptr = diag->diag.val;
             const INT nb2 = nb*nb;
             const INT m = diag->diag.row/nb2;
-            unsigned INT i;
+            INT i;
 
 #ifdef _OPENMP 
             if (m > OPENMP_HOLDS) {
@@ -125,7 +125,7 @@ void fasp_precond_dbsr_diag_nc2 (REAL *r,
     precond_diag_bsr  * diag    = (precond_diag_bsr *)data;
     REAL              * diagptr = diag->diag.val;
     
-    unsigned INT i;
+    INT i;
     const INT m = diag->diag.row/4;
 
 #ifdef _OPENMP 
@@ -174,7 +174,7 @@ void fasp_precond_dbsr_diag_nc3 (REAL *r,
     REAL              * diagptr = diag->diag.val;
     
     const INT m = diag->diag.row/9;
-    unsigned INT i;
+    INT i;
     
 #ifdef _OPENMP 
     if (m > OPENMP_HOLDS) {
@@ -221,8 +221,8 @@ void fasp_precond_dbsr_diag_nc5 (REAL *r,
     precond_diag_bsr  * diag    = (precond_diag_bsr *)data;
     REAL              * diagptr = diag->diag.val;
     
-    unsigned INT i;
     const INT m = diag->diag.row/25;
+    INT i;
 
 #ifdef _OPENMP 
     if (m > OPENMP_HOLDS) {
@@ -269,8 +269,8 @@ void fasp_precond_dbsr_diag_nc7 (REAL *r,
     precond_diag_bsr  * diag    = (precond_diag_bsr *)data;
     REAL              * diagptr = diag->diag.val;
     
-    unsigned INT i;
     const INT m = diag->diag.row/49;
+    INT i;
 
 #ifdef _OPENMP 
     if (m > OPENMP_HOLDS) {
@@ -991,8 +991,9 @@ void fasp_precond_dbsr_amg (REAL *r,
     const INT row=predata->mgl_data[0].A.ROW;
     const INT nb = predata->mgl_data[0].A.nb;
     const INT maxit=predata->maxit;
-    unsigned INT i;
     const INT m = row*nb;
+
+	INT i;
     
     AMG_param amgparam; fasp_param_amg_init(&amgparam);
     amgparam.cycle_type = predata->cycle_type;
@@ -1036,7 +1037,8 @@ void fasp_precond_dbsr_namli (REAL *r,
     const INT maxit=pcdata->maxit;
     const SHORT num_levels=pcdata->max_levels;
     const INT m=row*nb;
-    unsigned INT i;
+    
+	INT i;
     
     AMG_param amgparam;
     fasp_param_amg_init(&amgparam);
@@ -1071,10 +1073,11 @@ void fasp_precond_dbsr_amg_nk (REAL *r,
     const INT row=predata->mgl_data[0].A.ROW;
     const INT nb = predata->mgl_data[0].A.nb;
     const INT maxit=predata->maxit;
-    unsigned INT i;
     const INT m = row*nb;
     
-    dCSRmat *A_nk = predata->A_nk;
+    INT i;
+
+	dCSRmat *A_nk = predata->A_nk;
     dCSRmat *P_nk = predata->P_nk;
     dCSRmat *R_nk = predata->R_nk;
     

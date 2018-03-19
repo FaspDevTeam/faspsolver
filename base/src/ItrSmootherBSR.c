@@ -152,15 +152,12 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
 }
 
 /**
- * \fn void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A, dvector *b, dvector *u,
- *                                           REAL *diaginv)
+ * \fn void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A, REAL *diaginv)
  *
  * \brief Setup for jacobi relaxation, fetch the diagonal sub-block matrixes and
  *        make them inverse first
  *
  * \param A       Pointer to dBSRmat: the coefficient matrix
- * \param b       Pointer to dvector: the right hand side
- * \param u       Pointer to dvector: the unknowns (IN: initial, OUT: approximation)
  * \param diaginv Inverse of the diagonal entries
  *
  * \author Zhiyang Zhou
@@ -169,8 +166,6 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
  * Modified by Chunsheng Feng, Zheng Li on 08/02/2012
  */
 void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
-                                      dvector *b,
-                                      dvector *u,
                                       REAL    *diaginv)
 {
     // members of A
