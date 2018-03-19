@@ -23,7 +23,7 @@
 /*---------------------------------*/
 
 /**
- * \fn fasp_gettime (REAL *time)
+ * \fn void fasp_gettime (REAL *time)
  *
  * \brief Get system time
  *

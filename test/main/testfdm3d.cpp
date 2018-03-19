@@ -5,19 +5,20 @@
  *  Consider a three-dimensional Possion equation
  *
  * \f[
- *   \frac{du}{dt}-u_{xx}-u_{yy}-u_{zz} = f(x,y,t)\ \ in\ \Omega = (0,1)\times(0,1)\times(0,1)
+ *   \frac{du}{dt}-u_{xx}-u_{yy}-u_{zz} = f(x,y,z,t)\
+ *   \ in\ \Omega = (0,1)\times(0,1)\times(0,1)
  * \f]
  * \f[
- *                 u(x,y,z,0) = 0\ \ \ \ \ \ in\ \Omega
+ *           u(x,y,z,0) = 0\ \ \ \ \ \ in\ \Omega
  * \f]
  * \f[
- *                        u = 0\ \ \ \ \ \ \ \ \ on\  \partial\Omega
+ *                    u = 0\ \ \ \ \ \ \ \ \ on\  \partial\Omega
  * \f]
  *
  *  where f(x,y,z,t) = \f$3*\pi^2*u(x,y,z,t) + sin(\pi*x)*sin(\pi*y)*sin(\pi*z)\f$,
  *  and the solution function can be expressed by
  *
- *             \f$u(x,y,z,t) = sin(\pi*x)*sin(\pi*y)*sin(\pi*z)\f$
+ *        \f$u(x,y,z,t) = sin(\pi*x)*sin(\pi*y)*sin(\pi*z)\f$
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
@@ -25,15 +26,18 @@
  *---------------------------------------------------------------------------------
  */
 
+#include "fasp.h"
+
 extern "C"
 {
+#include "fasp_functs.h"
 #include "poisson_fdm.h"
 }
 
 int
 main( int argc, char *argv[])
 {
-    clock_t tStart, tEnd;
+    double tStart, tEnd;
     int TTest       = 1;
     int arg_index   = 1;
     int print_usage = 0;
@@ -164,13 +168,13 @@ main( int argc, char *argv[])
     /*-----------------------------------------------------
      * construct a linear system
      *----------------------------------------------------*/
-    if (TTest) tStart = clock();
+    if (TTest) fasp_gettime(&tStart);
 
     fsls_BuildLinearSystem_7pt3d(nt, nx, ny, nz, &A, &b, &u);
 
     if (TTest)
     {
-        tEnd = clock();
+        fasp_gettime(&tEnd);
         printf("\n >>> total time: %.3f seconds\n\n",mytime(tStart,tEnd));
     }
 

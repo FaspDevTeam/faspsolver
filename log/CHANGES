@@ -5,6 +5,7 @@ File Name: CHANGES
 - Remove unused OMP counter from fasp.h.
 - Change interger definitions of a few local variables.
 - Update function decrorations in fasp_functs.h.
+- Get rid of all clock().
 
 03/15/2018 FASP 2.0.7:
 - Update copyright information.

@@ -27,13 +27,11 @@ static void rap_setup(AMG_data *mgl, AMG_param *param)
     ivector vertices=fasp_ivec_create(m); // stores level info
     unsigned int level=0;   
     iCSRmat S;
-    
+
+    REAL setup_start, setup_end;
+
     if (print_level>8) printf("rap_setup: %d, %d, %d\n",m,n,nnz);
-    
-    clock_t setup_start, setup_end;
-    
-    double setupduration;
-    
+
     // initialize ILU parameters
     mgl->ILU_levels = param->ILU_levels;
     ILU_param iluparam;
@@ -61,22 +59,21 @@ static void rap_setup(AMG_data *mgl, AMG_param *param)
         
         /*-- Form coarse level stiffness matrix --*/    
         printf("--------- Level %d ---------- \n", level);
-        
-        setup_start=clock();
+
+        fasp_gettime(&setup_start);
         fasp_blas_dcsr_rap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
-        setup_end=clock();
-        setupduration = (double)(setup_end - setup_start)/(double)(CLOCKS_PER_SEC);
-        printf("RAP1 costs %f seconds.\n", setupduration);  
-        
+        fasp_gettime(&setup_end);
+
+        fasp_cputime("RAP1", setup_end - setup_start);
+
         fasp_dcsr_free(&mgl[level+1].A);
         
-        setup_start=clock();
+        fasp_gettime(&setup_start);
         fasp_blas_dcsr_ptap(&mgl[level].R, &mgl[level].A, &mgl[level].P, &mgl[level+1].A);
-        setup_end=clock();
-        
-        setupduration = (double)(setup_end - setup_start)/(double)(CLOCKS_PER_SEC);
-        printf("RAP2 costs %f seconds.\n", setupduration);          
-        
+        fasp_gettime(&setup_end);
+
+        fasp_cputime("RAP2", setup_end - setup_start);
+
         level++;
 
     }
