@@ -432,7 +432,8 @@ static REAL DinvAnorminf (dCSRmat *Amat,
     const INT   n  = Amat->row;
     const INT  *ia = Amat->IA;
     const REAL *a  = Amat->val;
-    unsigned INT i,j;
+    
+	INT i,j;
     REAL norm, temp;
 
 #ifdef _OPENMP
@@ -494,7 +495,7 @@ static void Diagx (REAL *Dinv,
                    REAL *x,
                    REAL *b)
 {
-    unsigned INT i;
+    INT i;
     
     // Variables for OpenMP
     SHORT nthreads = 1, use_openmp = FALSE;
@@ -515,7 +516,7 @@ static void Diagx (REAL *Dinv,
             fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
             for (i = mybegin; i < myend; i++) {
                 b[i] = Dinv[i] * x[i];
-	    }
+			}
         }
     }
     else {
@@ -615,7 +616,7 @@ static void fasp_aux_uuplv0_ (REAL *u,
      This computes y = y + x.
      */
     INT i;
-    for (i=0; i < *n ; i++) u[i]=u[i]+v[i];
+    for ( i=0; i < *n; i++ ) u[i] += v[i];
     return;
 }
 
@@ -629,16 +630,14 @@ static void fasp_aux_norm1_ (INT   *ia,
     REAL sum,s;
     /* computes one norm of a matrix a and stores it in the variable
        pointed to by *a1norm*/
-    n=*nn;
-    s = 0e+00;
-    for (i=0; i < n ; i++) {
+    n = *nn;
+    s = 0.0;
+    for ( i=0; i < n ; i++ ) {
         iaa = ia[i];
         iab = ia[i+1];
         sum = 0e+00;
-        for (jk = iaa; jk < iab; jk++) {
-            sum += fabs(a[jk]);
-        }
-        if ( sum > s) s = sum;
+        for ( jk = iaa; jk < iab; jk++ ) sum += fabs(a[jk]);
+        if ( sum > s ) s = sum;
     }
     *a1norm=s;
 }

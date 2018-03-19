@@ -789,7 +789,7 @@ static INT numfactor (dBSRmat   *A,
  * \author Zheng Li
  * \date   12/04/2016
  *
- * \note Only works for 1, 2, 3 nb (Zheng)
+ * \note Only works for nb = 1, 2, 3 (Zheng)
  */
 static INT numfactor_mulcol (dBSRmat   *A,
                              REAL      *luval,
@@ -802,11 +802,11 @@ static INT numfactor_mulcol (dBSRmat   *A,
     INT status = FASP_SUCCESS;
     
 #ifdef _OPENMP
-    INT n = A->ROW, nb = A->nb, nb2 = nb*nb;
-    INT ib, ibstart,ibstart1;
-    INT k, i, indj, inds, indja,jluj, jlus, ijaj, tmp;
-    REAL  *mult,*mult1;
-    INT *colptrs;
+    INT   n = A->ROW, nb = A->nb, nb2 = nb*nb;
+    INT   ib, ibstart,ibstart1;
+    INT   k, i, indj, inds, indja,jluj, jlus, ijaj, tmp;
+    REAL  *mult, *mult1;
+    INT   *colptrs;
     
     /**
      *     colptrs is used to hold the indices of entries in LU of row k.

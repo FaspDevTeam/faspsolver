@@ -91,9 +91,9 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
     REAL    *work = NULL;
     REAL   **p = NULL, **hh = NULL;
     
-    unsigned INT   Restart  = MIN(restart, MaxIt);
-    unsigned INT   Restart1 = Restart + 1;
-    unsigned LONG  worksize = (Restart+4)*(Restart+n)+1-n;
+    INT   Restart  = MIN(restart, MaxIt);
+    INT   Restart1 = Restart + 1;
+    LONG  worksize = (Restart+4)*(Restart+n)+1-n;
     
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
@@ -395,9 +395,9 @@ INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
     REAL    *work = NULL;
     REAL   **p = NULL, **hh = NULL;
 
-    unsigned INT   Restart  = MIN(restart, MaxIt);
-    unsigned INT   Restart1 = Restart + 1;
-    unsigned LONG  worksize = (Restart+4)*(Restart+n)+1-n;
+    INT   Restart  = MIN(restart, MaxIt);
+    INT   Restart1 = Restart + 1;
+    LONG  worksize = (Restart+4)*(Restart+n)+1-n;
 
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
@@ -700,9 +700,9 @@ INT fasp_solver_dblc_pgmres (dBLCmat     *A,
     REAL    *work = NULL;
     REAL   **p = NULL, **hh = NULL;
     
-    unsigned INT   Restart  = MIN(restart, MaxIt);
-    unsigned INT   Restart1 = Restart + 1;
-    unsigned LONG  worksize = (Restart+4)*(Restart+n)+1-n;
+    INT   Restart  = MIN(restart, MaxIt);
+    INT   Restart1 = Restart + 1;
+    LONG  worksize = (Restart+4)*(Restart+n)+1-n;
     
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
@@ -1004,9 +1004,9 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
     REAL    *work = NULL;
     REAL   **p = NULL, **hh = NULL;
     
-    unsigned INT   Restart  = MIN(restart, MaxIt);
-    unsigned INT   Restart1 = Restart + 1;
-    unsigned LONG  worksize = (Restart+4)*(Restart+n)+1-n;
+    INT   Restart  = MIN(restart, MaxIt);
+    INT   Restart1 = Restart + 1;
+    LONG  worksize = (Restart+4)*(Restart+n)+1-n;
     
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
@@ -1308,9 +1308,9 @@ INT fasp_solver_pgmres (mxv_matfree  *mf,
     REAL    *work = NULL;
     REAL    **p = NULL, **hh = NULL;
     
-    unsigned INT  Restart  = restart;
-    unsigned INT  Restart1 = Restart + 1;
-    unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n;
+    INT  Restart  = restart;
+    INT  Restart1 = Restart + 1;
+    LONG worksize = (Restart+4)*(Restart+n)+1-n;
     
     // Output some info for debuging
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GMRes solver (MatFree) ...\n");

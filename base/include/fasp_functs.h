@@ -1313,8 +1313,6 @@ void fasp_smoother_dbsr_jacobi (dBSRmat *A,
                                 dvector *u);
 
 void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
-                                      dvector *b,
-                                      dvector *u,
                                       REAL    *diaginv);
 
 void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,

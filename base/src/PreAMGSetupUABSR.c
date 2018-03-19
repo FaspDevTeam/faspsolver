@@ -235,14 +235,13 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr   *mgl,
         
         /* -- Form Prolongation --*/
         if ( lvl == 0 && mgl[0].near_kernel_dim >0 ) {
-            form_tentative_p_bsr1(&vertices[lvl], &mgl[lvl].P, &mgl[0], lvl+1,
+            form_tentative_p_bsr1(&vertices[lvl], &mgl[lvl].P, &mgl[0],
                                   num_aggs[lvl], mgl[0].near_kernel_dim,
                                   mgl[0].near_kernel_basis);
         }
         else {
 
-            form_boolean_p_bsr(&vertices[lvl], &mgl[lvl].P, &mgl[0], lvl+1,
-                               num_aggs[lvl]);
+            form_boolean_p_bsr(&vertices[lvl], &mgl[lvl].P, &mgl[0], num_aggs[lvl]);
         }
         
         /*-- Form resitriction --*/

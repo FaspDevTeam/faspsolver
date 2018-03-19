@@ -102,9 +102,9 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
     INT    restart_max = restart; // upper bound for restart in each restart cycle
     INT    restart_min = 3;       // lower bound for restart in each restart cycle
     
-    unsigned INT  Restart  = restart; // real restart in some fixed restarted cycle
-    unsigned INT  Restart1 = Restart + 1;
-    unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
+    INT  Restart  = restart; // real restart in some fixed restarted cycle
+    INT  Restart1 = Restart + 1;
+    LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
     
     // Output some info for debuging
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling VFGMRes solver (CSR) ...\n");
@@ -431,9 +431,9 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
     INT    restart_max = restart; // upper bound for restart in each restart cycle
     INT    restart_min = 3;       // lower bound for restart in each restart cycle
     
-    unsigned INT  Restart  = restart; // real restart in some fixed restarted cycle
-    unsigned INT  Restart1 = Restart + 1;
-    unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
+    INT  Restart  = restart; // real restart in some fixed restarted cycle
+    INT  Restart1 = Restart + 1;
+    LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
     
     // Output some info for debuging
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling VFGMRes solver (BSR) ...\n");
@@ -763,9 +763,9 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
     INT    restart_max = restart; // upper bound for restart in each restart cycle
     INT    restart_min = 3;       // lower bound for restart in each restart cycle
     
-    unsigned INT  Restart  = restart; // real restart in some fixed restarted cycle
-    unsigned INT  Restart1 = Restart + 1;
-    unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
+    INT  Restart  = restart; // real restart in some fixed restarted cycle
+    INT  Restart1 = Restart + 1;
+    LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
     
     // Output some info for debuging
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling VFGMRes solver (BLC) ...\n");
@@ -1093,9 +1093,9 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
     INT    restart_max = restart; // upper bound for restart in each restart cycle
     INT    restart_min = 3;       // lower bound for restart in each restart cycle
     
-    unsigned INT  Restart  = restart; // real restart in some fixed restarted cycle
-    unsigned INT  Restart1 = Restart + 1;
-    unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
+    INT  Restart  = restart; // real restart in some fixed restarted cycle
+    INT  Restart1 = Restart + 1;
+    LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
     
     // Output some info for debuging
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling VFGMRes solver (MatFree) ...\n");

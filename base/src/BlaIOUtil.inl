@@ -702,7 +702,7 @@ static inline void fasp_dbsr_write_s (FILE        *fp,
     INT  *ja  = A->JA;
     REAL *val = A->val;
     
-    unsigned INT i, n;
+    INT i, n;
     
     fprintf(fp,"%d  %d  %d\n",ROW,COL,NNZ); // write dimension of the block matrix
     
@@ -736,7 +736,7 @@ static inline void fasp_dbsr_write_b (FILE        *fp,
     INT  *ja  = A->JA;
     REAL *val = A->val;
     
-    unsigned INT i, n, index;
+    INT i, n, index;
     REAL value;
     
     // write dimension of the block matrix
@@ -781,7 +781,7 @@ static inline void fasp_dstr_write_s (FILE        *fp,
     
     INT *offsets=A->offsets;
     
-    unsigned INT i, k, n;
+    INT i, k, n;
     
     fprintf(fp,"%d  %d  %d\n",nx,ny,nz); // write dimension of the problem
     
@@ -815,7 +815,7 @@ static inline void fasp_dstr_write_b (FILE        *fp,
     
     INT *offsets=A->offsets;
     
-    unsigned INT i, k, n;
+    INT i, k, n;
     REAL value;
     
     // write dimension of the problem
@@ -856,7 +856,7 @@ static inline void fasp_dvec_read_s (FILE        *fp,
     
     INT   i, n;
     REAL  value;
-    int   status;
+    INT   status;
     
     status = fscanf(fp,"%d",&n);
     fasp_dvec_alloc(n,b);
@@ -893,7 +893,7 @@ static inline void fasp_ivec_read_s (FILE        *fp,
                                      ivector     *b)
 {
     INT   i, n, value;
-    int   status;
+    INT   status;
     
     status = fscanf(fp,"%d",&n);
     fasp_ivec_alloc(n,b);
@@ -931,7 +931,7 @@ static inline void fasp_dvecind_read_s (FILE        *fp,
 {
     INT   i, n, index;
     REAL  value;
-    int   status;
+    INT   status;
     
     status = fscanf(fp,"%d",&n);
     fasp_dvec_alloc(n,b);

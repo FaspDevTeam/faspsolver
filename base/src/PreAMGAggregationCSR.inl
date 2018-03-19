@@ -23,14 +23,13 @@
 
 /**
  * \fn static void form_tentative_p (ivector *vertices, dCSRmat *tentp, REAL **basis,
- *                                   INT levelNum, INT NumAggregates)
+ *                                   INT NumAggregates)
  *
  * \brief Form aggregation based on strong coupled neighbors
  *
  * \param vertices           Pointer to the aggregation of vertices
  * \param tentp              Pointer to the prolongation operators
  * \param basis              Pointer to the near kernel
- * \param levelNum           Level number
  * \param NumAggregates      Number of aggregations
  *
  * \author Xiaozhe Hu
@@ -41,7 +40,6 @@
 static void form_tentative_p (ivector  *vertices,
                               dCSRmat  *tentp,
                               REAL    **basis,
-                              INT       levelNum,
                               INT       NumAggregates)
 {
     INT i, j;

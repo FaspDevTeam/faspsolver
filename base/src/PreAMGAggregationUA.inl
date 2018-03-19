@@ -281,13 +281,12 @@ static void form_pairwise (const dCSRmat  *A,
 
 /**
  * \fn static void form_boolean_p (const ivector *vertices, dCSRmat *tentp,
- *                                 const INT NumLevels, const INT NumAggregates)
+ *                                 const INT NumAggregates)
  *
  * \brief Form aggregation based on strong coupled neighbors
  *
  * \param vertices           Pointer to the aggregation of vertices
  * \param tentp              Pointer to the prolongation operators
- * \param NumLevels          Level number
  * \param NumAggregates      Number of aggregations
  *
  * \author Xiaozhe Hu
@@ -295,7 +294,6 @@ static void form_pairwise (const dCSRmat  *A,
  */
 static void form_boolean_p (const ivector  *vertices,
                             dCSRmat        *tentp,
-                            const INT       NumLevels,
                             const INT       NumAggregates)
 {
     INT i, j;
@@ -399,7 +397,7 @@ static SHORT aggregation_symmpair (AMG_data   *mgl,
         if ( i < pair_number ) {
 
             /*-- Form Prolongation --*/
-            form_boolean_p(&vertices[lvl], &mgl[lvl].P, lvl+1, num_agg);
+            form_boolean_p(&vertices[lvl], &mgl[lvl].P, num_agg);
 
             /*-- Perform aggressive coarsening only up to the specified level --*/
             if ( mgl[lvl].P.col < MIN_CDOF ) break;
@@ -749,7 +747,7 @@ static SHORT aggregation_quality (const dCSRmat  *A,
 }
 
 /**
- * \fn void usympair_1stpass (const dCSRmat * A, const REAL k_tg, INT *order,
+ * \fn void usympair_1stpass (const dCSRmat * A, const REAL k_tg,
  *                            ivector *vertices, ivector *map, REAL*s,
  *                            INT *NumAggregates)
  *
@@ -757,7 +755,6 @@ static SHORT aggregation_quality (const dCSRmat  *A,
  *
  * \param A                Pointer to the coefficient matrices
  * \param k_tg             Two-grid convergence parameter
- * \param order            Pointer to the order of nodes
  * \param vertices         Pointer to the aggregation of vertices
  * \param map              Pointer to the map index of fine nodes to coarse nodes
  * \param s                Pointer to off-diagonal row sum
@@ -771,7 +768,6 @@ static SHORT aggregation_quality (const dCSRmat  *A,
  */
 static void usympair_1stpass (const dCSRmat * A,
                               const REAL      k_tg,
-                              INT           * order,
                               ivector       * vertices,
                               ivector       * map,
                               REAL          * s,
@@ -939,16 +935,14 @@ static void usympair_1stpass (const dCSRmat * A,
 
 /**
  * \fn void usympair_2ndpass (const dCSRmat *A, dCSRmat *tmpA, const REAL k_tg,
- *                            INT dopass, INT *order, ivector *map1,
- *                            ivector *vertices1, ivector *vertices, ivector *map,
- *                            REAL *s1, INT *NumAggregates)
+ *                            INT dopass, ivector *map1, ivector *vertices1, 
+ *                            ivector *vertices, ivector *map, REAL *s1, INT *NumAggregates)
  *
  * \brief Form second pass aggregation for non-symmetric problem
  *
  * \param A          Pointer to the coefficient matrices
  * \param tmpA       Pointer to the first pass aggregation coarse matrix
  * \param dopass     Pointer to the number of pass
- * \param order      Pointer to the order of nodes
  * \param map1       Pointer to the map index of fine nodes to coarse nodes in
  *                   initial pass
  * \param vertices1  Pointer to the aggregation of vertices in initial pass
@@ -968,7 +962,6 @@ static void usympair_2ndpass (const dCSRmat  *A,
                               dCSRmat        *tmpA,
                               const REAL      k_tg,
                               INT             dopass,
-                              INT            *order,
                               ivector        *map1,
                               ivector        *vertices1,
                               ivector        *vertices,
@@ -1217,17 +1210,15 @@ static SHORT aggregation_usympair (AMG_data   *mgl,
     SHORT      status = FASP_SUCCESS;
 
     ivector  map1, map2;
-    INT  *order = NULL;
     REAL *s = (REAL*)fasp_mem_calloc(ptrA->row, sizeof(REAL));
 
     for ( i = 1; i <= pair_number; ++i ) {
 
         if ( i == 1 ) {
-            usympair_1stpass(ptrA, quality_bound, order, &vertices[lvl], &map1,
-                             s, &num_agg);
+            usympair_1stpass(ptrA, quality_bound, &vertices[lvl], &map1, s, &num_agg);
         }
         else {
-            usympair_2ndpass(&mgl[level].A, ptrA, quality_bound, i, order, &map1,
+            usympair_2ndpass(&mgl[level].A, ptrA, quality_bound, i, &map1,
                              &vertices[lvl-1], &vertices[lvl], &map2, s, &num_agg);
         }
 
@@ -1245,7 +1236,7 @@ static SHORT aggregation_usympair (AMG_data   *mgl,
         if ( i < pair_number ) {
 
             /*-- Form Prolongation --*/
-            form_boolean_p(&vertices[lvl], &mgl[lvl].P, lvl+1, num_agg);
+            form_boolean_p(&vertices[lvl], &mgl[lvl].P, num_agg);
 
             /*-- Perform aggressive coarsening only up to the specified level --*/
             if ( mgl[lvl].P.col < MIN_CDOF ) break;

@@ -125,7 +125,7 @@ static dCSRmat condenseBSRLinf (const dBSRmat *A)
 /**
  * \fn static void form_boolean_p_bsr (const ivector *vertices, dBSRmat *tentp,
  *                                     const AMG_data_bsr *mgl,
- *                                     const INT NumLevels, const INT NumAggregates)
+ *                                     const INT NumAggregates)
  *
  * \brief Form boolean prolongations in dBSRmat (assume constant vector is in
  *        the null space)
@@ -133,7 +133,6 @@ static dCSRmat condenseBSRLinf (const dBSRmat *A)
  * \param vertices           Pointer to the aggregation of vertices
  * \param tentp              Pointer to the prolongation operators
  * \param mgl                Pointer to AMG levels
- * \param NumLevels          Level number
  * \param NumAggregates      Number of aggregations
  *
  * \author Xiaozhe Hu
@@ -142,7 +141,6 @@ static dCSRmat condenseBSRLinf (const dBSRmat *A)
 static void form_boolean_p_bsr (const ivector       *vertices,
                                 dBSRmat             *tentp,
                                 const AMG_data_bsr  *mgl,
-                                const INT            NumLevels,
                                 const INT            NumAggregates)
 {
     INT i, j;
@@ -195,9 +193,8 @@ static void form_boolean_p_bsr (const ivector       *vertices,
 
 /**
  * \fn static void form_tentative_p_bsr1 (const ivector *vertices, dBSRmat *tentp,
- *                                        const AMG_data_bsr *mgl, const INT NumLevels,
- *                                        const INT NumAggregates, const const INT dim,
- *                                        REAL **basis)
+ *                                        const AMG_data_bsr *mgl, const INT NumAggregates,
+ *                                        const const INT dim, REAL **basis)
  *
  * \brief Form tentative prolongation for BSR format matrix (use general basis for
  *        the null space)
@@ -205,7 +202,6 @@ static void form_boolean_p_bsr (const ivector       *vertices,
  * \param vertices           Pointer to the aggregation of vertices
  * \param tentp              Pointer to the prolongation operators
  * \param mgl                Pointer to AMG levels
- * \param NumLevels          Level number
  * \param NumAggregates      Number of aggregations
  * \param dim                Dimension of the near kernel space
  * \param basis              Pointer to the basis of the near kernel space
@@ -216,7 +212,6 @@ static void form_boolean_p_bsr (const ivector       *vertices,
 static void form_tentative_p_bsr1 (const ivector       *vertices,
                                    dBSRmat             *tentp,
                                    const AMG_data_bsr  *mgl,
-                                   const INT            NumLevels,
                                    const INT            NumAggregates,
                                    const INT            dim,
                                    REAL               **basis)

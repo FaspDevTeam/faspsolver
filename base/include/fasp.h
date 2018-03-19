@@ -1172,13 +1172,13 @@ typedef struct {
 /*
  * OpenMP definitions and declarations
  */
-extern INT  count;   /**< Counter for multiple calls */
-
 #ifdef _OPENMP
 
 #include "omp.h"
 
 #define ILU_MC_OMP       OFF   /**< Use multicolor smoothing or not, default is not */
+
+//extern INT omp_count;   /**< Counter for multiple calls: Remove later!!! --Chensong  */
 
 extern INT THDs_AMG_GS;        /**< AMG GS smoothing threads  */
 extern INT THDs_CPR_lGS;       /**< Reservoir GS smoothing threads */
