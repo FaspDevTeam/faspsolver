@@ -8,16 +8,16 @@
  *   \frac{du}{dt}-u_{xx}-u_{yy} = f(x,y,t)\ \ in\ \Omega = (0,1)\times(0,1)
  * \f]
  * \f[
- *                 u(x,y,0) = 0\ \ \ \ \ \ in\ \Omega = (0,1)\times(0,1)
+ *             u(x,y,0) = 0\ \ \ \ \ \ in\ \Omega = (0,1)\times(0,1)
  * \f]
  * \f[
- *                        u = 0\ \ \ \ \ \ \ \ \ on\  \partial\Omega
+ *                    u = 0\ \ \ \ \ \ \ \ \ on\  \partial\Omega
  * \f]
  *
  *  where f(x,y,t) = \f$2*\pi^2*sin(\pi*x)*sin(\pi*y)*t + sin(\pi*x)*sin(\pi*y)\f$,
  *  and the solution function can be expressed by
  *
- *             \f$u(x,y,t) = sin(pi*x)*sin(pi*y)*t\f$
+ *          \f$u(x,y,t) = sin(pi*x)*sin(pi*y)*t\f$
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
@@ -25,16 +25,18 @@
  *---------------------------------------------------------------------------------
  */
 
- 
+#include "fasp.h"
+
 extern "C"
 {
+#include "fasp_functs.h"
 #include "poisson_fdm.h"
 }
 
 int
 main( int argc, char *argv[])
 {
-    clock_t tStart, tEnd;
+    double tStart, tEnd;
     int TTest       = 1;
     int arg_index   = 1;
     int print_usage = 0;
@@ -159,14 +161,15 @@ main( int argc, char *argv[])
     /*-----------------------------------------------------
      * construct a linear system
      *----------------------------------------------------*/
-    if (TTest) tStart = clock();
+    if (TTest) fasp_gettime(&tStart);
+
 
     if (rb) fsls_BuildLinearSystem_5pt2d_rb(nt, nx, ny, &A, &b, &u);
     else fsls_BuildLinearSystem_5pt2d(nt, nx, ny, &A, &b, &u);
 
     if (TTest)
     {
-        tEnd = clock();
+        fasp_gettime(&tEnd);
         printf("\n >>> total time: %.3f seconds\n\n",mytime(tStart,tEnd));
     }
 

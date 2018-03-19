@@ -36,10 +36,12 @@ int main (int argc, const char * argv[])
     // Set default values
     int status = FASP_SUCCESS;
     int print_usage;
-    
+    double mesh_refine_s, mesh_refine_e, assemble_s, assemble_e;
+
     FEM_param pt; // parameter for testfem
     FEM_param_init(&pt);
     print_usage = FEM_param_set(argc, argv, &pt);
+
     double dt = pt.T/pt.nt; // time step size
     
     if (print_usage) {
@@ -90,18 +92,16 @@ int main (int argc, const char * argv[])
     mesh_aux_build(&mesh, &mesh_aux);
     
     // Step 2: refinement
-    clock_t mesh_refine_s = clock();
+    fasp_gettime(&mesh_refine_s);
     for (i=0;i<pt.refine_lvl;++i) mesh_refine(&mesh, &mesh_aux);
-    clock_t mesh_refine_e = clock();
-    double mesh_refine_time = (double)(mesh_refine_e - mesh_refine_s)/(double)(CLOCKS_PER_SEC);
-    printf("Mesh refinement costs... %8.4f seconds\n", mesh_refine_time);
-    
+    fasp_gettime(&mesh_refine_e);
+    fasp_cputime("Mesh refinement", mesh_refine_e - mesh_refine_s);
+
     // Step 3: assemble for linear system
-    clock_t assemble_s = clock();
+    fasp_gettime(&assemble_s);
     setup_heat(&A_heat, &Mass, &b_heat, &mesh, &mesh_aux, &pt, &uh_heat, &bdinfo, dt);
-    clock_t assemble_e = clock();
-    double assemble_time = (double)(assemble_e - assemble_s)/(double)(CLOCKS_PER_SEC);
-    printf("Assembling costs........ %8.4f seconds\n", assemble_time);
+    fasp_gettime(&assemble_e);
+    fasp_cputime("Assembling", assemble_e - assemble_s);
     
     // Step 3.5: clean auxiliary mesh info
     mesh_aux_free(&mesh_aux);
@@ -163,10 +163,9 @@ int main (int argc, const char * argv[])
     }
     
     printf("\n==============================================================\n");
-    for (it = 0;it < pt.nt; ++it)
-        {
-            printf("L2 error of FEM at t=%1.5fs is %g\n", dt*(it+1), l2error[it]);
-        }
+    for (it = 0;it < pt.nt; ++it) {
+        printf("L2 error of FEM at t=%1.5fs is %g\n", dt*(it+1), l2error[it]);
+    }
     printf("==============================================================\n");
     
     // Clean up memory
