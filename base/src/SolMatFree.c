@@ -69,10 +69,10 @@ INT fasp_solver_itsolver (mxv_matfree  *mf,
     const REAL  tol           = itparam->tol;
     
     /* Local Variables */
-    REAL solver_start, solver_end, solver_duration;
+    REAL solve_start, solve_end, solve_time;
     INT iter = ERROR_SOLVER_TYPE;
     
-    fasp_gettime(&solver_start);
+    fasp_gettime(&solve_start);
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -121,9 +121,9 @@ INT fasp_solver_itsolver (mxv_matfree  *mf,
     } 
     
     if ( (prtlvl >= PRINT_SOME) && (iter >= 0) ) {
-        fasp_gettime(&solver_end);
-        solver_duration = solver_end - solver_start;
-        fasp_cputime("Iterative method", solver_duration);
+        fasp_gettime(&solve_end);
+        solve_time = solve_end - solve_start;
+        fasp_cputime("Iterative method", solve_time);
     }
     
 #if DEBUG_MODE > 0
@@ -160,21 +160,21 @@ INT fasp_solver_krylov (mxv_matfree  *mf,
     
     /* Local Variables */
     INT      status = FASP_SUCCESS;
-    REAL     solver_start, solver_end, solver_duration;
+    REAL     solve_start, solve_end, solve_time;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
-    fasp_gettime(&solver_start);
+    fasp_gettime(&solve_start);
     
     status = fasp_solver_itsolver(mf,b,x,NULL,itparam);
     
     if ( prtlvl >= PRINT_MIN ) {
-        fasp_gettime(&solver_end);
-        solver_duration = solver_end - solver_start;
-        fasp_cputime("Krylov method totally", solver_duration);
+        fasp_gettime(&solve_end);
+        solve_time = solve_end - solve_start;
+        fasp_cputime("Krylov method totally", solve_time);
     }    
     
 #if DEBUG_MODE > 0

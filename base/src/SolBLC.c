@@ -64,10 +64,10 @@ INT fasp_solver_dblc_itsolver (dBLCmat    *A,
     const INT   MaxIt = itparam->maxit;
     const REAL  tol = itparam->tol;
     
-    REAL  solver_start, solver_end, solver_duration;
+    REAL  solve_start, solve_end, solve_time;
     INT   iter = ERROR_SOLVER_TYPE;
     
-    fasp_gettime(&solver_start);
+    fasp_gettime(&solve_start);
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -107,9 +107,9 @@ INT fasp_solver_dblc_itsolver (dBLCmat    *A,
     }
     
     if ( (prtlvl >= PRINT_MIN) && (iter >= 0) ) {
-        fasp_gettime(&solver_end);
-        solver_duration = solver_end - solver_start;
-        fasp_cputime("Iterative method", solver_duration);
+        fasp_gettime(&solve_end);
+        solve_time = solve_end - solve_start;
+        fasp_cputime("Iterative method", solve_time);
     }
     
 #if DEBUG_MODE > 0
@@ -143,23 +143,23 @@ INT fasp_solver_dblc_krylov (dBLCmat    *A,
     const SHORT prtlvl = itparam->print_level;
     
     INT status = FASP_SUCCESS;
-    REAL solver_start, solver_end, solver_duration;
+    REAL solve_start, solve_end, solve_time;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
 
     // solver part
-    fasp_gettime(&solver_start);
+    fasp_gettime(&solve_start);
     
     status = fasp_solver_dblc_itsolver(A,b,x,NULL,itparam);
     
-    fasp_gettime(&solver_end);
+    fasp_gettime(&solve_end);
     
-    solver_duration = solver_end - solver_start;
+    solve_time = solve_end - solve_start;
     
     if ( prtlvl >= PRINT_MIN )
-        fasp_cputime("Krylov method totally", solver_duration);
+        fasp_cputime("Krylov method totally", solve_time);
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -200,8 +200,8 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
     const SHORT precond_type = itparam->precond_type;
     
     INT status = FASP_SUCCESS;
-    REAL setup_start, setup_end, setup_duration;
-    REAL solver_start, solver_end, solver_duration;
+    REAL setup_start, setup_end, setup_time;
+    REAL solve_start, solve_end, solve_time;
     
     const SHORT max_levels = amgparam->max_levels;
     INT m, n, nnz, i;
@@ -326,22 +326,22 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
     
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&setup_end);
-        setup_duration = setup_end - setup_start;
-        fasp_cputime("Setup totally", setup_duration);
+        setup_time = setup_end - setup_start;
+        fasp_cputime("Setup totally", setup_time);
     }
     
     
     // solver part
-    fasp_gettime(&solver_start);
+    fasp_gettime(&solve_start);
     
     status=fasp_solver_dblc_itsolver(A,b,x, &prec,itparam);
     
-    fasp_gettime(&solver_end);
+    fasp_gettime(&solve_end);
     
-    solver_duration = solver_end - solver_start;
+    solve_time = solve_end - solve_start;
     
     if ( prtlvl >= PRINT_MIN )
-        fasp_cputime("Krylov method totally", solver_duration);
+        fasp_cputime("Krylov method totally", solve_time);
     
     // clean
     /* diagonal blocks are solved exactly */
@@ -398,8 +398,8 @@ INT fasp_solver_dblc_krylov_block_4 (dBLCmat    *A,
     const SHORT precond_type = itparam->precond_type;
     
     INT status = FASP_SUCCESS;
-    REAL setup_start, setup_end, setup_duration;
-    REAL solver_start, solver_end, solver_duration;
+    REAL setup_start, setup_end, setup_time;
+    REAL solve_start, solve_end, solve_time;
 
 #if WITH_UMFPACK
     void **LU_diag = (void **)fasp_mem_calloc(4, sizeof(void *));
@@ -463,21 +463,21 @@ INT fasp_solver_dblc_krylov_block_4 (dBLCmat    *A,
     
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&setup_end);
-        setup_duration = setup_end - setup_start;
-        fasp_cputime("Setup totally", setup_duration);
+        setup_time = setup_end - setup_start;
+        fasp_cputime("Setup totally", setup_time);
     }
 
     // solver part
-    fasp_gettime(&solver_start);
+    fasp_gettime(&solve_start);
     
     status=fasp_solver_dblc_itsolver(A,b,x, &prec,itparam);
     
-    fasp_gettime(&solver_end);
+    fasp_gettime(&solve_end);
     
-    solver_duration = solver_end - solver_start;
+    solve_time = solve_end - solve_start;
     
     if ( prtlvl >= PRINT_MIN )
-        fasp_cputime("Krylov method totally", solver_duration);
+        fasp_cputime("Krylov method totally", solve_time);
     
     // clean
 #if WITH_UMFPACK
@@ -525,8 +525,8 @@ INT fasp_solver_dblc_krylov_sweeping (dBLCmat    *A,
     const SHORT prtlvl = itparam->print_level;
     
     INT status = FASP_SUCCESS;
-    REAL setup_start, setup_end, setup_duration = 0;
-    REAL solve_start, solve_end, solve_duration = 0;
+    REAL setup_start, setup_end, setup_time = 0;
+    REAL solve_start, solve_end, solve_time = 0;
     
     /* setup preconditioner */
     fasp_gettime(&setup_start);
@@ -572,8 +572,8 @@ INT fasp_solver_dblc_krylov_sweeping (dBLCmat    *A,
     
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&setup_end);
-        setup_duration = setup_end - setup_start;
-        fasp_cputime("Setup totally", setup_duration);
+        setup_time = setup_end - setup_start;
+        fasp_cputime("Setup totally", setup_time);
     }
     
     /* solver part */
@@ -583,10 +583,10 @@ INT fasp_solver_dblc_krylov_sweeping (dBLCmat    *A,
     
     fasp_gettime(&solve_end);
     
-    solve_duration = solve_end - solve_start;
+    solve_time = solve_end - solve_start;
     
     if ( prtlvl >= PRINT_MIN )
-        fasp_cputime("Krylov method totally", setup_duration+solve_duration);
+        fasp_cputime("Krylov method totally", setup_time+solve_time);
     
     // clean
 #if WITH_UMFPACK
