@@ -67,14 +67,14 @@ INT fasp_solver_dbsr_itsolver (dBSRmat    *A,
     
     // Local variables
     INT iter = ERROR_SOLVER_TYPE;
-    REAL solver_start, solver_end, solver_duration;
+    REAL solve_start, solve_end, solve_time;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
-    fasp_gettime(&solver_start);
+    fasp_gettime(&solve_start);
     
     /* Safe-guard checks on parameters */
     ITS_CHECK ( MaxIt, tol );
@@ -109,9 +109,9 @@ INT fasp_solver_dbsr_itsolver (dBSRmat    *A,
     }
     
     if ( (prtlvl > PRINT_MIN) && (iter >= 0) ) {
-        fasp_gettime(&solver_end);
-        solver_duration = solver_end - solver_start;
-        fasp_cputime("Iterative method", solver_duration);
+        fasp_gettime(&solve_end);
+        solve_time = solve_end - solve_start;
+        fasp_cputime("Iterative method", solve_time);
     }
     
 #if DEBUG_MODE > 0
@@ -144,22 +144,22 @@ INT fasp_solver_dbsr_krylov (dBSRmat    *A,
 {
     const SHORT prtlvl = itparam->print_level;
     INT status = FASP_SUCCESS;
-    REAL solver_start, solver_end;
+    REAL solve_start, solve_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
     
     // solver part
-    fasp_gettime(&solver_start);
+    fasp_gettime(&solve_start);
     
     status=fasp_solver_dbsr_itsolver(A,b,x,NULL,itparam);
     
-    fasp_gettime(&solver_end);
+    fasp_gettime(&solve_end);
     
     if ( prtlvl > PRINT_NONE ) {
-        REAL solver_duration = solver_end - solver_start;
-        fasp_cputime("Krylov method totally", solver_duration);
+        REAL solve_time = solve_end - solve_start;
+        fasp_cputime("Krylov method totally", solve_time);
     }
     
 #if DEBUG_MODE > 0
@@ -194,7 +194,7 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat    *A,
 {
     const SHORT prtlvl = itparam->print_level;
     INT status = FASP_SUCCESS;
-    REAL solver_start, solver_end;
+    REAL solve_start, solve_end;
     
     INT nb=A->nb,i,k;
     INT nb2=nb*nb;
@@ -253,15 +253,15 @@ INT fasp_solver_dbsr_krylov_diag (dBSRmat    *A,
     pc->fct  = fasp_precond_dbsr_diag;
     
     // solver part
-    fasp_gettime(&solver_start);
+    fasp_gettime(&solve_start);
     
     status=fasp_solver_dbsr_itsolver(A,b,x,pc,itparam);
     
-    fasp_gettime(&solver_end);
+    fasp_gettime(&solve_end);
     
     if ( prtlvl > PRINT_NONE ) {
-        REAL solver_duration = solver_end - solver_start;
-        fasp_cputime("Diag_Krylov method totally", solver_duration);
+        REAL solve_time = solve_end - solve_start;
+        fasp_cputime("Diag_Krylov method totally", solve_time);
     }
     
     // clean up
@@ -298,7 +298,7 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat    *A,
                                  ILU_param  *iluparam)
 {
     const SHORT prtlvl = itparam->print_level;
-    REAL solver_start, solver_end;
+    REAL solve_start, solve_end;
     INT status = FASP_SUCCESS;
     
     ILU_data LU;
@@ -310,7 +310,7 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat    *A,
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
-    fasp_gettime(&solver_start);
+    fasp_gettime(&solve_start);
     
     // ILU setup for whole matrix
     if ( (status = fasp_ilu_dbsr_setup(A, &LU, iluparam)) < 0 ) goto FINISHED;
@@ -324,11 +324,11 @@ INT fasp_solver_dbsr_krylov_ilu (dBSRmat    *A,
     // solve
     status = fasp_solver_dbsr_itsolver(A, b, x, &pc, itparam);
     
-    fasp_gettime(&solver_end);
+    fasp_gettime(&solve_end);
 
     if ( prtlvl > PRINT_NONE ) {
-        REAL solver_duration = solver_end - solver_start;
-        fasp_cputime("ILUk_Krylov method totally", solver_duration);
+        REAL solve_time = solve_end - solve_start;
+        fasp_cputime("ILUk_Krylov method totally", solve_time);
     }
     
 FINISHED:
@@ -379,8 +379,8 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat    *A,
     AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);
         
     // timing
-    REAL setup_start, setup_end, setup_duration;
-    REAL solver_start, solver_end, solver_duration;
+    REAL setup_start, setup_end, setup_time;
+    REAL solve_start, solve_end, solve_time;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -412,7 +412,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat    *A,
     
     fasp_gettime(&setup_end);
     
-    setup_duration = setup_end - setup_start;
+    setup_time = setup_end - setup_start;
     
     precond_data_bsr precdata;
     precdata.print_level = amgparam->print_level;
@@ -446,22 +446,22 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat    *A,
     }
     
     if ( prtlvl >= PRINT_MIN ) {
-        fasp_cputime("BSR AMG setup", setup_duration);
+        fasp_cputime("BSR AMG setup", setup_time);
     }
     
     //--------------------------------------------------------------
     // Part 3: solver
     //--------------------------------------------------------------
-    fasp_gettime(&solver_start);
+    fasp_gettime(&solve_start);
     
     status=fasp_solver_dbsr_itsolver(A,b,x,&prec,itparam);
     
-    fasp_gettime(&solver_end);
+    fasp_gettime(&solve_end);
     
-    solver_duration = solver_end - solver_start;
+    solve_time = solve_end - solve_start;
     
     if ( prtlvl >= PRINT_MIN ) {
-        fasp_cputime("BSR Krylov method", setup_duration+solver_duration);
+        fasp_cputime("BSR Krylov method", setup_time+solve_time);
     }
     
 FINISHED:
@@ -523,8 +523,8 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat    *A,
     AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);
     
     // timing
-    REAL setup_start, setup_end, setup_duration;
-    REAL solver_start, solver_end, solver_duration;
+    REAL setup_start, setup_end, setup_time;
+    REAL solve_start, solve_end, solve_time;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -560,7 +560,7 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat    *A,
     
     fasp_gettime(&setup_end);
     
-    setup_duration = setup_end - setup_start;
+    setup_time = setup_end - setup_start;
     
     precond_data_bsr precdata;
     precdata.print_level = amgparam->print_level;
@@ -603,22 +603,22 @@ INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat    *A,
     prec.fct = fasp_precond_dbsr_amg_nk;
     
     if ( prtlvl >= PRINT_MIN ) {
-        fasp_cputime("BSR AMG setup", setup_duration);
+        fasp_cputime("BSR AMG setup", setup_time);
     }
     
     //--------------------------------------------------------------
     // Part 3: solver
     //--------------------------------------------------------------
-    fasp_gettime(&solver_start);
+    fasp_gettime(&solve_start);
     
     status=fasp_solver_dbsr_itsolver(A,b,x,&prec,itparam);
     
-    fasp_gettime(&solver_end);
+    fasp_gettime(&solve_end);
     
-    solver_duration = solver_end - solver_start;
+    solve_time = solve_end - solve_start;
     
     if ( prtlvl >= PRINT_MIN ) {
-        fasp_cputime("BSR Krylov method", setup_duration+solver_duration);
+        fasp_cputime("BSR Krylov method", setup_time+solve_time);
     }
     
 FINISHED:
@@ -684,8 +684,8 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat    *A,
     AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);
     
     // timing
-    REAL setup_start, setup_end, setup_duration;
-    REAL solver_start, solver_end, solver_duration;
+    REAL setup_start, setup_end, setup_time;
+    REAL solve_start, solve_end, solve_time;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -726,7 +726,7 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat    *A,
     
     fasp_gettime(&setup_end);
     
-    setup_duration = setup_end - setup_start;
+    setup_time = setup_end - setup_start;
     
     precond_data_bsr precdata;
     precdata.print_level = amgparam->print_level;
@@ -760,22 +760,22 @@ INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat    *A,
     }
     
     if ( prtlvl >= PRINT_MIN ) {
-        fasp_cputime("BSR AMG setup", setup_duration);
+        fasp_cputime("BSR AMG setup", setup_time);
     }
     
     //--------------------------------------------------------------
     // Part 3: solver
     //--------------------------------------------------------------
-    fasp_gettime(&solver_start);
+    fasp_gettime(&solve_start);
     
     status=fasp_solver_dbsr_itsolver(A,b,x,&prec,itparam);
     
-    fasp_gettime(&solver_end);
+    fasp_gettime(&solve_end);
     
-    solver_duration = solver_end - solver_start;
+    solve_time = solve_end - solve_start;
     
     if ( prtlvl >= PRINT_MIN ) {
-        fasp_cputime("BSR Krylov method", setup_duration+solver_duration);
+        fasp_cputime("BSR Krylov method", setup_time+solve_time);
     }
     
 FINISHED:
