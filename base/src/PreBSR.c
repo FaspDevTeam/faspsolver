@@ -775,6 +775,7 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
                                    void *data)
 {
 #ifdef _OPENMP
+        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
     const ILU_data  *iludata=(ILU_data *)data;
     const INT        m=iludata->row, memneed=2*m;
     const INT        nb=iludata->nb, nb2=nb*nb, size=m*nb;
@@ -791,6 +792,7 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
     INT         ib, ibstart,ibstart1;
     INT         i, ii, j, jj, k, begin_row, end_row;
     REAL       *zz, *zr, *mult;
+        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
     
     if (iludata->nwork<memneed) {
         printf("### ERROR: Need %d memory, only %d available!\n",
@@ -804,6 +806,7 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
     
     memcpy(zr, r, size*sizeof(REAL));
     
+        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
     switch (nb) {
 
         case 1:
@@ -866,6 +869,7 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
                     fasp_mem_free(mult); mult = NULL;
                 }
             }
+        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
 
             for (k=0; k<nlevU; k++) {
 #pragma omp parallel private(i,ii,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
@@ -898,10 +902,12 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
             break; // end (if nb=2)
         case 3:
 
+        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
             for (k=0; k<nlevL; ++k) {
 #pragma omp parallel private(i,ii,begin_row,end_row,ibstart,j,jj,ib,mult)
                 {
                     mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));
+        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
 #pragma omp for
                     for (ii=ilevL[k];ii<ilevL[k+1];++ii) {
                         i = jlevL[ii];
@@ -926,6 +932,7 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
                 }
             }
 
+        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
             for (k=0; k<nlevU; k++) {
 #pragma omp parallel private(i,ii,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
                 {
@@ -967,6 +974,7 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
         }
     }
     
+        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
     return;
 #endif
 }
