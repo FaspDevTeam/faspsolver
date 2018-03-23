@@ -350,9 +350,11 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
     
     fasp_gettime(&symbolic_end);
-    
-    printf("symbolic time=%f\n", symbolic_end-symbolic_start);
-    
+
+#if prtlvl > PRINT_MIN
+    printf("ILU symbolic factorization time = %f\n", symbolic_end-symbolic_start);
+#endif
+
     nwork = 5*A->ROW*A->nb;
     iludata->nzlu  = nzlu;
     iludata->nwork = nwork;
@@ -377,8 +379,10 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     
     fasp_gettime(&numfac_end);
     
-    printf("numfac time =%f\n", numfac_end-numfac_start);
-    
+#if prtlvl > PRINT_MIN
+    printf("ILU numerical factorization time = %f\n", numfac_end-numfac_start);
+#endif
+
 #if DEBUG_MODE > 1
     printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
     printf("### DEBUG: iwk = %d, nzlu = %d\n", iwk, nzlu);
