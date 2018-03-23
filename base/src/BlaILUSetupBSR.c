@@ -60,15 +60,15 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
     
     // local variables
-    INT lfil = iluparam->ILU_lfil;
-    INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
-    
-    REAL    setup_start, setup_end, setup_duration;
+    INT     lfil = iluparam->ILU_lfil;
+    INT     ierr, iwk, nzlu, nwork, *ijlu, *uptr;
     SHORT   status = FASP_SUCCESS;
-    
+
+    REAL    setup_start, setup_end, setup_duration;
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
-    printf("### DEBUG: m=%d, n=%d, nnz=%d\n", A->ROW, n, nnz);
+    printf("### DEBUG: m = %d, n = %d, nnz = %d\n", A->ROW, n, nnz);
 #endif
     
     fasp_gettime(&setup_start);
@@ -183,16 +183,16 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
     
     // local variables
-    INT lfil = iluparam->ILU_lfil;
-    INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
-    
-    REAL    setup_start, setup_end, setup_duration;
-    
+    INT     lfil = iluparam->ILU_lfil;
+    INT     ierr, iwk, nzlu, nwork, *ijlu, *uptr;
     SHORT   status = FASP_SUCCESS;
-    
+
+    REAL    setup_start, setup_end, setup_duration;
+    REAL    symbolic_start, symbolic_end, numfac_start, numfac_end;
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
-    printf("### DEBUG: m=%d, n=%d, nnz=%d\n", A->ROW, n, nnz);
+    printf("### DEBUG: m = %d, n = %d, nnz = %d\n", A->ROW, n, nnz);
 #endif
     
     fasp_gettime(&setup_start);
@@ -202,7 +202,7 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     
 #if DEBUG_MODE > 0
     if (iluparam->ILU_type == ILUtp) {
-        printf("### WARNING: iludata->type = %d not supported!\n",
+        printf("### WARNING: iludata->type = %d not supported any more!\n",
                iluparam->ILU_type);
     }
 #endif
@@ -211,11 +211,11 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     iludata->type  = 0; // Must be initialized
     iludata->iperm = NULL;
     iludata->A     = NULL; // No need for BSR matrix
-    iludata->row   = iludata->col=n;
+    iludata->row   = iludata->col = n;
     iludata->nb    = nb;
     
-    ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
-    uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
+    ijlu = (INT *) fasp_mem_calloc(iwk,   sizeof(INT));
+    uptr = (INT *) fasp_mem_calloc(A->ROW,sizeof(INT));
     
 #if DEBUG_MODE > 1
     printf("### DEBUG: symbolic factorization ... \n");
@@ -223,8 +223,16 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     
     // ILU decomposition
     // (1) symbolic factoration
+    fasp_gettime(&symbolic_start);
+
     fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
-    
+
+    fasp_gettime(&symbolic_end);
+
+#if prtlvl > PRINT_MIN
+    printf("ILU symbolic factorization time = %f\n", symbolic_end-symbolic_start);
+#endif
+
     nwork = 5*A->ROW*A->nb;
     iludata->nzlu  = nzlu;
     iludata->nwork = nwork;
@@ -233,17 +241,23 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     iludata->work  = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
     memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
     fasp_darray_set(nzlu*nb2, iludata->luval, 0.0);
-    
+
 #if DEBUG_MODE > 1
     printf("### DEBUG: numerical factorization ... \n");
 #endif
     
     // (2) numerical factoration
+    fasp_gettime(&numfac_start);
+
     numfactor_mulcol(A, iludata->luval, ijlu, uptr, iludata->nlevL,
                      iludata->ilevL, iludata->jlevL);
     
-    //printf("numfac time =%f\n", numfac_end-numfac_start);
-    
+    fasp_gettime(&numfac_end);
+
+#if prtlvl > PRINT_MIN
+    printf("ILU numerical factorization time = %f\n", numfac_end-numfac_start);
+#endif
+
 #if DEBUG_MODE > 1
     printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
     printf("### DEBUG: iwk = %d, nzlu = %d\n", iwk, nzlu);
@@ -306,12 +320,11 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     // local variables
     INT lfil = iluparam->ILU_lfil;
     INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
-    
+    SHORT   status = FASP_SUCCESS;
+
     REAL    setup_start, setup_end, setup_duration;
     REAL    symbolic_start, symbolic_end, numfac_start, numfac_end;
-    
-    SHORT   status = FASP_SUCCESS;
-    
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: m=%d, n=%d, nnz=%d\n", A->ROW, n, nnz);
