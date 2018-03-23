@@ -33,7 +33,7 @@
       79 ./base/src/BlaEigen.c
     1009 ./base/src/BlaFormat.c
     2203 ./base/src/BlaILU.c
-    1525 ./base/src/BlaILUSetupBSR.c
+    1529 ./base/src/BlaILUSetupBSR.c
      179 ./base/src/BlaILUSetupCSR.c
     1282 ./base/src/BlaILUSetupSTR.c
     2269 ./base/src/BlaIO.c
@@ -56,7 +56,7 @@
      133 ./base/src/BlaSpmvCSRL.c
     1859 ./base/src/BlaSpmvSTR.c
      318 ./base/src/BlaVector.c
-    1708 ./base/src/ItrSmootherBSR.c
+    1712 ./base/src/ItrSmootherBSR.c
     1517 ./base/src/ItrSmootherCSR.c
       94 ./base/src/ItrSmootherCSRcr.c
      647 ./base/src/ItrSmootherCSRpoly.c
@@ -85,7 +85,7 @@
      407 ./base/src/PreAMGSetupUA.c
      382 ./base/src/PreAMGSetupUABSR.c
     1067 ./base/src/PreBLC.c
-    1152 ./base/src/PreBSR.c
+    1160 ./base/src/PreBSR.c
      674 ./base/src/PreCSR.c
      365 ./base/src/PreDataInit.c
      522 ./base/src/PreMGCycle.c
@@ -103,4 +103,4 @@
      238 ./base/src/SolMatFree.c
      411 ./base/src/SolSTR.c
      322 ./base/src/SolWrapper.c
-   85542 total
+   85558 total

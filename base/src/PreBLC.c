@@ -290,7 +290,7 @@ void fasp_precond_block_lower_3 (REAL *r,
     dvector *tempr = &(precdata->r);
     
 #if WITH_UMFPACK
-    const void **LU_diag = precdata->LU_diag;
+    void **LU_diag = precdata->LU_diag;
 #endif
 
     const INT N0 = A_diag[0].row;
@@ -450,7 +450,7 @@ void fasp_precond_block_lower_4 (REAL *r,
     dvector *tempr = &(precdata->r);
 
 #if WITH_UMFPACK
-    const void **LU_diag = precdata->LU_diag;
+    void **LU_diag = precdata->LU_diag;
 #endif
     
     const INT N0 = A_diag[0].row;
@@ -552,7 +552,7 @@ void fasp_precond_block_upper_3 (REAL *r,
     dvector *tempr = &(precdata->r);
 
 #if WITH_UMFPACK
-    const void **LU_diag = precdata->LU_diag;
+    void **LU_diag = precdata->LU_diag;
 #endif
     
     const INT N0 = A_diag[0].row;
@@ -717,7 +717,7 @@ void fasp_precond_block_SGS_3 (REAL *r,
     dvector *tempr = &(precdata->r);
 
 #if WITH_UMFPACK
-    const void **LU_diag = precdata->LU_diag;
+    void **LU_diag = precdata->LU_diag;
 #endif
     
     const INT N0 = A_diag[0].row;
@@ -938,7 +938,7 @@ void fasp_precond_sweeping (REAL *r,
     ivector *local_index = precdata->local_index;
 
 #if WITH_UMFPACK
-    const void **local_LU = precdata->local_LU;
+    void **local_LU = precdata->local_LU;
 #endif
     
     dvector *r_backup = &(precdata->r);

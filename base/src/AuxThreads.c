@@ -45,7 +45,7 @@ INT fasp_get_num_threads ( void )
 #pragma omp parallel
         nthreads = omp_get_num_threads();
         
-        printf("\nFASP is running on %3d thread(s).\n\n",nthreads);
+        printf("\nFASP is running on %d thread(s).\n\n", nthreads);
         thread_ini_flag = 1;
     }
     
