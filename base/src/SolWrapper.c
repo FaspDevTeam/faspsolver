@@ -6,6 +6,10 @@
  *         AuxParam.c, BlaFormat.c, BlaSparseBSR.c, BlaSparseCSR.c, SolAMG.c,
  *         SolBSR.c, and SolCSR.c
  *
+ *  \note  IMPORTANT: The wrappers DO NOT change the original matrix data. Users
+ *         should shift the matrix indices in order to make the IA and JA to start
+ *         from 0 instead of 1.
+ *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
@@ -74,6 +78,66 @@ void fasp_fwrapper_amg_ (INT  *n,
 }
 
 /**
+ * \fn void fasp_fwrapper_krylov_ilu_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a,
+ *                                     REAL *b, REAL *u, REAL *tol, INT *maxit,
+ *                                     INT *ptrlvl)
+ *
+ * \brief Solve Ax=b by Krylov method preconditioned by ILUk
+ *
+ * \param n       Number of cols of A
+ * \param nnz     Number of nonzeros of A
+ * \param ia      IA of A in CSR format
+ * \param ja      JA of A in CSR format
+ * \param a       VAL of A in CSR format
+ * \param b       RHS vector
+ * \param u       Solution vector
+ * \param tol     Tolerance for iterative solvers
+ * \param maxit   Max number of iterations
+ * \param ptrlvl  Print level for iterative solvers
+ *
+ * \author Chensong Zhang
+ * \date   03/24/2018
+ */
+void fasp_fwrapper_krylov_ilu_ (INT  *n,
+                                INT  *nnz,
+                                INT  *ia,
+                                INT  *ja,
+                                REAL *a,
+                                REAL *b,
+                                REAL *u,
+                                REAL *tol,
+                                INT  *maxit,
+                                INT  *ptrlvl)
+{
+    dCSRmat    mat;      // coefficient matrix
+    dvector    rhs, sol; // right-hand-side, solution
+    ILU_param  iluparam; // parameters for ILU
+    ITS_param  itsparam; // parameters for itsolver
+
+    // setup ILU parameters
+    fasp_param_ilu_init(&iluparam);
+
+    iluparam.print_level          = *ptrlvl;
+
+    // setup Krylov method parameters
+    fasp_param_solver_init(&itsparam);
+
+    itsparam.itsolver_type         = SOLVER_VFGMRES;
+    itsparam.tol                   = *tol;
+    itsparam.maxit                 = *maxit;
+    itsparam.print_level           = *ptrlvl;
+
+    // set up coefficient matrix
+    mat.row = *n; mat.col = *n; mat.nnz = *nnz;
+    mat.IA  = ia;  mat.JA = ja; mat.val = a;
+
+    rhs.row = *n; rhs.val = b;
+    sol.row = *n; sol.val = u;
+
+    fasp_solver_dcsr_krylov_ilu(&mat, &rhs, &sol, &itsparam, &iluparam);
+}
+
+/**
  * \fn void fasp_fwrapper_krylov_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a,
  *                                     REAL *b, REAL *u, REAL *tol, INT *maxit,
  *                                     INT *ptrlvl)
@@ -108,12 +172,11 @@ void fasp_fwrapper_krylov_amg_ (INT  *n,
     dCSRmat    mat;      // coefficient matrix
     dvector    rhs, sol; // right-hand-side, solution
     AMG_param  amgparam; // parameters for AMG
-    ITS_param  itparam;  // parameters for itsolver
+    ITS_param  itsparam; // parameters for itsolver
     
     // setup AMG parameters
     fasp_param_amg_init(&amgparam);
     
-    amgparam.print_level          = *ptrlvl;
     amgparam.AMG_type             = UA_AMG;
     amgparam.aggregation_type     = VMB;
     amgparam.coarse_dof           = 100;
@@ -121,22 +184,23 @@ void fasp_fwrapper_krylov_amg_ (INT  *n,
     amgparam.presmooth_iter       = 1;
     amgparam.postsmooth_iter      = 1;
     amgparam.strong_coupled       = 0.00;
-    
+    amgparam.print_level          = *ptrlvl;
+
     // setup Krylov method parameters
-    fasp_param_solver_init(&itparam);
+    fasp_param_solver_init(&itsparam);
     
-    itparam.tol                   = *tol;
-    itparam.print_level           = *ptrlvl;
-    itparam.maxit                 = *maxit;
-    
+    itsparam.tol                   = *tol;
+    itsparam.maxit                 = *maxit;
+    itsparam.print_level           = *ptrlvl;
+
     // set up coefficient matrix
     mat.row = *n; mat.col = *n; mat.nnz = *nnz;
-    mat.IA = ia;  mat.JA  = ja; mat.val = a;
+    mat.IA  = ia;  mat.JA = ja; mat.val = a;
     
     rhs.row = *n; rhs.val = b;
     sol.row = *n; sol.val = u;
     
-    fasp_solver_dcsr_krylov_amg(&mat, &rhs, &sol, &itparam, &amgparam);
+    fasp_solver_dcsr_krylov_amg(&mat, &rhs, &sol, &itsparam, &amgparam);
 }
 
 /**
@@ -179,7 +243,7 @@ INT fasp_wrapper_dbsr_krylov_amg (INT   n,
     dBSRmat    bsrmat;   // coefficient matrix in BSR format
     dvector    rhs, sol; // right-hand-side, solution
     AMG_param  amgparam; // parameters for AMG
-    ITS_param  itparam;  // parameters for itsolver
+    ITS_param  itsparam; // parameters for itsolver
     INT        status = FASP_SUCCESS; // return parameter
     
     // setup AMG parameters
@@ -197,13 +261,13 @@ INT fasp_wrapper_dbsr_krylov_amg (INT   n,
     amgparam.ILU_lfil        = 1;
     
     // setup Krylov method parameters
-    fasp_param_solver_init(&itparam);
+    fasp_param_solver_init(&itsparam);
     
-    itparam.tol              = tol;
-    itparam.print_level      = ptrlvl;
-    itparam.maxit            = maxit;
-    itparam.itsolver_type    = SOLVER_VFGMRES;
-    itparam.restart          = 30;
+    itsparam.tol              = tol;
+    itsparam.print_level      = ptrlvl;
+    itsparam.maxit            = maxit;
+    itsparam.itsolver_type    = SOLVER_VFGMRES;
+    itsparam.restart          = 30;
     
     // set up coefficient matrix
     mat.row = n; mat.col = n;  mat.nnz = nnz;
@@ -216,7 +280,7 @@ INT fasp_wrapper_dbsr_krylov_amg (INT   n,
     sol.row = n; sol.val = u;
     
     // solve
-    status = fasp_solver_dbsr_krylov_amg(&bsrmat, &rhs, &sol, &itparam, &amgparam);
+    status = fasp_solver_dbsr_krylov_amg(&bsrmat, &rhs, &sol, &itsparam, &amgparam);
     
     // clean up
     fasp_dbsr_free(&bsrmat);
@@ -266,7 +330,7 @@ INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT   n,
     dBSRmat         bsrmat;   // coefficient matrix in BSR format
     dvector         rhs, sol; // right-hand-side, solution
     AMG_param       amgparam; // parameters for AMG
-    ITS_param       itparam;  // parameters for itsolver
+    ITS_param       itsparam; // parameters for itsolver
     INT             status = FASP_SUCCESS; // return parameter
     
     // setup AMG parameters
@@ -284,13 +348,13 @@ INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT   n,
     amgparam.ILU_lfil        = 1;
     
     // setup Krylov method parameters
-    fasp_param_solver_init(&itparam);
+    fasp_param_solver_init(&itsparam);
     
-    itparam.tol              = tol;
-    itparam.print_level      = ptrlvl;
-    itparam.maxit            = maxit;
-    itparam.itsolver_type    = SOLVER_VFGMRES;
-    itparam.restart          = 30;
+    itsparam.tol              = tol;
+    itsparam.print_level      = ptrlvl;
+    itsparam.maxit            = maxit;
+    itsparam.itsolver_type    = SOLVER_VFGMRES;
+    itsparam.restart          = 30;
     
     // set up coefficient matrix
     coomat.row = n; coomat.col = n; coomat.nnz = nnz;
@@ -309,7 +373,7 @@ INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT   n,
     sol.row = n; sol.val = u;
     
     // solve
-    status = fasp_solver_dbsr_krylov_amg(&bsrmat, &rhs, &sol, &itparam, &amgparam);
+    status = fasp_solver_dbsr_krylov_amg(&bsrmat, &rhs, &sol, &itsparam, &amgparam);
     
     // clean up
     fasp_dbsr_free(&bsrmat);
