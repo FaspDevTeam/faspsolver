@@ -2755,6 +2755,17 @@ void fasp_fwrapper_amg_ (INT  *n,
                          INT  *maxit,
                          INT  *ptrlvl);
 
+void fasp_fwrapper_krylov_ilu_ (INT  *n,
+                                INT  *nnz,
+                                INT  *ia,
+                                INT  *ja,
+                                REAL *a,
+                                REAL *b,
+                                REAL *u,
+                                REAL *tol,
+                                INT  *maxit,
+                                INT  *ptrlvl);
+
 void fasp_fwrapper_krylov_amg_ (INT  *n,
                                 INT  *nnz,
                                 INT  *ia,

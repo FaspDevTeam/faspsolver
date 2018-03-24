@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+03/25/2018 FASP 2.0.9:
+- Update Fortran wrappers: add a new one.
+
 03/24/2018 FASP 2.0.8:
 - Remove unused arguments in several functions.
 - Remove unused OMP counter from fasp.h.
