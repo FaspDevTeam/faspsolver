@@ -102,5 +102,5 @@
     1048 ./base/src/SolGMGPoisson.c
      238 ./base/src/SolMatFree.c
      411 ./base/src/SolSTR.c
-     386 ./base/src/SolWrapper.c
-   85646 total
+     456 ./base/src/SolWrapper.c
+   85716 total

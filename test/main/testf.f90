@@ -63,9 +63,9 @@ program test
   u=0.0d0 
 
   if (stype == 1) then 
-     call fasp_fwrapper_amg(n,nnz,ia,ja,a,b,u,tol,maxit,prt_lvl);
+     call fasp_fwrapper_dcsr_amg(n,nnz,ia,ja,a,b,u,tol,maxit,prt_lvl);
   else if (stype == 2) then 
-     call fasp_fwrapper_krylov_amg(n,nnz,ia,ja,a,b,u,tol,maxit,prt_lvl);
+     call fasp_fwrapper_dcsr_krylov_amg(n,nnz,ia,ja,a,b,u,tol,maxit,prt_lvl);
   else
      write(*,*) '### ERROR: Unknown solver type!'
   end if
