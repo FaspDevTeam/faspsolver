@@ -67,7 +67,7 @@ program test
   !===> Initial guess
   allocate(u(1:n))
   u=0.0d0 
-  call fasp_fwrapper_amg(n,nnz,ia,ja,a,b,u,tol,maxit,prt_lvl)
+  call fasp_fwrapper_dcsr_amg(n,nnz,ia,ja,a,b,u,tol,maxit,prt_lvl)
  
   ! Step 3: Clean up memory
   deallocate(ia,ja,a)
