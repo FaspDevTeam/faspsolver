@@ -2193,49 +2193,49 @@ SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr  *mgl,
 
 /*-------- In file: PreBLC.c --------*/
 
-void fasp_precond_block_diag_3 (REAL *r,
-                                REAL *z,
-                                void *data);
-
-void fasp_precond_block_diag_3_amg (REAL *r,
-                                    REAL *z,
-                                    void *data);
-
-void fasp_precond_block_diag_4 (REAL *r,
-                                REAL *z,
-                                void *data);
-
-void fasp_precond_block_lower_3 (REAL *r,
-                                 REAL *z,
-                                 void *data);
-
-void fasp_precond_block_lower_3_amg (REAL *r,
-                                     REAL *z,
-                                     void *data);
-
-void fasp_precond_block_lower_4 (REAL *r,
-                                 REAL *z,
-                                 void *data);
-
-void fasp_precond_block_upper_3 (REAL *r,
-                                 REAL *z,
-                                 void *data);
-
-void fasp_precond_block_upper_3_amg (REAL *r,
-                                     REAL *z,
-                                     void *data);
-
-void fasp_precond_block_SGS_3 (REAL *r,
+void fasp_precond_dblc_diag_3 (REAL *r,
                                REAL *z,
                                void *data);
 
-void fasp_precond_block_SGS_3_amg (REAL *r,
+void fasp_precond_dblc_diag_3_amg (REAL *r,
                                    REAL *z,
                                    void *data);
 
-void fasp_precond_sweeping (REAL *r,
-                            REAL *z,
-                            void *data);
+void fasp_precond_dblc_diag_4 (REAL *r,
+                               REAL *z,
+                               void *data);
+
+void fasp_precond_dblc_lower_3 (REAL *r,
+                                REAL *z,
+                                void *data);
+
+void fasp_precond_dblc_lower_3_amg (REAL *r,
+                                    REAL *z,
+                                    void *data);
+
+void fasp_precond_dblc_lower_4 (REAL *r,
+                                REAL *z,
+                                void *data);
+
+void fasp_precond_dblc_upper_3 (REAL *r,
+                                REAL *z,
+                                void *data);
+
+void fasp_precond_dblc_upper_3_amg (REAL *r,
+                                    REAL *z,
+                                    void *data);
+
+void fasp_precond_dblc_SGS_3 (REAL *r,
+                              REAL *z,
+                              void *data);
+
+void fasp_precond_dblc_SGS_3_amg (REAL *r,
+                                  REAL *z,
+                                  void *data);
+
+void fasp_precond_dblc_sweeping (REAL *r,
+                                 REAL *z,
+                                 void *data);
 
 
 /*-------- In file: PreBSR.c --------*/
@@ -2276,13 +2276,13 @@ void fasp_precond_dbsr_amg (REAL *r,
                             REAL *z,
                             void *data);
 
-void fasp_precond_dbsr_namli (REAL *r, 
-                              REAL *z,
-                              void *data);
-
 void fasp_precond_dbsr_amg_nk (REAL *r,
                                REAL *z,
                                void *data);
+
+void fasp_precond_dbsr_namli (REAL *r,
+                              REAL *z,
+                              void *data);
 
 
 /*-------- In file: PreCSR.c --------*/
@@ -2331,9 +2331,6 @@ void fasp_precond_namli (REAL *r,
 void fasp_precond_amg_nk (REAL *r,
                           REAL *z,
                           void *data);
-
-void fasp_precond_free (const SHORT   precond_type,
-                        precond      *pc);
 
 
 /*-------- In file: PreDataInit.c --------*/
@@ -2473,19 +2470,19 @@ INT fasp_solver_dblc_krylov (dBLCmat    *A,
                              dvector    *x,
                              ITS_param  *itparam);
 
-INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
-                                     dvector    *b,
-                                     dvector    *x,
-                                     ITS_param  *itparam,
-                                     AMG_param  *amgparam,
-                                     dCSRmat    *A_diag);
+INT fasp_solver_dblc_krylov_block3 (dBLCmat    *A,
+                                    dvector    *b,
+                                    dvector    *x,
+                                    ITS_param  *itparam,
+                                    AMG_param  *amgparam,
+                                    dCSRmat    *A_diag);
 
-INT fasp_solver_dblc_krylov_block_4 (dBLCmat    *A,
-                                     dvector    *b,
-                                     dvector    *x,
-                                     ITS_param  *itparam,
-                                     AMG_param  *amgparam,
-                                     dCSRmat    *A_diag);
+INT fasp_solver_dblc_krylov_block4 (dBLCmat    *A,
+                                    dvector    *b,
+                                    dvector    *x,
+                                    ITS_param  *itparam,
+                                    AMG_param  *amgparam,
+                                    dCSRmat    *A_diag);
 
 INT fasp_solver_dblc_krylov_sweeping (dBLCmat    *A,
                                       dvector    *b,
@@ -2744,38 +2741,50 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat    *A,
 
 /*-------- In file: SolWrapper.c --------*/
 
-void fasp_fwrapper_amg_ (INT  *n,
-                         INT  *nnz,
-                         INT  *ia,
-                         INT  *ja,
-                         REAL *a,
-                         REAL *b,
-                         REAL *u,
-                         REAL *tol,
-                         INT  *maxit,
-                         INT  *ptrlvl);
+void fasp_fwrapper_dcsr_amg_ (INT  *n,
+                              INT  *nnz,
+                              INT  *ia,
+                              INT  *ja,
+                              REAL *a,
+                              REAL *b,
+                              REAL *u,
+                              REAL *tol,
+                              INT  *maxit,
+                              INT  *ptrlvl);
 
-void fasp_fwrapper_krylov_ilu_ (INT  *n,
-                                INT  *nnz,
-                                INT  *ia,
-                                INT  *ja,
-                                REAL *a,
-                                REAL *b,
-                                REAL *u,
-                                REAL *tol,
-                                INT  *maxit,
-                                INT  *ptrlvl);
+void fasp_fwrapper_dcsr_krylov_ilu_ (INT  *n,
+                                     INT  *nnz,
+                                     INT  *ia,
+                                     INT  *ja,
+                                     REAL *a,
+                                     REAL *b,
+                                     REAL *u,
+                                     REAL *tol,
+                                     INT  *maxit,
+                                     INT  *ptrlvl);
 
-void fasp_fwrapper_krylov_amg_ (INT  *n,
-                                INT  *nnz,
-                                INT  *ia,
-                                INT  *ja,
-                                REAL *a,
-                                REAL *b,
-                                REAL *u,
-                                REAL *tol,
-                                INT  *maxit,
-                                INT  *ptrlvl);
+void fasp_fwrapper_dcsr_krylov_amg_ (INT  *n,
+                                     INT  *nnz,
+                                     INT  *ia,
+                                     INT  *ja,
+                                     REAL *a,
+                                     REAL *b,
+                                     REAL *u,
+                                     REAL *tol,
+                                     INT  *maxit,
+                                     INT  *ptrlvl);
+
+void fasp_wrapper_dbsr_krylov_ilu (INT  *n,
+                                   INT  *nnz,
+                                   INT  *nb,
+                                   INT  *ia,
+                                   INT  *ja,
+                                   REAL *a,
+                                   REAL *b,
+                                   REAL *u,
+                                   REAL *tol,
+                                   INT  *maxit,
+                                   INT  *ptrlvl);
 
 INT fasp_wrapper_dbsr_krylov_amg (INT   n,
                                   INT   nnz,

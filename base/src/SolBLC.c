@@ -5,7 +5,7 @@
  *  \note  This file contains Level-5 (Sol) functions. It requires:
  *         AuxMemory.c, AuxMessage.c, AuxTiming.c, AuxVector.c, BlaSparseCSR.c,
  *         KryPbcgs.c, KryPgmres.c, KryPminres.c, KryPvfgmres.c, KryPvgmres.c,
- *         PreAMGSetupRS.c, PreAMGSetupSA.c, PreAMGSetupUA.c, PreBLC.c, 
+ *         PreAMGSetupRS.c, PreAMGSetupSA.c, PreAMGSetupUA.c, PreBLC.c,
  *         and PreDataInit.c
  *
  *---------------------------------------------------------------------------------
@@ -64,15 +64,15 @@ INT fasp_solver_dblc_itsolver (dBLCmat    *A,
     const INT   MaxIt = itparam->maxit;
     const REAL  tol = itparam->tol;
     
-    REAL  solve_start, solve_end, solve_time;
+    REAL  solve_start, solve_end;
     INT   iter = ERROR_SOLVER_TYPE;
-    
-    fasp_gettime(&solve_start);
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
+
+    fasp_gettime(&solve_start);
 
     /* Safe-guard checks on parameters */
     ITS_CHECK ( MaxIt, tol );
@@ -108,8 +108,7 @@ INT fasp_solver_dblc_itsolver (dBLCmat    *A,
     
     if ( (prtlvl >= PRINT_MIN) && (iter >= 0) ) {
         fasp_gettime(&solve_end);
-        solve_time = solve_end - solve_start;
-        fasp_cputime("Iterative method", solve_time);
+        fasp_cputime("Iterative method", solve_end - solve_start);
     }
     
 #if DEBUG_MODE > 0
@@ -143,7 +142,7 @@ INT fasp_solver_dblc_krylov (dBLCmat    *A,
     const SHORT prtlvl = itparam->print_level;
     
     INT status = FASP_SUCCESS;
-    REAL solve_start, solve_end, solve_time;
+    REAL solve_start, solve_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -155,11 +154,9 @@ INT fasp_solver_dblc_krylov (dBLCmat    *A,
     status = fasp_solver_dblc_itsolver(A,b,x,NULL,itparam);
     
     fasp_gettime(&solve_end);
-    
-    solve_time = solve_end - solve_start;
-    
+
     if ( prtlvl >= PRINT_MIN )
-        fasp_cputime("Krylov method totally", solve_time);
+        fasp_cputime("Krylov method totally", solve_end - solve_start);
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -169,9 +166,9 @@ INT fasp_solver_dblc_krylov (dBLCmat    *A,
 }
 
 /**
- * \fn INT fasp_solver_dblc_krylov_block_3 (dBLCmat *A, dvector *b, dvector *x,
- *                                          ITS_param *itparam,
- *                                          AMG_param *amgparam, dCSRmat *A_diag)
+ * \fn INT fasp_solver_dblc_krylov_block3 (dBLCmat *A, dvector *b, dvector *x,
+ *                                         ITS_param *itparam, AMG_param *amgparam,
+ *                                         dCSRmat *A_diag)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
@@ -187,21 +184,21 @@ INT fasp_solver_dblc_krylov (dBLCmat    *A,
  * \author Xiaozhe Hu
  * \date   07/10/2014
  *
- * \warning Only works for 3by3 block dCSRmat problems!! -- Xiaozhe Hu
+ * \warning Only works for 3X3 block problems!! -- Xiaozhe Hu
  */
-INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
-                                     dvector    *b,
-                                     dvector    *x,
-                                     ITS_param  *itparam,
-                                     AMG_param  *amgparam,
-                                     dCSRmat    *A_diag)
+INT fasp_solver_dblc_krylov_block3 (dBLCmat    *A,
+                                    dvector    *b,
+                                    dvector    *x,
+                                    ITS_param  *itparam,
+                                    AMG_param  *amgparam,
+                                    dCSRmat    *A_diag)
 {
     const SHORT prtlvl = itparam->print_level;
     const SHORT precond_type = itparam->precond_type;
     
     INT status = FASP_SUCCESS;
-    REAL setup_start, setup_end, setup_time;
-    REAL solve_start, solve_end, solve_time;
+    REAL setup_start, setup_end;
+    REAL solve_start, solve_end;
     
     const SHORT max_levels = amgparam->max_levels;
     INT m, n, nnz, i;
@@ -217,11 +214,11 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
 #endif
 
     /* setup preconditioner */
+    fasp_gettime(&solve_start);
     fasp_gettime(&setup_start);
     
     /* diagonal blocks are solved exactly */
     if ( precond_type > 20 && precond_type < 30 ) {
-        
 #if WITH_UMFPACK
         // Need to sort the diagonal blocks for UMFPACK format
         dCSRmat A_tran;
@@ -239,12 +236,11 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
         
         fasp_dcsr_free(&A_tran);
 #endif
-    
     }
     
     /* diagonal blocks are solved by AMG */
     else if ( precond_type > 30 && precond_type < 40 ) {
-     
+
         mgl = (AMG_data **)fasp_mem_calloc(3, sizeof(AMG_data *));
         
         for (i=0; i<3; i++){
@@ -272,7 +268,7 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
         fasp_chkerr(ERROR_SOLVER_PRECTYPE, __FUNCTION__);
     }
     
-    precond_block_data precdata;
+    precond_data_blc precdata;
     precdata.Ablc = A;
     precdata.A_diag = A_diag;
     precdata.r = fasp_dvec_create(b->row);
@@ -294,31 +290,30 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
     
     precond prec; prec.data = &precdata;
     
-    switch (precond_type)
-    {
+    switch (precond_type) {
         case 21:
-            prec.fct = fasp_precond_block_diag_3; break;
+            prec.fct = fasp_precond_dblc_diag_3; break;
             
         case 22:
-            prec.fct = fasp_precond_block_lower_3; break;
+            prec.fct = fasp_precond_dblc_lower_3; break;
             
         case 23:
-            prec.fct = fasp_precond_block_upper_3; break;
+            prec.fct = fasp_precond_dblc_upper_3; break;
             
         case 24:
-            prec.fct = fasp_precond_block_SGS_3; break;
+            prec.fct = fasp_precond_dblc_SGS_3; break;
             
         case 31:
-            prec.fct = fasp_precond_block_diag_3_amg; break;
+            prec.fct = fasp_precond_dblc_diag_3_amg; break;
             
         case 32:
-            prec.fct = fasp_precond_block_lower_3_amg; break;
+            prec.fct = fasp_precond_dblc_lower_3_amg; break;
             
         case 33:
-            prec.fct = fasp_precond_block_upper_3_amg; break;
-        
+            prec.fct = fasp_precond_dblc_upper_3_amg; break;
+
         case 34:
-            prec.fct = fasp_precond_block_SGS_3_amg; break;
+            prec.fct = fasp_precond_dblc_SGS_3_amg; break;
             
         default:
             fasp_chkerr(ERROR_SOLVER_PRECTYPE, __FUNCTION__); break;
@@ -326,24 +321,18 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
     
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&setup_end);
-        setup_time = setup_end - setup_start;
-        fasp_cputime("Setup totally", setup_time);
+        fasp_cputime("Setup totally", setup_end - setup_start);
     }
     
-    
-    // solver part
-    fasp_gettime(&solve_start);
-    
-    status=fasp_solver_dblc_itsolver(A,b,x, &prec,itparam);
+    // solve part
+    status = fasp_solver_dblc_itsolver(A,b,x, &prec,itparam);
     
     fasp_gettime(&solve_end);
-    
-    solve_time = solve_end - solve_start;
-    
+
     if ( prtlvl >= PRINT_MIN )
-        fasp_cputime("Krylov method totally", solve_time);
+        fasp_cputime("Krylov method totally", solve_end - solve_start);
     
-    // clean
+    // clean up
     /* diagonal blocks are solved exactly */
     if ( precond_type > 20 && precond_type < 30 ) {
 #if WITH_UMFPACK
@@ -367,9 +356,9 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
 }
 
 /**
- * \fn INT fasp_solver_dblc_krylov_block_4 (dBLCmat *A, dvector *b, dvector *x,
- *                                          ITS_param *itparam,
- *                                          AMG_param *amgparam, dCSRmat *A_diag)
+ * \fn INT fasp_solver_dblc_krylov_block4 (dBLCmat *A, dvector *b, dvector *x,
+ *                                         ITS_param *itparam, AMG_param *amgparam,
+ *                                         dCSRmat *A_diag)
  *
  * \brief Solve Ax = b by standard Krylov methods
  *
@@ -387,51 +376,52 @@ INT fasp_solver_dblc_krylov_block_3 (dBLCmat    *A,
  *
  * \warning Only works for 4 by 4 block dCSRmat problems!! -- Xiaozhe Hu
  */
-INT fasp_solver_dblc_krylov_block_4 (dBLCmat    *A,
-                                     dvector    *b,
-                                     dvector    *x,
-                                     ITS_param  *itparam,
-                                     AMG_param  *amgparam,
-                                     dCSRmat    *A_diag)
+INT fasp_solver_dblc_krylov_block4 (dBLCmat    *A,
+                                    dvector    *b,
+                                    dvector    *x,
+                                    ITS_param  *itparam,
+                                    AMG_param  *amgparam,
+                                    dCSRmat    *A_diag)
 {
     const SHORT prtlvl = itparam->print_level;
     const SHORT precond_type = itparam->precond_type;
     
     INT status = FASP_SUCCESS;
-    REAL setup_start, setup_end, setup_time;
-    REAL solve_start, solve_end, solve_time;
-
-#if WITH_UMFPACK
-    void **LU_diag = (void **)fasp_mem_calloc(4, sizeof(void *));
-    INT i;
-#endif
+    REAL setup_start, setup_end;
+    REAL solve_start, solve_end;
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
 
     /* setup preconditioner */
+    fasp_gettime(&solve_start);
     fasp_gettime(&setup_start);
-    
+
+#if WITH_UMFPACK
+    void **LU_diag = (void **)fasp_mem_calloc(4, sizeof(void *));
+    INT i;
+#endif
+
     /* diagonal blocks are solved exactly */
     if ( precond_type > 20 && precond_type < 30 ) {
-    
+
 #if WITH_UMFPACK
-    // Need to sort the matrices local_A for UMFPACK format
-    dCSRmat A_tran;
-    
-    for (i=0; i<4; i++){
-        
-        A_tran = fasp_dcsr_create(A_diag[i].row, A_diag[i].col, A_diag[i].nnz);
-        fasp_dcsr_transz(&A_diag[i], NULL, &A_tran);
-        fasp_dcsr_cp(&A_tran, &A_diag[i]);
-        
-        printf("Factorization for %d-th diagnol: \n", i);
-        LU_diag[i] = fasp_umfpack_factorize(&A_diag[i], prtlvl);
-        
-    }
-    
-    fasp_dcsr_free(&A_tran);
+        // Need to sort the matrices local_A for UMFPACK format
+        dCSRmat A_tran;
+
+        for (i=0; i<4; i++){
+
+            A_tran = fasp_dcsr_create(A_diag[i].row, A_diag[i].col, A_diag[i].nnz);
+            fasp_dcsr_transz(&A_diag[i], NULL, &A_tran);
+            fasp_dcsr_cp(&A_tran, &A_diag[i]);
+
+            printf("Factorization for %d-th diagnol: \n", i);
+            LU_diag[i] = fasp_umfpack_factorize(&A_diag[i], prtlvl);
+
+        }
+
+        fasp_dcsr_free(&A_tran);
 #endif
         
     }
@@ -439,7 +429,7 @@ INT fasp_solver_dblc_krylov_block_4 (dBLCmat    *A,
         fasp_chkerr(ERROR_SOLVER_PRECTYPE, __FUNCTION__);
     }
     
-    precond_block_data precdata;
+    precond_data_blc precdata;
     
     precdata.Ablc = A;
     precdata.A_diag = A_diag;
@@ -453,31 +443,26 @@ INT fasp_solver_dblc_krylov_block_4 (dBLCmat    *A,
     switch (precond_type)
     {
         case 21:
-            prec.fct = fasp_precond_block_diag_4;
+            prec.fct = fasp_precond_dblc_diag_4;
             break;
             
         case 22:
-            prec.fct = fasp_precond_block_lower_4;
+            prec.fct = fasp_precond_dblc_lower_4;
             break;
     }
     
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&setup_end);
-        setup_time = setup_end - setup_start;
-        fasp_cputime("Setup totally", setup_time);
+        fasp_cputime("Setup totally", setup_end - setup_start);
     }
 
     // solver part
-    fasp_gettime(&solve_start);
-    
     status=fasp_solver_dblc_itsolver(A,b,x, &prec,itparam);
     
     fasp_gettime(&solve_end);
-    
-    solve_time = solve_end - solve_start;
-    
+
     if ( prtlvl >= PRINT_MIN )
-        fasp_cputime("Krylov method totally", solve_time);
+        fasp_cputime("Krylov method totally", solve_end - solve_start);
     
     // clean
 #if WITH_UMFPACK
@@ -525,18 +510,19 @@ INT fasp_solver_dblc_krylov_sweeping (dBLCmat    *A,
     const SHORT prtlvl = itparam->print_level;
     
     INT status = FASP_SUCCESS;
-    REAL setup_start, setup_end, setup_time = 0;
-    REAL solve_start, solve_end, solve_time = 0;
-    
-    /* setup preconditioner */
-    fasp_gettime(&setup_start);
-    
+    REAL setup_start, setup_end;
+    REAL solve_start, solve_end;
+
     void **local_LU = NULL;
-    
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
 #endif
-    
+
+    /* setup preconditioner */
+    fasp_gettime(&solve_start);
+    fasp_gettime(&setup_start);
+
 #if WITH_UMFPACK
     // Need to sort the matrices local_A for UMFPACK format
     INT l;
@@ -557,7 +543,7 @@ INT fasp_solver_dblc_krylov_sweeping (dBLCmat    *A,
     fasp_dcsr_free(&A_tran);
 #endif
     
-    precond_sweeping_data precdata;
+    precond_data_sweeping precdata;
     precdata.NumLayers = NumLayers;
     precdata.A = A;
     precdata.Ai = Ai;
@@ -568,25 +554,20 @@ INT fasp_solver_dblc_krylov_sweeping (dBLCmat    *A,
     precdata.w = (REAL *)fasp_mem_calloc(10*b->row,sizeof(REAL));
     
     precond prec; prec.data = &precdata;
-    prec.fct = fasp_precond_sweeping;
+    prec.fct = fasp_precond_dblc_sweeping;
     
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&setup_end);
-        setup_time = setup_end - setup_start;
-        fasp_cputime("Setup totally", setup_time);
+        fasp_cputime("Setup totally", setup_end - setup_start);
     }
     
-    /* solver part */
-    fasp_gettime(&solve_start);
-    
+    /* solver part */    
     status = fasp_solver_dblc_itsolver(A,b,x, &prec,itparam);
     
     fasp_gettime(&solve_end);
-    
-    solve_time = solve_end - solve_start;
-    
+        
     if ( prtlvl >= PRINT_MIN )
-        fasp_cputime("Krylov method totally", setup_time+solve_time);
+        fasp_cputime("Krylov method totally", solve_end - solve_start);
     
     // clean
 #if WITH_UMFPACK

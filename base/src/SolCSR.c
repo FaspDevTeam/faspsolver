@@ -67,16 +67,16 @@ INT fasp_solver_dcsr_itsolver (dCSRmat    *A,
     const REAL  tol           = itparam->tol;
     
     /* Local Variables */
-    REAL solve_start, solve_end, solve_time;
+    REAL solve_start, solve_end;
     INT iter;
-    
-    fasp_gettime(&solve_start);
-    
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
-    
+
+    fasp_gettime(&solve_start);
+
     /* check matrix data */
     fasp_check_dCSRmat(A);
 
@@ -126,8 +126,7 @@ INT fasp_solver_dcsr_itsolver (dCSRmat    *A,
     
     if ( (prtlvl >= PRINT_SOME) && (iter >= 0) ) {
         fasp_gettime(&solve_end);
-        solve_time = solve_end - solve_start;
-        fasp_cputime("Iterative method", solve_time);
+        fasp_cputime("Iterative method", solve_end - solve_start);
     }
     
 #if DEBUG_MODE > 0
@@ -170,15 +169,15 @@ INT fasp_solver_dcsr_itsolver_s (dCSRmat    *A,
     const REAL  tol           = itparam->tol;
 
     /* Local Variables */
-    REAL solve_start, solve_end, solve_time;
+    REAL solve_start, solve_end;
     INT iter;
-
-    fasp_gettime(&solve_start);
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
+
+    fasp_gettime(&solve_start);
 
     /* check matrix data */
     fasp_check_dCSRmat(A);
@@ -217,8 +216,7 @@ INT fasp_solver_dcsr_itsolver_s (dCSRmat    *A,
 
     if ( (prtlvl >= PRINT_SOME) && (iter >= 0) ) {
         fasp_gettime(&solve_end);
-        solve_time = solve_end - solve_start;
-        fasp_cputime("Iterative method", solve_time);
+        fasp_cputime("Iterative method", solve_end - solve_start);
     }
 
 #if DEBUG_MODE > 0
@@ -253,7 +251,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat    *A,
     
     /* Local Variables */
     INT      status = FASP_SUCCESS;
-    REAL     solve_start, solve_end, solve_time;
+    REAL     solve_start, solve_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -267,8 +265,7 @@ INT fasp_solver_dcsr_krylov (dCSRmat    *A,
     
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solve_end);
-        solve_time = solve_end - solve_start;
-        fasp_cputime("Krylov method totally", solve_time);
+        fasp_cputime("Krylov method totally", solve_end - solve_start);
     }
     
 #if DEBUG_MODE > 0
@@ -303,7 +300,7 @@ INT fasp_solver_dcsr_krylov_s (dCSRmat    *A,
 
     /* Local Variables */
     INT      status = FASP_SUCCESS;
-    REAL     solve_start, solve_end, solve_time;
+    REAL     solve_start, solve_end;
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -317,8 +314,7 @@ INT fasp_solver_dcsr_krylov_s (dCSRmat    *A,
 
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solve_end);
-        solve_time = solve_end - solve_start;
-        fasp_cputime("Krylov method totally", solve_time);
+        fasp_cputime("Krylov method totally", solve_end - solve_start);
     }
 
 #if DEBUG_MODE > 0
@@ -353,7 +349,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat    *A,
     
     /* Local Variables */
     INT       status = FASP_SUCCESS;
-    REAL      solve_start, solve_end, solve_time;
+    REAL      solve_start, solve_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -375,8 +371,7 @@ INT fasp_solver_dcsr_krylov_diag (dCSRmat    *A,
     
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solve_end);
-        solve_time = solve_end - solve_start;
-        fasp_cputime("Diag_Krylov method totally", solve_time);
+        fasp_cputime("Diag_Krylov method totally", solve_end - solve_start);
     }
     
     fasp_dvec_free(&diag);
@@ -421,8 +416,8 @@ INT fasp_solver_dcsr_krylov_swz (dCSRmat    *A,
 
     const SHORT prtlvl = itparam->print_level;
 
-    REAL setup_start, setup_end, setup_time;
-    REAL solve_start, solve_end, solve_time;
+    REAL setup_start, setup_end;
+    REAL solve_start, solve_end;
     INT status = FASP_SUCCESS;
 
 #if DEBUG_MODE > 0
@@ -431,6 +426,7 @@ INT fasp_solver_dcsr_krylov_swz (dCSRmat    *A,
     printf("### DEBUG: rhs/sol size: %d %d\n", b->row, x->row);
 #endif
     
+    fasp_gettime(&solve_start);
     fasp_gettime(&setup_start);
     
     // setup preconditioner
@@ -444,22 +440,18 @@ INT fasp_solver_dcsr_krylov_swz (dCSRmat    *A,
     fasp_swz_dcsr_setup (&SWZ_data, &swzparam);
 
     fasp_gettime (&setup_end);
-    setup_time = setup_end - setup_start;
-    printf("SWZ_Krylov method setup %f seconds.\n", setup_time);
+    printf("SWZ_Krylov method setup %f seconds.\n", setup_end - setup_start);
 
     precond prec;
     prec.data = &SWZ_data;
     prec.fct  = fasp_precond_swz;
-
-    fasp_gettime(&solve_start);
 
     // solver part
     status = fasp_solver_dcsr_itsolver(A,b,x,&prec,itparam);
 
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&solve_end);
-        solve_time = solve_end - solve_start;
-        printf("SWZ_Krylov method totally %f seconds.\n", solve_time);
+        fasp_cputime("SWZ_Krylov method totally", solve_end - solve_start);
     }
 
 #if DEBUG_MODE > 0
@@ -500,7 +492,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat    *A,
     
     /* Local Variables */
     INT      status = FASP_SUCCESS;
-    REAL     solve_start, solve_end, solve_time;
+    REAL     solve_start, solve_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -562,8 +554,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat    *A,
     
     if ( prtlvl >= PRINT_MIN ) {
         fasp_gettime(&solve_end);
-        solve_time = solve_end - solve_start;
-        fasp_cputime("AMG_Krylov method totally", solve_time);
+        fasp_cputime("AMG_Krylov method totally", solve_end - solve_start);
     }
     
 FINISHED:

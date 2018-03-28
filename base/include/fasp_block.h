@@ -369,11 +369,12 @@ typedef struct {
 
     AMG_param *amgparam;  /**< parameters for AMG */
 
-} precond_block_data; /**< Precond data for block matrices */
+} precond_data_blc; /**< Precond data for block matrices */
 
 /**
- * \struct precond_sweeping_data
- * \brief Data for sweeping preconditioner
+ * \struct precond_data_sweeping
+ *
+ * \brief  Data for sweeping preconditioner
  *
  * \author Xiaozhe Hu
  * \date   05/01/2014
@@ -384,8 +385,8 @@ typedef struct {
 
     INT NumLayers;      /**< number of layers */
 
-    dBLCmat *A;   /**< problem data, the sparse matrix */
-    dBLCmat *Ai;  /**< preconditioner data, the sparse matrix */
+    dBLCmat *A;         /**< problem data, the sparse matrix */
+    dBLCmat *Ai;        /**< preconditioner data, the sparse matrix */
 
     dCSRmat *local_A;   /**< local stiffness matrix for each layer */
     void **local_LU;    /**< lcoal LU decomposition (for UMFpack) */
@@ -396,7 +397,7 @@ typedef struct {
     dvector r; /**< temporary dvector used to store and restore the residual */
     REAL *w;   /**< temporary work space for other usage */
 
-} precond_sweeping_data; /**< Data for sweeping preconditioner */
+} precond_data_sweeping; /**< Data for sweeping preconditioner */
 
 #endif /* end if for __FASPBLOCK_HEADER__ */
 

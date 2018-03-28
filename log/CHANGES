@@ -1,8 +1,9 @@
 File Name: CHANGES
 
-03/27/2018 FASP 2.0.9:
+03/28/2018 FASP 2.0.9:
 - Update Fortran wrappers: add a new one.
-- Update Fortran wrapper function names; update examples accordingly. 
+- Update Fortran wrapper function names; update examples accordingly.
+- Clean up BLC preconditioners and solvers.
 
 03/24/2018 FASP 2.0.8:
 - Remove unused arguments in several functions.

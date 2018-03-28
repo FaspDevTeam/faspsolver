@@ -1754,13 +1754,13 @@ int main (int argc, const char * argv[])
         else if (precond_type >= 20 &&  precond_type < 40) {
             
             if (Ablc.brow == 3) {
-                status = fasp_solver_dblc_krylov_block_3(&Ablc, &b, &uh, &itpar, &amgpar, A_diag);
+                status = fasp_solver_dblc_krylov_block3(&Ablc, &b, &uh, &itpar, &amgpar, A_diag);
             }
             else if (Ablc.brow == 4) {
-                status = fasp_solver_dblc_krylov_block_4(&Ablc, &b, &uh, &itpar, &amgpar, A_diag);
+                status = fasp_solver_dblc_krylov_block4(&Ablc, &b, &uh, &itpar, &amgpar, A_diag);
             }
             else {
-                //status = fasp_solver_dblc_krylov_block(&Ablc, &b, &uh, &itpar, &amgpar);
+                printf("### ERROR: Block size %d is not known!!!\n", Ablc.brow);
             }
         }
         
