@@ -616,59 +616,6 @@ void fasp_precond_amg_nk (REAL *r,
     fasp_blas_dcsr_aAxpy(1.0, P_nk, z_nk.val, z);
 }
 
-/**
- * \fn void fasp_precond_free (const SHORT precond_type, precond *pc)
- *
- * \brief free preconditioner
- *
- * \param precond_type   Preconditioner type
- * \param pc             Preconditioner data & fct
- *
- * \author Feiteng Huang
- * \date   12/24/2012
- */
-void fasp_precond_free (const SHORT   precond_type,
-                        precond      *pc)
-{
-    switch (precond_type) {
-            
-    case PREC_AMG: // AMG preconditioner
-
-        fasp_amg_data_free(((precond_data*)(pc->data))->mgl_data, NULL);
-        fasp_mem_free((precond_data*)(pc->data));
-        fasp_mem_free(pc); pc = NULL;
-            
-        break;
-            
-    case PREC_FMG: // FMG preconditioner
-            
-        fasp_amg_data_free(((precond_data*)(pc->data))->mgl_data, NULL);
-        fasp_mem_free((precond_data*)(pc->data));
-        fasp_mem_free(pc); pc = NULL;
-            
-        break;
-            
-    case PREC_ILU: // ILU preconditioner
-            
-        fasp_ilu_data_free((ILU_data*)(pc->data));
-        fasp_mem_free(pc); pc = NULL;
-            
-        break;
-            
-    case PREC_DIAG: // Diagonal preconditioner
-            
-        fasp_dvec_free((dvector*)(pc->data));
-        fasp_mem_free(pc); pc = NULL;
-            
-        break;
-            
-    default: // No preconditioner
-            
-        break;
-            
-    }
-}
-
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

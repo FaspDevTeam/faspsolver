@@ -561,7 +561,7 @@ void fasp_precond_dbsr_ilu (REAL *r,
  * \param z     Pointer to preconditioned vector
  * \param data  Pointer to precondition data
  *
- * \author ZhengLi
+ * \author Zheng Li
  * \date   12/04/2016
  *
  * \note Only works for nb 1, 2, and 3 (Zheng)
@@ -765,7 +765,7 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
  * \param z     Pointer to preconditioned vector
  * \param data  Pointer to precondition data
  *
- * \author ZhengLi
+ * \author Zheng Li
  * \date   12/04/2016
  *
  * \note Only works for nb 1, 2, and 3 (Zheng)
@@ -775,7 +775,6 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
                                    void *data)
 {
 #ifdef _OPENMP
-        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
     const ILU_data  *iludata=(ILU_data *)data;
     const INT        m=iludata->row, memneed=2*m;
     const INT        nb=iludata->nb, nb2=nb*nb, size=m*nb;
@@ -792,8 +791,7 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
     INT         ib, ibstart,ibstart1;
     INT         i, ii, j, jj, k, begin_row, end_row;
     REAL       *zz, *zr, *mult;
-        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
-    
+
     if (iludata->nwork<memneed) {
         printf("### ERROR: Need %d memory, only %d available!\n",
                memneed, iludata->nwork);
@@ -806,7 +804,6 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
     
     memcpy(zr, r, size*sizeof(REAL));
     
-        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
     switch (nb) {
 
         case 1:
@@ -869,7 +866,6 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
                     fasp_mem_free(mult); mult = NULL;
                 }
             }
-        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
 
             for (k=0; k<nlevU; k++) {
 #pragma omp parallel private(i,ii,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
@@ -902,12 +898,10 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
             break; // end (if nb=2)
         case 3:
 
-        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
             for (k=0; k<nlevL; ++k) {
 #pragma omp parallel private(i,ii,begin_row,end_row,ibstart,j,jj,ib,mult)
                 {
                     mult = (REAL*)fasp_mem_calloc(nb,sizeof(REAL));
-        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
 #pragma omp for
                     for (ii=ilevL[k];ii<ilevL[k+1];++ii) {
                         i = jlevL[ii];
@@ -932,7 +926,6 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
                 }
             }
 
-        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
             for (k=0; k<nlevU; k++) {
 #pragma omp parallel private(i,ii,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
                 {
@@ -974,7 +967,6 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
         }
     }
     
-        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
     return;
 #endif
 }
@@ -1019,44 +1011,6 @@ void fasp_precond_dbsr_amg (REAL *r,
     mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
     
     for ( i=maxit; i--; ) fasp_solver_mgcycle_bsr(mgl,&amgparam);
-    
-    fasp_darray_cp(m,mgl->x.val,z);
-}
-
-/**
- * \fn void fasp_precond_dbsr_namli (REAL *r, REAL *z, void *data)
- *
- * \brief Nonlinear AMLI-cycle AMG preconditioner
- *
- * \param r     Pointer to the vector needs preconditioning
- * \param z     Pointer to preconditioned vector
- * \param data  Pointer to precondition data
- *
- * \author Xiaozhe Hu
- * \date   02/06/2012
- */
-void fasp_precond_dbsr_namli (REAL *r, 
-                              REAL *z,
-                              void *data)
-{    
-    precond_data_bsr *pcdata=(precond_data_bsr *)data;
-    const INT row=pcdata->mgl_data[0].A.ROW;
-    const INT nb=pcdata->mgl_data[0].A.nb;
-    const INT maxit=pcdata->maxit;
-    const SHORT num_levels=pcdata->max_levels;
-    const INT m=row*nb;
-    
-	INT i;
-    
-    AMG_param amgparam;
-    fasp_param_amg_init(&amgparam);
-    fasp_param_precbsr_to_amg(&amgparam,pcdata);
-    
-    AMG_data_bsr *mgl = pcdata->mgl_data;
-    mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input
-    mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
-    
-    for ( i=maxit; i--; ) fasp_solver_namli_bsr(mgl,&amgparam,0, num_levels);
     
     fasp_darray_cp(m,mgl->x.val,z);
 }
@@ -1153,6 +1107,44 @@ void fasp_precond_dbsr_amg_nk (REAL *r,
     
     // z = z + P_nk*z_nk;
     fasp_blas_dcsr_aAxpy(1.0, P_nk, z_nk.val, z);
+}
+
+/**
+ * \fn void fasp_precond_dbsr_namli (REAL *r, REAL *z, void *data)
+ *
+ * \brief Nonlinear AMLI-cycle AMG preconditioner
+ *
+ * \param r     Pointer to the vector needs preconditioning
+ * \param z     Pointer to preconditioned vector
+ * \param data  Pointer to precondition data
+ *
+ * \author Xiaozhe Hu
+ * \date   02/06/2012
+ */
+void fasp_precond_dbsr_namli (REAL *r,
+                              REAL *z,
+                              void *data)
+{
+    precond_data_bsr *pcdata=(precond_data_bsr *)data;
+    const INT row=pcdata->mgl_data[0].A.ROW;
+    const INT nb=pcdata->mgl_data[0].A.nb;
+    const INT maxit=pcdata->maxit;
+    const SHORT num_levels=pcdata->max_levels;
+    const INT m=row*nb;
+
+    INT i;
+
+    AMG_param amgparam;
+    fasp_param_amg_init(&amgparam);
+    fasp_param_precbsr_to_amg(&amgparam,pcdata);
+
+    AMG_data_bsr *mgl = pcdata->mgl_data;
+    mgl->b.row=m; fasp_darray_cp(m,r,mgl->b.val); // residual is an input
+    mgl->x.row=m; fasp_dvec_set(m,&mgl->x,0.0);
+
+    for ( i=maxit; i--; ) fasp_solver_namli_bsr(mgl,&amgparam,0, num_levels);
+
+    fasp_darray_cp(m,mgl->x.val,z);
 }
 
 /*---------------------------------*/

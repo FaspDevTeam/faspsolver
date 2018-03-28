@@ -63,7 +63,7 @@ INT fasp_solver_dstr_itsolver (dSTRmat    *A,
 
     // local variables
     INT iter = ERROR_SOLVER_TYPE;
-    REAL solve_start, solve_end, solve_time;
+    REAL solve_start, solve_end;
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -102,8 +102,7 @@ INT fasp_solver_dstr_itsolver (dSTRmat    *A,
     
     if ( (prtlvl > PRINT_MIN) && (iter >= 0) ) {
         fasp_gettime(&solve_end);
-        solve_time = solve_end - solve_start;
-        fasp_cputime("Iterative method", solve_time);
+        fasp_cputime("Iterative method", solve_end - solve_start);
     }
     
 #if DEBUG_MODE > 0
@@ -136,7 +135,7 @@ INT fasp_solver_dstr_krylov (dSTRmat    *A,
 {
     const SHORT prtlvl = itparam->print_level;
     INT status = FASP_SUCCESS;
-    REAL solve_start, solve_end, solve_time;
+    REAL solve_start, solve_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -149,11 +148,9 @@ INT fasp_solver_dstr_krylov (dSTRmat    *A,
 
     fasp_gettime(&solve_end);
     
-    if ( prtlvl >= PRINT_MIN ) {
-        solve_time = solve_end - solve_start;
-        fasp_cputime("Krylov method totally", solve_time);
-    }
-    
+    if ( prtlvl >= PRINT_MIN )
+        fasp_cputime("Krylov method totally", solve_end - solve_start);
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
@@ -186,9 +183,11 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat    *A,
     const INT ngrid = A->ngrid;
 
     INT status = FASP_SUCCESS;
-    REAL solve_start, solve_end, solve_time;
+    REAL solve_start, solve_end;
     INT nc = A->nc, nc2 = nc*nc, i;
-    
+
+    fasp_gettime(&solve_start);
+
     // setup preconditioner
     precond_diag_str diag;
     fasp_dvec_alloc(ngrid*nc2, &(diag.diag));
@@ -208,16 +207,12 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat    *A,
 #endif
 
     // solver part
-    fasp_gettime(&solve_start);
-
     status=fasp_solver_dstr_itsolver(A,b,x,pc,itparam);
 
     fasp_gettime(&solve_end);
-    
-    solve_time = solve_end - solve_start;
-    
+
     if ( prtlvl >= PRINT_MIN )
-        fasp_cputime("Diag_Krylov method totally", solve_time);
+        fasp_cputime("Diag_Krylov method totally", solve_end - solve_start);
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -227,8 +222,8 @@ INT fasp_solver_dstr_krylov_diag (dSTRmat    *A,
 }
 
 /**
- * \fn INT fasp_solver_dstr_krylov_ilu(dSTRmat *A, dvector *b, dvector *x,
- *                                 ITS_param *itparam, ILU_param *iluparam)
+ * \fn INT fasp_solver_dstr_krylov_ilu (dSTRmat *A, dvector *b, dvector *x,
+ *                                      ITS_param *itparam, ILU_param *iluparam)
  *
  * \brief Solve Ax=b by structured ILU preconditioned Krylov methods
  *
