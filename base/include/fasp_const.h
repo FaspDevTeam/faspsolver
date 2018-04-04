@@ -167,7 +167,7 @@
  */
 #define PAIRWISE                1  /**< pairwise aggregation, default is SPAIR */
 #define VMB                     2  /**< VMB aggregation */
-#define USPAIR                  3  /**< unsymmetric pairwise aggregation */
+#define NPAIR                   3  /**< non-symmetric pairwise aggregation */
 #define SPAIR                   4  /**< symmetric pairwise aggregation */
 
 /**

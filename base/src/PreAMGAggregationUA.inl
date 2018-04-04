@@ -747,7 +747,7 @@ static SHORT aggregation_quality (const dCSRmat  *A,
 }
 
 /**
- * \fn void usympair_1stpass (const dCSRmat * A, const REAL k_tg,
+ * \fn void nsympair_1stpass (const dCSRmat * A, const REAL k_tg,
  *                            ivector *vertices, ivector *map, REAL*s,
  *                            INT *NumAggregates)
  *
@@ -766,7 +766,7 @@ static SHORT aggregation_quality (const dCSRmat  *A,
  * \note  Refer to Yvan Notay "Aggregation-based algebraic multigrid
  *        for convection-diffusion equations" 2011.
  */
-static void usympair_1stpass (const dCSRmat * A,
+static void nsympair_1stpass (const dCSRmat * A,
                               const REAL      k_tg,
                               ivector       * vertices,
                               ivector       * map,
@@ -934,7 +934,7 @@ static void usympair_1stpass (const dCSRmat * A,
 }
 
 /**
- * \fn void usympair_2ndpass (const dCSRmat *A, dCSRmat *tmpA, const REAL k_tg,
+ * \fn void nsympair_2ndpass (const dCSRmat *A, dCSRmat *tmpA, const REAL k_tg,
  *                            INT dopass, ivector *map1, ivector *vertices1, 
  *                            ivector *vertices, ivector *map, REAL *s1, INT *NumAggregates)
  *
@@ -958,7 +958,7 @@ static void usympair_1stpass (const dCSRmat * A,
  * \note  Refer to Yvan Notay "Aggregation-based algebraic multigrid
  *        for convection-diffusion equations" 2011.
  */
-static void usympair_2ndpass (const dCSRmat  *A,
+static void nsympair_2ndpass (const dCSRmat  *A,
                               dCSRmat        *tmpA,
                               const REAL      k_tg,
                               INT             dopass,
@@ -1171,7 +1171,7 @@ static void usympair_2ndpass (const dCSRmat  *A,
 }
 
 /**
- * \fn static SHORT aggregation_usympair (dCSRmat *A, AMG_param *param,
+ * \fn static SHORT aggregation_nsympair (dCSRmat *A, AMG_param *param,
  *                                        const INT level, ivector *vertices,
  *                                        INT *NumAggregates)
  *
@@ -1192,7 +1192,7 @@ static void usympair_2ndpass (const dCSRmat  *A,
  *
  * Modified by Chensong Zhang, Zheng Li on 07/29/2014
  */
-static SHORT aggregation_usympair (AMG_data   *mgl,
+static SHORT aggregation_nsympair (AMG_data   *mgl,
                                    AMG_param  *param,
                                    const INT   level,
                                    ivector    *vertices,
@@ -1215,10 +1215,10 @@ static SHORT aggregation_usympair (AMG_data   *mgl,
     for ( i = 1; i <= pair_number; ++i ) {
 
         if ( i == 1 ) {
-            usympair_1stpass(ptrA, quality_bound, &vertices[lvl], &map1, s, &num_agg);
+            nsympair_1stpass(ptrA, quality_bound, &vertices[lvl], &map1, s, &num_agg);
         }
         else {
-            usympair_2ndpass(&mgl[level].A, ptrA, quality_bound, i, &map1,
+            nsympair_2ndpass(&mgl[level].A, ptrA, quality_bound, i, &map1,
                              &vertices[lvl-1], &vertices[lvl], &map2, s, &num_agg);
         }
 

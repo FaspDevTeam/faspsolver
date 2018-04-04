@@ -104,7 +104,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr   *mgl,
     SHORT     i, lvl = 0, status = FASP_SUCCESS;
     REAL      setup_start, setup_end;
     
-    AMG_data *mgl_csr=fasp_amg_data_create(max_levels);
+    AMG_data *mgl_csr = fasp_amg_data_create(max_levels);
     
     dCSRmat   temp1, temp2;
 
@@ -205,10 +205,10 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr   *mgl,
 
                 break;
 
-            case USPAIR: // unsymmetric pairwise matching aggregation
+            case NPAIR: // non-symmetric pairwise matching aggregation
 
                 mgl_csr[lvl].A = mgl[lvl].PP;
-                status = aggregation_usympair (mgl_csr, param, lvl, vertices,
+                status = aggregation_nsympair (mgl_csr, param, lvl, vertices,
                                                &num_aggs[lvl]);
 
                 break;
@@ -220,7 +220,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr   *mgl,
                                               &num_aggs[lvl]);
 
                 // TODO: Need to design better algorithm for pairwise BSR -- Xiaozhe
-                // TODO: Unsymmetric pairwise aggregation not implemented -- Chensong
+                // TODO: Unsymmetric pairwise aggregation not finished -- Chensong
+                // TODO: Check why this fails for BSR --Chensong
 
                break;
         }
@@ -240,7 +241,6 @@ static SHORT amg_setup_unsmoothP_unsmoothR_bsr (AMG_data_bsr   *mgl,
                                   mgl[0].near_kernel_basis);
         }
         else {
-
             form_boolean_p_bsr(&vertices[lvl], &mgl[lvl].P, &mgl[0], num_aggs[lvl]);
         }
         

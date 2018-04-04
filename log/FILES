@@ -1,7 +1,7 @@
     1200 ./base/include/fasp.h
      406 ./base/include/fasp_block.h
      262 ./base/include/fasp_const.h
-    2897 ./base/include/fasp_functs.h
+    2909 ./base/include/fasp_functs.h
       51 ./base/include/fasp_grid.h
     1118 ./base/src/BlaIOUtil.inl
      115 ./base/src/BlaSpmvMatFree.inl
@@ -81,13 +81,13 @@
      134 ./base/src/PreAMGSetupCR.c
      320 ./base/src/PreAMGSetupRS.c
      778 ./base/src/PreAMGSetupSA.c
-     528 ./base/src/PreAMGSetupSABSR.c
+     461 ./base/src/PreAMGSetupSABSR.c
      407 ./base/src/PreAMGSetupUA.c
      382 ./base/src/PreAMGSetupUABSR.c
     1081 ./base/src/PreBLC.c
     1152 ./base/src/PreBSR.c
      621 ./base/src/PreCSR.c
-     365 ./base/src/PreDataInit.c
+     366 ./base/src/PreDataInit.c
      522 ./base/src/PreMGCycle.c
      364 ./base/src/PreMGCycleFull.c
      166 ./base/src/PreMGRecur.c
@@ -96,11 +96,11 @@
     1796 ./base/src/PreSTR.c
      144 ./base/src/SolAMG.c
      586 ./base/src/SolBLC.c
-     785 ./base/src/SolBSR.c
+     774 ./base/src/SolBSR.c
      853 ./base/src/SolCSR.c
      116 ./base/src/SolFAMG.c
     1048 ./base/src/SolGMGPoisson.c
      238 ./base/src/SolMatFree.c
      406 ./base/src/SolSTR.c
-     456 ./base/src/SolWrapper.c
-   85633 total
+     339 ./base/src/SolWrapper.c
+   85451 total
