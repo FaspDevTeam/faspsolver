@@ -115,14 +115,23 @@ void fasp_amg_data_free (AMG_data   *mgl,
         fasp_ivec_free(&mgl[i].cfmark);
         fasp_swz_data_free(&mgl[i].Schwarz);
     }
-    
+
     for ( i=0; i<mgl->near_kernel_dim; ++i ) {
         fasp_mem_free(mgl->near_kernel_basis[i]); mgl->near_kernel_basis[i] = NULL;
     }
-    
+
+    fasp_mem_free(mgl->near_kernel_basis); mgl->near_kernel_basis = NULL;
+    fasp_mem_free(mgl); mgl = NULL;
+
+    if ( param == NULL ) return; // exit if no param given
+
+    if ( param->cycle_type == AMLI_CYCLE ) {
+        fasp_mem_free(param->amli_coef); param->amli_coef = NULL;
+    }
+
     // Clean direct solver data in necessary
     switch (param->coarse_solver) {
-            
+
 #if WITH_MUMPS
             /* Destroy MUMPS direct solver on the coarsest level */
         case SOLVER_MUMPS: {
@@ -132,14 +141,14 @@ void fasp_amg_data_free (AMG_data   *mgl,
             break;
         }
 #endif
-            
+
 #if WITH_UMFPACK
         case SOLVER_UMFPACK: {
             fasp_mem_free(mgl[max_levels-1].Numeric); mgl[max_levels-1].Numeric = NULL;
             break;
         }
 #endif
-            
+
 #if WITH_PARDISO
         case SOLVER_PARDISO: {
             fasp_pardiso_free_internal_mem(&mgl[max_levels-1].pdata);
@@ -148,15 +157,7 @@ void fasp_amg_data_free (AMG_data   *mgl,
         default: // Do nothing!
             break;
     }
-    
-    fasp_mem_free(mgl->near_kernel_basis); mgl->near_kernel_basis = NULL;
-    fasp_mem_free(mgl); mgl = NULL;
-    
-    if ( param != NULL ) {
-        if ( param->cycle_type == AMLI_CYCLE ) {
-            fasp_mem_free(param->amli_coef); param->amli_coef = NULL;
-        }
-    }
+
 }
 
 /**

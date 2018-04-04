@@ -35,6 +35,7 @@
 
 #include "PreAMGAggregation.inl"
 #include "PreAMGAggregationBSR.inl"
+#include "PreAMGAggregationUA.inl"
 
 static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *, AMG_param *);
 static void smooth_agg_bsr (const dBSRmat *, dBSRmat *, dBSRmat *, const AMG_param *,
@@ -107,7 +108,7 @@ static void smooth_agg_bsr (const dBSRmat    *A,
     dBSRmat S;
     dvector diaginv;  // diagonal block inv
 
-    INT i,j;
+    INT i, j;
 
     REAL *Id   = (REAL *)fasp_mem_calloc(nb2, sizeof(REAL));
     REAL *temp = (REAL *)fasp_mem_calloc(nb2, sizeof(REAL));
@@ -116,40 +117,35 @@ static void smooth_agg_bsr (const dBSRmat    *A,
 
     /* Step 1. Form smoother */
 
-    /* Without filter: Using A for damped Jacobian smoother */
-    if ( filter != ON ) {
+    // copy structure from A
+    S = fasp_dbsr_create(row, col, nnz, nb, 0);
 
-        // copy structure from A
-        S = fasp_dbsr_create(row, col, nnz, nb, 0);
+    for ( i=0; i<=row; ++i ) S.IA[i] = A->IA[i];
+    for ( i=0; i<nnz;  ++i ) S.JA[i] = A->JA[i];
 
-        for ( i=0; i<=row; ++i ) S.IA[i] = A->IA[i];
-        for ( i=0; i<nnz; ++i ) S.JA[i] = A->JA[i];
+    diaginv = fasp_dbsr_getdiaginv(A);
 
-        diaginv = fasp_dbsr_getdiaginv(A);
+    // for S
+    for (i=0; i<row; ++i) {
 
-        // for S
-        for (i=0; i<row; ++i) {
+        for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
 
-            for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
+            if (S.JA[j] == i) {
 
-                if (S.JA[j] == i) {
+                fasp_blas_smat_mul(diaginv.val+(i*nb2), A->val+(j*nb2), temp, nb);
+                fasp_blas_smat_add(Id, temp, nb, 1.0, (-1.0)*smooth_factor, S.val+(j*nb2));
 
-                    fasp_blas_smat_mul(diaginv.val+(i*nb2), A->val+(j*nb2), temp, nb);
-                    fasp_blas_smat_add(Id, temp, nb, 1.0, (-1.0)*smooth_factor, S.val+(j*nb2));
+            }
+            else {
 
-                }
-                else {
-
-                    fasp_blas_smat_mul(diaginv.val+(i*nb2), A->val+(j*nb2), S.val+(j*nb2), nb);
-                    fasp_blas_smat_axm(S.val+(j*nb2), nb, (-1.0)*smooth_factor);
-
-                }
+                fasp_blas_smat_mul(diaginv.val+(i*nb2), A->val+(j*nb2), S.val+(j*nb2), nb);
+                fasp_blas_smat_axm(S.val+(j*nb2), nb, (-1.0)*smooth_factor);
 
             }
 
         }
-    }
 
+    }
     fasp_dvec_free(&diaginv);
 
     fasp_mem_free(Id);   Id   = NULL;
@@ -162,74 +158,6 @@ static void smooth_agg_bsr (const dBSRmat    *A,
 
     fasp_dbsr_free(&S);
 }
-
-#if 0 /* Not used any where */
-/**
- * \fn static void smooth_agg_bsr1 (const dBSRmat *A, dBSRmat *tentp, dBSRmat *P,
- *                                  const AMG_param *param, const INT NumLevels,
- *                                  const dCSRmat *N)
- *
- * \brief Smooth the tentative prolongation (without filter)
- *
- * \param A            Pointer to the coefficient matrices (dBSRmat)
- * \param tentp        Pointer to the tentative prolongation operators (dBSRmat)
- * \param P            Pointer to the prolongation operators (dBSRmat)
- * \param param        Pointer to AMG parameters
- * \param NumLevels    Current level number
- * \param N            Pointer to strongly coupled neighbors
- *
- * \author Xiaozhe Hu
- * \date   05/26/2014
- */
-static void smooth_agg_bsr1 (const dBSRmat    *A,
-                             dBSRmat          *tentp,
-                             dBSRmat          *P,
-                             const AMG_param  *param,
-                             const INT         NumLevels,
-                             const dCSRmat    *N)
-{
-    const INT   row = A->ROW;
-    const INT   nb = A->nb;
-    const INT   nb2 = nb*nb;
-    const REAL  smooth_factor = param->tentative_smooth;
-
-    // local variables
-    dBSRmat S;
-
-    INT i,j;
-
-    REAL *Id   = (REAL *)fasp_mem_calloc(nb2, sizeof(REAL));
-    REAL *temp = (REAL *)fasp_mem_calloc(nb2, sizeof(REAL));
-
-    fasp_smat_identity(Id, nb, nb2);
-
-    /* Step 1. D^{-1}A */
-    S = fasp_dbsr_diaginv(A);
-
-    /* Step 2. -wD^{-1}A */
-    fasp_blas_dbsr_axm (&S, (-1.0)*smooth_factor);
-
-    /* Step 3. I - wD^{-1}A */
-    for (i=0; i<row; ++i) {
-        for (j=S.IA[i]; j<S.IA[i+1]; ++j) {
-            if (S.JA[j] == i) {
-                fasp_blas_smat_add(Id, S.val+(j*nb2), nb, 1.0, 1.0, temp);
-                fasp_darray_cp(nb2, temp, S.val+(j*nb2));
-            }
-        }
-    }
-
-    fasp_mem_free(Id);   Id   = NULL;
-    fasp_mem_free(temp); temp = NULL;
-
-    /* Step 2. Smooth the tentative prolongation P = S*tenp */
-    fasp_blas_dbsr_mxm(&S, tentp, P); // Note: think twice about this.
-
-    P->NNZ = P->IA[P->ROW];
-
-    fasp_dbsr_free(&S);
-}
-#endif
 
 /**
  * \fn static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
@@ -262,6 +190,8 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
     SHORT     max_levels=param->max_levels;
     SHORT     i, lvl=0, status=FASP_SUCCESS;
     REAL      setup_start, setup_end;
+
+    AMG_data *mgl_csr = fasp_amg_data_create(max_levels);
 
     dCSRmat temp1, temp2;
 
@@ -350,19 +280,22 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         /*-- Aggregation --*/
         switch ( param->aggregation_type ) {
 
-            case VMB: // VMB aggregation
-                // Same as default
+            case NPAIR: // unsymmetric pairwise matching aggregation
 
-            default: // only one aggregation is tested!!! --Chensong
+                mgl_csr[lvl].A = mgl[lvl].PP;
+                status = aggregation_nsympair (mgl_csr, param, lvl, vertices,
+                                               &num_aggs[lvl]);
 
-                status = aggregation_vmb(&mgl[lvl].PP, &vertices[lvl], param, lvl+1,
-                                         &Neighbor[lvl], &num_aggs[lvl]);
+                break;
 
-                /*-- Choose strength threshold adaptively --*/
-                if ( num_aggs[lvl]*4 > mgl[lvl].PP.row )
-                    param->strong_coupled /= 4;
-                else if ( num_aggs[lvl]*1.25 < mgl[lvl].PP.row )
-                    param->strong_coupled *= 1.5;
+            default: // symmetric pairwise matching aggregation
+
+                mgl_csr[lvl].A = mgl[lvl].PP;
+                status = aggregation_symmpair (mgl_csr, param, lvl, vertices,
+                                               &num_aggs[lvl]);
+
+                // TODO: Need to design better algorithm for pairwise BSR -- Xiaozhe
+                // TODO: Check why this fails for BSR --Chensong
 
                 break;
         }
@@ -458,7 +391,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
             fasp_dcsr_sort(&mgl[lvl].Ac);
             fasp_pardiso_factorize(&mgl[lvl].Ac, &mgl[lvl].pdata, 0);
             break;
-         }
+        }
 #endif
 
         default:

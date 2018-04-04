@@ -369,11 +369,10 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat    *A,
     INT status = FASP_SUCCESS;
     
     // data of AMG
-    AMG_data_bsr *mgl=fasp_amg_data_bsr_create(max_levels);
+    AMG_data_bsr *mgl = fasp_amg_data_bsr_create(max_levels);
         
     // timing
-    REAL setup_start, setup_end, setup_time;
-    REAL solve_start, solve_end, solve_time;
+    REAL setup_start, setup_end, solve_end;
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -390,7 +389,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat    *A,
     mgl[0].x = fasp_dvec_create(mgl[0].A.COL*mgl[0].A.nb);
     
     fasp_dbsr_cp(A, &(mgl[0].A));
-    
+
     switch (amgparam->AMG_type) {
             
         case SA_AMG: // Smoothed Aggregation AMG
@@ -400,7 +399,7 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat    *A,
             status = fasp_amg_setup_ua_bsr(mgl, amgparam); break;
             
     }
-    
+
     if (status < 0) goto FINISHED;
     
     precond_data_bsr precdata;
@@ -420,41 +419,31 @@ INT fasp_solver_dbsr_krylov_amg (dBSRmat    *A,
     precdata.max_levels = mgl[0].num_levels;
     precdata.mgl_data = mgl;
     precdata.A = A;
-    
-    if (status < 0) goto FINISHED;
-    
+
     precond prec;
     prec.data = &precdata;
     switch (amgparam->cycle_type) {
         case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
-            prec.fct = fasp_precond_dbsr_namli;
-            break;
+            prec.fct = fasp_precond_dbsr_namli; break;
         default: // V,W-Cycle AMG
-            prec.fct = fasp_precond_dbsr_amg;
-            break;
+            prec.fct = fasp_precond_dbsr_amg; break;
     }
 
     fasp_gettime(&setup_end);
 
-    setup_time = setup_end - setup_start;
-
-    if ( prtlvl >= PRINT_MIN ) fasp_cputime("BSR AMG setup", setup_time);
+    if ( prtlvl >= PRINT_MIN )
+        fasp_cputime("BSR AMG setup", setup_end - setup_start);
 
     //--------------------------------------------------------------
     // Part 3: solver
     //--------------------------------------------------------------
-    fasp_gettime(&solve_start);
-    
-    status=fasp_solver_dbsr_itsolver(A,b,x,&prec,itparam);
+    status = fasp_solver_dbsr_itsolver(A,b,x,&prec,itparam);
     
     fasp_gettime(&solve_end);
-    
-    solve_time = solve_end - solve_start;
-    
-    if ( prtlvl >= PRINT_MIN ) {
-        fasp_cputime("BSR Krylov method", setup_time+solve_time);
-    }
-    
+
+    if ( prtlvl >= PRINT_MIN )
+        fasp_cputime("BSR Krylov method", solve_end - setup_start);
+
 FINISHED:
     fasp_amg_data_bsr_free(mgl);
     
@@ -462,7 +451,7 @@ FINISHED:
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
-    if (status == ERROR_ALLOC_MEM) goto MEMORY_ERROR;
+    if ( status == ERROR_ALLOC_MEM ) goto MEMORY_ERROR;
     return status;
     
 MEMORY_ERROR:

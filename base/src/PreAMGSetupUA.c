@@ -238,9 +238,9 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
 
                 break;
 
-            case USPAIR: // unsymmetric pairwise matching aggregation
+            case NPAIR: // non-symmetric pairwise matching aggregation
 
-                status = aggregation_usympair (mgl, param, lvl, vertices,
+                status = aggregation_nsympair (mgl, param, lvl, vertices,
                                                &num_aggs[lvl]);
 
                 break;

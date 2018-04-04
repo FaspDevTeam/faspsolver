@@ -690,10 +690,10 @@ INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat    *A,
     
     // ILU setup for M
     ILU_data LU;
-    if ( (status = fasp_ilu_dcsr_setup(M, &LU, iluparam))<0 ) goto FINISHED;
+    if ( (status = fasp_ilu_dcsr_setup(M, &LU, iluparam)) < 0 ) goto FINISHED;
     
     // check iludata
-    if ( (status = fasp_mem_iludata_check(&LU))<0 ) goto FINISHED;
+    if ( (status = fasp_mem_iludata_check(&LU)) < 0 ) goto FINISHED;
     
     // set precondtioner
     precond pc;
