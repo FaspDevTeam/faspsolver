@@ -53,7 +53,7 @@
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
- * \param StopType     Stopping criteria type -- DOES not support this parameter
+ * \param StopType     Stopping criteria type -- DO not support this parameter
  * \param PrtLvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
@@ -76,47 +76,47 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
 {
     const INT n                 = b->row;
     const INT min_iter          = 0;
-    
+
     //--------------------------------------------//
     //   Newly added parameters to monitor when   //
     //   to change the restart parameter          //
     //--------------------------------------------//
     const REAL cr_max           = 0.99;    // = cos(8^o)  (experimental)
     const REAL cr_min           = 0.174;   // = cos(80^o) (experimental)
-    
+
     // local variables
     INT    iter                 = 0;
     INT    i,j,k;
-    
+
     REAL   epsmac               = SMALLREAL;
     REAL   r_norm, b_norm, den_norm;
     REAL   epsilon, gamma, t;
     REAL   relres, normu, r_normb;
-    
+
     REAL   *c = NULL, *s = NULL, *rs = NULL, *norms = NULL, *r = NULL;
     REAL   **p = NULL, **hh = NULL, **z=NULL;
-    
+
     REAL   cr          = 1.0;     // convergence rate
     REAL   r_norm_old  = 0.0;     // save residual norm of previous restart cycle
     INT    d           = 3;       // reduction for restart parameter
     INT    restart_max = restart; // upper bound for restart in each restart cycle
     INT    restart_min = 3;       // lower bound for restart in each restart cycle
-    
+
     INT  Restart  = restart; // real restart in some fixed restarted cycle
     INT  Restart1 = Restart + 1;
     LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
-    
+
     // Output some info for debuging
-    if ( PrtLvl > PRINT_NONE ) printf("\nCalling VFGMRes solver (CSR) ...\n");
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling VFGMRes solver (BLC) ...\n");
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
-    
+
     /* allocate memory and setup temp work space */
     REAL *work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
-    
+
     /* check whether memory is enough for GMRES */
     while ( (work == NULL) && (Restart > 5) ) {
         Restart = Restart - 5;
@@ -124,57 +124,57 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
         work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
         Restart1 = Restart + 1;
     }
-    
+
     if ( work == NULL ) {
         printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
         fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
-    
+
     if ( PrtLvl > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: vFGMRES restart number set to %d!\n", Restart);
     }
-    
+
     p  = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
     hh = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
     z  = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
     norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
-    
+
     r = work; rs = r + n; c = rs + Restart1; s = c + Restart;
     for ( i = 0; i < Restart1; i++ ) p[i] = s + Restart + i*n;
     for ( i = 0; i < Restart1; i++ ) hh[i] = p[Restart] + n + i*Restart;
     for ( i = 0; i < Restart1; i++ ) z[i] = hh[Restart] + Restart + i*n;
-    
+
     /* initialization */
     fasp_darray_cp(n, b->val, p[0]);
     fasp_blas_dcsr_aAxpy(-1.0, A, x->val, p[0]);
-    
+
     b_norm = fasp_blas_darray_norm2(n, b->val);
     r_norm = fasp_blas_darray_norm2(n, p[0]);
     norms[0] = r_norm;
-    
+
     if ( PrtLvl >= PRINT_SOME) {
         ITS_PUTNORM("right-hand side", b_norm);
         ITS_PUTNORM("residual", r_norm);
     }
-    
+
     if ( b_norm > 0.0 ) den_norm = b_norm;
     else                den_norm = r_norm;
-    
+
     epsilon = tol*den_norm;
-    
+
     // if initial residual is small, no need to iterate!
     if ( r_norm < epsilon || r_norm < 1e-3*tol ) goto FINISHED;
-    
+
     if ( b_norm > 0.0 ) {
-        fasp_itinfo(PrtLvl,StopType,iter,norms[iter]/b_norm,norms[iter],0);
+        fasp_itinfo(PrtLvl, StopType, iter, norms[iter]/b_norm, norms[iter], 0);
     }
     else {
-        fasp_itinfo(PrtLvl,StopType,iter,norms[iter],norms[iter],0);
+        fasp_itinfo(PrtLvl, StopType, iter, norms[iter], norms[iter], 0);
     }
-    
+
     /* outer iteration cycle */
     while ( iter < MaxIt ) {
-        
+
         rs[0] = r_norm;
         r_norm_old = r_norm;
         if ( r_norm == 0.0 ) {
@@ -185,11 +185,11 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
             fasp_mem_free(z);     z     = NULL;
             return iter;
         }
-        
+
         //-----------------------------------//
         //   adjust the restart parameter    //
         //-----------------------------------//
-        
+
         if ( cr > cr_max || iter == 0 ) {
             Restart = restart_max;
         }
@@ -197,33 +197,28 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
             // Restart = Restart;
         }
         else {
-            if ( Restart - d > restart_min ) {
-                Restart -= d;
-            }
-            else {
-                Restart = restart_max;
-            }
+            if ( Restart - d > restart_min ) Restart -= d;
+            else Restart = restart_max;
         }
-        
-        // Always enter the cycle at the first iteration
-        // For at least one iteration step
+
+        // Enter the cycle at the first iteration for at least one iteration
         t = 1.0 / r_norm;
         fasp_blas_darray_ax(n, t, p[0]);
         i = 0;
-        
+
         // RESTART CYCLE (right-preconditioning)
         while ( i < Restart && iter < MaxIt ) {
-            
+
             i ++;  iter ++;
-            
+
             /* apply preconditioner */
             if ( pc == NULL )
                 fasp_darray_cp(n, p[i-1], z[i-1]);
             else
                 pc->fct(p[i-1], z[i-1], pc->data);
-            
+
             fasp_blas_dcsr_mxv(A, z[i-1], p[i]);
-            
+
             /* modified Gram_Schmidt */
             for ( j = 0; j < i; j++ ) {
                 hh[j][i-1] = fasp_blas_darray_dotprod(n, p[j], p[i]);
@@ -235,71 +230,69 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
                 t = 1.0 / t;
                 fasp_blas_darray_ax(n, t, p[i]);
             }
-            
+
             for ( j = 1; j < i; ++j ) {
                 t = hh[j-1][i-1];
-                hh[j-1][i-1] = s[j-1]*hh[j][i-1] + c[j-1]*t;
-                hh[j][i-1] = -s[j-1]*t + c[j-1]*hh[j][i-1];
+                hh[j-1][i-1] =  s[j-1]*hh[j][i-1] + c[j-1]*t;
+                hh[j][i-1]   = -s[j-1]*t + c[j-1]*hh[j][i-1];
             }
-            t= hh[i][i-1]*hh[i][i-1];
-            t+= hh[i-1][i-1]*hh[i-1][i-1];
+            t  = hh[i][i-1]   * hh[i][i-1];
+            t += hh[i-1][i-1] * hh[i-1][i-1];
             gamma = sqrt(t);
             if (gamma == 0.0) gamma = epsmac;
             c[i-1]  = hh[i-1][i-1] / gamma;
             s[i-1]  = hh[i][i-1] / gamma;
-            rs[i]   = -s[i-1]*rs[i-1];
-            rs[i-1] = c[i-1]*rs[i-1];
+            rs[i]   = -s[i-1] * rs[i-1];
+            rs[i-1] =  c[i-1] * rs[i-1];
             hh[i-1][i-1] = s[i-1]*hh[i][i-1] + c[i-1]*hh[i-1][i-1];
-            
+
             r_norm = fabs(rs[i]);
             norms[iter] = r_norm;
-            
+
             if ( b_norm > 0 ) {
-                fasp_itinfo(PrtLvl,StopType,iter,norms[iter]/b_norm,
-                            norms[iter],norms[iter]/norms[iter-1]);
+                fasp_itinfo(PrtLvl, StopType, iter, norms[iter]/b_norm,
+                            norms[iter], norms[iter]/norms[iter-1]);
             }
             else {
-                fasp_itinfo(PrtLvl,StopType,iter,norms[iter],norms[iter],
+                fasp_itinfo(PrtLvl, StopType, iter, norms[iter], norms[iter],
                             norms[iter]/norms[iter-1]);
             }
-            
-            /* should we exit restart cycle? */
+
+            /* Check: Exit the restart cycle? */
             if (r_norm <= epsilon && iter >= min_iter) break;
-            
+
         } /* end of restart cycle */
-        
+
         /* now compute solution, first solve upper triangular system */
-        
+
         rs[i-1] = rs[i-1] / hh[i-1][i-1];
         for ( k = i-2; k >= 0; k-- ) {
             t = 0.0;
-            for (j = k+1; j < i; j ++)  t -= hh[k][j]*rs[j];
-            
+            for (j = k+1; j < i; j ++) t -= hh[k][j]*rs[j];
+
             t += rs[k];
             rs[k] = t / hh[k][k];
         }
-        
+
         fasp_darray_cp(n, z[i-1], r);
         fasp_blas_darray_ax(n, rs[i-1], r);
-        
+
         for ( j = i-2; j >= 0; j-- ) fasp_blas_darray_axpy(n, rs[j], z[j], r);
-        
+
         fasp_blas_darray_axpy(n, 1.0, r, x->val);
-        
+
         if ( r_norm <= epsilon && iter >= min_iter ) {
             fasp_darray_cp(n, b->val, r);
             fasp_blas_dcsr_aAxpy(-1.0, A, x->val, r);
             r_norm = fasp_blas_darray_norm2(n, r);
-            
+
             switch (StopType) {
                 case STOP_REL_RES:
                     relres  = r_norm/den_norm;
                     break;
                 case STOP_REL_PRECRES:
-                    if ( pc == NULL )
-                        fasp_darray_cp(n, r, p[0]);
-                    else
-                        pc->fct(r, p[0], pc->data);
+                    if ( pc == NULL ) fasp_darray_cp(n, r, p[0]);
+                    else pc->fct(r, p[0], pc->data);
                     r_normb = sqrt(fasp_blas_darray_dotprod(n,p[0],r));
                     relres  = r_normb/den_norm;
                     break;
@@ -311,7 +304,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
                     printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
                     goto FINISHED;
             }
-            
+
             if ( relres <= tol ) {
                 break;
             }
@@ -319,47 +312,47 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
                 if ( PrtLvl >= PRINT_SOME ) ITS_FACONV;
                 fasp_darray_cp(n, r, p[0]); i = 0;
             }
-            
+
         } /* end of convergence check */
-        
+
         /* compute residual vector and continue loop */
         for ( j = i; j > 0; j-- ) {
             rs[j-1] = -s[j-1]*rs[j];
             rs[j] = c[j-1]*rs[j];
         }
-        
+
         if (i) fasp_blas_darray_axpy(n, rs[i]-1.0, p[i], p[i]);
-        
+
         for ( j = i-1; j > 0; j-- ) fasp_blas_darray_axpy(n, rs[j], p[j], p[i]);
-        
+
         if (i) {
             fasp_blas_darray_axpy(n, rs[0]-1.0, p[0], p[0]);
             fasp_blas_darray_axpy(n, 1.0, p[i], p[0]);
         }
-        
+
         //-----------------------------------//
         //   compute the convergence rate    //
         //-----------------------------------//
         cr = r_norm / r_norm_old;
-        
+
     } /* end of iteration while loop */
-    
+
     if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,r_norm/den_norm);
-    
+
 FINISHED:
     /*-------------------------------------------
      * Free some stuff
      *------------------------------------------*/
-    fasp_mem_free(work);  work  = NULL;
-    fasp_mem_free(p);     p     = NULL;
-    fasp_mem_free(hh);    hh    = NULL;
-    fasp_mem_free(norms); norms = NULL;
-    fasp_mem_free(z);     z     = NULL;
-    
+    fasp_mem_free(work);   work  = NULL;
+    fasp_mem_free(p);      p     = NULL;
+    fasp_mem_free(hh);     hh    = NULL;
+    fasp_mem_free(norms);  norms = NULL;
+    fasp_mem_free(z);      z     = NULL;
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
-    
+
     if ( iter >= MaxIt )
         return ERROR_SOLVER_MAXIT;
     else
@@ -382,7 +375,7 @@ FINISHED:
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
- * \param StopType     Stopping criteria type -- DOES not support this parameter
+ * \param StopType     Stopping criteria type -- DO not support this parameter
  * \param PrtLvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
@@ -405,47 +398,47 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
 {
     const INT n                 = b->row;
     const INT min_iter          = 0;
-    
+
     //--------------------------------------------//
     //   Newly added parameters to monitor when   //
     //   to change the restart parameter          //
     //--------------------------------------------//
     const REAL cr_max           = 0.99;    // = cos(8^o)  (experimental)
     const REAL cr_min           = 0.174;   // = cos(80^o) (experimental)
-    
+
     // local variables
     INT    iter                 = 0;
     INT    i,j,k;
-    
+
     REAL   epsmac               = SMALLREAL;
     REAL   r_norm, b_norm, den_norm;
     REAL   epsilon, gamma, t;
     REAL   relres, normu, r_normb;
-    
+
     REAL   *c = NULL, *s = NULL, *rs = NULL, *norms = NULL, *r = NULL;
     REAL   **p = NULL, **hh = NULL, **z=NULL;
-    
+
     REAL   cr          = 1.0;     // convergence rate
     REAL   r_norm_old  = 0.0;     // save residual norm of previous restart cycle
     INT    d           = 3;       // reduction for restart parameter
     INT    restart_max = restart; // upper bound for restart in each restart cycle
     INT    restart_min = 3;       // lower bound for restart in each restart cycle
-    
+
     INT  Restart  = restart; // real restart in some fixed restarted cycle
     INT  Restart1 = Restart + 1;
     LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
-    
+
     // Output some info for debuging
-    if ( PrtLvl > PRINT_NONE ) printf("\nCalling VFGMRes solver (BSR) ...\n");
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling VFGMRes solver (BLC) ...\n");
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: maxit = %d, tol = %.4le\n", MaxIt, tol);
 #endif
-    
+
     /* allocate memory and setup temp work space */
     REAL *work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
-    
+
     /* check whether memory is enough for GMRES */
     while ( (work == NULL) && (Restart > 5) ) {
         Restart = Restart - 5;
@@ -453,57 +446,57 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
         work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
         Restart1 = Restart + 1;
     }
-    
+
     if ( work == NULL ) {
         printf("### ERROR: No enough memory! [%s:%d]\n", __FILE__, __LINE__ );
         fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
-    
+
     if ( PrtLvl > PRINT_MIN && Restart < restart ) {
         printf("### WARNING: vFGMRES restart number set to %d!\n", Restart);
     }
-    
+
     p  = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
     hh = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
     z  = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
     norms = (REAL *)fasp_mem_calloc(MaxIt+1, sizeof(REAL));
-    
+
     r = work; rs = r + n; c = rs + Restart1; s = c + Restart;
     for ( i = 0; i < Restart1; i++ ) p[i] = s + Restart + i*n;
     for ( i = 0; i < Restart1; i++ ) hh[i] = p[Restart] + n + i*Restart;
     for ( i = 0; i < Restart1; i++ ) z[i] = hh[Restart] + Restart + i*n;
-    
+
     /* initialization */
     fasp_darray_cp(n, b->val, p[0]);
     fasp_blas_dbsr_aAxpy(-1.0, A, x->val, p[0]);
-    
+
     b_norm = fasp_blas_darray_norm2(n, b->val);
     r_norm = fasp_blas_darray_norm2(n, p[0]);
     norms[0] = r_norm;
-    
+
     if ( PrtLvl >= PRINT_SOME) {
         ITS_PUTNORM("right-hand side", b_norm);
         ITS_PUTNORM("residual", r_norm);
     }
-    
+
     if ( b_norm > 0.0 ) den_norm = b_norm;
     else                den_norm = r_norm;
-    
+
     epsilon = tol*den_norm;
-    
+
     // if initial residual is small, no need to iterate!
     if ( r_norm < epsilon || r_norm < 1e-3*tol ) goto FINISHED;
-    
+
     if ( b_norm > 0.0 ) {
-        fasp_itinfo(PrtLvl,StopType,iter,norms[iter]/b_norm,norms[iter],0);
+        fasp_itinfo(PrtLvl, StopType, iter, norms[iter]/b_norm, norms[iter], 0);
     }
     else {
-        fasp_itinfo(PrtLvl,StopType,iter,norms[iter],norms[iter],0);
+        fasp_itinfo(PrtLvl, StopType, iter, norms[iter], norms[iter], 0);
     }
-    
+
     /* outer iteration cycle */
     while ( iter < MaxIt ) {
-        
+
         rs[0] = r_norm;
         r_norm_old = r_norm;
         if ( r_norm == 0.0 ) {
@@ -514,11 +507,11 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
             fasp_mem_free(z);     z     = NULL;
             return iter;
         }
-        
+
         //-----------------------------------//
         //   adjust the restart parameter    //
         //-----------------------------------//
-        
+
         if ( cr > cr_max || iter == 0 ) {
             Restart = restart_max;
         }
@@ -526,33 +519,28 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
             // Restart = Restart;
         }
         else {
-            if ( Restart - d > restart_min ) {
-                Restart -= d;
-            }
-            else {
-                Restart = restart_max;
-            }
+            if ( Restart - d > restart_min ) Restart -= d;
+            else Restart = restart_max;
         }
-        
-        // Always enter the cycle at the first iteration
-        // For at least one iteration step
+
+        // Enter the cycle at the first iteration for at least one iteration
         t = 1.0 / r_norm;
         fasp_blas_darray_ax(n, t, p[0]);
         i = 0;
-        
+
         // RESTART CYCLE (right-preconditioning)
         while ( i < Restart && iter < MaxIt ) {
-            
+
             i ++;  iter ++;
-            
+
             /* apply preconditioner */
             if ( pc == NULL )
                 fasp_darray_cp(n, p[i-1], z[i-1]);
             else
                 pc->fct(p[i-1], z[i-1], pc->data);
-            
+
             fasp_blas_dbsr_mxv(A, z[i-1], p[i]);
-            
+
             /* modified Gram_Schmidt */
             for ( j = 0; j < i; j++ ) {
                 hh[j][i-1] = fasp_blas_darray_dotprod(n, p[j], p[i]);
@@ -564,71 +552,69 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
                 t = 1.0 / t;
                 fasp_blas_darray_ax(n, t, p[i]);
             }
-            
+
             for ( j = 1; j < i; ++j ) {
                 t = hh[j-1][i-1];
-                hh[j-1][i-1] = s[j-1]*hh[j][i-1] + c[j-1]*t;
-                hh[j][i-1] = -s[j-1]*t + c[j-1]*hh[j][i-1];
+                hh[j-1][i-1] =  s[j-1]*hh[j][i-1] + c[j-1]*t;
+                hh[j][i-1]   = -s[j-1]*t + c[j-1]*hh[j][i-1];
             }
-            t= hh[i][i-1]*hh[i][i-1];
-            t+= hh[i-1][i-1]*hh[i-1][i-1];
+            t  = hh[i][i-1]   * hh[i][i-1];
+            t += hh[i-1][i-1] * hh[i-1][i-1];
             gamma = sqrt(t);
             if (gamma == 0.0) gamma = epsmac;
             c[i-1]  = hh[i-1][i-1] / gamma;
             s[i-1]  = hh[i][i-1] / gamma;
-            rs[i]   = -s[i-1]*rs[i-1];
-            rs[i-1] = c[i-1]*rs[i-1];
+            rs[i]   = -s[i-1] * rs[i-1];
+            rs[i-1] =  c[i-1] * rs[i-1];
             hh[i-1][i-1] = s[i-1]*hh[i][i-1] + c[i-1]*hh[i-1][i-1];
-            
+
             r_norm = fabs(rs[i]);
             norms[iter] = r_norm;
-            
+
             if ( b_norm > 0 ) {
-                fasp_itinfo(PrtLvl,StopType,iter,norms[iter]/b_norm,
-                            norms[iter],norms[iter]/norms[iter-1]);
+                fasp_itinfo(PrtLvl, StopType, iter, norms[iter]/b_norm,
+                            norms[iter], norms[iter]/norms[iter-1]);
             }
             else {
-                fasp_itinfo(PrtLvl,StopType,iter,norms[iter],norms[iter],
+                fasp_itinfo(PrtLvl, StopType, iter, norms[iter], norms[iter],
                             norms[iter]/norms[iter-1]);
             }
-            
-            /* should we exit restart cycle? */
+
+            /* Check: Exit the restart cycle? */
             if (r_norm <= epsilon && iter >= min_iter) break;
-            
+
         } /* end of restart cycle */
-        
+
         /* now compute solution, first solve upper triangular system */
-        
+
         rs[i-1] = rs[i-1] / hh[i-1][i-1];
         for ( k = i-2; k >= 0; k-- ) {
             t = 0.0;
-            for (j = k+1; j < i; j ++)  t -= hh[k][j]*rs[j];
-            
+            for (j = k+1; j < i; j ++) t -= hh[k][j]*rs[j];
+
             t += rs[k];
             rs[k] = t / hh[k][k];
         }
-        
+
         fasp_darray_cp(n, z[i-1], r);
         fasp_blas_darray_ax(n, rs[i-1], r);
-        
+
         for ( j = i-2; j >= 0; j-- ) fasp_blas_darray_axpy(n, rs[j], z[j], r);
-        
+
         fasp_blas_darray_axpy(n, 1.0, r, x->val);
-        
+
         if ( r_norm <= epsilon && iter >= min_iter ) {
             fasp_darray_cp(n, b->val, r);
             fasp_blas_dbsr_aAxpy(-1.0, A, x->val, r);
             r_norm = fasp_blas_darray_norm2(n, r);
-            
+
             switch (StopType) {
                 case STOP_REL_RES:
                     relres  = r_norm/den_norm;
                     break;
                 case STOP_REL_PRECRES:
-                    if ( pc == NULL )
-                        fasp_darray_cp(n, r, p[0]);
-                    else
-                        pc->fct(r, p[0], pc->data);
+                    if ( pc == NULL ) fasp_darray_cp(n, r, p[0]);
+                    else pc->fct(r, p[0], pc->data);
                     r_normb = sqrt(fasp_blas_darray_dotprod(n,p[0],r));
                     relres  = r_normb/den_norm;
                     break;
@@ -640,7 +626,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
                     printf("### ERROR: Unknown stopping type! [%s]\n", __FUNCTION__);
                     goto FINISHED;
             }
-            
+
             if ( relres <= tol ) {
                 break;
             }
@@ -648,47 +634,47 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
                 if ( PrtLvl >= PRINT_SOME ) ITS_FACONV;
                 fasp_darray_cp(n, r, p[0]); i = 0;
             }
-            
+
         } /* end of convergence check */
-        
+
         /* compute residual vector and continue loop */
         for ( j = i; j > 0; j-- ) {
             rs[j-1] = -s[j-1]*rs[j];
             rs[j] = c[j-1]*rs[j];
         }
-        
+
         if (i) fasp_blas_darray_axpy(n, rs[i]-1.0, p[i], p[i]);
-        
+
         for ( j = i-1; j > 0; j-- ) fasp_blas_darray_axpy(n, rs[j], p[j], p[i]);
-        
+
         if (i) {
             fasp_blas_darray_axpy(n, rs[0]-1.0, p[0], p[0]);
             fasp_blas_darray_axpy(n, 1.0, p[i], p[0]);
         }
-        
+
         //-----------------------------------//
         //   compute the convergence rate    //
         //-----------------------------------//
         cr = r_norm / r_norm_old;
-        
+
     } /* end of iteration while loop */
-    
+
     if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,r_norm/den_norm);
-    
+
 FINISHED:
     /*-------------------------------------------
      * Free some stuff
      *------------------------------------------*/
-    fasp_mem_free(work);  work  = NULL;
-    fasp_mem_free(p);     p     = NULL;
-    fasp_mem_free(hh);    hh    = NULL;
-    fasp_mem_free(norms); norms = NULL;
-    fasp_mem_free(z);     z     = NULL;
-    
+    fasp_mem_free(work);   work  = NULL;
+    fasp_mem_free(p);      p     = NULL;
+    fasp_mem_free(hh);     hh    = NULL;
+    fasp_mem_free(norms);  norms = NULL;
+    fasp_mem_free(z);      z     = NULL;
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
-    
+
     if ( iter >= MaxIt )
         return ERROR_SOLVER_MAXIT;
     else
@@ -827,10 +813,10 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
     if ( r_norm < epsilon || r_norm < 1e-3*tol ) goto FINISHED;
     
     if ( b_norm > 0.0 ) {
-        fasp_itinfo(PrtLvl,StopType,iter,norms[iter]/b_norm,norms[iter],0);
+        fasp_itinfo(PrtLvl, StopType, iter, norms[iter]/b_norm, norms[iter], 0);
     }
     else {
-        fasp_itinfo(PrtLvl,StopType,iter,norms[iter],norms[iter],0);
+        fasp_itinfo(PrtLvl, StopType, iter, norms[iter], norms[iter], 0);
     }
     
     /* outer iteration cycle */
@@ -858,16 +844,11 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
             // Restart = Restart;
         }
         else {
-            if ( Restart - d > restart_min ) {
-                Restart -= d;
-            }
-            else {
-                Restart = restart_max;
-            }
+            if ( Restart - d > restart_min ) Restart -= d;
+            else Restart = restart_max;
         }
         
-        // Always enter the cycle at the first iteration
-        // For at least one iteration step
+        // Enter the cycle at the first iteration for at least one iteration
         t = 1.0 / r_norm;
         fasp_blas_darray_ax(n, t, p[0]);
         i = 0;
@@ -899,32 +880,32 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
             
             for ( j = 1; j < i; ++j ) {
                 t = hh[j-1][i-1];
-                hh[j-1][i-1] = s[j-1]*hh[j][i-1] + c[j-1]*t;
-                hh[j][i-1] = -s[j-1]*t + c[j-1]*hh[j][i-1];
+                hh[j-1][i-1] =  s[j-1]*hh[j][i-1] + c[j-1]*t;
+                hh[j][i-1]   = -s[j-1]*t + c[j-1]*hh[j][i-1];
             }
-            t= hh[i][i-1]*hh[i][i-1];
-            t+= hh[i-1][i-1]*hh[i-1][i-1];
+            t  = hh[i][i-1]   * hh[i][i-1];
+            t += hh[i-1][i-1] * hh[i-1][i-1];
             gamma = sqrt(t);
             if (gamma == 0.0) gamma = epsmac;
             c[i-1]  = hh[i-1][i-1] / gamma;
             s[i-1]  = hh[i][i-1] / gamma;
-            rs[i]   = -s[i-1]*rs[i-1];
-            rs[i-1] = c[i-1]*rs[i-1];
+            rs[i]   = -s[i-1] * rs[i-1];
+            rs[i-1] =  c[i-1] * rs[i-1];
             hh[i-1][i-1] = s[i-1]*hh[i][i-1] + c[i-1]*hh[i-1][i-1];
             
             r_norm = fabs(rs[i]);
             norms[iter] = r_norm;
             
             if ( b_norm > 0 ) {
-                fasp_itinfo(PrtLvl,StopType,iter,norms[iter]/b_norm,
-                            norms[iter],norms[iter]/norms[iter-1]);
+                fasp_itinfo(PrtLvl, StopType, iter, norms[iter]/b_norm,
+                            norms[iter], norms[iter]/norms[iter-1]);
             }
             else {
-                fasp_itinfo(PrtLvl,StopType,iter,norms[iter],norms[iter],
+                fasp_itinfo(PrtLvl, StopType, iter, norms[iter], norms[iter],
                             norms[iter]/norms[iter-1]);
             }
             
-            /* should we exit restart cycle? */
+            /* Check: Exit the restart cycle? */
             if (r_norm <= epsilon && iter >= min_iter) break;
             
         } /* end of restart cycle */
@@ -934,7 +915,7 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
         rs[i-1] = rs[i-1] / hh[i-1][i-1];
         for ( k = i-2; k >= 0; k-- ) {
             t = 0.0;
-            for (j = k+1; j < i; j ++)  t -= hh[k][j]*rs[j];
+            for (j = k+1; j < i; j ++) t -= hh[k][j]*rs[j];
             
             t += rs[k];
             rs[k] = t / hh[k][k];
@@ -957,10 +938,8 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
                     relres  = r_norm/den_norm;
                     break;
                 case STOP_REL_PRECRES:
-                    if ( pc == NULL )
-                        fasp_darray_cp(n, r, p[0]);
-                    else
-                        pc->fct(r, p[0], pc->data);
+                    if ( pc == NULL ) fasp_darray_cp(n, r, p[0]);
+                    else pc->fct(r, p[0], pc->data);
                     r_normb = sqrt(fasp_blas_darray_dotprod(n,p[0],r));
                     relres  = r_normb/den_norm;
                     break;
@@ -1043,7 +1022,7 @@ FINISHED:
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
- * \param StopType     Stopping criteria type -- DOES not support this parameter
+ * \param StopType     Stopping criteria type -- DO not support this parameter
  * \param PrtLvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
@@ -1177,12 +1156,8 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
             // Restart = Restart;
         }
         else {
-            if (Restart - d > restart_min) {
-                Restart -= d;
-            }
-            else {
-                Restart = restart_max;
-            }
+            if ( Restart - d > restart_min ) Restart -= d;
+            else Restart = restart_max;
         }
         
         if (r_norm <= epsilon && iter >= min_iter) {
@@ -1199,7 +1174,6 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
         }
         
         t = 1.0 / r_norm;
-        //for (j = 0; j < n; j ++) p[0][j] *= t;
         fasp_blas_darray_ax(n, t, p[0]);
         
         /* RESTART CYCLE (right-preconditioning) */
@@ -1209,10 +1183,8 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
             i ++;  iter ++;
             
             /* apply preconditioner */
-            if (pc == NULL)
-                fasp_darray_cp(n, p[i-1], z[i-1]);
-            else
-                pc->fct(p[i-1], z[i-1], pc->data);
+            if (pc == NULL) fasp_darray_cp(n, p[i-1], z[i-1]);
+            else pc->fct(p[i-1], z[i-1], pc->data);
             
             mf->fct(mf->data, z[i-1], p[i]);
             
@@ -1225,7 +1197,6 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
             hh[i][i-1] = t;
             if (t != 0.0) {
                 t = 1.0/t;
-                //for (j = 0; j < n; j ++) p[i][j] *= t;
                 fasp_blas_darray_ax(n, t, p[i]);
             }
             
@@ -1248,15 +1219,15 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
             norms[iter] = r_norm;
             
             if (b_norm > 0 ) {
-                fasp_itinfo(PrtLvl,StopType,iter,norms[iter]/b_norm,
-                            norms[iter],norms[iter]/norms[iter-1]);
+                fasp_itinfo(PrtLvl, StopType, iter, norms[iter]/b_norm,
+                            norms[iter], norms[iter]/norms[iter-1]);
             }
             else {
-                fasp_itinfo(PrtLvl,StopType,iter,norms[iter],norms[iter],
+                fasp_itinfo(PrtLvl, StopType, iter, norms[iter], norms[iter],
                             norms[iter]/norms[iter-1]);
             }
             
-            /* should we exit restart cycle? */
+            /* Check: Exit restart cycle? */
             if (r_norm <= epsilon && iter >= min_iter) break;
             
         } /* end of restart cycle */
@@ -1273,7 +1244,6 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
         }
         
         fasp_darray_cp(n, z[i-1], r);
-        //for (j = 0; j < n; j ++) r[j] *= rs[i-1];
         fasp_blas_darray_ax(n, rs[i-1], r);
         for (j = i-2; j >= 0; j --)  fasp_blas_darray_axpy(n, rs[j], z[j], r);
         

@@ -1,12 +1,13 @@
 File Name: CHANGES
 
-04/04/2018 FASP 2.0.9:
+04/08/2018 FASP 2.0.9:
 - Update Fortran wrappers: add a new one.
 - Update Fortran wrapper function names; update examples accordingly.
 - Clean up BLC preconditioners and solvers.
 - Fix a few wrong function names. 
 - Fix a memory problem in BSR SA method.
 - Find more problems with BSR AMG methods; to fix.
+- Check 'cannot allocate memory' warning in VFGMRes.
 
 03/24/2018 FASP 2.0.8:
 - Remove unused arguments in several functions.
