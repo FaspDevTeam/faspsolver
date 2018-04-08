@@ -67,7 +67,7 @@
      464 ./base/src/KryPgcr.c
     1663 ./base/src/KryPgmres.c
     1670 ./base/src/KryPminres.c
-    1342 ./base/src/KryPvfgmres.c
+    1312 ./base/src/KryPvfgmres.c
     1737 ./base/src/KryPvgmres.c
     1606 ./base/src/KrySPbcgs.c
     1040 ./base/src/KrySPcg.c
@@ -103,4 +103,4 @@
      238 ./base/src/SolMatFree.c
      406 ./base/src/SolSTR.c
      339 ./base/src/SolWrapper.c
-   85451 total
+   85421 total
