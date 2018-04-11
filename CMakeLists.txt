@@ -47,7 +47,9 @@ include(install_prefix)
 # OpenMP : defined on command line in the top Makefile
 #######################################################################
 if(USE_OPENMP)
-    cmake_policy(SET "CMP0054" NEW)
+    if(CMAKE_VERSION VERSION_GREATER 3)
+        cmake_policy(SET "CMP0054" NEW)
+    endif()
     find_package(OpenMP)
 
     if(OPENMP_FOUND)
