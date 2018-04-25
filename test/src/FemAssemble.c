@@ -60,8 +60,8 @@ void icsr_output ( iCSRmat *t, iCSRmat *s )
     t->row = s->row;
     t->col = s->col;
     t->nnz = s->nnz;
-    t->IA = s->IA;
-    t->JA = s->JA;
+    t->IA  = s->IA;
+    t->JA  = s->JA;
     t->val = s->val;
 }
 
@@ -81,8 +81,8 @@ void dcsr_output ( dCSRmat *t, dCSRmat *s )
     t->row = s->row;
     t->col = s->col;
     t->nnz = s->nnz;
-    t->IA = s->IA;
-    t->JA = s->JA;
+    t->IA  = s->IA;
+    t->JA  = s->JA;
     t->val = s->val;
 }
 
