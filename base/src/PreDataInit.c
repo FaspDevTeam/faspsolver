@@ -101,7 +101,37 @@ void fasp_amg_data_free (AMG_data   *mgl,
     const INT max_levels = MAX(1,mgl[0].num_levels);
     
     INT i;
-    
+
+ // Clean direct solver data in necessary
+    switch (param->coarse_solver) {
+
+#if WITH_MUMPS
+            /* Destroy MUMPS direct solver on the coarsest level */
+        case SOLVER_MUMPS: {
+            mgl[max_levels-1].mumps.job = 3;
+            fasp_solver_mumps_steps(&mgl[max_levels-1].A, &mgl[max_levels-1].b,
+                                    &mgl[max_levels-1].x, &mgl[max_levels-1].mumps);
+            break;
+        }
+#endif
+
+#if WITH_UMFPACK
+        case SOLVER_UMFPACK: {
+            fasp_mem_free(mgl[max_levels-1].Numeric); mgl[max_levels-1].Numeric = NULL;
+            break;
+        }
+#endif
+
+#if WITH_PARDISO
+        case SOLVER_PARDISO: {
+			      fasp_pardiso_free_internal_mem(&mgl[max_levels-1].pdata);
+        }
+
+#endif
+        default: // Do nothing!
+            break;
+    }
+
     for ( i=0; i<max_levels; ++i ) {
         fasp_ilu_data_free(&mgl[i].LU);
         fasp_dcsr_free(&mgl[i].A);
@@ -129,34 +159,7 @@ void fasp_amg_data_free (AMG_data   *mgl,
         fasp_mem_free(param->amli_coef); param->amli_coef = NULL;
     }
 
-    // Clean direct solver data in necessary
-    switch (param->coarse_solver) {
-
-#if WITH_MUMPS
-            /* Destroy MUMPS direct solver on the coarsest level */
-        case SOLVER_MUMPS: {
-            mgl[max_levels-1].mumps.job = 3;
-            fasp_solver_mumps_steps(&mgl[max_levels-1].A, &mgl[max_levels-1].b,
-                                    &mgl[max_levels-1].x, &mgl[max_levels-1].mumps);
-            break;
-        }
-#endif
-
-#if WITH_UMFPACK
-        case SOLVER_UMFPACK: {
-            fasp_mem_free(mgl[max_levels-1].Numeric); mgl[max_levels-1].Numeric = NULL;
-            break;
-        }
-#endif
-
-#if WITH_PARDISO
-        case SOLVER_PARDISO: {
-            fasp_pardiso_free_internal_mem(&mgl[max_levels-1].pdata);
-        }
-#endif
-        default: // Do nothing!
-            break;
-    }
+   
 
 }
 

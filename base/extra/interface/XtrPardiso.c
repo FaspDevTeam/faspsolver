@@ -172,6 +172,13 @@ INT fasp_pardiso_factorize (dCSRmat *ptrA,
 
     PARDISOINIT(pdata->pt, &(pdata->mtype), pdata->iparm); /* Initialize. */
     pdata->iparm[34] = 1;  /* Use 0-based indexing. */
+
+    /* Numbers of processors, value of OMP_NUM_THREADS */
+#ifdef _OPENMP
+    pdata->iparm[2]  = fasp_get_num_threads();
+	//if ( prtlvl > PRINT_MIN ) 	printf("PARDISO Set environment OMP_NUM_THREADS to %d\n",pdata->iparm[2]);
+#endif
+
     pdata->maxfct = 1;     /* Maximum number of numerical factorizations. */
     pdata->mnum = 1;       /* Which factorization to use. */
     msglvl = 0;            /* Do not print statistical information in file */
@@ -304,9 +311,8 @@ INT fasp_pardiso_free_internal_mem (Pardiso_data *pdata)
 #endif
     
     phase = -1;           /* Release internal memory. */
-    PARDISO (pdata->pt, &(pdata->maxfct), &(pdata->mnum), &(pdata->mtype), &phase,
-             &idum, a, ia, ja, &idum, &nrhs, pdata->iparm, &msglvl, &ddum, &ddum, &error);
-    
+    PARDISO (pdata->pt, &(pdata->maxfct), &(pdata->mnum), &(pdata->mtype), &phase, &idum, &ddum, ia, ja, &idum, &nrhs, pdata->iparm, &msglvl, &ddum, &ddum, &error);
+	    
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Finish]\n", __FUNCTION__);
 #endif
@@ -314,8 +320,8 @@ INT fasp_pardiso_free_internal_mem (Pardiso_data *pdata)
     return status;
 }
 
-#endif
 
+#endif
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/

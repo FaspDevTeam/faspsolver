@@ -389,7 +389,7 @@ static SHORT amg_setup_smoothP_smoothR_bsr (AMG_data_bsr *mgl,
         case SOLVER_PARDISO: {
             mgl[lvl].Ac = fasp_format_dbsr_dcsr(&mgl[lvl].A);
             fasp_dcsr_sort(&mgl[lvl].Ac);
-            fasp_pardiso_factorize(&mgl[lvl].Ac, &mgl[lvl].pdata, 0);
+            fasp_pardiso_factorize(&mgl[lvl].Ac, &mgl[lvl].pdata, prtlvl);
             break;
         }
 #endif

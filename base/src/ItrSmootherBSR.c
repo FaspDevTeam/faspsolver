@@ -1579,15 +1579,15 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     fasp_darray_cp(m,bval,zr); fasp_blas_dbsr_aAxpy(-1.0,A,xval,zr);
     
     /** solve LU z=zr */
-#ifdef __OPENMP
+#ifdef _OPENMP
     
-        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
+       // printf("spring testing %s %d ...\n",__FILE__,__LINE__);
 #if ILU_MC_OMP
     REAL *tz = (REAL*)fasp_mem_calloc(A->ROW*A->nb, sizeof(REAL));
     REAL *tzr = (REAL*)fasp_mem_calloc(A->ROW*A->nb, sizeof(REAL));
     perm(A->ROW, A->nb, zr, iludata->jlevL, tzr);
     
-        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
+       // printf("spring testing %s %d ...\n",__FILE__,__LINE__);
     fasp_gettime(&start);
     fasp_precond_dbsr_ilu_mc_omp(tzr,tz,iludata);
     fasp_gettime(&end);
@@ -1597,9 +1597,9 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     fasp_mem_free(tz);  tz  = NULL;
 #else
     fasp_gettime(&start);
-        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
+      //  printf("spring testing %s %d ...\n",__FILE__,__LINE__);
     fasp_precond_dbsr_ilu_ls_omp(zr,z,iludata);
-        printf("spring testing %s %d ...\n",__FILE__,__LINE__);
+      //  printf("spring testing %s %d ...\n",__FILE__,__LINE__);
     fasp_gettime(&end);
 #endif
     

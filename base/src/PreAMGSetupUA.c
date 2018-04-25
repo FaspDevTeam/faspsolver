@@ -342,7 +342,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
 #if WITH_PARDISO
         case SOLVER_PARDISO: {
              fasp_dcsr_sort(&mgl[lvl].A);
-             fasp_pardiso_factorize(&mgl[lvl].A, &mgl[lvl].pdata, 0);
+             fasp_pardiso_factorize(&mgl[lvl].A, &mgl[lvl].pdata, prtlvl);
              break;
          }
 #endif
