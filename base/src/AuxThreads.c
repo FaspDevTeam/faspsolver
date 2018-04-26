@@ -42,7 +42,7 @@ INT fasp_get_num_threads ( void )
     static INT nthreads;
     
     if ( thread_ini_flag == 0 ) {
-		nthreads = 1;
+        nthreads = 1;
 #pragma omp parallel
         nthreads = omp_get_num_threads();
         

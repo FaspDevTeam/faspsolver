@@ -102,11 +102,10 @@ void fasp_amg_data_free (AMG_data   *mgl,
     
     INT i;
 
- // Clean direct solver data in necessary
     switch (param->coarse_solver) {
 
 #if WITH_MUMPS
-            /* Destroy MUMPS direct solver on the coarsest level */
+        /* Destroy MUMPS direct solver on the coarsest level */
         case SOLVER_MUMPS: {
             mgl[max_levels-1].mumps.job = 3;
             fasp_solver_mumps_steps(&mgl[max_levels-1].A, &mgl[max_levels-1].b,
@@ -116,6 +115,7 @@ void fasp_amg_data_free (AMG_data   *mgl,
 #endif
 
 #if WITH_UMFPACK
+        /* Destroy UMFPACK direct solver on the coarsest level */
         case SOLVER_UMFPACK: {
             fasp_mem_free(mgl[max_levels-1].Numeric); mgl[max_levels-1].Numeric = NULL;
             break;
@@ -123,8 +123,10 @@ void fasp_amg_data_free (AMG_data   *mgl,
 #endif
 
 #if WITH_PARDISO
+        /* Destroy PARDISO direct solver on the coarsest level */
         case SOLVER_PARDISO: {
-			      fasp_pardiso_free_internal_mem(&mgl[max_levels-1].pdata);
+            fasp_pardiso_free_internal_mem(&mgl[max_levels-1].pdata);
+            break;
         }
 
 #endif
@@ -158,8 +160,6 @@ void fasp_amg_data_free (AMG_data   *mgl,
     if ( param->cycle_type == AMLI_CYCLE ) {
         fasp_mem_free(param->amli_coef); param->amli_coef = NULL;
     }
-
-   
 
 }
 
