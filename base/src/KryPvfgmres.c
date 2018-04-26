@@ -107,7 +107,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
     LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
 
     // Output some info for debuging
-    if ( PrtLvl > PRINT_NONE ) printf("\nCalling VFGMRes solver (BLC) ...\n");
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling VFGMRes solver (CSR) ...\n");
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -429,7 +429,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
     LONG worksize = (Restart+4)*(Restart+n)+1-n+Restart*n;
 
     // Output some info for debuging
-    if ( PrtLvl > PRINT_NONE ) printf("\nCalling VFGMRes solver (BLC) ...\n");
+    if ( PrtLvl > PRINT_NONE ) printf("\nCalling VFGMRes solver (BSR) ...\n");
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);

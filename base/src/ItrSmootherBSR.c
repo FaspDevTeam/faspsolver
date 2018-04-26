@@ -1386,7 +1386,8 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
                         if (j != i)
                             fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+myid*nb, nb);
                     }
-                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb, one_minus_weight, u_val+pb, nb);
+                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb,
+                                          one_minus_weight, u_val+pb, nb);
                 }
             }
             fasp_mem_free(b_tmp); b_tmp = NULL;
@@ -1402,7 +1403,8 @@ void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
                     if (j != i)
                         fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
                 }
-                fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
+                fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight,
+                                      u_val+pb, nb);
             }
             fasp_mem_free(b_tmp); b_tmp = NULL;
 #ifdef _OPENMP
@@ -1514,7 +1516,8 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
                         if (j != i)
                             fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp+myid*nb, nb);
                     }
-                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb, one_minus_weight, u_val+pb, nb);
+                    fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp+myid*nb,
+                                          one_minus_weight, u_val+pb, nb);
                 }
             }
             fasp_mem_free(b_tmp); b_tmp = NULL;
@@ -1531,7 +1534,8 @@ void fasp_smoother_dbsr_sor_order (dBSRmat *A,
                     if (j != i)
                         fasp_blas_smat_ymAx(val+k*nb2, u_val+j*nb, b_tmp, nb);
                 }
-                fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight, u_val+pb, nb);
+                fasp_blas_smat_aAxpby(weight, diaginv+nb2*i, b_tmp, one_minus_weight,
+                                      u_val+pb, nb);
             }
             fasp_mem_free(b_tmp); b_tmp = NULL;
 #ifdef _OPENMP
@@ -1581,13 +1585,11 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     /** solve LU z=zr */
 #ifdef _OPENMP
     
-       // printf("spring testing %s %d ...\n",__FILE__,__LINE__);
 #if ILU_MC_OMP
     REAL *tz = (REAL*)fasp_mem_calloc(A->ROW*A->nb, sizeof(REAL));
     REAL *tzr = (REAL*)fasp_mem_calloc(A->ROW*A->nb, sizeof(REAL));
     perm(A->ROW, A->nb, zr, iludata->jlevL, tzr);
     
-       // printf("spring testing %s %d ...\n",__FILE__,__LINE__);
     fasp_gettime(&start);
     fasp_precond_dbsr_ilu_mc_omp(tzr,tz,iludata);
     fasp_gettime(&end);
@@ -1597,9 +1599,7 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     fasp_mem_free(tz);  tz  = NULL;
 #else
     fasp_gettime(&start);
-      //  printf("spring testing %s %d ...\n",__FILE__,__LINE__);
     fasp_precond_dbsr_ilu_ls_omp(zr,z,iludata);
-      //  printf("spring testing %s %d ...\n",__FILE__,__LINE__);
     fasp_gettime(&end);
 #endif
     

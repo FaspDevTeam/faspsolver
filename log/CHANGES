@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+04/26/2018 FASP 2.1.0:
+- Fix OpenMP problem with FASP1.
+- Fix a typo in KryPvfgmres.c.
+- Update regression results. 
+
 04/11/2018 FASP 2.0.9:
 - Update Fortran wrappers: add a new one.
 - Update Fortran wrapper function names; update examples accordingly.
