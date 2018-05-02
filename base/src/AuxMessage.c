@@ -84,9 +84,9 @@ void fasp_itinfo (const INT   ptrlvl,
 void fasp_amgcomplexity (const AMG_data  *mgl,
                          const SHORT      prtlvl)
 {
-    const SHORT   max_levels=mgl->num_levels;
+    const SHORT   max_levels = mgl->num_levels;
     SHORT         level;
-    REAL          gridcom=0.0, opcom=0.0;
+    REAL          gridcom = 0.0, opcom = 0.0;
     
     if ( prtlvl >= PRINT_SOME ) {
         

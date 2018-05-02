@@ -166,7 +166,7 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
             // When error happens, stop at the current multigrid level!
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: Could not find any C-variables!\n");
-                printf("### WARNING: RS coarsening on level-%d failed!\n", lvl);
+                printf("### WARNING: Stop coarsening on level=%d!\n", lvl);
             }
             status = FASP_SUCCESS; break;
         }

@@ -257,7 +257,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
         if ( status < 0 ) {
             // When error happens, stop at the current multigrid level!
             if ( prtlvl > PRINT_MIN ) {
-                printf("### WARNING: Forming aggregates on level-%d failed!\n", lvl);
+                printf("### WARNING: Stop coarsening on level=%d!\n", lvl);
             }
             status = FASP_SUCCESS; 
             fasp_ivec_free(&vertices[lvl]);

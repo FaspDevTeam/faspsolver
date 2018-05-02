@@ -1,8 +1,8 @@
 /*! \file  testfdm2d.cpp
  *
- *  \brief Test program to generate FDM linear system for 2D Possion Problem.
+ *  \brief Test program to generate FDM linear system for 2D Heat equation.
  *
- *  Consider a two-dimensional Possion equation
+ *  Consider a two-dimensional Heat/Possion equation
  *
  * \f[
  *   \frac{du}{dt}-u_{xx}-u_{yy} = f(x,y,t)\ \ in\ \Omega = (0,1)\times(0,1)
@@ -14,10 +14,10 @@
  *                    u = 0\ \ \ \ \ \ \ \ \ on\  \partial\Omega
  * \f]
  *
- *  where f(x,y,t) = \f$2*\pi^2*sin(\pi*x)*sin(\pi*y)*t + sin(\pi*x)*sin(\pi*y)\f$,
+ *  where f(x,y,t) = \f$ 2*\pi^2*sin(\pi*x)*sin(\pi*y)*t + sin(\pi*x)*sin(\pi*y) \f$,
  *  and the solution function can be expressed by
  *
- *          \f$u(x,y,t) = sin(pi*x)*sin(pi*y)*t\f$
+ *          \f$ u(x,y,t) = sin(pi*x)*sin(pi*y)*t. \f$
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
@@ -43,10 +43,7 @@ main( int argc, char *argv[])
 
     char filename[120];
 
-    const char *MatFile = NULL;
-    const char *RhsFile = NULL;
-    const char *SolFile = NULL;
-    const char *SPFile  = NULL;
+    const char *FileDir = NULL;
 
     fsls_BandMatrix *A    = NULL;
     fsls_CSRMatrix  *Acsr = NULL;
@@ -63,6 +60,7 @@ main( int argc, char *argv[])
     nx = 11;
     ny = 11;
     nt = 0;
+    FileDir = "./out";
 
     while (arg_index < argc)
     {
@@ -153,11 +151,6 @@ main( int argc, char *argv[])
     printf("\n ++++++++++++ (nx,ny,nt,test,order) = (%d,%d,%d,%d,%s)  ngrid = %d ++++++++++\n\n",
            nx,ny,nt,test,order,ngrid);
 
-    MatFile = "./out/mat_";
-    RhsFile = "./out/rhs_";
-    SolFile = "./out/sol_";
-    SPFile  = "./out/sp_";
-
     /*-----------------------------------------------------
      * construct a linear system
      *----------------------------------------------------*/
@@ -170,29 +163,29 @@ main( int argc, char *argv[])
     if (TTest)
     {
         fasp_gettime(&tEnd);
-        printf("\n >>> total time: %.3f seconds\n\n",mytime(tStart,tEnd));
+        printf("\n >>> total time: %.3f seconds\n\n",mytime(tStart, tEnd));
     }
 
     fsls_Band2CSRMatrix(A, &Acsr);
 
     if ( strcmp(op,"csr") == 0 )
     {
-        sprintf(filename, "%scsr_%dX%d.dat",MatFile,nx,ny);
-        fsls_CSRMatrixPrint(Acsr,filename);
+        sprintf(filename, "%s/csrmat_%dX%d.dat",FileDir,nx,ny);
+        fsls_CSRMatrixPrint(Acsr, filename);
     }
     if ( strcmp(op,"coo") == 0 )
     {
-        sprintf(filename, "%scoo_%dX%d.dat",MatFile,nx,ny);
-        fsls_COOMatrixPrint(Acsr,filename);
+        sprintf(filename, "%s/coomat_%dX%d.dat",FileDir,nx,ny);
+        fsls_COOMatrixPrint(Acsr, filename);
     }
 
-    sprintf(filename, "%s%dX%d_%s.dat",SPFile,nx,ny,order);
-    fsls_MatrixSPGnuplot( Acsr, filename );
+    sprintf(filename, "%s/sp_%dX%d_%s.dat",FileDir,nx,ny,order);
+    fsls_MatrixSPGnuplot(Acsr, filename);
 
-    sprintf(filename, "%s%dX%d.dat",RhsFile,nx,ny);
+    sprintf(filename, "%s/rhs_%dX%d.dat",FileDir,nx,ny);
     fsls_XVectorPrint(b, filename);
 
-    sprintf(filename, "%s%dX%d.dat",SolFile,nx,ny);
+    sprintf(filename, "%s/sol_%dX%d.dat",FileDir,nx,ny);
     fsls_XVectorPrint(u, filename);
 
     /*------------------------------------------------------
