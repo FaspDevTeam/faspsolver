@@ -16,21 +16,22 @@
  
  * Consider a two-dimensional Poisson equation
  * \f[
- *    \frac{du}{dt}-u_{xx}-u_{yy} = f(x,y)\ \ in\ \Omega = (0,1)\times(0,1)
+ *    \frac{du}{dt} - xcoeff * u_{xx} - ycoeff * u_{yy} = f(x,y)
+ *    (x,y)\ in\ \Omega = (0,1)\times(0,1)
  * \f]
  * \f[
- *                 u(x,y,0) = 0\ \ \ \ \ \ in\ \Omega = (0,1)\times(0,1)
+ *    u(x,y,0) = 0\ \ \ \ \ \ in\ \Omega = (0,1)\times(0,1)
  * \f]
  * \f[
- *                        u = 0\ \ \ \ \ \ \ \ \ on\  \partial\Omega
+ *    u = 0\ \ \ \ \ \ \ \ \ on\  \partial\Omega
  * \f]
  *
- *  where f(x,y,t) = \f$2*\pi^2*sin(\pi*x)*sin(\pi*y)*t + sin(\pi*x)*sin(\pi*y)\f$,
+ *  where f(x,y,t) = \f$ 2*\pi^2*sin(\pi*x)*sin(\pi*y)*t + sin(\pi*x)*sin(\pi*y), \f$
  *  and the solution function can be expressed by
  *
- *             \f$u(x,y,t) = sin(pi*x)*sin(pi*y)*t\f$
+ *             \f$ u(x,y,t) = sin(pi*x)*sin(pi*y)*t \f$
  *
- *  Grid: nx = 6; ny = 6
+ *  Sample grid: nx = 6; ny = 6
  *
  *           y
  *           |
@@ -57,15 +58,17 @@
  *           |      |      |      |      |      |      |      |
  *     (0,0) |______|______|______|______|______|______|______|_______x
  *
- * \param nt number of nodes in t-direction, if nt == 0, it turn to be the Poisson system
+ * \param nt number of nodes in t-direction (nt == 0 ==> the Poisson's equation)
  * \param nx number of nodes in x-direction (excluding the boundary nodes)
  * \param ny number of nodes in y-direction (excluding the boundary nodes)
  * \param A_ptr pointer to pointer to the coefficient matrix
  * \param f_ptr pointer to pointer to the right hand side vector
  * \param u_ptr pointer to pointer to the true solution vector
  *
- * \author peghoty
+ * \author Zhiyang Zhou
  * \date   2010/07/14
+ *
+ * Modified by Chensong Zhang on 05/01/2018: Add coefficients
  */
 void
 fsls_BuildLinearSystem_5pt2d (int               nt,
@@ -105,7 +108,9 @@ fsls_BuildLinearSystem_5pt2d (int               nt,
     double   factorx  = 0.0;
     double   factory  = 0.0;
     double   constant = 2*PI*PI;
-    
+    double   xcoeff   = 1.0;
+    double   ycoeff   = 1.0;
+
     A = fsls_BandMatrixCreate(ngrid, nband);
     fsls_BandMatrixInitialize(A);
     fsls_BandMatrixNx(A) = nx;
@@ -136,9 +141,9 @@ fsls_BuildLinearSystem_5pt2d (int               nt,
     ht  = 1.0 / (double)nt;
     hx2 = hx*hx;
     hy2 = hy*hy;
-    factorx = 1.0 / hx2;
-    factory = 1.0 / hy2;
-    dd = 2*(factorx + factory);
+    factorx = xcoeff / hx2;
+    factory = ycoeff / hy2;
+    dd = 2.0 * (factorx + factory);
     
     for (i = 0; i < ngrid; i ++) {
         diag[i] = dd;
@@ -156,24 +161,16 @@ fsls_BuildLinearSystem_5pt2d (int               nt,
     offdiag[0][ngridminusnx] = 0.0;
     offdiag[3][ngridminusnx] = 0.0;
     offdiag[1][ngridminus1] = 0.0;
-    offdiag[3][ngridminus1] = 0.0;/* the four vtx */
+    offdiag[3][ngridminus1] = 0.0; /* the four vtx */
     
-    for (i = 1; i < nxminus1; i ++) {
-        offdiag[2][i] = 0.0;
-    }
-    
-    for (i = ngrid-nxminus1; i < ngridminus1; i ++) {
-        offdiag[3][i] = 0.0;
-    }
-    
-    for (i = nx; i < ngridminusnx; i += nx) {
-        offdiag[0][i] = 0.0;
-    }
-    
-    for (i = 2*nx-1; i < ngridminus1; i += nx) {
-        offdiag[1][i] = 0.0;
-    } /* the four lines */
-    
+    for (i = 1; i < nxminus1; i ++) offdiag[2][i] = 0.0;
+
+    for (i = ngrid-nxminus1; i < ngridminus1; i ++) offdiag[3][i] = 0.0;
+
+    for (i = nx; i < ngridminusnx; i += nx) offdiag[0][i] = 0.0;
+
+    for (i = 2*nx-1; i < ngridminus1; i += nx) offdiag[1][i] = 0.0;
+
     // generate the rhs and sol vector
     f = fsls_XVectorCreate(ngridxt);
     fsls_XVectorInitialize(f);
@@ -252,7 +249,9 @@ fsls_BuildLinearSystem_5pt2d_rb (int               nt,
     double   factorx  = 0.0;
     double   factory  = 0.0;
     double   constant = 2*PI*PI;
-    
+    double   xcoeff   = 1.0;
+    double   ycoeff   = 1.0;
+
     A = fsls_BandMatrixCreate(ngrid, nband);
     fsls_BandMatrixInitialize(A);
     fsls_BandMatrixNx(A) = nx;
@@ -291,8 +290,8 @@ fsls_BuildLinearSystem_5pt2d_rb (int               nt,
     ht  = 1.0 / (double)nt;
     hx2 = hx*hx;
     hy2 = hy*hy;
-    factorx = 1.0 / hx2;
-    factory = 1.0 / hy2;
+    factorx = xcoeff / hx2;
+    factory = ycoeff / hy2;
     dd = 2*(factorx + factory);
     
     for (i = 0; i < n_red; i++) {
@@ -485,7 +484,10 @@ fsls_BuildLinearSystem_7pt3d (int               nt,
     double   factory  = 0.0;
     double   factorz  = 0.0;
     double   constant = 3.0*PI*PI;
-    
+    double   xcoeff   = 1.0;
+    double   ycoeff   = 1.0;
+    double   zcoeff   = 1.0;
+
     A = fsls_BandMatrixCreate(ngrid, nband);
     fsls_BandMatrixInitialize(A);
     fsls_BandMatrixNx(A) = nx;
@@ -522,9 +524,9 @@ fsls_BuildLinearSystem_7pt3d (int               nt,
     hy2 = hy*hy;
     hz2 = hz*hz;
     
-    factorx = 1.0 / hx2;
-    factory = 1.0 / hy2;
-    factorz = 1.0 / hz2;
+    factorx = xcoeff / hx2;
+    factory = ycoeff / hy2;
+    factorz = zcoeff / hz2;
     
     dd = 2.0*(factorx + factory + factorz);
     
