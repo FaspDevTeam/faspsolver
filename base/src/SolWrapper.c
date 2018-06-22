@@ -222,8 +222,6 @@ void fasp_fwrapper_dcsr_krylov_amg_ (INT  *n,
  * \param maxit   Max number of iterations
  * \param ptrlvl  Print level for iterative solvers
  *
- * \return        Iteration number if converges; ERROR otherwise.
- *
  * \author Chensong Zhang
  * \date   03/25/2018
  */
@@ -287,8 +285,6 @@ void fasp_fwrapper_dbsr_krylov_ilu_ (INT  *n,
  * \param tol     Tolerance for iterative solvers
  * \param maxit   Max number of iterations
  * \param ptrlvl  Print level for iterative solvers
- *
- * \return        Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang
  * \date   04/05/2018

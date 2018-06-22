@@ -99,7 +99,6 @@ static void smooth_agg_bsr (const dBSRmat    *A,
                             const AMG_param  *param,
                             const dCSRmat    *N)
 {
-    const SHORT filter = param->smooth_filter;
     const INT   row = A->ROW, col= A->COL, nnz = A->NNZ;
     const INT   nb = A->nb, nb2 = nb*nb;
     const REAL  smooth_factor = param->tentative_smooth;
