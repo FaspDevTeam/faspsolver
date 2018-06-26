@@ -81,7 +81,7 @@
      134 ./base/src/PreAMGSetupCR.c
      320 ./base/src/PreAMGSetupRS.c
      778 ./base/src/PreAMGSetupSA.c
-     461 ./base/src/PreAMGSetupSABSR.c
+     460 ./base/src/PreAMGSetupSABSR.c
      407 ./base/src/PreAMGSetupUA.c
      382 ./base/src/PreAMGSetupUABSR.c
     1081 ./base/src/PreBLC.c
@@ -102,5 +102,5 @@
     1048 ./base/src/SolGMGPoisson.c
      238 ./base/src/SolMatFree.c
      406 ./base/src/SolSTR.c
-     339 ./base/src/SolWrapper.c
-   85425 total
+     335 ./base/src/SolWrapper.c
+   85420 total
