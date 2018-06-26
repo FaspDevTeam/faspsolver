@@ -63,7 +63,7 @@
  *
  * The most updated version of FASP can be downloaded from
  *
- * > http://fasp.sourceforge.net/download/faspsolver.zip
+ * > http://www.multigrid.org/fasp/download/faspsolver.zip
  *
  * We use HG (Mecurial) as our main version control tool. HG is easy to use and it is 
  * available at all OS platforms. For people who is interested in the developer version, 

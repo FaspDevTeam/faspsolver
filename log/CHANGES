@@ -1,11 +1,13 @@
 File Name: CHANGES
 
-06/22/2018 FASP 2.1.0:
+06/26/2018 FASP 2.1.0:
 - Fix OpenMP problem with FASP1.
 - Fix a typo in KryPvfgmres.c.
 - Update regression results.
 - Update FD for Poisson/Heat example.
 - Update to new Xcode setting.
+- Update refman.pdf and webpage.
+- Move official webpage to multigrid.org/fasp.
 
 04/11/2018 FASP 2.0.9:
 - Update Fortran wrappers: add a new one.
