@@ -241,6 +241,7 @@ static void amg_interp_trunc (dCSRmat    *P,
  * \author Xuehai Huang, Chensong Zhang
  * \date   01/31/2009
  *
+ * Modified by Chunsheng Feng on 07/17/2018: Fix a potential bug for "row = MIN(P->IA[P->row], row)"
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012: add OMP support
  * Modified by Chensong Zhang on 09/12/2012: compare with the old version
  * Modified by Chensong Zhang on 05/14/2013: reconstruct the code
@@ -271,8 +272,8 @@ static void interp_DIR (dCSRmat    *A,
     
 #ifdef _OPENMP
     INT myid, mybegin, myend, stride_i, nthreads;
-    row = MIN(P->IA[P->row], row);
-    if ( row > OPENMP_HOLDS ) {
+//    row = MIN(P->IA[P->row], row);
+    if ( MIN(P->IA[P->row], row) > OPENMP_HOLDS ) {
         use_openmp = TRUE;
         nthreads = fasp_get_num_threads();
     }
