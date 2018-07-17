@@ -197,7 +197,7 @@ static SHORT get_block (dCSRmat  *A,
     memset(Aloc, 0x0, sizeof(REAL)*m*n);
     
 #ifdef _OPENMP
-#pragma omp parallel for if(n>OPENMP_HOLDS)
+#pragma omp parallel for if(n>OPENMP_HOLDS) private(j)
 #endif
     for ( j=0; j<n; ++j ) {
         mask[cols[j]] = j; // initialize mask, mask stores C indices 0,1,...
@@ -224,7 +224,7 @@ static SHORT get_block (dCSRmat  *A,
 #endif
     
 #ifdef _OPENMP
-#pragma omp parallel for if(n>OPENMP_HOLDS)
+#pragma omp parallel for if(n>OPENMP_HOLDS) private(j)
 #endif
     for ( j=0; j<n; ++j ) mask[cols[j]] = -1; // re-initialize mask
     
@@ -364,7 +364,7 @@ static SHORT orderone (INT   **mat,
     vals[0]=(REAL *)fasp_mem_calloc(tniz,sizeof(REAL));
     
 #ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#pragma omp parallel for if(tniz>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<tniz;++i) {
         rows[0][i]=mat[0][i];
@@ -381,7 +381,7 @@ static SHORT orderone (INT   **mat,
     // all the nonzeros with same col are gathering together
     
 #ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#pragma omp parallel for if(tniz>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<tniz;++i) {
         rows[0][i]=rows[1][i];
@@ -396,7 +396,7 @@ static SHORT orderone (INT   **mat,
     
     // all the nonzeros with same col and row are gathering together
 #ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#pragma omp parallel for if(tniz>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<tniz;++i) {
         rows[0][i]=rows[1][i];
@@ -422,7 +422,7 @@ static SHORT orderone (INT   **mat,
     fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
     
 #ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#pragma omp parallel for if(tniz>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<tniz;++i) {
         rows[0][i]=rows[1][i];
@@ -437,7 +437,7 @@ static SHORT orderone (INT   **mat,
     fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
     
 #ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#pragma omp parallel for if(tniz>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<tniz;++i) {
         rows[0][i]=rows[1][i];
@@ -454,7 +454,7 @@ static SHORT orderone (INT   **mat,
         if (rows[0][i]<nns[0]-1) tniz++;
     
 #ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#pragma omp parallel for if(tniz>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<tniz;++i) {
         mat[0][i]=rows[0][i];
@@ -541,7 +541,7 @@ static SHORT genintval (dCSRmat  *A,
     memset(iz, 0, sizeof(INT)*nc);
     
 #ifdef _OPENMP
-#pragma omp parallel for if(ittniz>OPENMP_HOLDS)
+#pragma omp parallel for if(ittniz>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<ittniz;++i) iz[itmat[0][i]]++;
     
@@ -550,7 +550,7 @@ static SHORT genintval (dCSRmat  *A,
     
     sum = 0;
 #ifdef _OPENMP
-#pragma omp parallel for reduction(+:sum) if(nc>OPENMP_HOLDS)
+#pragma omp parallel for reduction(+:sum) if(nc>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<nc;++i) sum+=iz[i]*iz[i];
     
@@ -574,7 +574,7 @@ static SHORT genintval (dCSRmat  *A,
         Ii=(INT *)fasp_mem_realloc(Ii,mm*sizeof(INT));
         
 #ifdef _OPENMP
-#pragma omp parallel for if(mm>OPENMP_HOLDS)
+#pragma omp parallel for if(mm>OPENMP_HOLDS) private(j)
 #endif
         for (j=0;j<mm;++j) Ii[j]=itmat[1][izs[i]+j];
         
@@ -585,7 +585,7 @@ static SHORT genintval (dCSRmat  *A,
         getinonefull(mat,matval,lengths,mm,Ii,ima);
         
 #ifdef _OPENMP
-#pragma omp parallel for if(mm*mm>OPENMP_HOLDS)
+#pragma omp parallel for if(mm*mm>OPENMP_HOLDS) private(j)
 #endif
         for (j=0;j<mm*mm;++j) imas[i][j]=ima[j];
     }
@@ -611,7 +611,7 @@ static SHORT genintval (dCSRmat  *A,
     memset(izt, 0, sizeof(INT)*nf);
     
 #ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#pragma omp parallel for if(tniz>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<tniz;++i) izt[mat[0][i]]++;
     
@@ -626,21 +626,21 @@ static SHORT genintval (dCSRmat  *A,
     T.JA=(INT*)fasp_mem_calloc(tniz,sizeof(INT));
     
 #ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#pragma omp parallel for if(tniz>OPENMP_HOLDS) private(j)
 #endif
     for (j=0;j<tniz;++j) T.JA[j]=mat[1][j];
     
     T.val=(REAL*)fasp_mem_calloc(tniz,sizeof(REAL));
     
 #ifdef _OPENMP
-#pragma omp parallel for if(tniz>OPENMP_HOLDS)
+#pragma omp parallel for if(tniz>OPENMP_HOLDS) private(j)
 #endif
     for (j=0;j<tniz;++j) T.val[j]=matval[0][j];
     
     rhs.val=(REAL*)fasp_mem_calloc(nf,sizeof(REAL));
     
 #ifdef _OPENMP
-#pragma omp parallel for if(nf>OPENMP_HOLDS)
+#pragma omp parallel for if(nf>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<nf;++i) rhs.val[i]=1.0;
     rhs.row=nf;
@@ -664,12 +664,12 @@ static SHORT genintval (dCSRmat  *A,
         Ii=(INT *)fasp_mem_realloc(Ii,mm*sizeof(INT));
         
 #ifdef _OPENMP
-#pragma omp parallel for if(mm>OPENMP_HOLDS)
+#pragma omp parallel for if(mm>OPENMP_HOLDS) private(j)
 #endif
         for (j=0;j<mm;++j) Ii[j]=itmat[1][izs[i]+j];
         
 #ifdef _OPENMP
-#pragma omp parallel for if(mm*mm>OPENMP_HOLDS)
+#pragma omp parallel for if(mm*mm>OPENMP_HOLDS) private(j)
 #endif
         for (j=0;j<mm*mm;++j) ima[j]=imas[i][j];
         
@@ -680,7 +680,7 @@ static SHORT genintval (dCSRmat  *A,
             for (pex[k]=j=0;j<mm;++j) pex[k]+=ima[k*mm+j]*sol.val[Ii[j]];
         }
 #ifdef _OPENMP
-#pragma omp parallel for if(mm>OPENMP_HOLDS)
+#pragma omp parallel for if(mm>OPENMP_HOLDS) private(j)
 #endif
         for (j=0;j<mm;++j) itmatval[0][izs[i]+j]=pex[j];
         
@@ -763,7 +763,7 @@ static SHORT getiteval (dCSRmat  *A,
     }
     
 #ifdef _OPENMP
-#pragma omp parallel for if(ittniz>OPENMP_HOLDS)
+#pragma omp parallel for if(ittniz>OPENMP_HOLDS) private(j)
 #endif
     for (j=0;j<ittniz;++j) {
         itmat[1][j]=it->JA[j];
@@ -775,7 +775,7 @@ static SHORT getiteval (dCSRmat  *A,
     vals[0]=(REAL *)fasp_mem_calloc(ittniz,sizeof(REAL));
     
 #ifdef _OPENMP
-#pragma omp parallel for if(ittniz>OPENMP_HOLDS)
+#pragma omp parallel for if(ittniz>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<ittniz;++i) {
         rows[0][i]=itmat[0][i];
@@ -794,7 +794,7 @@ static SHORT getiteval (dCSRmat  *A,
     fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
     
 #ifdef _OPENMP
-#pragma omp parallel for if(ittniz>OPENMP_HOLDS)
+#pragma omp parallel for if(ittniz>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<ittniz;++i) {
         itmat[0][i]=rows[1][i];
@@ -804,7 +804,7 @@ static SHORT getiteval (dCSRmat  *A,
     genintval(A,itmat,itmatval,ittniz,isol,numiso,nf,nc);
     
 #ifdef _OPENMP
-#pragma omp parallel for if(ittniz>OPENMP_HOLDS)
+#pragma omp parallel for if(ittniz>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<ittniz;++i) {
         rows[0][i]=itmat[0][i];
@@ -818,7 +818,7 @@ static SHORT getiteval (dCSRmat  *A,
     fasp_dcsr_transpose(rows,cols,vals,nns,tnizs);
     
 #ifdef _OPENMP
-#pragma omp parallel for if(ittniz>OPENMP_HOLDS)
+#pragma omp parallel for if(ittniz>OPENMP_HOLDS) private(i)
 #endif
     for (i=0;i<ittniz;++i) it->val[i]=vals[1][i];
     
