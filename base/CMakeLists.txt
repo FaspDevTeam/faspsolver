@@ -4,8 +4,8 @@ set(FASP_BASE_SRC_DIR "src")
 set(FASP_EXTRA_SRC_DIR "extra")
 #
 file(GLOB FASP_EXTRA_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}  
-				      ${FASP_EXTRA_SRC_DIR}/interface/*.c
-				      ${FASP_EXTRA_SRC_DIR}/hb_io/*.c)
+				      ${FASP_EXTRA_SRC_DIR}/hb_io/*.c
+				      ${FASP_EXTRA_SRC_DIR}/interface/*.c)
 #
 file(GLOB FASP_BASE_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} 
 	  		    	     ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h
@@ -20,7 +20,7 @@ file(GLOB FASP_BASE_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
 	  		    	     ${FASP_EXTRA_SOURCES} )
 #
 # Build libfasp
-# depends also on the source, header and inl files 
+# depends also on the source, header, and inl files 
 add_library(${FASP_LIBRARY_NAME} ${FASP_LIBRARY_TYPE} ${FASP_BASE_SOURCES} 
                                  ${FASP_BASE_INL} )
 

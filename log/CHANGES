@@ -1,6 +1,6 @@
 File Name: CHANGES
 
-06/26/2018 FASP 2.1.0:
+08/04/2018 FASP 2.1.0:
 - Fix OpenMP problem with FASP1.
 - Fix a typo in KryPvfgmres.c.
 - Update regression results.
@@ -8,6 +8,7 @@ File Name: CHANGES
 - Update to new Xcode setting.
 - Update refman.pdf and webpage.
 - Move official webpage to multigrid.org/fasp.
+- Check compiling order from cmake. 
 
 04/11/2018 FASP 2.0.9:
 - Update Fortran wrappers: add a new one.
