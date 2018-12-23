@@ -24,6 +24,7 @@
  * \date   05/17/2012
  *
  * Modified by Chensong Zhang on 09/22/2012
+ * Modified by Chensong Zhang on 12/23/2018: Fix memory leakage
  */
 int main (int argc, const char * argv[]) 
 {
@@ -87,11 +88,18 @@ int main (int argc, const char * argv[])
     fasp_solver_dcsr_pcg(&A, &b, &x, pc, tol, maxit, stop_type, print_level);
     
     // Step 5. Clean up memory
+    // First clean up the AMG data if you are using AMG as preconditioner
+    fasp_amg_data_free(((precond_data *)pc->data)->mgl_data, &amgparam);
+
+    // Clean up the pcdata
     if (pc_type!=PREC_NULL) fasp_mem_free(pc->data);
+    fasp_mem_free(pc);
+
+    // Clean up coefficient matrix, right-hand side, and solution
     fasp_dcsr_free(&A);
     fasp_dvec_free(&b);
     fasp_dvec_free(&x);
-    
+
     return FASP_SUCCESS;
 }
 
