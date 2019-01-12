@@ -1,8 +1,9 @@
 File Name: CHANGES
 
-12/23/2018 FASP 2.1.1:
+01/12/2018 FASP 2.1.1:
 - Find a problem when users try to free precond_data.
 - Fix a memory leakage problem in tutorial/poisson-pcg.c.
+- Change matrix format in fasp_dcoo_read1, make it consistent with fasp_dcoo_read.
 
 08/04/2018 FASP 2.1.0:
 - Fix OpenMP problem with FASP1.

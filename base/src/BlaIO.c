@@ -345,52 +345,53 @@ void fasp_dcoo_read (const char  *filename,
 }
 
 /**
- * \fn void fasp_dcoo_read1 (const char *filename, dCOOmat *A)
+ * \fn void fasp_dcoo_read1 (const char *filename, dCSRmat *A)
  *
  * \brief Read A from matrix disk file in IJ format -- indices starting from 1
  *
  * \param filename  File name for matrix
- * \param A         Pointer to the COO matrix
+ * \param A         Pointer to the CSR matrix
  *
  * \note File format:
  *   - nrow ncol nnz     % number of rows, number of columns, and nnz
  *   - i  j  a_ij        % i, j a_ij in each line
  *
- * \note Difference between fasp_dcoo_read and this funciton is this function do
- *       not change to CSR format
- *
- * \author Xiaozhe Hu
+ * \author Xiaozhe Hu, Chensong Zhang
  * \date   03/24/2013
+ *
+ * Modified by Chensong Zhang on 01/12/2019: Convert COO to CSR
  */
 void fasp_dcoo_read1 (const char  *filename,
-                      dCOOmat     *A)
+                      dCSRmat     *A)
 {
     int  i,j,k,m,n,nnz;
     REAL value;
-    
+
     FILE *fp = fopen(filename,"r");
-    
+
     if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
-    
+
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
-    
-    if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) > 0 ) {
-        fasp_dcoo_alloc(m, n, nnz, A);
-    }
-    else {
+
+    if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) <= 0 ) {
         fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
-    
+
+    dCOOmat Atmp = fasp_dcoo_create(m,n,nnz);
+
     for ( k = 0; k < nnz; k++ ) {
         if ( fscanf(fp, "%d %d %le", &i, &j, &value) != EOF ) {
-            A->rowind[k]=i-1; A->colind[k]=j-1; A->val[k] = value;
+            Atmp.rowind[k]=i-1; Atmp.colind[k]=j-1; Atmp.val[k] = value;
         }
         else {
             fasp_chkerr(ERROR_WRONG_FILE, filename);
         }
     }
-    
+
     fclose(fp);
+
+    fasp_format_dcoo_dcsr(&Atmp,A);
+    fasp_dcoo_free(&Atmp);
 }
 
 /**
