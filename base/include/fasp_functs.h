@@ -483,7 +483,7 @@ void fasp_dcoo_read (const char  *filename,
                      dCSRmat     *A);
 
 void fasp_dcoo_read1 (const char  *filename,
-                      dCOOmat     *A);
+                      dCSRmat     *A);
 
 void fasp_dcoo_shift_read (const char  *filename,
                            dCSRmat     *A);
@@ -2797,30 +2797,6 @@ void fasp_fwrapper_dbsr_krylov_amg_ (INT  *n,
                                      REAL *tol,
                                      INT  *maxit,
                                      INT  *ptrlvl);
-
-INT fasp_wrapper_dbsr_krylov_amg (INT   n,
-                                  INT   nnz,
-                                  INT   nb,
-                                  INT  *ia,
-                                  INT  *ja,
-                                  REAL *a,
-                                  REAL *b,
-                                  REAL *u,
-                                  REAL  tol,
-                                  INT   maxit,
-                                  INT   ptrlvl);
-
-INT fasp_wrapper_dcoo_dbsr_krylov_amg (INT   n,
-                                       INT   nnz,
-                                       INT   nb,
-                                       INT  *ia,
-                                       INT  *ja,
-                                       REAL *a,
-                                       REAL *b,
-                                       REAL *u,
-                                       REAL  tol,
-                                       INT   maxit,
-                                       INT   ptrlvl);
 
 
 /*-------- In file: XtrMumps.c --------*/
