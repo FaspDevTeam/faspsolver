@@ -113,6 +113,9 @@
 # prefix = /path/to/install
 ####################  User Defined Compiler Flags  #####################
 #export CC=gcc
-#cflags="-funroll-loops -funswitch-loops"
-#cxxflags="-funroll-loops -funswitch-loops"
-#fflags="-funroll-loops -funswitch-loops"
+#cflags   = "-O3 -funroll-loops -funswitch-loops"
+#cflags   = "-O3 -funroll-loops -funswitch-loops -march=corei7-avx -ffast-math"
+#cxxflags = "-O3 -funroll-loops -funswitch-loops"
+#cxxflags = "-O3 -funroll-loops -funswitch-loops -march=corei7-avx -ffast-math"
+#fflags   = "-O3 -funroll-loops -funswitch-loops"
+#fflags   = "-O3 -funroll-loops -funswitch-loops -march=corei7-avx -ffast-math"
