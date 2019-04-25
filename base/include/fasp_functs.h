@@ -966,6 +966,8 @@ void fasp_check_dCSRmat (const dCSRmat *A);
 
 SHORT fasp_check_iCSRmat (const iCSRmat *A);
 
+void fasp_check_ordering (dCSRmat *A);
+
 
 /*-------- In file: BlaSparseSTR.c --------*/
 

@@ -344,6 +344,38 @@ SHORT fasp_check_iCSRmat (const iCSRmat *A)
     return FASP_SUCCESS;
 }
 
+/**
+* \fn void fasp_check_ordering (dCSRmat *A)
+*
+* \brief Check whether each row of A is in ascending order w.r.t. column indices
+*
+* \param A   Pointer to the dCSRmat matrix
+*
+* \author Chensong Zhang
+* \date   02/26/2019
+*/
+void fasp_check_ordering (dCSRmat *A)
+{
+	const INT n = A->col;
+	INT i, j, j1, j2, start, end;
+
+	for ( i=0; i<n; ++i ) {
+
+		start = A->IA[i];
+		end   = A->IA[i+1] - 1;
+
+		for ( j=start; j<end-1; ++j ) {
+			j1 = A->JA[j]; j2 = A->JA[j + 1];
+			if ( j1 >= j2 ) {
+				printf("### ERROR: Order in row %10d is wrong! %10d, %10d\n", i, j1, j2);
+				fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
+			}
+		}
+
+	}
+
+}
+
 /*---------------------------------*/
 /*--        End of File          --*/
 /*---------------------------------*/
