@@ -132,6 +132,7 @@ test tutorial:
 		echo " "; \
 		cat INSTALL; \
 	else \
+		echo "Building the FASP test problems ...                                     *"; \
 		make -C $(build_dir)/$@ install ; \
 	fi
 

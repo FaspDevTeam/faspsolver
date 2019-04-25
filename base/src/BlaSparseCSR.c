@@ -374,7 +374,7 @@ void fasp_dcsr_sort (dCSRmat *A)
     ja    = (INT*)fasp_mem_calloc(n,sizeof(INT));
     a     = (REAL*)fasp_mem_calloc(n,sizeof(REAL));
     
-    for (i=0;i<n;++i) {
+    for ( i=0; i<n; ++i ) {
         start=A->IA[i];
         row_length=A->IA[i+1]-start;
         
@@ -382,12 +382,12 @@ void fasp_dcsr_sort (dCSRmat *A)
         
         fasp_aux_iQuickSortIndex(&(A->JA[start]), 0, row_length-1, index);
         
-        for (j=0;j<row_length;++j) {
+        for ( j=0; j<row_length; ++j ) {
             ja[j]=A->JA[start+index[j]];
             a[j]=A->val[start+index[j]];
         }
         
-        for (j=0;j<row_length;++j) {
+        for ( j=0; j<row_length; ++j ) {
             A->JA[start+j]=ja[j];
             A->val[start+j]=a[j];
         }
