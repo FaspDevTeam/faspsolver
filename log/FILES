@@ -1,7 +1,7 @@
     1200 ./base/include/fasp.h
      406 ./base/include/fasp_block.h
      262 ./base/include/fasp_const.h
-    2885 ./base/include/fasp_functs.h
+    2887 ./base/include/fasp_functs.h
       51 ./base/include/fasp_grid.h
     1118 ./base/src/BlaIOUtil.inl
      115 ./base/src/BlaSpmvMatFree.inl
@@ -47,7 +47,7 @@
      161 ./base/src/BlaSparseCOO.c
     1636 ./base/src/BlaSparseCSR.c
       81 ./base/src/BlaSparseCSRL.c
-     349 ./base/src/BlaSparseCheck.c
+     381 ./base/src/BlaSparseCheck.c
      186 ./base/src/BlaSparseSTR.c
      963 ./base/src/BlaSparseUtil.c
      284 ./base/src/BlaSpmvBLC.c
@@ -103,4 +103,4 @@
      238 ./base/src/SolMatFree.c
      406 ./base/src/SolSTR.c
      335 ./base/src/SolWrapper.c
-   85398 total
+   85432 total
