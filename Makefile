@@ -15,6 +15,7 @@
 # 
 #  Modified   2015-10-18   --ltz
 #  Modified   2017-01-10   --zcs
+#  Modified   2019-08-08   --zcs
 ########################################################################
 prefix = no-prefix
 
@@ -35,9 +36,9 @@ ifeq ($(debug),some)
 endif
 #
 ifeq ($(debug),all)
-		cflags="-Wall -g -DDEBUG_MODE=3 -DCHMEM_MODE=1"
-		cxxflags="-Wall -g -DDEBUG_MODE=3 -DCHMEM_MODE=1"
-		fflags="-Wall -g -DDEBUG_MODE=3 -DCHMEM_MODE=1"
+	cflags="-Wall -g -DDEBUG_MODE=3 -DCHMEM_MODE=1"
+	cxxflags="-Wall -g -DDEBUG_MODE=3 -DCHMEM_MODE=1"
+	fflags="-Wall -g -DDEBUG_MODE=3 -DCHMEM_MODE=1"
 endif
 ####################  User Changes UP TO HERE   ########################
 
@@ -132,7 +133,6 @@ test tutorial:
 		echo " "; \
 		cat INSTALL; \
 	else \
-		echo "Building the FASP test problems ...                                     *"; \
 		make -C $(build_dir)/$@ install ; \
 	fi
 
@@ -161,8 +161,6 @@ uninstall:
 	fi
 
 distclean:
-	make -C test distclean 
-	make -C tutorial distclean
 	@-rm -rf Config.mk
 	@-rm -rf $(build_dir)   
 	@-find . -name '*~' -exec rm {} \;
