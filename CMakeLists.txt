@@ -2,10 +2,12 @@
 # CMakeLists for FASP 
 # Modified   2015-08-08   --Ludmil Zikatanov
 # Modified   2017-10-20   --Chensong Zhang
+# Modified   2019-08-08   --Ludmil Zikatanov & Chensong Zhang
 ############################################################
+
 cmake_minimum_required (VERSION 2.8)
 
-# Helper modules.
+# Helper modules
 include(CheckFunctionExists)
 include(CheckIncludeFile)
 
@@ -26,12 +28,12 @@ else(DEFINED ENV{CC})
 endif(DEFINED ENV{CC}) 
 
 if( THE_C )
-    set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL   "the C compiler" FORCE)
+    set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL "the C compiler" FORCE)
 endif( THE_C )
 
 #######################################################################
 # name the project at this moment and this will set the compiler id:
-project(FASP C )
+project(FASP C)
 #######################################################################
 set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
 
@@ -92,20 +94,17 @@ endif(ADD_FFLAGS)
 	set(FASP_LIBRARY_TYPE STATIC)
     endif(SHARED)   
 #
-if(APPLE)
-    cmake_policy(SET "CMP0042" NEW)
-endif(APPLE)
 
 # FOR MAC OS X to find shared libs in install location
     set(CMAKE_INSTALL_NAME_DIR 
-	${CMAKE_INSTALL_PREFIX}/lib CACHE PATH "path for apple")
+	${CMAKE_INSTALL_PREFIX}/lib CACHE PATH "path for Mac OS X")
 # FOR LINUX to find shared libs in install location
     set(CMAKE_INSTALL_RPATH
         ${CMAKE_INSTALL_NAME_DIR} CACHE PATH "path for Linux")
-### NOT SURE IF WE NEED THIS (POLICY CMP 00042)
+
 file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR} 
-	  		    ${FASP_SOURCE_DIR}/base/src/*.c 
-	  		    ${FASP_SOURCE_DIR}/base/src/*.inl )
+	  		          ${FASP_SOURCE_DIR}/base/src/*.c 
+	  		          ${FASP_SOURCE_DIR}/base/src/*.inl )
 
 # keep here for auto generating headers if needed
 add_custom_target(headers ${FASP_SOURCE_DIR}/util/fhead.sh "${FASP_SOURCE_DIR}/base"
@@ -249,10 +248,18 @@ endif(NOT (CMAKE_Fortran_COMPILER_ID STREQUAL CMAKE_C_COMPILER_ID))
 ##################################################################
 # Recursively look for CMakeLists.txt in the library subdir.
     add_subdirectory("base")
+    add_subdirectory("test")
+    add_subdirectory("tutorial")
 # write the configuration
     include(write_config)
+    
 ##################################################################
-# only the library will be installed with "make" The rest of the
+# Only the library will be installed with "make". The rest of the
 # targets must be installed separately, so we do EXCLUDE_FROM_ALL
-    add_subdirectory("test" EXCLUDE_FROM_ALL)
-    add_subdirectory("tutorial" EXCLUDE_FROM_ALL)
+##################################################################
+# We no longer treat "test" and "tutorial" separately due to
+# cmake 3.14+ changes its behavoir on EXCLUDE_FROM_ALL!!! It
+# makes the compilation results unpredictable.
+##################################################################
+#    add_subdirectory("test" EXCLUDE_FROM_ALL)
+#    add_subdirectory("tutorial" EXCLUDE_FROM_ALL)

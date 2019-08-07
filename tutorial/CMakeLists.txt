@@ -10,7 +10,7 @@ endif()
 file( GLOB FASP_TUTSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
       main/*.c main/*.f main/*.f90 )
 
-include_directories(${FASP_INSTALL_PREFIX}/include)
+include_directories(${FASP_SOURCE_DIR}/base/include)
 
 foreach( srcfile ${FASP_TUTSRC} )
  	string( REGEX MATCH "\\.c$|\\.f90$|\\.cpp$" X ${srcfile} )

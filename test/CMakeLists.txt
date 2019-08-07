@@ -2,7 +2,6 @@
 
 set(FASP_TLIB_DIR ${FASP_SOURCE_DIR}/test)
 set(FASP_TINC_DIR ${FASP_SOURCE_DIR}/test/include)
-
 set(RUNTIME_OUTPUT_DIRECTORY ${FASP_SOURCE_DIR}/test)
 
 ## requires math library
@@ -11,7 +10,7 @@ if(UNIX OR LINUX)
 endif()
 
 include_directories(${FASP_TINC_DIR}
-		    ${FASP_INSTALL_PREFIX}/include )
+		    ${FASP_SOURCE_DIR}/base/include )
 
 file(GLOB FASP_TLIB_SRC src/*.c src/*.f )
 
@@ -29,16 +28,16 @@ foreach( srcfile ${FASP_TSRC} )
 #
 	 add_executable( ${execfile} main/${srcfile} )
 # 
-        target_link_libraries( ${execfile} 
+         target_link_libraries( ${execfile} 
 	 			fasptest 
 	 			${FASP_LIBRARY_NAME}
 				${UMFPACK_LIBRARIES} 
 				${SUPERLU_LIBRARIES} 
 				${MUMPS_LIBRARIES}
 				${MKL_LIBRARIES}
-				${ADD_STDLIBS} ) 
+				${ADD_STDLIBS} )
 #
-     install(TARGETS ${execfile} 
-             DESTINATION ${FASP_SOURCE_DIR}/test)
+         install(TARGETS ${execfile} 
+                 DESTINATION ${FASP_SOURCE_DIR}/test)
 endforeach( srcfile ${FASP_TSRC} )
 
