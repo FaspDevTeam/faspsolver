@@ -1481,10 +1481,13 @@ void fasp_dbsr_write_coo (const char    *filename,
     
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
     
+    // write dimension of the block matrix
     fprintf(fp,"%% dimension of the block matrix and nonzeros %d  %d  %d\n",
-            A->ROW,A->COL,A->NNZ); // write dimension of the block matrix
-    fprintf(fp,"%% the size of each block %d\n",A->nb); // write the size of each block
-    fprintf(fp,"%% storage manner of each block %d\n",A->storage_manner); // write storage manner of each block
+            A->ROW,A->COL,A->NNZ);
+    // write the size of each block
+    fprintf(fp,"%% the size of each block %d\n",A->nb);
+    // write storage manner of each block
+    fprintf(fp,"%% storage manner of each block %d\n",A->storage_manner);
     
     for ( i = 0; i < A->ROW; i++ ) {
         for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
@@ -1879,9 +1882,13 @@ void fasp_vector_read (const char *filerhs,
 
         fclose(fp);
         fp = fopen(filerhs,"r");
-        fscanf(fp,"%d\n",&flag);
-        fscanf(fp,"%d\n",&flag);
 
+        if ( !fscanf(fp,"%d\n",&flag) )
+            printf("### ERROR: File format problem in %s!\n", __FUNCTION__);
+        // TODO: Check why skip this flag ??? --Chensong
+
+        if ( !fscanf(fp,"%d\n",&flag) )
+            printf("### ERROR: File format problem in %s!\n", __FUNCTION__);
         flag = (int) flag/100;
         
         switch (flag) {
