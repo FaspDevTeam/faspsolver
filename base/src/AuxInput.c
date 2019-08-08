@@ -135,7 +135,7 @@ void fasp_param_input (const char   *fname,
         if (val==EOF) break;
         if (val!=1) { status = ERROR_INPUT_PAR; break; }
         if (buffer[0]=='[' || buffer[0]=='%' || buffer[0]=='|') {
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
             continue;
         }
     
@@ -148,7 +148,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%s",sbuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             strncpy(inparam->workdir,sbuff,128);
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"problem_num")==0) {
@@ -159,7 +159,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->problem_num=ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"print_level")==0) {
@@ -170,7 +170,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->print_level = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"output_type")==0) {
@@ -181,7 +181,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->output_type = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"solver_type")==0) {
@@ -192,7 +192,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->solver_type = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"stop_type")==0) {
@@ -203,7 +203,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->stop_type = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"precond_type")==0) {
@@ -214,7 +214,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->precond_type = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"itsolver_tol")==0) {
@@ -225,7 +225,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%lf",&dbuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->itsolver_tol = dbuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"itsolver_maxit")==0) {
@@ -236,7 +236,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->itsolver_maxit = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_ILU_levels")==0) {
@@ -247,7 +247,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_ILU_levels = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
         
         else if (strcmp(buffer,"AMG_SWZ_levels")==0) {
@@ -258,7 +258,7 @@ void fasp_param_input (const char   *fname,
 			val = fscanf(fp,"%d",&ibuff);
 			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			inparam->AMG_SWZ_levels = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
 		}
     
         else if (strcmp(buffer,"itsolver_restart")==0) {
@@ -269,7 +269,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->restart = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_type")==0) {
@@ -288,7 +288,7 @@ void fasp_param_input (const char   *fname,
                 inparam->AMG_type = UA_AMG;
             else
                 { status = ERROR_INPUT_PAR; break; }
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_strong_coupled")==0) {
@@ -299,7 +299,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%lf",&dbuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_strong_coupled = dbuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_max_aggregation")==0) {
@@ -310,7 +310,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_max_aggregation = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_tentative_smooth")==0) {
@@ -321,7 +321,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%lf",&dbuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_tentative_smooth = dbuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_smooth_filter")==0) {
@@ -344,7 +344,7 @@ void fasp_param_input (const char   *fname,
             }
             else
                 { status = ERROR_INPUT_PAR; break; }
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
 
         else if (strcmp(buffer,"AMG_smooth_restriction")==0) {
@@ -367,7 +367,7 @@ void fasp_param_input (const char   *fname,
             }
             else
                 { status = ERROR_INPUT_PAR; break; }
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
 
         else if (strcmp(buffer,"AMG_coarse_solver")==0) {
@@ -378,7 +378,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_coarse_solver = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
 
         else if (strcmp(buffer,"AMG_coarse_scaling")==0) {
@@ -401,7 +401,7 @@ void fasp_param_input (const char   *fname,
             }
             else
                 { status = ERROR_INPUT_PAR; break; }
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_levels")==0) {
@@ -412,7 +412,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_levels = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_tol")==0) {
@@ -423,7 +423,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%lf",&dbuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_tol = dbuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_maxit")==0) {
@@ -434,7 +434,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_maxit = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_coarse_dof")==0) {
@@ -445,7 +445,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_coarse_dof = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_cycle_type")==0) {
@@ -466,7 +466,7 @@ void fasp_param_input (const char   *fname,
                 inparam->AMG_cycle_type = NL_AMLI_CYCLE; 
             else
                 { status = ERROR_INPUT_PAR; break; }
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_smoother")==0) {
@@ -503,7 +503,7 @@ void fasp_param_input (const char   *fname,
                 inparam->AMG_smoother = SMOOTHER_SPETEN;
             else
                 { status = ERROR_INPUT_PAR; break; }
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
 
         else if (strcmp(buffer,"AMG_smooth_order")==0) {
@@ -520,7 +520,7 @@ void fasp_param_input (const char   *fname,
                 inparam->AMG_smooth_order = CF_ORDER;
             else
             { status = ERROR_INPUT_PAR; break; }
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
 
         else if (strcmp(buffer,"AMG_coarsening_type")==0) {
@@ -531,7 +531,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_coarsening_type = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_interpolation_type")==0) {
@@ -542,7 +542,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_interpolation_type = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
 
         else if (strcmp(buffer,"AMG_aggregation_type")==0) {
@@ -553,7 +553,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_aggregation_type = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
 
         else if (strcmp(buffer,"AMG_pair_number")==0) {
@@ -564,7 +564,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_pair_number = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
 
         else if (strcmp(buffer,"AMG_quality_bound")==0) {
@@ -575,7 +575,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%lf",&dbuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_quality_bound = dbuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
 
         else if (strcmp(buffer,"AMG_aggressive_level")==0) {
@@ -586,7 +586,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_aggressive_level = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
         
         else if (strcmp(buffer,"AMG_aggressive_path")==0) {
@@ -597,7 +597,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_aggressive_path = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_presmooth_iter")==0) {
@@ -608,7 +608,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_presmooth_iter = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_postsmooth_iter")==0) {
@@ -619,7 +619,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_postsmooth_iter = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_relaxation")==0) {
@@ -630,7 +630,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%lf",&dbuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_relaxation=dbuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
         
         else if (strcmp(buffer,"AMG_polynomial_degree")==0) {
@@ -641,7 +641,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_polynomial_degree = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_strong_threshold")==0) {
@@ -652,7 +652,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%lf",&dbuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_strong_threshold = dbuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_truncation_threshold")==0) {
@@ -663,7 +663,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%lf",&dbuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_truncation_threshold = dbuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_max_row_sum")==0) {
@@ -674,7 +674,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%lf",&dbuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_max_row_sum = dbuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"AMG_amli_degree")==0) {
@@ -685,7 +685,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_amli_degree = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
         
         else if (strcmp(buffer,"AMG_nl_amli_krylov_type")==0) {
@@ -696,7 +696,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->AMG_nl_amli_krylov_type = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"ILU_type")==0) {
@@ -707,7 +707,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->ILU_type = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"ILU_lfil")==0) {
@@ -718,7 +718,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->ILU_lfil = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"ILU_droptol")==0) {
@@ -729,7 +729,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%lf",&dbuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->ILU_droptol = dbuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"ILU_relax")==0) {
@@ -740,7 +740,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%lf",&dbuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->ILU_relax = dbuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     
         else if (strcmp(buffer,"ILU_permtol")==0) {
@@ -751,7 +751,7 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%lf",&dbuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->ILU_permtol = dbuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
         
         else if (strcmp(buffer,"SWZ_mmsize")==0) {
@@ -762,7 +762,7 @@ void fasp_param_input (const char   *fname,
 			val = fscanf(fp,"%d",&ibuff);
 			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			inparam->SWZ_mmsize = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
 		}
 		
 		else if (strcmp(buffer,"SWZ_maxlvl")==0) {
@@ -773,7 +773,7 @@ void fasp_param_input (const char   *fname,
 			val = fscanf(fp,"%d",&ibuff);
 			if (val!=1) {status = ERROR_INPUT_PAR; break; }
 			inparam->SWZ_maxlvl = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
 		}
 		
 		else if (strcmp(buffer,"SWZ_type")==0) {
@@ -784,7 +784,7 @@ void fasp_param_input (const char   *fname,
 			val = fscanf(fp,"%d",&ibuff);
 			if (val!=1) { status = ERROR_INPUT_PAR; break; }
 			inparam->SWZ_type = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
 		}
 
         else if (strcmp(buffer,"SWZ_blksolver")==0) {
@@ -795,12 +795,12 @@ void fasp_param_input (const char   *fname,
             val = fscanf(fp,"%d",&ibuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
             inparam->SWZ_blksolver = ibuff;
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
 
         else {
             printf("### WARNING: Unknown input keyword %s!\n", buffer);
-            fscanf(fp, "%*[^\n]"); // skip rest of line
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     }
     

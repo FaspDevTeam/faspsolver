@@ -18,10 +18,8 @@ $ make config openmp=yes  # Configure with OpenMP support
 $ make config prefix=dir  # Configure installation directory
 ===============================================================================
 $ make                    # Compile the library (after "make config")
-$ make install            # Install FASP library and header files
+$ make install            # Install FASP library, header files, examples
 $ make uninstall          # Remove the files installed by "make install"
-$ make test               # Install FASP test examples
-$ make tutorial           # Install FASP tutorial examples
 $ make headers            # Generate function declarations automatically
 $ make version            # Show version information
 $ make docs               # Generate the FASP documentation with Doxygen
