@@ -6,12 +6,14 @@
 # test programs
 #
 ########################################################################
+
 proc InstallError { x } {
 	    puts stderr {*****************************************************************}
 	    puts stderr "ERROR: $x"
 	    puts stderr {*****************************************************************}
 	    exit
 }
+
 proc InstallStatus { s } {
 global status
 set status $s
@@ -272,7 +274,7 @@ proc GentleExit {} {
 }
 
 proc CheckInpData { x } {
-     set y {}
+    set y {}
     regsub "^\[ \t\]*" $x {} y
     regsub "\[ \t\]*\$" $y {} y
     regsub -all -- "\[ \t\]\[ \t\]*" $y { } y
@@ -451,16 +453,16 @@ pack .f.text  -side right -fill both
     
 #   grab release .f.text
 
-button .f.buttons.help -text Help -command {Help}
-button .f.buttons.quit -text Quit -command {GentleExit}
+button .f.buttons.help -text "Help" -command {Help}
+button .f.buttons.quit -text "Quit" -command {GentleExit}
 button .f.buttons.config -text "Config" -command {Config .f.text}
 button .f.buttons.install -text "Install" -command {RunIt .f.text install}
 button .f.buttons.uninstall -text "Uninstall" -command {Uninstall}
-button .f.buttons.docs -text "HTML docs" -command {RunIt .f.text docs}
+button .f.buttons.docs -text "HTML Docs" -command {RunIt .f.text docs}
 button .f.buttons.headers -text "Headers" -command {RunIt .f.text headers}
 
 pack .f.buttons.quit .f.buttons.config .f.buttons.install .f.buttons.docs \
-    .f.buttons.headers .f.buttons.uninstall  -side left
+     .f.buttons.headers .f.buttons.uninstall -side left
 
 pack .f.buttons.help -side right
 
