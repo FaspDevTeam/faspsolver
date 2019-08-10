@@ -71,7 +71,7 @@
 
 \author{FASP Developers}
 
-\date{\vfill Version 2.0.5} % Activate to display a given date or no date
+\date{\vfill Version 2.2.0} % Activate to display a given date or no date
 
 \begin{document}
 
@@ -238,7 +238,7 @@ via a couple of simple tutorial problems. The user's guide is a
 self-contained document but does \emph{not} provide any details about
 the algorithms or their implementation. Along with this guide, we provide a
 reference manual\footnote{Available online at
-  \url{http://fasp.sourceforge.net}. It is also available in
+  \url{http://www.multigrid.org/fasp}. It is also available in
   ``\url{faspsolver/doc/doc.zip}''.} for technical details on the
 implementation which includes references. We recommend that the users
 read these references to better
@@ -258,7 +258,7 @@ There are several ways to download the FASP source files. We recommend users dow
 The most updated version of FASP can be downloaded directly from
 %
 \begin{center}
-\url{http://fasp.sf.net/download/faspsolver.zip}
+\url{http://www.multigrid.org/fasp/download/faspsolver.zip}
 \end{center}
 %
 
@@ -367,22 +367,6 @@ variables and can be loaded by external project Makefiles (see
 
 If you do not have ``FASP.mk'' present in the current directory,
 default settings will be used for building and installation FASP. 
-
-Next, if you would like to try some of the examples that come with
-FASP, you can build the ``test'' and ``tutorial'' targets as follows:
-%
-\begin{lstlisting}[numbers=none]
-$ make test
-$ make tutorial
-\end{lstlisting}
-%
-Equivalently, you may also build the test suite and the tutorial examples by using
-the ``local'' Makefile(s) in \verb|$(faspsolver)/test|
-and \verb|$(faspsolver)/tutorial|.
-\begin{lstlisting}[numbers=none]
-$ make -C test
-$ make -C tutorial
-\end{lstlisting}
 
 \begin{snugshade}
   \noindent
@@ -1235,19 +1219,19 @@ In FASP, there are a couple of standard preconditioned iterative methods~\cite{S
 
 We first show the abstract interface for the iterative methods. The following code segment is taken from ``\url{base/src/SolCSR.c}'':
 %
-\lstinputlisting[firstnumber=37,firstline=37,lastline=62]{../base/src/SolCSR.c}
+\lstinputlisting[firstnumber=37,firstline=37,lastline=60]{../base/src/SolCSR.c}
 %
 The names of the input arguments explain themselves mostly and they are explained in the Reference Manual in detail.
 
 We briefly discuss how to call this function; and, once you understand PCG, you can easily call other Krylov-type iterative methods.
 %
-\lstinputlisting[firstnumber=477,firstline=477,lastline=490]{../base/src/SolCSR.c}
+\lstinputlisting[firstnumber=607,firstline=607,lastline=620]{../base/src/SolCSR.c}
 %
 Now we explain this code segment a little bit:
 \begin{itemize}
-\item Line 478--479 performs the setup phase for ILU method. The particular type of ILU method is determined by ``\verb|iluparam|''; see \S\ref{sec:parameters}. Line 7 performs a simple memory check for ILU.
-\item Line 485--487 defines the preconditioner data structure ``\verb|pc|'', which contains two parts: one is the actual preconditioning action ``\verb|pc.fct|'', the other is the auxiliary data which is needed to perform the preconditioning action ``\verb|pc.data|''.
-\item Line 490 calls iterative methods. ``A'' is the matrix in dCSRmat format; ``b'' and ``x'' are the right-hand side and the solution vectors, respectively. Similar to ILU setup, the type of iterative methods is determined by ``\verb|itparam|''.
+\item Line 608--609 performs the setup phase for ILU method. The particular type of ILU method is determined by ``\verb|iluparam|''; see \S\ref{sec:parameters}. Line 612 performs a simple memory check for ILU.
+\item Line 615--617 defines the preconditioner data structure ``\verb|pc|'', which contains two parts: one is the actual preconditioning action ``\verb|pc.fct|'', the other is the auxiliary data which is needed to perform the preconditioning action ``\verb|pc.data|''.
+\item Line 620 calls iterative methods. ``A'' is the matrix in dCSRmat format; ``b'' and ``x'' are the right-hand side and the solution vectors, respectively. Similar to ILU setup, the type of iterative methods is determined by ``\verb|itparam|''.
 \end{itemize}
 
 Apparently, we should now explain the data structure ``\verb|itparam|''.
