@@ -1,10 +1,11 @@
 File Name: CHANGES
 
-08/10/2019 FASP 2.2.0:
+09/04/2019 FASP 2.2.0:
 - Update cmake behavoir due to cmake changes since 3.14.1.
 - Test new version on OS X 10.14.6, RedHat 4.8.5; need more tests.
 - Fix warnings for fscanf in Ubuntu.
 - Update webpage, documentation, and user guide.
+- Fix a mistake in User Guide.
 
 01/26/2019 FASP 2.1.1:
 - Find a problem when users try to free precond_data.
