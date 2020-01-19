@@ -2743,6 +2743,15 @@ INT fasp_solver_dstr_krylov_blockgs (dSTRmat    *A,
 
 /*-------- In file: SolWrapper.c --------*/
 
+void fasp_fwrapper_dcsr_pardiso_(INT  *n,
+							     INT  *nnz,
+								 INT  *ia,
+								 INT  *ja,
+								 REAL *a,
+								 REAL *b,
+								 REAL *u,
+								 INT  *ptrlvl);
+
 void fasp_fwrapper_dcsr_amg_ (INT  *n,
                               INT  *nnz,
                               INT  *ia,
