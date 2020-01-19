@@ -25,6 +25,48 @@
 /*---------------------------------*/
 
 /**
+ * \fn void fasp_fwrapper_dcsr_pardiso_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a,
+ *                                       REAL *b, REAL *u, INT *ptrlvl)
+ *
+ * \brief Solve Ax=b by the Pardiso direct solver
+ *
+ * \param n       Number of cols of A
+ * \param nnz     Number of nonzeros of A
+ * \param ia      IA of A in CSR format
+ * \param ja      JA of A in CSR format
+ * \param a       VAL of A in CSR format
+ * \param b       RHS vector
+ * \param u       Solution vector
+ * \param ptrlvl  Print level for iterative solvers
+ *
+ * \author Chensong Zhang
+ * \date   01/09/2020
+ */
+void fasp_fwrapper_dcsr_pardiso_(INT  *n,
+							     INT  *nnz,
+								 INT  *ia,
+								 INT  *ja,
+								 REAL *a,
+								 REAL *b,
+								 REAL *u,
+								 INT  *ptrlvl)
+{
+	dCSRmat    mat;      // coefficient matrix
+	dvector    rhs, sol; // right-hand-side, solution
+
+	// set up coefficient matrix
+	mat.row = *n; mat.col = *n; mat.nnz = *nnz;
+	mat.IA = ia; mat.JA = ja; mat.val = a;
+
+	rhs.row = *n; rhs.val = b;
+	sol.row = *n; sol.val = u;
+
+	fasp_dcsr_sort(&mat);
+
+	fasp_solver_pardiso(&mat, &rhs, &sol, *ptrlvl);
+}
+
+/**
  * \fn void fasp_fwrapper_dcsr_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a,
  *                                   REAL *b, REAL *u, REAL *tol, INT *maxit,
  *                                   INT *ptrlvl)
