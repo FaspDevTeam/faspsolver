@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+01/20/2020 FASP 2.5.0:
+- Migrate from BitBucket to GitHub!
+
 01/20/2020 FASP 2.2.0:
 - Update cmake behavoir due to cmake changes since 3.14.1.
 - Test new version on OS X 10.14.6, RedHat 4.8.5; need more tests.

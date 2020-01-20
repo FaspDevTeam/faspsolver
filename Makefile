@@ -176,8 +176,7 @@ backup:
                                 *.txt *.tcl doc/*.pdf doc/*.in doc/FAQ 
 
 version:
-	@-hg log -r "." --template 'FASP {latesttag}.{latesttagdistance}:' > VERSION
-	@-hg -q id >> VERSION
+	@-git describe --tags > VERSION
 	@-cat VERSION
 
 .PHONY:	backup config fasp install tutorial test clean distclean uninstall docs headers help version 
