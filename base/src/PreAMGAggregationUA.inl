@@ -1161,7 +1161,7 @@ static void nsympair_2ndpass (const dCSRmat  *A,
 
     for (i=0; i<row; ++i) s1[i] = s[i];
 
-    map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*2*nc);
+    if ( nc > 0 ) map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*2*nc);
     map->row = 2*nc;
 
     *NumAggregates = nc;
