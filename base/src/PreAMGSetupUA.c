@@ -210,7 +210,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
 
         /*-- Setup Schwarz smoother if necessary */
         if ( lvl < param->SWZ_levels ) {
-            mgl[lvl].Schwarz.A=fasp_dcsr_sympart(&mgl[lvl].A);
+            mgl[lvl].Schwarz.A = fasp_dcsr_sympart(&mgl[lvl].A);
             fasp_dcsr_shift(&(mgl[lvl].Schwarz.A), 1);
             status = fasp_swz_dcsr_setup(&mgl[lvl].Schwarz, &swzparam);
             if ( status < 0 ) {
@@ -226,7 +226,6 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
         switch ( param->aggregation_type ) {
 
             case VMB: // VMB aggregation
-
                 status = aggregation_vmb (&mgl[lvl].A, &vertices[lvl], param, lvl+1,
                                           &Neighbor[lvl], &num_aggs[lvl]);
 
@@ -239,14 +238,12 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
                 break;
 
             case NPAIR: // non-symmetric pairwise matching aggregation
-
                 status = aggregation_nsympair (mgl, param, lvl, vertices,
                                                &num_aggs[lvl]);
 
                 break;
 
             default: // symmetric pairwise matching aggregation
-
                 status = aggregation_symmpair (mgl, param, lvl, vertices,
                                                &num_aggs[lvl]);
 
@@ -257,7 +254,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
         if ( status < 0 ) {
             // When error happens, stop at the current multigrid level!
             if ( prtlvl > PRINT_MIN ) {
-                printf("### WARNING: Stop coarsening on level=%d!\n", lvl);
+                printf("### WARNING: Stop coarsening on level %d!\n", lvl);
             }
             status = FASP_SUCCESS; 
             fasp_ivec_free(&vertices[lvl]);

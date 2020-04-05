@@ -807,7 +807,7 @@ static void nsympair_1stpass (const dCSRmat * A,
     /*-----------------------------------------*/
     /* Step 3. start the pairwise aggregation  */
     /*-----------------------------------------*/
-    while (node < row) {
+    while ( node < row ) {
 
         // deal with G0 type node
         if ( vertices->val[i] == G0PT ) {
@@ -926,7 +926,8 @@ static void nsympair_1stpass (const dCSRmat * A,
     }
 
     map->row = 2*nc;
-    map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*map->row);
+
+	if ( nc > 0 ) map->val = (INT*)fasp_mem_realloc(map->val, sizeof(INT)*map->row);
 
     *NumAggregates = nc;
 
@@ -1218,7 +1219,7 @@ static SHORT aggregation_nsympair (AMG_data   *mgl,
             nsympair_1stpass(ptrA, quality_bound, &vertices[lvl], &map1, s, &num_agg);
         }
         else {
-            nsympair_2ndpass(&mgl[level].A, ptrA, quality_bound, i, &map1,
+			nsympair_2ndpass(&mgl[level].A, ptrA, quality_bound, i, &map1,
                              &vertices[lvl-1], &vertices[lvl], &map2, s, &num_agg);
         }
 
@@ -1234,17 +1235,16 @@ static SHORT aggregation_nsympair (AMG_data   *mgl,
         }
 
         if ( i < pair_number ) {
-
             /*-- Form Prolongation --*/
             form_boolean_p(&vertices[lvl], &mgl[lvl].P, num_agg);
 
-            /*-- Perform aggressive coarsening only up to the specified level --*/
+			/*-- Perform aggressive coarsening only up to the specified level --*/
             if ( mgl[lvl].P.col < MIN_CDOF ) break;
 
-            /*-- Form restriction --*/
+			/*-- Form restriction --*/
             fasp_dcsr_trans(&mgl[lvl].P, &mgl[lvl].R);
 
-            /*-- Form coarse level stiffness matrix --*/
+			/*-- Form coarse level stiffness matrix --*/
             fasp_blas_dcsr_rap_agg(&mgl[lvl].R, ptrA, &mgl[lvl].P, &mgl[lvl+1].A);
 
             ptrA = &mgl[lvl+1].A;
