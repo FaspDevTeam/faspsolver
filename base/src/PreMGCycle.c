@@ -69,6 +69,10 @@ void fasp_solver_mgcycle (AMG_data   *mgl,
     REAL alpha = 1.0;
     INT  num_lvl[MAX_AMG_LVL] = {0}, l = 0;
 
+    // more general cycling types on each level --zcs 05/07/2020
+    INT  ncycles[MAX_AMG_LVL] = {1};
+    for ( SHORT i = 0; i < MAX_AMG_LVL; i += 1 ) ncycles[i] = cycle_type;
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: n=%d, nnz=%d\n", mgl[0].A.row, mgl[0].A.nnz);
@@ -223,7 +227,8 @@ ForwardSweep:
                                     relax, ndeg, smooth_order, mgl[l].cfmark.val);
         }
 
-        if ( num_lvl[l] < cycle_type ) break;
+        //if ( num_lvl[l] < cycle_type ) break; --zcs General cycling on each level
+        if ( num_lvl[l] < ncycles[l] ) break;
         else num_lvl[l] = 0;
     }
 
