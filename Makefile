@@ -16,6 +16,7 @@
 #  Modified   2015-10-18   --ltz
 #  Modified   2017-01-10   --zcs
 #  Modified   2019-08-08   --zcs
+#  Modified   2020-05-06   --zcs
 ########################################################################
 prefix = no-prefix
 
@@ -77,6 +78,7 @@ endif
 
 ifeq ($(umfpack), yes)
     CONFIG_FLAGS+=-DUSE_UMFPACK=$(umfpack)
+    CONFIG_FLAGS+=-DMETIS_DIR=$(metis_dir)
     CONFIG_FLAGS+=-DSUITESPARSE_DIR=$(suitesparse_dir)
 endif
 

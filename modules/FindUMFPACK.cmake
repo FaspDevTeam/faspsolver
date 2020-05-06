@@ -13,16 +13,15 @@ message(STATUS "Checking for dependent packages of 'UMFPACK'")
 
 # Find packages that UMFPACK depends on
 find_package(BLAS)
-find_package(SUITESPARSECONFIG)
 find_package(AMD)
+find_package(SUITESPARSECONFIG)
 ### next one not needed if we only want UMFPACK.
-find_package(CHOLMOD) 
+#find_package(CHOLMOD) 
 
 message(STATUS "Checking for package 'UMFPACK'")
 
 # Check for header file
 find_path(UMFPACK_INCLUDE_DIRS umfpack.h
-# HINTS ${UMFPACK_DIR}/include ${UMFPACK_DIR}/UMFPACK/include $ENV{UMFPACK_DIR}/include $ENV{UMFPACK_DIR}/UMFPACK/include
  HINTS ${SUITESPARSE_DIR}/include ${SUITESPARSE_DIR}/UMFPACK/include $ENV{SUITESPARSE_DIR}/include $ENV{SUITESPARSE_DIR}/UMFPACK/include
  PATH_SUFFIXES suitesparse ufsparse
  DOC "Directory where the UMFPACK header is located"
@@ -44,9 +43,9 @@ endif()
 if (BLAS_FOUND)
   set(UMFPACK_LIBRARIES ${UMFPACK_LIBRARIES} ${BLAS_LIBRARIES})
 endif()
-if (SUITESPARSE_CONFIG_FOUND)
-  set(UMFPACK_INCLUDE_DIRS ${UMFPACK_INCLUDE_DIRS} ${SUITESPARSE_CONFIG_INCLUDE_DIRS})
-  set(UMFPACK_LIBRARIES ${UMFPACK_LIBRARIES} ${SUITESPARSE_CONFIG_LIBRARIES})
+if (SUITESPARSECONFIG_FOUND)
+  set(UMFPACK_INCLUDE_DIRS ${UMFPACK_INCLUDE_DIRS} ${SUITESPARSECONFIG_INCLUDE_DIRS})
+  set(UMFPACK_LIBRARIES ${UMFPACK_LIBRARIES} ${SUITESPARSECONFIG_LIBRARIES})
 endif()
 if (CHOLMOD_FOUND)
   set(UMFPACK_INCLUDE_DIRS ${UMFPACK_INCLUDE_DIRS} ${CHOLMOD_INCLUDE_DIRS})
