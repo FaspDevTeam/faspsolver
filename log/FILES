@@ -82,13 +82,13 @@
      320 ./base/src/PreAMGSetupRS.c
      778 ./base/src/PreAMGSetupSA.c
      460 ./base/src/PreAMGSetupSABSR.c
-     407 ./base/src/PreAMGSetupUA.c
+     404 ./base/src/PreAMGSetupUA.c
      382 ./base/src/PreAMGSetupUABSR.c
     1081 ./base/src/PreBLC.c
     1152 ./base/src/PreBSR.c
      621 ./base/src/PreCSR.c
      369 ./base/src/PreDataInit.c
-     522 ./base/src/PreMGCycle.c
+     527 ./base/src/PreMGCycle.c
      364 ./base/src/PreMGCycleFull.c
      166 ./base/src/PreMGRecur.c
      779 ./base/src/PreMGRecurAMLI.c
@@ -103,4 +103,4 @@
      238 ./base/src/SolMatFree.c
      406 ./base/src/SolSTR.c
      377 ./base/src/SolWrapper.c
-   85490 total
+   85492 total

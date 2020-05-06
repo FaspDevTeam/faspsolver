@@ -1,5 +1,11 @@
 File Name: CHANGES
 
+05/07/2020 FASP 2.5.1:
+- Fix UMFPACK test run problem.
+- Fix METIS module.
+- Fix CHOLMOD module.
+- Add general cycling type on each level.
+
 01/20/2020 FASP 2.5.0:
 - Migrate from BitBucket to GitHub!
 
