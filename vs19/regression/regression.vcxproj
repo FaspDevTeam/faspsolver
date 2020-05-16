@@ -39,7 +39,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <InterproceduralOptimization>true</InterproceduralOptimization>
     <UseIntelMKL>Sequential</UseIntelMKL>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler 19.1</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OMP|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -47,12 +47,12 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <InterproceduralOptimization>true</InterproceduralOptimization>
     <UseIntelMKL>Sequential</UseIntelMKL>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler 19.1</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler 19.1</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -60,7 +60,7 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <InterproceduralOptimization>true</InterproceduralOptimization>
     <UseIntelMKL>Sequential</UseIntelMKL>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler 19.1</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_OMP|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -68,12 +68,12 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <InterproceduralOptimization>true</InterproceduralOptimization>
     <UseIntelMKL>Parallel</UseIntelMKL>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler 19.1</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>Intel C++ Compiler 19.1</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
