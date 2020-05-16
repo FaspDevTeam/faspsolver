@@ -334,7 +334,8 @@ void fasp_ilu_dstr_setup1 (dSTRmat  *A,
                            dSTRmat  *LU)
 {
     const INT LUnband = 12;
-    
+    INT LUoffsets[12];
+
     const INT nc=A->nc, nc2=nc*nc;
     const INT nx=A->nx;
     const INT ny=A->ny;
@@ -343,7 +344,6 @@ void fasp_ilu_dstr_setup1 (dSTRmat  *A,
     const INT nband=A->nband;
     const INT ngrid=A->ngrid;
     INT nline, nplane;
-    INT LUoffsets[LUnband];
 
     INT i,j,i1,ix,ixy,ixyx,ix1,ixy1,ic,i1c,ixc,ix1c,ixyc,ixy1c,ixyxc;
     register REAL *smat,t,*tc;

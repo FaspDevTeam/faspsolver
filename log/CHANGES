@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+05/16/2020 FASP 2.5.2:
+- Add VS19 solution.
+- Fix encoding warning in VS19.
+- Fix problems with Intel compiler 2020.1 version.
+
 05/07/2020 FASP 2.5.1:
 - Fix UMFPACK test run problem.
 - Fix METIS module.
