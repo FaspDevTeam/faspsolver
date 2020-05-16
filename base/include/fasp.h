@@ -25,7 +25,6 @@
 #if WITH_PARDISO
 #include "mkl_pardiso.h"
 #include "mkl_types.h"
-#include "mkl_spblas.h"
 #endif
 
 #ifndef __FASP_HEADER__      /*-- allow multiple inclusions --*/
