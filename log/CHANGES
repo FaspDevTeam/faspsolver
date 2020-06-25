@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+06/25/2020 FASP 2.5.3:
+- Modify test problems.
+
 05/16/2020 FASP 2.5.2:
 - Add VS19 solution.
 - Fix encoding warning in VS19.

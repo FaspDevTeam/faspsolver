@@ -2,7 +2,7 @@
  *
  *  \brief Test program to generate FDM linear system for 2D Heat equation.
  *
- *  Consider a two-dimensional Heat/Possion equation
+ *  Consider a two-dimensional Heat/Poisson equation
  *
  * \f[
  *   \frac{du}{dt}-u_{xx}-u_{yy} = f(x,y,t)\ \ in\ \Omega = (0,1)\times(0,1)
@@ -20,7 +20,7 @@
  *          \f$ u(x,y,t) = sin(pi*x)*sin(pi*y)*t. \f$
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -64,82 +64,72 @@ main( int argc, char *argv[])
 
     while (arg_index < argc)
     {
-        if (argc%2 == 0)
-        {
+        if (argc%2 == 0) {
             print_usage = 1;
             break;
         }
 
-        if ( strcmp(argv[arg_index], "-help") == 0 )
-        {
+        if ( strcmp(argv[arg_index], "-help") == 0 ) {
             print_usage = 1;
             break;
         }
 
-        if ( strcmp(argv[arg_index], "-nx") == 0 )
-        {
+        if ( strcmp(argv[arg_index], "-nx") == 0 ) {
             arg_index ++;
             nx = atoi(argv[arg_index++]);
             input_flag = 0;
         }
         if (arg_index >= argc) break;
 
-        if ( strcmp(argv[arg_index], "-ny") == 0 )
-        {
+        if ( strcmp(argv[arg_index], "-ny") == 0 ) {
             arg_index ++;
             ny = atoi(argv[arg_index++]);
             input_flag = 0;
         }
         if (arg_index >= argc) break;
 
-        if ( strcmp(argv[arg_index], "-nt") == 0 )
-        {
+        if ( strcmp(argv[arg_index], "-nt") == 0 ) {
             arg_index ++;
             nt = atoi(argv[arg_index++]);
             input_flag = 0;
         }
         if (arg_index >= argc) break;
 
-        if ( strcmp(argv[arg_index], "-test") == 0 )
-        {
+        if ( strcmp(argv[arg_index], "-test") == 0 ) {
             arg_index ++;
             test = atoi(argv[arg_index++]);
             input_flag = 0;
         }
         if (arg_index >= argc) break;
 
-        if ( strcmp(argv[arg_index], "-order") == 0 )
-        {
+        if ( strcmp(argv[arg_index], "-order") == 0 ) {
             arg_index ++;
             order = argv[arg_index++];
             input_flag = 0;
         }
         if (arg_index >= argc) break;
 
-        if ( strcmp(argv[arg_index], "-op") == 0 )
-        {
+        if ( strcmp(argv[arg_index], "-op") == 0 ) {
             arg_index ++;
             op = argv[arg_index++];
             input_flag = 0;
         }
         if (arg_index >= argc) break;
         
-        if (input_flag)
-        {
+        if (input_flag) {
             print_usage = 1;
             break;
         }
     }
 
-    if (print_usage)
-    {
-        printf("\n  Usage: %s [<options>]\n\n", argv[0]);
-        printf("  -nx    <val> : number of interier nodes in x-direction [default: 11]\n");
-        printf("  -ny    <val> : number of interier nodes in y-direction [default: 11]\n");
-        printf("  -nt    <val> : number of interier nodes in t-direction [default:  0]\n");
-        printf("  -test  <val> : 1->lapack routine test for fdm;0->no test for FDM [default:  0]\n");
+    if (print_usage) {
+        printf("\n  Usage: %s [<options>]\n", argv[0]);
+        printf("  -nx    <val> : number of interior nodes in x-direction [default: 11]\n");
+        printf("  -ny    <val> : number of interior nodes in y-direction [default: 11]\n");
+        printf("  -nt    <val> : number of interior nodes in t-direction [default: 0]\n");
+        printf("  -test  <val> : 1->Lapack routine test for fdm; 0->no test for FDM [default: 0]\n");
         printf("  -order <val> : rb->Red-Black ordering for the d.o.f [default:  normal]\n");
-        printf("  -op <val>    : csr->CSR format for the output matrix\n         coo->COO format for the output matrix [default:  CSR]\n");
+        printf("  -op    <val> : csr->CSR or coo->COO format for the output matrix [default: CSR]\n");
         printf("  -help        : print this help message\n\n");
         exit(1);
     }
@@ -156,25 +146,21 @@ main( int argc, char *argv[])
      *----------------------------------------------------*/
     if (TTest) fasp_gettime(&tStart);
 
-
     if (rb) fsls_BuildLinearSystem_5pt2d_rb(nt, nx, ny, &A, &b, &u);
     else fsls_BuildLinearSystem_5pt2d(nt, nx, ny, &A, &b, &u);
 
-    if (TTest)
-    {
+    if (TTest) {
         fasp_gettime(&tEnd);
         printf("\n >>> total time: %.3f seconds\n\n",mytime(tStart, tEnd));
     }
 
     fsls_Band2CSRMatrix(A, &Acsr);
 
-    if ( strcmp(op,"csr") == 0 )
-    {
+    if ( strcmp(op,"csr") == 0 ) {
         sprintf(filename, "%s/csrmat_%dX%d.dat",FileDir,nx,ny);
         fsls_CSRMatrixPrint(Acsr, filename);
     }
-    if ( strcmp(op,"coo") == 0 )
-    {
+    if ( strcmp(op,"coo") == 0 ) {
         sprintf(filename, "%s/coomat_%dX%d.dat",FileDir,nx,ny);
         fsls_COOMatrixPrint(Acsr, filename);
     }

@@ -98,25 +98,50 @@ int main (int argc, const char * argv[])
         b = fasp_dvec_create(A.row);
         fasp_blas_dcsr_mxv(&A, sol.val, b.val);
         fasp_dvec_free(&sol);
-        
-    }   
+
+    }
     
     else if (problem_num == 12) {
 
-        // Read A and b -- FD discretization for Poisson, 1M DoF
-        datafile1="csrmat_1023X1023.dat"; // This file is NOT in ../data!
+        // Read A and b -- P1 FE discretization for Poisson, 0.25M DoF
+        datafile1="coomat_261121.dat"; // This file is NOT in ../data!
         strcat(filename1,datafile1);
-        
-        datafile2="rhs_1023X1023.dat";
-        strcat(filename2,datafile2);
-        
-        fasp_dcsrvec_read2(filename1, filename2, &A, &b);
-        
+        fasp_dcoo_read(filename1, &A);
+
+        // Generate a random solution
+        dvector sol = fasp_dvec_create(A.row);
+        fasp_dvec_rand(A.row, &sol);
+
+        // Form the right-hand-side b = A*sol
+        b = fasp_dvec_create(A.row);
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+        fasp_dvec_free(&sol);
+
+    }
+
+    else if (problem_num == 13) {
+
+        // Read A and b -- P1 FE discretization for Poisson, 65K DoF
+        datafile1="coomat_65025.dat"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        fasp_dcoo_read(filename1, &A);
+
+        // Generate a random solution
+        dvector sol = fasp_dvec_create(A.row);
+        fasp_dvec_rand(A.row, &sol);
+
+        // Form the right-hand-side b = A*sol
+        b = fasp_dvec_create(A.row);
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+        fasp_dvec_free(&sol);
+
     }
 
     else {
+
         printf("### ERROR: Unrecognised problem number %d\n", problem_num);
         return ERROR_INPUT_PAR;
+
     }
     
     // Print problem size
@@ -126,7 +151,7 @@ int main (int argc, const char * argv[])
     }
     
     // Print out solver parameters
-    if (print_level>PRINT_NONE) fasp_param_solver_print(&itspar);
+    if (print_level > PRINT_NONE) fasp_param_solver_print(&itspar);
     
     //--------------------------//
     // Step 2. Solve the system //
@@ -137,7 +162,7 @@ int main (int argc, const char * argv[])
     fasp_dvec_set(A.row,&x,0.0);
 
     // Preconditioned Krylov methods
-    if ( solver_type >= 1 && solver_type <= 20) {
+    if (solver_type >= 1 && solver_type <= 20) {
         
         // Using no preconditioner for Krylov iterative methods
         if (precond_type == PREC_NULL) {
