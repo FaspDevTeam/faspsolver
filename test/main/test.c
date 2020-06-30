@@ -215,7 +215,7 @@ int main (int argc, const char * argv[])
     else if (solver_type == SOLVER_SUPERLU) {
         status = fasp_solver_superlu(&A, &b, &x, print_level);
     }
-#endif   
+#endif
     
 #if WITH_UMFPACK // use UMFPACK directly
     else if (solver_type == SOLVER_UMFPACK) {
