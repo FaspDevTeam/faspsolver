@@ -15,6 +15,37 @@
 #include "fasp_functs.h"
 
 /**
+ * \fn static inline void skip_comments (FILE * fp)
+ *
+ * \brief Skip the comments in the beginning of data file
+ *
+ * \param FILE        File handler
+ *
+ * \author Chensong Zhang
+ * \date   2020-06-30
+ */
+static inline void skip_comments (FILE * fp)
+{
+    while ( 1 ) {
+        char  buffer[500];
+        int   loc = ftell(fp); // record the current position
+        int   val = fscanf(fp,"%s",buffer); // read in a string
+        if ( val!=1 || val==EOF ) {
+            printf("### ERROR: Could not get any data!\n");
+            exit(ERROR_WRONG_FILE);
+        }
+        if ( buffer[0]=='%' || buffer[0]=='!' || buffer[0]=='/' ) {
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
+            continue;
+        }
+        else {
+            fseek(fp, loc, SEEK_SET); // back to the beginning of this line
+            break;
+        }
+    }
+}
+
+/**
  * \fn static inline INT endian_convert_int (const INT inum, const INT ilength,
  *                                           const SHORT EndianFlag)
  *

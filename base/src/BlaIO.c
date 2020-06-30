@@ -73,7 +73,9 @@ void fasp_dcsrvec_read1 (const char  *filename,
     if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
-    
+
+    skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
+
     // Read CSR matrix
     if ( fscanf(fp, "%d %d", &m, &n) > 0 ) {
         A->row = m; A->col = n;
@@ -171,6 +173,8 @@ void fasp_dcsrvec_read2 (const char  *filemat,
 
     printf("%s: reading file %s...\n", __FUNCTION__, filemat);
     
+    skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
+
     if ( fscanf(fp,"%d\n",&n) > 0 ) {
         A->row = n;
         A->col = n;
@@ -256,7 +260,9 @@ void fasp_dcsr_read (const char  *filename,
     if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
-    
+
+    skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
+
     // Read CSR matrix
     if ( fscanf(fp, "%d", &m) > 0 ) A->row = A->col = m;
     else {
@@ -322,7 +328,9 @@ void fasp_dcoo_read (const char  *filename,
     if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
-    
+
+    skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
+
     if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) <= 0 ) {
         fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
@@ -372,6 +380,8 @@ void fasp_dcoo_read1 (const char  *filename,
     if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
+
+    skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
     if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) <= 0 ) {
         fasp_chkerr(ERROR_WRONG_FILE, filename);
@@ -426,6 +436,8 @@ void fasp_dcoo_shift_read (const char  *filename,
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
+    skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
+
     if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) <= 0 ) {
         fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
@@ -477,7 +489,9 @@ void fasp_dmtx_read (const char  *filename,
     if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
-    
+
+    skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
+
     if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) <= 0 ) {
         fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
@@ -535,6 +549,8 @@ void fasp_dmtxsym_read (const char  *filename,
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
+    skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
+
     if ( fscanf(fp,"%d %d %d",&m,&n,&nnz) <= 0 ) {
         fasp_chkerr(ERROR_WRONG_FILE, filename);
     }
@@ -610,6 +626,8 @@ void fasp_dstr_read (const char  *filename,
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
+    skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
+
     // read dimension of the problem
     if ( fscanf(fp,"%d %d %d",&nx,&ny,&nz) > 0 ) {
         A->nx = nx; A->ny = ny; A->nz = nz;
@@ -715,7 +733,9 @@ void fasp_dbsr_read (const char  *filename,
     if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
-    
+
+    skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
+
     status = fscanf(fp, "%d %d %d", &ROW,&COL,&NNZ); // read dimension of the problem
     fasp_chkerr(status, filename);
     A->ROW = ROW; A->COL = COL; A->NNZ = NNZ;
@@ -791,6 +811,8 @@ void fasp_dvecind_read (const char  *filename,
     
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
     
+    skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
+
     status = fscanf(fp,"%d",&n);
     fasp_dvec_alloc(n,b);
     
@@ -839,7 +861,9 @@ void fasp_dvec_read (const char  *filename,
     if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
-    
+
+    skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
+
     status = fscanf(fp,"%d",&n);
     
     fasp_dvec_alloc(n,b);
@@ -888,7 +912,9 @@ void fasp_ivecind_read (const char  *filename,
     if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
-    
+
+    skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
+
     status = fscanf(fp,"%d",&n);
     fasp_ivec_alloc(n,b);
     
@@ -927,7 +953,9 @@ void fasp_ivec_read (const char  *filename,
     if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
     printf("%s: reading file %s...\n", __FUNCTION__, filename);
-    
+
+    skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
+
     status = fscanf(fp,"%d",&n);
     fasp_ivec_alloc(n,b);
     
