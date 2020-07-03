@@ -3,7 +3,7 @@
  *  \brief The main test function for FASP solvers
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -125,6 +125,24 @@ int main (int argc, const char * argv[])
         datafile1="coomat_65025.dat"; // This file is NOT in ../data!
         strcat(filename1,datafile1);
         fasp_dcoo_read(filename1, &A);
+
+        // Generate a random solution
+        dvector sol = fasp_dvec_create(A.row);
+        fasp_dvec_rand(A.row, &sol);
+
+        // Form the right-hand-side b = A*sol
+        b = fasp_dvec_create(A.row);
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+        fasp_dvec_free(&sol);
+
+    }
+
+        else if (problem_num == 14) {
+
+        // Read A and b -- 5pt FD stencil for Poisson, 1M DoF
+        datafile1="fdm_1023X1023.csr"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        fasp_dcsr_read(filename1, &A);
 
         // Generate a random solution
         dvector sol = fasp_dvec_create(A.row);
