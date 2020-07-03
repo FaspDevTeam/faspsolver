@@ -96,14 +96,11 @@ ForwardSweep:
         else if ( l < mgl->SWZ_levels ) {
             switch (mgl[l].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_swz_forward_smoother(&mgl[l].Schwarz, &swzparam,
-                                                   &mgl[l].x, &mgl[l].b);
-                    fasp_dcsr_swz_backward_smoother(&mgl[l].Schwarz, &swzparam,
-                                                    &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_forward(&mgl[l].Schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_backward(&mgl[l].Schwarz,&swzparam, &mgl[l].x, &mgl[l].b);
                     break;
                 default:
-                    fasp_dcsr_swz_forward_smoother(&mgl[l].Schwarz, &swzparam,
-                                                   &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_forward(&mgl[l].Schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
                     break;
             }
         }
@@ -117,7 +114,7 @@ ForwardSweep:
 
         // form residual r = b - A x
         fasp_darray_cp(mgl[l].A.row, mgl[l].b.val, mgl[l].w.val);
-        fasp_blas_dcsr_aAxpy(-1.0,&mgl[l].A, mgl[l].x.val, mgl[l].w.val);
+        fasp_blas_dcsr_aAxpy(-1.0, &mgl[l].A, mgl[l].x.val, mgl[l].w.val);
 
         // restriction r1 = R*r0
         switch ( amg_type ) {
@@ -208,14 +205,11 @@ ForwardSweep:
         else if ( l < mgl->SWZ_levels ) {
             switch (mgl[l].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_swz_backward_smoother(&mgl[l].Schwarz, &swzparam,
-                                                    &mgl[l].x, &mgl[l].b);
-                    fasp_dcsr_swz_forward_smoother(&mgl[l].Schwarz, &swzparam,
-                                                   &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_backward(&mgl[l].Schwarz,&swzparam, &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_forward(&mgl[l].Schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
                     break;
                 default:
-                    fasp_dcsr_swz_backward_smoother(&mgl[l].Schwarz, &swzparam,
-                                                    &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_backward(&mgl[l].Schwarz,&swzparam, &mgl[l].x, &mgl[l].b);
                     break;
             }
         }
@@ -227,7 +221,7 @@ ForwardSweep:
                                     relax, ndeg, smooth_order, mgl[l].cfmark.val);
         }
 
-        //if ( num_lvl[l] < cycle_type ) break; --zcs General cycling on each level
+        // General cycling on each level --zcs
         if ( num_lvl[l] < ncycles[l] ) break;
         else num_lvl[l] = 0;
     }

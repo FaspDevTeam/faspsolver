@@ -387,14 +387,14 @@ void fasp_precond_swz (REAL *r,
 
 	switch (swztype) {
 		case SCHWARZ_BACKWARD:
-			fasp_dcsr_swz_backward_smoother(swzdata, swzparam, &x, &b);
+			fasp_dcsr_swz_backward(swzdata, swzparam, &x, &b);
 			break;
 		case SCHWARZ_SYMMETRIC:
-			fasp_dcsr_swz_forward_smoother(swzdata, swzparam, &x, &b);
-			fasp_dcsr_swz_backward_smoother(swzdata, swzparam, &x, &b);
+			fasp_dcsr_swz_forward(swzdata, swzparam, &x, &b);
+			fasp_dcsr_swz_backward(swzdata, swzparam, &x, &b);
 			break;
 		default:
-			fasp_dcsr_swz_forward_smoother(swzdata, swzparam, &x, &b);
+			fasp_dcsr_swz_forward(swzdata, swzparam, &x, &b);
 			break;
 	}
 

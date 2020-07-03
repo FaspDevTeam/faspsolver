@@ -200,8 +200,8 @@ INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
 }
 
 /**
- * \fn void fasp_dcsr_swz_forward_smoother (SWZ_data  *swzdata, SWZ_param *swzparam,
- *                                          dvector *x, dvector *b)
+ * \fn void fasp_dcsr_swz_forward (SWZ_data  *swzdata, SWZ_param *swzparam,
+ *                                 dvector *x, dvector *b)
  *
  * \brief Schwarz smoother: forward sweep
  *
@@ -213,10 +213,10 @@ INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
  * \author Zheng Li, Chensong Zhang
  * \date   2014/10/5
  */
-void fasp_dcsr_swz_forward_smoother (SWZ_data   *swzdata,
-                                     SWZ_param  *swzparam,
-                                     dvector    *x,
-                                     dvector    *b)
+void fasp_dcsr_swz_forward (SWZ_data   *swzdata,
+                            SWZ_param  *swzparam,
+                            dvector    *x,
+                            dvector    *b)
 {
     INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     
@@ -309,9 +309,8 @@ void fasp_dcsr_swz_forward_smoother (SWZ_data   *swzdata,
 }
 
 /**
- * \fn void fasp_dcsr_swz_backward_smoother (SWZ_data  *swzdata,
- *                                           SWZ_param *swzparam,
- *                                           dvector *x, dvector *b)
+ * \fn void fasp_dcsr_swz_backward (SWZ_data  *swzdata, SWZ_param *swzparam,
+ *                                  dvector *x, dvector *b)
  *
  * \brief Schwarz smoother: backward sweep
  *
@@ -323,10 +322,10 @@ void fasp_dcsr_swz_forward_smoother (SWZ_data   *swzdata,
  * \author Zheng Li, Chensong Zhang
  * \date   2014/10/5
  */
-void fasp_dcsr_swz_backward_smoother (SWZ_data   *swzdata,
-                                      SWZ_param  *swzparam,
-                                      dvector    *x,
-                                      dvector    *b)
+void fasp_dcsr_swz_backward (SWZ_data   *swzdata,
+                             SWZ_param  *swzparam,
+                             dvector    *x,
+                             dvector    *b)
 {
     INT i, j, iblk, ki, kj, kij, is, ibl0, ibl1, nloc, iaa, iab;
     
