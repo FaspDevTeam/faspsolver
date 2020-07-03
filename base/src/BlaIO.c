@@ -276,8 +276,11 @@ void fasp_dcsr_read (const char  *filename,
             fasp_chkerr(ERROR_WRONG_FILE, filename);
         }
     }
-    
-    INT nnz = A->IA[m]-A->IA[0];
+
+    // If IA starts from 1, shift by -1
+    if ( A->IA[0] == 1 ) for ( i = 0; i <= m; ++i ) A->IA[i] --;
+
+    INT nnz = A->IA[m] - A->IA[0];
     
     A->nnz = nnz;
     A->JA  = (INT *)fasp_mem_calloc(nnz, sizeof(INT));
@@ -289,6 +292,9 @@ void fasp_dcsr_read (const char  *filename,
             fasp_chkerr(ERROR_WRONG_FILE, filename);
         }
     }
+
+    // If JA starts from 1, shift by -1
+    if ( A->JA[0] == 1 ) for ( i = 0; i < nnz; ++i ) A->JA[i] --;
     
     for ( i = 0; i < nnz; ++i ) {
         if ( fscanf(fp, "%lf", &ddata) > 0 ) A->val[i]= ddata;

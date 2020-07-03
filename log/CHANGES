@@ -1,8 +1,10 @@
 File Name: CHANGES
 
-06/30/2020 FASP 2.5.3:
+07/03/2020 FASP 2.5.3:
 - Modify test problems.
 - Skip comments in the beginning of data files.
+- When reading CSR matrix starting from 1, shift by -1.
+- Ignore ex and mk files from git.
 
 05/16/2020 FASP 2.5.2:
 - Add VS19 solution.
