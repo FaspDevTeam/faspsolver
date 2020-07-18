@@ -1,9 +1,7 @@
 #!/bin/sh
 
 # backup server info
-#SERVER="66.228.35.193"
-SERVER="23.239.26.149"
-#USERID="vcc"
+SERVER="103.3.62.110"
 USERID="root"
 
 # optional parameters
@@ -17,4 +15,4 @@ fi
 # cp ../../download/.ht* htdocs/download
 cp ../../download/*.zip htdocs/download
 cp ../../download/*.pdf htdocs/download
-rsync -avz $1 ${OPT} ./htdocs/* ${USERID}@${SERVER}:/opt/www/fasp
+rsync -avz $1 ${OPT} ./htdocs/* ${USERID}@${SERVER}:/www/wwwroot/103.3.62.110/fasp
