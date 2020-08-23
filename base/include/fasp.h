@@ -474,7 +474,7 @@ typedef struct {
     //! number of postsmoothers
     SHORT postsmooth_iter;
     
-    //! relaxation parameter for SOR smoother
+    //! relaxation parameter for Jacobi and SOR smoother
     REAL relaxation;
     
     //! degree of the polynomial smoother
