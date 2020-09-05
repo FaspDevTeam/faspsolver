@@ -92,14 +92,6 @@ int main (int argc, const char * argv[])
 
     // Step 3.5: clean up auxiliary mesh info
     mesh_aux_free(&mesh_aux);
-#if 0    
-// test by chunsheng
-     char matfile[80];
-     sprintf(matfile, "out/fem_mat_%03d.dat",fempar.refine_lvl); 
-     fasp_dcsr_write_coo(matfile, &A);
-     sprintf(matfile, "out/fem_rhs_%03d.dat",fempar.refine_lvl); 
-     fasp_dvec_write (matfile,&b);
-#endif
 
     // Step 4: solve the linear system with AMG
     {
@@ -117,19 +109,6 @@ int main (int argc, const char * argv[])
 
 		amgparam.ILU_type             = ILUtp;
 		amgparam.ILU_levels           = 2;
-#if 0
-// test by chunsheng
-	itparam.itsolver_type= SOLVER_BiCGstab;
-	itparam.itsolver_type= SOLVER_VBiCGstab;
-    itparam.precond_type =  PREC_NULL;
-	//itparam.precond_type =  PREC_AMG;
-	inparam.print_level = 3;
-	inparam.solver_type = SOLVER_VBiCGstab;
-    //inparam.precond_type = PREC_AMG;
-	inparam.precond_type = PREC_NULL;
-    itparam.maxit = 1000;
-// test by chunsheng
-#endif
 
 	    const int print_level   = inparam.print_level;
         const int solver_type   = inparam.solver_type;
