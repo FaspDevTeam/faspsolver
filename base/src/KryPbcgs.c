@@ -764,14 +764,14 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
     normr     = fasp_blas_darray_norm2(m,r);
     normr_act = normr;
     relres    = normr/n2b;
-    
+
     // if initial residual is small, no need to iterate!
     if ( normr <= tolb ) {
         flag = 0;
         iter = 0;
         goto FINISHED;
     }
-    
+
     // output iteration information if needed
     fasp_itinfo(PrtLvl,StopType,iter,relres,n2b,0.0);
     
@@ -857,7 +857,7 @@ INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
         absres = normr_act;
         factor = absres/absres0;
         fasp_itinfo(PrtLvl,StopType,iter,normr_act/n2b,absres,factor);
-        
+
         // check for convergence
         if ((normr <= tolb)||(stag >= maxstagsteps)||moresteps)
         {

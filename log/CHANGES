@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+10/03/2020 FASP 2.5.4:
+- Update Windows version to VS2019 and Intel2020.1.
+
 07/18/2020 FASP 2.5.3:
 - Modify test problems.
 - Skip comments in the beginning of data files.
