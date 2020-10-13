@@ -780,7 +780,7 @@ static void nsympair_1stpass (const dCSRmat * A,
 
     INT i, j, row_start, row_end, nc, col, k, ipair, node, checkdd;
     REAL mu, aii, ajj, aij, aji, tent, vals, val = 0;
-    REAL del1, del2, eta1, eta2, sig1, sig2, rsi, rsj, epsr,del12;
+    REAL del1, del2, eta1, eta2, sig1, sig2, rsi, rsj, epsr, del12;
 
     nc = 0;
     i = 0;
@@ -789,10 +789,8 @@ static void nsympair_1stpass (const dCSRmat * A,
 
     /*---------------------------------------------------------*/
     /* Step 1. select extremely strong diagonal dominate rows  */
-    /*        and store in G0.                                 */
+    /*         and store in G0.                                */
     /*---------------------------------------------------------*/
-
-    /* G0 : vertices->val[i]=G0PT, Remain: vertices->val[i]=UNPT */
 
     fasp_ivec_alloc(row, vertices);
     fasp_ivec_alloc(2*row, map);
@@ -802,6 +800,8 @@ static void nsympair_1stpass (const dCSRmat * A,
     /*---------------------------------------------------------*/
     /* Step 2. compute row sum (off-diagonal) for each vertex  */
     /*---------------------------------------------------------*/
+
+    /* G0:vertices->val[i]=G0PT, Remain: vertices->val[i]=UNPT */
     pair_aggregate_init(A, checkdd, k_tg, iperm, vertices, s);
 
     /*-----------------------------------------*/
@@ -815,7 +815,8 @@ static void nsympair_1stpass (const dCSRmat * A,
             i ++;
             continue;
         }
-        // check nodes whether are aggregated
+
+        // skip nodes if they have been determined
         if ( vertices->val[i] != UNPT ) { i ++ ; continue;}
 
         vertices->val[i] = nc;
@@ -836,9 +837,9 @@ static void nsympair_1stpass (const dCSRmat * A,
 
         aii = Aval[row_start];
 
-        for ( j= row_start + 1; j < row_end; j++ ) {
+        for ( j = row_start + 1; j < row_end; j++ ) {
             col = AJA[j];
-            if ( vertices->val[col] != UNPT || iperm[col] == -1) continue;
+            if ( vertices->val[col] != UNPT || iperm[col] == -1 ) continue;
 
             aij = Aval[j];
             ajj = Aval[AIA[col]];
@@ -873,11 +874,11 @@ static void nsympair_1stpass (const dCSRmat * A,
                 del2 = rsj+2*sig2;
             }
             if (vals > 0.0) {
-                epsr=1.49e-8*vals;
+                epsr = 1.49e-8*vals;
                 if ((ABS(del1) < epsr) && (ABS(del2) < epsr)) {
                     mu = (eta1*eta2)/(vals*(eta1+eta2));
                 } else if (ABS(del1) < epsr) {
-                    if(del2 < -epsr) continue;
+                    if (del2 < -epsr) continue;
                     mu = (eta1*eta2)/(vals*(eta1+eta2));
                 } else if (ABS(del2) < epsr) {
                     if (del1 < -epsr) continue;
@@ -885,15 +886,16 @@ static void nsympair_1stpass (const dCSRmat * A,
                 } else {
                     del12 = del1 + del2;
                     if (del12 < -epsr) continue;
+                    if (del12 == 0.0) continue;
                     mu = vals + del1*del2/del12;
-                    if (mu < 0.0) continue;
+                    if (mu <= 0.0) continue;
                     mu = ((eta1*eta2)/(eta1+eta2))/mu;
                 }
             }
             else {
                 if (del1 <= 0.0 || del2 <= 0.0) continue;
                 mu = vals + del1*del2/(del1+del2);
-                if (mu < 0.0) continue;
+                if (mu <= 0.0) continue;
                 vals = (eta1*eta2)/(eta1+eta2);
                 mu = vals/mu;
             }
@@ -912,7 +914,7 @@ static void nsympair_1stpass (const dCSRmat * A,
             }
         }
 
-        if ( ipair == -1) {
+        if (ipair == -1) {
             map->val[2*nc+1] = -2;
         }
         else {
@@ -1066,7 +1068,7 @@ static void nsympair_2ndpass (const dCSRmat  *A,
                 if ((ABS(del1) < epsr) && (ABS(del2) < epsr)) {
                     mu = (eta1*eta2)/(vals*(eta1+eta2));
                 } else if (ABS(del1) < epsr) {
-                    if(del2 < -epsr) continue;
+                    if (del2 < -epsr) continue;
                     mu = (eta1*eta2)/(vals*(eta1+eta2));
                 } else if (ABS(del2) < epsr) {
                     if (del1 < -epsr) continue;
@@ -1074,15 +1076,16 @@ static void nsympair_2ndpass (const dCSRmat  *A,
                 } else {
                     del12 = del1 + del2;
                     if (del12 < -epsr) continue;
+                    if (del12 == 0.0) continue;
                     mu = vals + del1*del2/del12;
-                    if (mu < 0.0) continue;
+                    if (mu <= 0.0) continue;
                     mu = ((eta1*eta2)/(eta1+eta2))/mu;
                 }
             }
             else {
                 if (del1 <= 0.0 || del2 <= 0.0) continue;
                 mu = vals + del1*del2/(del1+del2);
-                if (mu < 0.0) continue;
+                if (mu <= 0.0) continue;
                 aij = (eta1*eta2)/(eta1+eta2);
                 mu = aij/mu;
             }
@@ -1096,7 +1099,7 @@ static void nsympair_2ndpass (const dCSRmat  *A,
             }
             else if ( (tmp-val) < -0.06 ) {
                 Tnode[Tsize] = ipair;
-                Tval[Tsize] = val;
+                Tval[Tsize]  = val;
                 ipair = col;
                 val = tmp;
                 Tsize ++;

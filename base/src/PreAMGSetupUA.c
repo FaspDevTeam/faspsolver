@@ -10,8 +10,8 @@
  *  \note  Setup A, P, PT and levels using the unsmoothed aggregation algorithm
  *
  *  Reference:
- *         P. Vanek, J. Madel and M. Brezina
- *         Algebraic Multigrid on Unstructured Meshes, 1994
+ *         A. Napov and Y. Notay
+ *         An Algebraic Multigrid Method with Guaranteed Convergence Rate, 2012
  *
  *---------------------------------------------------------------------------------
  *  Copyright (C) 2011--2018 by the FASP team. All rights reserved.
