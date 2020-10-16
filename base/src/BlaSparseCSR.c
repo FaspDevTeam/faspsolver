@@ -1126,6 +1126,7 @@ void fasp_dcsr_compress (const dCSRmat *A,
  * \date   12/25/2010
  *
  * Modified by Chensong Zhang on 02/21/2013
+ * Modified by Chunsheng Feng on 10/16/2020: Avoid filtering diagonal entries.
  *
  * \note This routine can be modified for filtering.
  */
@@ -1138,12 +1139,11 @@ SHORT fasp_dcsr_compress_inplace (dCSRmat    *A,
     INT i, j, k;
     INT ibegin, iend = A->IA[0];
     SHORT status = FASP_SUCCESS;
-    
     k = 0;
     for ( i=0; i<row; ++i ) {
         ibegin = iend; iend = A->IA[i+1];
         for ( j=ibegin; j<iend; ++j )
-            if ( ABS(A->val[j]) > dtol ) {
+            if ( ABS(A->val[j]) > dtol || i == A->JA[j] ) {
                 A->JA[k]  = A->JA[j];
                 A->val[k] = A->val[j];
                 ++k;

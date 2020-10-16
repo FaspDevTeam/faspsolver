@@ -96,6 +96,7 @@ SHORT fasp_amg_setup_ua (AMG_data   *mgl,
  * Modified by Chensong Zhang on 09/23/2014: check coarse spaces.
  * Modified by Zheng Li on 01/13/2015: adjust coarsening stop criterion.
  * Modified by Zheng Li on 03/22/2015: adjust coarsening ratio.
+ * Modified by Chunsheng Feng on 10/17/2020: if NPAIR fail auto switch aggregation type to VBM.
  */
 static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
                                             AMG_param  *param)
@@ -240,6 +241,14 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
             case NPAIR: // non-symmetric pairwise matching aggregation
                 status = aggregation_nsympair (mgl, param, lvl, vertices,
                                                &num_aggs[lvl]);
+		/*-- Modified by Chunsheng Feng on 10/17/2020: if NPAIR fail auto switch aggregation type to VBM. --*/
+                if ( num_aggs[lvl] * 2.0 > mgl[lvl].A.row ) {  
+		    param->aggregation_type =VMB;
+                    printf("### WARNING: non-symmetric pairwise matching aggregation on level-%d failed!\n", lvl);
+                    printf("### WARNING: switch aggregation type to VMB aggregation on level-%d\n", lvl);
+                    status = aggregation_vmb (&mgl[lvl].A, &vertices[lvl], param, lvl+1,
+                                              &Neighbor[lvl], &num_aggs[lvl]);
+		  }
 
                 break;
 
