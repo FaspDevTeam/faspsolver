@@ -134,9 +134,7 @@ int main (int argc, const char * argv[])
         fasp_check_symm(&A);     // check symmetry
         fasp_check_diagpos(&A);  // check sign of diagonal entries
         fasp_check_diagdom(&A);  // check diagonal dominance
-
-        fasp_dcoo_write("testa.coo", &A);
-
+        
         /*****************************/
         /* Step 3. Solve the system  */ 
         /*****************************/
