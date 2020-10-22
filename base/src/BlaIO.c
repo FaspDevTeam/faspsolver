@@ -20,8 +20,8 @@
 #include "hb_io.h"
 
 // Flags which indicates lengths of INT and REAL numbers
-INT   ilength; /**< Length of INT in byte */
-INT   dlength; /**< Length of REAL in byte */
+int   ilength; /**< Length of INT in byte */
+int   dlength; /**< Length of REAL in byte */
 
 /*---------------------------------*/
 /*--  Declare Private Functions  --*/
@@ -64,7 +64,7 @@ void fasp_dcsrvec_read1 (const char  *filename,
                          dCSRmat     *A,
                          dvector     *b)
 {
-    INT  i, m, n, idata;
+    int  i, m, n, idata;
     REAL ddata;
     
     // Open input disk file
@@ -251,7 +251,7 @@ void fasp_dcsrvec_read2 (const char  *filemat,
 void fasp_dcsr_read (const char  *filename,
                      dCSRmat     *A)
 {
-    INT  i,m,idata;
+    int  i,m,idata;
     REAL ddata;
     
     // Open input disk file
@@ -728,9 +728,9 @@ void fasp_dstr_read (const char  *filename,
 void fasp_dbsr_read (const char  *filename,
                      dBSRmat     *A)
 {
-    INT     ROW, COL, NNZ, nb, storage_manner;
-    INT     i, n;
-    INT     index;
+    int     ROW, COL, NNZ, nb, storage_manner;
+    int     i, n;
+    int     index;
     REAL    value;
     size_t  status;
     
@@ -742,7 +742,7 @@ void fasp_dbsr_read (const char  *filename,
 
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
-    status = fscanf(fp, "%d %d %d", &ROW,&COL,&NNZ); // read dimension of the problem
+    status = fscanf(fp, "%d %d %d", &ROW, &COL, &NNZ); // dimensions of the problem
     fasp_chkerr(status, filename);
     A->ROW = ROW; A->COL = COL; A->NNZ = NNZ;
     
@@ -753,10 +753,10 @@ void fasp_dbsr_read (const char  *filename,
     status = fscanf(fp, "%d", &storage_manner); // read the storage_manner
     fasp_chkerr(status, filename);
     A->storage_manner = storage_manner;
-    
+
     // allocate memory space
     fasp_dbsr_alloc(ROW, COL, NNZ, nb, storage_manner, A);
-    
+
     // read IA
     status = fscanf(fp, "%d", &n);
     fasp_chkerr(status, filename);
@@ -807,19 +807,19 @@ void fasp_dbsr_read (const char  *filename,
 void fasp_dvecind_read (const char  *filename,
                         dvector     *b)
 {
-    INT     i, n, index;
+    int     i, n, index;
     REAL    value;
     size_t  status;
-    
-	FILE   *fp = fopen(filename,"r");
+
+    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+
+    FILE   *fp = fopen(filename,"r");
     
     if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
-    
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
-    
+
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
-    status = fscanf(fp,"%d",&n);
+    status = fscanf(fp, "%d", &n);
     fasp_dvec_alloc(n,b);
     
     for ( i = 0; i < n; ++i ) {
@@ -858,7 +858,7 @@ void fasp_dvecind_read (const char  *filename,
 void fasp_dvec_read (const char  *filename,
                      dvector     *b)
 {
-    INT     i, n;
+    int     i, n;
     REAL    value;
     size_t  status;
     
@@ -910,7 +910,7 @@ void fasp_dvec_read (const char  *filename,
 void fasp_ivecind_read (const char  *filename,
                         ivector     *b)
 {
-    INT     i, n, index, value;
+    int     i, n, index, value;
     size_t  status;
 
     FILE *fp = fopen(filename,"r");
@@ -923,7 +923,7 @@ void fasp_ivecind_read (const char  *filename,
 
     status = fscanf(fp,"%d",&n);
     fasp_ivec_alloc(n,b);
-    
+
     for ( i = 0; i < n; ++i ) {
         status = fscanf(fp, "%d %d", &index, &value);
         b->val[index] = value;
@@ -951,7 +951,7 @@ void fasp_ivecind_read (const char  *filename,
 void fasp_ivec_read (const char  *filename,
                      ivector     *b)
 {
-    INT     i, n, value;
+    int     i, n, value;
     size_t  status;
 
     FILE *fp = fopen(filename,"r");
@@ -1625,7 +1625,7 @@ void fasp_matrix_read (const char  *filename,
                        void        *A)
 {
     
-    INT      index, flag;
+    int      index, flag;
     SHORT    EndianFlag;
 	size_t   status;
 
@@ -1733,7 +1733,7 @@ void fasp_matrix_read (const char  *filename,
 void fasp_matrix_read_bin (const char *filename,
                            void       *A)
 {
-    INT     index, flag;
+    int     index, flag;
     SHORT   EndianFlag = 1;
 	size_t  status;
 
@@ -1898,7 +1898,7 @@ void fasp_matrix_write (const char *filename,
 void fasp_vector_read (const char *filerhs,
                        void       *b)
 {
-    INT      index, flag;
+    int      index, flag;
     SHORT    EndianFlag;
     size_t   status;
 

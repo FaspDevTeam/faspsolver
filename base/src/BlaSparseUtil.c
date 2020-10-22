@@ -63,7 +63,7 @@ void fasp_sparse_abybms_ (INT *ia,
         the ic and jc are for c=a*b, a and b sparse  */
     /*  na = number of rows of a    */
     /*  mb = number of columns of b */
-    unsigned INT jcform=0;
+    unsigned int jcform=0;
     INT na,mb,icpp,iastrt,ibstrt,iaend,ibend,i,j,k,jia,jib;
     INT *icp;
     if (jc) jcform=1;
@@ -365,7 +365,7 @@ void fasp_sparse_aplbms_ (INT *ia,
                           INT *ic,
                           INT *jc)
 {
-    unsigned INT jcform=0;
+    unsigned int jcform=0;
     INT icpp,i1,i,j,jp,n,m,iastrt,iaend,ibstrt,ibend;
     INT *icp;
     /*

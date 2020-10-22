@@ -47,8 +47,8 @@ void fasp_blas_dblc_aAxpy (const REAL      alpha,
     register dCSRmat *A11, *A12, *A21, *A22;
     register dCSRmat *A13, *A23, *A31, *A32, *A33;
     
-    unsigned INT row1, col1;
-    unsigned INT row2, col2;
+    INT row1, col1;
+    INT row2, col2;
     
     const register REAL *x1, *x2, *x3;
     register REAL       *y1, *y2, *y3;
@@ -172,8 +172,8 @@ void fasp_blas_dblc_mxv (const dBLCmat  *A,
     register dCSRmat *A11, *A12, *A21, *A22;
     register dCSRmat *A13, *A23, *A31, *A32, *A33;
     
-    unsigned INT row1, col1;
-    unsigned INT row2, col2;
+    INT row1, col1;
+    INT row2, col2;
     
     const register REAL *x1, *x2, *x3;
     register REAL       *y1, *y2, *y3;

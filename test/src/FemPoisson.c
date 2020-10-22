@@ -26,7 +26,7 @@
 /*---------------------------------*/
 
 /**
- * \fn static void localb (double (*node)[DIM],double *b, int num_qp)
+ * \fn static void localb (double (*node)[DIM],double *b, INT num_qp)
  *
  * \brief Form local right-hand side b from triangle node
  *
@@ -42,11 +42,11 @@
  */
 static void localb (double (*node)[DIM],
                     double *b,
-                    int num_qp)
+                    INT num_qp)
 {
     double gauss[MAX_QUAD][DIM+1];
     double a,p[DIM];
-    int i,j;
+    INT i,j;
     
 #if DIM==2 // 2D case
     
@@ -115,44 +115,44 @@ static void assemble_stiffmat (dCSRmat *A,
      */
     
     // assemble option
-    int mat = 0, rhs = 0;
+    INT mat = 0, rhs = 0;
     if ( strcmp(pt->option,"ab") == 0 ) { mat = 1; rhs = 1; }
     if ( strcmp(pt->option,"a") == 0 ) mat = 1;
     if ( strcmp(pt->option,"b") == 0 ) rhs = 1;
     
-    const int num_node = mesh->node.row;
-    const int num_edge = mesh_aux->edge.row;
-    const int nnz = num_node + 2*num_edge;
-    const double epsilon=1;
+    const INT num_node = mesh->node.row;
+    const INT num_edge = mesh_aux->edge.row;
+    const INT nnz = num_node + 2*num_edge;
+    const REAL epsilon=1;
     
-    double T[3][2],phi1[2],phi2[2];
-    double gauss[MAX_QUAD][DIM+1];
-    double s;
+    REAL T[3][2],phi1[2],phi2[2];
+    REAL gauss[MAX_QUAD][DIM+1];
+    REAL s;
     
-    int i,j,k;
-    int k1,n1,n2,i1;
-    double btmp[3], tmp_a;
-    int tmp, edge_c;
+    INT i,j,k;
+    INT k1,n1,n2,i1;
+    REAL btmp[3], tmp_a;
+    INT tmp, edge_c;
     
     fasp_gauss2d(pt->num_qp_mat, 2, gauss); // Gauss integration initial
     
     // alloc memory for A & b
     A->row = A->col = num_node;
     A->nnz = nnz;
-    A->IA = (int*)fasp_mem_calloc(A->row+1, sizeof(int));
-    A->JA = (int*)fasp_mem_calloc(nnz, sizeof(int));
-    A->val = (double*)fasp_mem_calloc(nnz, sizeof(double));
+    A->IA = (INT*)fasp_mem_calloc(A->row+1, sizeof(INT));
+    A->JA = (INT*)fasp_mem_calloc(nnz, sizeof(INT));
+    A->val = (REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
     b->row = num_node;
-    b->val = (double*)fasp_mem_calloc(num_node, sizeof(double));
-    total_alloc_mem += (A->row+1)*sizeof(int);
-    total_alloc_mem += nnz*sizeof(int);
-    total_alloc_mem += nnz*sizeof(double);
-    total_alloc_mem += num_node*sizeof(double);
-    int *count = (int*)fasp_mem_calloc(num_node, sizeof(int));
+    b->val = (REAL*)fasp_mem_calloc(num_node, sizeof(REAL));
+    total_alloc_mem += (A->row+1)*sizeof(INT);
+    total_alloc_mem += nnz*sizeof(INT);
+    total_alloc_mem += nnz*sizeof(REAL);
+    total_alloc_mem += num_node*sizeof(REAL);
+    INT *count = (INT*)fasp_mem_calloc(num_node, sizeof(INT));
 	
 	// edge to global idx of A->val
-    int *edge2idx_g1 = (int*)fasp_mem_calloc(num_edge, sizeof(int));
-    int *edge2idx_g2 = (int*)fasp_mem_calloc(num_edge, sizeof(int));
+    INT *edge2idx_g1 = (INT*)fasp_mem_calloc(num_edge, sizeof(INT));
+    INT *edge2idx_g2 = (INT*)fasp_mem_calloc(num_edge, sizeof(INT));
     
     // get IA
     for (i=0;i<num_edge;++i) {
@@ -298,7 +298,7 @@ static void assemble_stiffmat (dCSRmat *A,
 /*---------------------------------*/
 
 /**
- * \fn int setup_poisson (dCSRmat *A, dvector *b, Mesh *mesh, Mesh_aux *mesh_aux,
+ * \fn INT setup_poisson (dCSRmat *A, dvector *b, Mesh *mesh, Mesh_aux *mesh_aux,
  *                        FEM_param *pt, dvector *ptr_uh, ivector *dof)
  *
  * \brief Setup P1 FEM for the Poisson's equation
@@ -320,7 +320,7 @@ static void assemble_stiffmat (dCSRmat *A,
  * Modified by Feiteng Huang on 04/01/2012: output node, elem, uh, and dof for L2 error
  * Modified by Feiteng Huang on 04/09/2012: restructure the code
  */
-int setup_poisson (dCSRmat *A,
+INT setup_poisson (dCSRmat *A,
                    dvector *b,
                    Mesh *mesh,
                    Mesh_aux *mesh_aux,
@@ -331,8 +331,8 @@ int setup_poisson (dCSRmat *A,
     dCSRmat Stiff;
     dvector rhs;
     ivector dirichlet,nondirichlet,index;
-    int i,j,k;
-    int dirichlet_count = 0;
+    INT i,j,k;
+    INT dirichlet_count = 0;
     
     // assemble A and b
     assemble_stiffmat(&Stiff, &rhs, mesh, mesh_aux, pt);
@@ -362,7 +362,7 @@ int setup_poisson (dCSRmat *A,
     
     // set initial boundary value
     dvector uh = fasp_dvec_create(Stiff.row);
-    double p[DIM];
+    REAL p[DIM];
     for (i=0;i<uh.row;++i) {
         if(mesh->node_bd.val[i]==DIRICHLET) { // the node is on the boundary
             for (j=0;j<DIM;++j)
@@ -388,10 +388,10 @@ int setup_poisson (dCSRmat *A,
 }
 
 /**
- * \fn double get_l2_error_poisson (ddenmat *node,
- *                                  iCSRmat *elem,
- *                                  dvector *uh,
- *                                  int num_qp)
+ * \fn REAL get_l2_error_poisson (ddenmat *node,
+ *                                iCSRmat *elem,
+ *                                dvector *uh,
+ *                                INT num_qp)
  *
  * \brief get l2 error of fem.
  *
@@ -403,18 +403,18 @@ int setup_poisson (dCSRmat *A,
  * \author Feiteng Huang
  * \date   03/30/2012
  */
-double get_l2_error_poisson (ddenmat *node,
-                             idenmat *elem,
-                             dvector *uh,
-                             int num_qp)
+REAL get_l2_error_poisson (ddenmat *node,
+                           idenmat *elem,
+                           dvector *uh,
+                           INT num_qp)
 {
-    double l2error = 0.0;
-    double T[3][2] = {{0, 0}, {0, 0}, {0, 0}};
-    double uh_local[3] = {0, 0, 0};
-    double gauss[MAX_QUAD][DIM+1];
-    double s, l2, a, p[DIM], uh_p;
+    REAL l2error = 0.0;
+    REAL T[3][2] = {{0, 0}, {0, 0}, {0, 0}};
+    REAL uh_local[3] = {0, 0, 0};
+    REAL gauss[MAX_QUAD][DIM+1];
+    REAL s, l2, a, p[DIM], uh_p;
     
-    int i,j,k;
+    INT i,j,k;
     
     fasp_gauss2d(num_qp, 2, gauss); // Gauss integration initial
     

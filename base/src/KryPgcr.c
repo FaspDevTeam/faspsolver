@@ -65,9 +65,9 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
     const INT   n = b->row;
     
     // local variables
-    INT      iter = 0, rst = -1;
-    INT      i, j, k;
-    
+    INT      iter = 0;
+    int      i, j, k, rst = -1; // must be signed! -zcs
+
     REAL     gamma, alpha, beta, checktol;
     REAL     absres0 = BIGREAL, absres = BIGREAL;
     REAL     relres  = BIGREAL;
@@ -80,7 +80,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
     INT      Restart = MIN(restart, MaxIt);
     LONG     worksize = n+2*Restart*n+Restart+Restart;
     
-    // Output some info for debuging
+    // Output some info for debugging
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GCR solver (CSR) ...\n");
 
 #if DEBUG_MODE > 0
@@ -90,7 +90,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
     
     work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     
-    /* check whether memory is enough for GMRES */
+    /* check whether memory is enough for GCR */
     while ( (work == NULL) && (Restart > 5) ) {
         Restart = Restart - 5;
         worksize = n+2*Restart*n+Restart+Restart;
@@ -98,13 +98,13 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
     }
     
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for GMRES! [%s:%d]\n",
+        printf("### ERROR: No enough memory for GCR! [%s:%d]\n",
                __FILE__, __LINE__ );
         fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
     if ( PrtLvl > PRINT_MIN && Restart < restart ) {
-        printf("### WARNING: GMRES restart number set to %d!\n", Restart);
+        printf("### WARNING: GCR restart number set to %d!\n", Restart);
     }
     
     r = work; z = r+n; c = z + Restart*n; alp = c + Restart*n; tmpx = alp + Restart;
@@ -135,11 +135,11 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
     while ( iter < MaxIt && sqrt(relres) > tol ) {
         
         i = -1; rst ++;
-        
+
         while ( i < Restart-1 && iter < MaxIt ) {
-            
+
             i++; iter++;
-            
+
             // z = B^-1r
             if ( pc == NULL )
                 fasp_darray_cp(n, r, &z[i*n]);
@@ -148,7 +148,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
             
             // c = Az
             fasp_blas_dcsr_mxv(A, &z[i*n], &c[i*n]);
-            
+
             /* Modified Gram_Schmidt orthogonalization */
             for ( j = 0; j < i; j++ ) {
                 gamma = fasp_blas_darray_dotprod(n, &c[j*n], &c[i*n]);
@@ -157,19 +157,19 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
             }
             // gamma = (c,c)
             gamma = fasp_blas_darray_dotprod(n, &c[i*n], &c[i*n]);
-            
+
             h[i][i] = gamma;
             
             // alpha = (c, r)
             alpha = fasp_blas_darray_dotprod(n, &c[i*n], r);
-            
+
             beta = alpha/gamma;
             
             alp[i] = beta;
             
             // r = r - beta*c
             fasp_blas_darray_axpy(n, -beta, &c[i*n], r);
-            
+
             // equivalent to ||r||_2
             absres = absres - alpha*alpha/gamma;
             
@@ -177,7 +177,7 @@ INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
                 absres = fasp_blas_darray_dotprod(n, r, r);
                 checktol = MAX(tol*tol*absres0, absres*1.0e-4);
             }
-            
+
             relres = absres / absres0;
             
             norms[iter] = relres;
@@ -259,8 +259,8 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
     const INT   n = b->row;
     
     // local variables
-    INT      iter = 0, rst = -1;
-    INT      i, j, k;
+    INT      iter = 0;
+    int      i, j, k, rst = -1; // must be signed! -zcs
     
     REAL     gamma, alpha, beta, checktol;
     REAL     absres0 = BIGREAL, absres = BIGREAL;
@@ -274,7 +274,7 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
     INT      Restart = MIN(restart, MaxIt);
     LONG     worksize = n+2*Restart*n+Restart+Restart;
     
-    // Output some info for debuging
+    // Output some info for debugging
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GCR solver (BLC) ...\n");
 
 #if DEBUG_MODE > 0
@@ -284,7 +284,7 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
     
     work = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     
-    /* check whether memory is enough for GMRES */
+    /* check whether memory is enough for GCR */
     while ( (work == NULL) && (Restart > 5) ) {
         Restart = Restart - 5;
         worksize = n+2*Restart*n+Restart+Restart;
@@ -292,13 +292,13 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
     }
     
     if ( work == NULL ) {
-        printf("### ERROR: No enough memory for GMRES! [%s:%d]\n",
+        printf("### ERROR: No enough memory for GCR! [%s:%d]\n",
                __FILE__, __LINE__ );
         fasp_chkerr(ERROR_ALLOC_MEM, __FUNCTION__);
     }
     
     if ( PrtLvl > PRINT_MIN && Restart < restart ) {
-        printf("### WARNING: GMRES restart number set to %d!\n", Restart);
+        printf("### WARNING: GCR restart number set to %d!\n", Restart);
     }
     
     r = work; z = r+n; c = z + Restart*n; alp = c + Restart*n; tmpx = alp + Restart;
@@ -328,21 +328,20 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
     
     while ( iter < MaxIt && sqrt(relres) > tol ) {
         
-        i = -1; rst ++;
-        
-        while ( i < Restart-1 && iter < MaxIt ) {
-            
-            i++; iter++;
-            
+        i = 0; rst ++;
+        while ( i < Restart && iter < MaxIt ) {
+
+            iter++;
+
             // z = B^-1r
             if ( pc == NULL )
                 fasp_darray_cp(n, r, &z[i*n]);
             else
                 pc->fct(r, &z[i*n], pc->data);
-            
+
             // c = Az
             fasp_blas_dblc_mxv(A, &z[i*n], &c[i*n]);
-            
+
             /* Modified Gram_Schmidt orthogonalization */
             for ( j = 0; j < i; j++ ) {
                 gamma = fasp_blas_darray_dotprod(n, &c[j*n], &c[i*n]);
@@ -351,19 +350,19 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
             }
             // gamma = (c,c)
             gamma = fasp_blas_darray_dotprod(n, &c[i*n], &c[i*n]);
-            
+
             h[i][i] = gamma;
             
             // alpha = (c, r)
             alpha = fasp_blas_darray_dotprod(n, &c[i*n], r);
-            
+
             beta = alpha/gamma;
             
             alp[i] = beta;
             
             // r = r - beta*c
             fasp_blas_darray_axpy(n, -beta, &c[i*n], r);
-            
+
             // equivalent to ||r||_2
             absres = absres - alpha*alpha/gamma;
             
@@ -371,7 +370,7 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
                 absres = fasp_blas_darray_dotprod(n, r, r);
                 checktol = MAX(tol*tol*absres0, absres*1.0e-4);
             }
-            
+
             relres = absres / absres0;
             
             norms[iter] = relres;
@@ -380,6 +379,8 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
                         sqrt(norms[iter]/norms[iter-1]));
             
             if (sqrt(relres) < tol)  break;
+
+            i++;
         }
         
         for ( k = i; k >=0; k-- ) {
@@ -388,10 +389,9 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
                 alp[j] -= h[k][j]*tmpx[k];
             }
         }
-        
+
         if (rst==0) dense_aAtxpby(n, i+1, z, 1.0, tmpx, 0.0, x->val);
         else dense_aAtxpby(n, i+1, z, 1.0, tmpx, 1.0, x->val);
-        
     }
     
     if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,sqrt(relres));
@@ -433,7 +433,7 @@ INT fasp_solver_dblc_pgcr (dBLCmat     *A,
  * \param beta  Real factor beta
  * \param y     Maximal number of iterations
  *
- * \author zheng Li, Chensong Zhang
+ * \author Zheng Li, Chensong Zhang
  * \date   12/23/2014
  *
  * \warning This is a special function. Move it to blas_smat.c if needed else where.

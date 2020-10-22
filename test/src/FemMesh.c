@@ -28,10 +28,11 @@
  */
 int mesh_init (Mesh *mesh, const char *filename)
 {
-    int num_node, dim_node, num_elem, dim_elem;
-    int i, j, status = FASP_SUCCESS;
+    INT num_node, dim_node, num_elem, dim_elem;
+    INT i, j;
+    int status = FASP_SUCCESS;
     
-    FILE *inputFile=fopen(filename, "r");
+    FILE *inputFile = fopen(filename, "r");
     if (inputFile==NULL) {
         printf("### ERROR: Cannot open %s!\n", filename);
         exit(ERROR_OPEN_FILE);
@@ -48,9 +49,9 @@ int mesh_init (Mesh *mesh, const char *filename)
     }
     
     // alloc mem we need,
-    mesh->node.val    = (double **)fasp_mem_calloc(num_node, sizeof(double*));
-    mesh->node.val[0] = (double *)fasp_mem_calloc(num_node*dim_node, sizeof(double));
-    double *tmp_node  = mesh->node.val[0];
+    mesh->node.val    = (REAL **)fasp_mem_calloc(num_node, sizeof(REAL*));
+    mesh->node.val[0] = (REAL *)fasp_mem_calloc(num_node*dim_node, sizeof(REAL));
+    REAL *tmp_node  = mesh->node.val[0];
     
     for (i=0;i<num_node;++i) {
         // re-point to the val
@@ -71,9 +72,9 @@ int mesh_init (Mesh *mesh, const char *filename)
     }
     
     // alloc mem we need,
-    mesh->elem.val    = (int **)fasp_mem_calloc(num_elem, sizeof(int*));
-    mesh->elem.val[0] = (int *)fasp_mem_calloc(num_elem*dim_elem, sizeof(int));
-    int *tmp_elem     = mesh->elem.val[0];
+    mesh->elem.val    = (INT **)fasp_mem_calloc(num_elem, sizeof(INT*));
+    mesh->elem.val[0] = (INT *)fasp_mem_calloc(num_elem*dim_elem, sizeof(INT));
+    INT *tmp_elem     = mesh->elem.val[0];
     
     for (i=0;i<num_elem;++i) {
         // re-point to the val
@@ -86,8 +87,8 @@ int mesh_init (Mesh *mesh, const char *filename)
     
     // get node boundary flag
     mesh->node_bd.row = num_node;
-    mesh->node_bd.val = (int *)fasp_mem_calloc(num_node, sizeof(int));
-    double p[DIM];
+    mesh->node_bd.val = (INT *)fasp_mem_calloc(num_node, sizeof(INT));
+    REAL p[DIM];
     for (i=0;i<num_node;++i) {
         for (j=0;j<dim_node;j++)
             p[j] = mesh->node.val[i][j];
@@ -113,8 +114,9 @@ int mesh_init (Mesh *mesh, const char *filename)
  */
 int mesh_init_pro (Mesh *mesh, const char *filename)
 {
-    int num_node, dim_node, num_elem, dim_elem;
-    int i, j, status = FASP_SUCCESS;
+    INT num_node, dim_node, num_elem, dim_elem;
+    INT i, j;
+    int status = FASP_SUCCESS;
     
     FILE *inputFile=fopen(filename, "r");
     if (inputFile==NULL) {
@@ -133,9 +135,9 @@ int mesh_init_pro (Mesh *mesh, const char *filename)
     }
     
     // alloc mem we need,
-    mesh->node.val    = (double **)fasp_mem_calloc(num_node, sizeof(double*));
-    mesh->node.val[0] = (double *)fasp_mem_calloc(num_node*dim_node, sizeof(double));
-    double *tmp_node  = mesh->node.val[0];
+    mesh->node.val    = (REAL **)fasp_mem_calloc(num_node, sizeof(REAL*));
+    mesh->node.val[0] = (REAL *)fasp_mem_calloc(num_node*dim_node, sizeof(REAL));
+    REAL *tmp_node  = mesh->node.val[0];
     
     for (i=0;i<num_node;++i) {
         // re-point to the val
@@ -156,9 +158,9 @@ int mesh_init_pro (Mesh *mesh, const char *filename)
     }
     
     // alloc mem we need,
-    mesh->elem.val    = (int **)fasp_mem_calloc(num_elem, sizeof(int*));
-    mesh->elem.val[0] = (int *)fasp_mem_calloc(num_elem*dim_elem, sizeof(int));
-    int *tmp_elem     = mesh->elem.val[0];
+    mesh->elem.val    = (INT **)fasp_mem_calloc(num_elem, sizeof(INT*));
+    mesh->elem.val[0] = (INT *)fasp_mem_calloc(num_elem*dim_elem, sizeof(INT));
+    INT *tmp_elem     = mesh->elem.val[0];
     
     for (i=0;i<num_elem;++i) {
         // re-point to the val
@@ -178,7 +180,7 @@ int mesh_init_pro (Mesh *mesh, const char *filename)
         exit(ERROR_WRONG_FILE);
     }
     
-    mesh->node_bd.val = (int *)fasp_mem_calloc(num_node, sizeof(int));
+    mesh->node_bd.val = (INT *)fasp_mem_calloc(num_node, sizeof(INT));
     for (i=0;i<num_node;++i) {
         status = fscanf(inputFile, "%d", &mesh->node_bd.val[i]);
     }
@@ -203,8 +205,9 @@ int mesh_init_pro (Mesh *mesh, const char *filename)
  */
 int mesh_aux_init (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
 {
-    int num_edge, dim_edge, num_elem2edge, dim_elem2edge;
-    int i, j, status = FASP_SUCCESS;
+    INT num_edge, dim_edge, num_elem2edge, dim_elem2edge;
+    INT i, j;
+    int status = FASP_SUCCESS;
     
     FILE *inputFile=fopen(filename, "r");
     if (inputFile==NULL) {
@@ -223,9 +226,9 @@ int mesh_aux_init (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
     }
     
     // alloc mem we need,
-    mesh_aux->edge.val    = (int **)fasp_mem_calloc(num_edge, sizeof(int *));
-    mesh_aux->edge.val[0] = (int *)fasp_mem_calloc(num_edge*dim_edge, sizeof(int));
-    int *tmp_edge         = mesh_aux->edge.val[0];
+    mesh_aux->edge.val    = (INT **)fasp_mem_calloc(num_edge, sizeof(INT *));
+    mesh_aux->edge.val[0] = (INT *)fasp_mem_calloc(num_edge*dim_edge, sizeof(INT));
+    INT *tmp_edge         = mesh_aux->edge.val[0];
     
     for (i=0;i<num_edge;++i) {
         // re-point to the val
@@ -247,9 +250,9 @@ int mesh_aux_init (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
     }
     
     // alloc mem we need,
-    mesh_aux->elem2edge.val    = (int **)fasp_mem_calloc(num_elem2edge, sizeof(int*));
-    mesh_aux->elem2edge.val[0] = (int *)fasp_mem_calloc(num_elem2edge*dim_elem2edge, sizeof(int));
-    int *tmp_elem              = mesh_aux->elem2edge.val[0];
+    mesh_aux->elem2edge.val    = (INT **)fasp_mem_calloc(num_elem2edge, sizeof(INT*));
+    mesh_aux->elem2edge.val[0] = (INT *)fasp_mem_calloc(num_elem2edge*dim_elem2edge, sizeof(INT));
+    INT *tmp_elem              = mesh_aux->elem2edge.val[0];
     
     for (i=0;i<num_elem2edge;++i) {
         // re-point to the val
@@ -262,11 +265,11 @@ int mesh_aux_init (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
     
     // get edge boundary flag
     mesh_aux->edge_bd.row = num_edge;
-    mesh_aux->edge_bd.val = (int *)fasp_mem_calloc(num_edge, sizeof(int));
-    double p[DIM];
+    mesh_aux->edge_bd.val = (INT *)fasp_mem_calloc(num_edge, sizeof(INT));
+    REAL p[DIM];
     for (j=0;j<DIM;++j) p[j] = 0.0;
     
-    int n, k;
+    INT n, k;
     for (i=0;i<num_edge;++i) {
         for (j=0;j<dim_edge;++j) {
             n = mesh_aux->edge.val[i][j];
@@ -298,8 +301,9 @@ int mesh_aux_init (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
  */
 int mesh_aux_init_pro (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
 {
-    int num_edge, dim_edge, num_elem2edge, dim_elem2edge;
-    int i, j, status = FASP_SUCCESS;
+    INT num_edge, dim_edge, num_elem2edge, dim_elem2edge;
+    INT i, j;
+    int status = FASP_SUCCESS;
     
     FILE *inputFile=fopen(filename, "r");
     if (inputFile==NULL) {
@@ -318,9 +322,9 @@ int mesh_aux_init_pro (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
     }
     
     // alloc mem we need,
-    mesh_aux->edge.val    = (int **)fasp_mem_calloc(num_edge, sizeof(int *));
-    mesh_aux->edge.val[0] = (int *)fasp_mem_calloc(num_edge*dim_edge, sizeof(int));
-    int *tmp_edge         = mesh_aux->edge.val[0];
+    mesh_aux->edge.val    = (INT **)fasp_mem_calloc(num_edge, sizeof(INT *));
+    mesh_aux->edge.val[0] = (INT *)fasp_mem_calloc(num_edge*dim_edge, sizeof(INT));
+    INT *tmp_edge         = mesh_aux->edge.val[0];
     
     for (i=0;i<num_edge;++i) {
         // re-point to the val
@@ -342,9 +346,9 @@ int mesh_aux_init_pro (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
     }
     
     // alloc mem we need,
-    mesh_aux->elem2edge.val    = (int **)fasp_mem_calloc(num_elem2edge, sizeof(int*));
-    mesh_aux->elem2edge.val[0] = (int *)fasp_mem_calloc(num_elem2edge*dim_elem2edge, sizeof(int));
-    int *tmp_elem              = mesh_aux->elem2edge.val[0];
+    mesh_aux->elem2edge.val    = (INT **)fasp_mem_calloc(num_elem2edge, sizeof(INT*));
+    mesh_aux->elem2edge.val[0] = (INT *)fasp_mem_calloc(num_elem2edge*dim_elem2edge, sizeof(INT));
+    INT *tmp_elem              = mesh_aux->elem2edge.val[0];
     
     for (i=0;i<num_elem2edge;++i) {
         // re-point to the val
@@ -358,7 +362,7 @@ int mesh_aux_init_pro (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
     // get edge boundary flag
     if ( fscanf(inputFile, "%d", &num_edge) > 0 ) {
         mesh_aux->edge_bd.row = num_edge;
-        mesh_aux->edge_bd.val = (int *)fasp_mem_calloc(num_edge, sizeof(int));
+        mesh_aux->edge_bd.val = (INT *)fasp_mem_calloc(num_edge, sizeof(INT));
     }
     else {
         printf("### ERROR: Invalid mesh file!\n");
@@ -388,28 +392,28 @@ int mesh_aux_init_pro (Mesh *mesh, Mesh_aux *mesh_aux, const char *filename)
  */
 int mesh_aux_build(Mesh *mesh, Mesh_aux *mesh_aux)
 {
-    int num_node = mesh->node.row;
-    int dim_node = mesh->node.col;
-    int num_elem = mesh->elem.row;
-    int dim_elem = mesh->elem.col;
+    INT num_node = mesh->node.row;
+    INT dim_node = mesh->node.col;
+    INT num_elem = mesh->elem.row;
+    INT dim_elem = mesh->elem.col;
     
-    int num_elem2edge = num_elem;
-    int dim_elem2edge = dim_elem;
+    INT num_elem2edge = num_elem;
+    INT dim_elem2edge = dim_elem;
     mesh_aux->elem2edge.row = num_elem2edge;
     mesh_aux->elem2edge.col = dim_elem2edge;
-    int num_edge = 3*num_node; // pre-define num_edge, actually num_edge < 3*num_node
-    int dim_edge = dim_node;
+    INT num_edge = 3*num_node; // pre-define num_edge, actually num_edge < 3*num_node
+    INT dim_edge = dim_node;
     mesh_aux->edge.col = dim_edge;
     
-    int i, j, n1, n2, n1t, n2t, count = 0, edge_c = 0;
-    double p[DIM];
-    mesh_aux->edge.val = (int **)fasp_mem_calloc(num_edge, sizeof(int*));
-    mesh_aux->edge.val[0] = (int *)fasp_mem_calloc(num_edge*dim_edge, sizeof(int));
-    int *tmp_edge = mesh_aux->edge.val[0];
-    mesh_aux->elem2edge.val = (int **)fasp_mem_calloc(num_elem2edge, sizeof(int*));
-    mesh_aux->elem2edge.val[0] = (int *)fasp_mem_calloc(num_elem2edge*dim_elem2edge, sizeof(int));
-    int *tmp_elem = mesh_aux->elem2edge.val[0];
-    mesh_aux->edge_bd.val = (int *)fasp_mem_calloc(num_edge, sizeof(int));
+    INT i, j, n1, n2, n1t, n2t, count = 0, edge_c = 0;
+    REAL p[DIM];
+    mesh_aux->edge.val = (INT **)fasp_mem_calloc(num_edge, sizeof(INT*));
+    mesh_aux->edge.val[0] = (INT *)fasp_mem_calloc(num_edge*dim_edge, sizeof(INT));
+    INT *tmp_edge = mesh_aux->edge.val[0];
+    mesh_aux->elem2edge.val = (INT **)fasp_mem_calloc(num_elem2edge, sizeof(INT*));
+    mesh_aux->elem2edge.val[0] = (INT *)fasp_mem_calloc(num_elem2edge*dim_elem2edge, sizeof(INT));
+    INT *tmp_elem = mesh_aux->elem2edge.val[0];
+    mesh_aux->edge_bd.val = (INT *)fasp_mem_calloc(num_edge, sizeof(INT));
     
     for (i=0;i<num_edge;++i) {
         mesh_aux->edge.val[i] = &tmp_edge[dim_edge*i];
@@ -419,11 +423,11 @@ int mesh_aux_build(Mesh *mesh, Mesh_aux *mesh_aux)
         mesh_aux->elem2edge.val[i] = &tmp_elem[dim_elem2edge*i];
     }
     
-    int *edge_aux = NULL;
+    INT *edge_aux = NULL;
     if (num_node < 1e3) { // Why having such a constraint? --Chensong
         // no reason, :-), just to avoid the shortage of memory
         // see edge_aux following --Feiteng
-        edge_aux = (int *)fasp_mem_calloc(num_node*num_node, sizeof(int));
+        edge_aux = (INT *)fasp_mem_calloc(num_node*num_node, sizeof(INT));
         for (i=0;i<num_elem;++i) {
             for (j=0;j<dim_elem;++j) {
                 n1t = mesh->elem.val[i][(j+1)%dim_elem];
@@ -461,11 +465,11 @@ int mesh_aux_build(Mesh *mesh, Mesh_aux *mesh_aux)
     }// end of if
     
     else { // if there is too many node
-        int adj_max = 10; // set a max number of adjacent node
-        int k = 0;
-        int *edge_map= (int *)fasp_mem_calloc(num_node*adj_max, sizeof(int));
-        int *adj_count = (int *)fasp_mem_calloc(num_node, sizeof(int));
-        edge_aux = (int *)fasp_mem_calloc(num_node*adj_max, sizeof(int));
+        INT adj_max = 10; // set a max number of adjacent node
+        INT k = 0;
+        INT *edge_map= (INT *)fasp_mem_calloc(num_node*adj_max, sizeof(INT));
+        INT *adj_count = (INT *)fasp_mem_calloc(num_node, sizeof(INT));
+        edge_aux = (INT *)fasp_mem_calloc(num_node*adj_max, sizeof(INT));
         for (i=0;i<num_elem;++i) {
             for (j=0;j<dim_elem;++j) {
                 n1t = mesh->elem.val[i][(j+1)%dim_elem];
@@ -518,9 +522,9 @@ int mesh_aux_build(Mesh *mesh, Mesh_aux *mesh_aux)
     num_edge = count;
     mesh_aux->edge.row = num_edge;
     mesh_aux->edge_bd.row = num_edge;
-    mesh_aux->edge.val[0] = (int *)fasp_mem_realloc(mesh_aux->edge.val[0], sizeof(int)*num_edge*dim_edge);
-    mesh_aux->edge.val = (int **)fasp_mem_realloc(mesh_aux->edge.val, sizeof(int*)*num_edge);
-    mesh_aux->edge_bd.val = (int *)fasp_mem_realloc(mesh_aux->edge_bd.val, sizeof(int)*num_edge);
+    mesh_aux->edge.val[0] = (INT *)fasp_mem_realloc(mesh_aux->edge.val[0], sizeof(INT)*num_edge*dim_edge);
+    mesh_aux->edge.val = (INT **)fasp_mem_realloc(mesh_aux->edge.val, sizeof(INT*)*num_edge);
+    mesh_aux->edge_bd.val = (INT *)fasp_mem_realloc(mesh_aux->edge_bd.val, sizeof(INT)*num_edge);
     tmp_edge = mesh_aux->edge.val[0];
     for (i=0;i<num_edge;++i) {
         mesh_aux->edge.val[i] = &tmp_edge[i*dim_edge];
@@ -546,11 +550,11 @@ int mesh_aux_build(Mesh *mesh, Mesh_aux *mesh_aux)
  */
 int mesh_write (Mesh *mesh, const char *filename)
 {
-    int num_node=mesh->node.row;
-    int dim_node=mesh->node.col;
-    int num_elem=mesh->elem.row;
-    int dim_elem=mesh->elem.col;
-    int i,j;
+    INT num_node=mesh->node.row;
+    INT dim_node=mesh->node.col;
+    INT num_elem=mesh->elem.row;
+    INT dim_elem=mesh->elem.col;
+    INT i,j;
     
     FILE *outputFile=fopen(filename, "w");
     if (outputFile==NULL) {
@@ -596,11 +600,11 @@ int mesh_write (Mesh *mesh, const char *filename)
  */
 int mesh_write_pro (Mesh *mesh, const char *filename)
 {
-    int num_node=mesh->node.row;
-    int dim_node=mesh->node.col;
-    int num_elem=mesh->elem.row;
-    int dim_elem=mesh->elem.col;
-    int i,j;
+    INT num_node=mesh->node.row;
+    INT dim_node=mesh->node.col;
+    INT num_elem=mesh->elem.row;
+    INT dim_elem=mesh->elem.col;
+    INT i,j;
     
     FILE *outputFile=fopen(filename, "w");
     if (outputFile==NULL) {
@@ -651,11 +655,11 @@ int mesh_write_pro (Mesh *mesh, const char *filename)
  */
 int mesh_aux_write (Mesh_aux *mesh_aux, const char *filename)
 {
-    int num_edge=mesh_aux->edge.row;
-    int dim_edge=mesh_aux->edge.col;
-    int num_elem2edge=mesh_aux->elem2edge.row;
-    int dim_elem2edge=mesh_aux->elem2edge.col;
-    int i,j;
+    INT num_edge=mesh_aux->edge.row;
+    INT dim_edge=mesh_aux->edge.col;
+    INT num_elem2edge=mesh_aux->elem2edge.row;
+    INT dim_elem2edge=mesh_aux->elem2edge.col;
+    INT i,j;
     
     FILE *outputFile=fopen(filename, "w");
     if (outputFile==NULL) {
@@ -702,11 +706,11 @@ int mesh_aux_write (Mesh_aux *mesh_aux, const char *filename)
  */
 int mesh_aux_write_pro (Mesh_aux *mesh_aux, const char *filename)
 {
-    int num_edge=mesh_aux->edge.row;
-    int dim_edge=mesh_aux->edge.col;
-    int num_elem2edge=mesh_aux->elem2edge.row;
-    int dim_elem2edge=mesh_aux->elem2edge.col;
-    int i,j;
+    INT num_edge=mesh_aux->edge.row;
+    INT dim_edge=mesh_aux->edge.col;
+    INT num_elem2edge=mesh_aux->elem2edge.row;
+    INT dim_elem2edge=mesh_aux->elem2edge.col;
+    INT i,j;
     
     FILE *outputFile=fopen(filename, "w");
     if (outputFile==NULL) {
@@ -823,19 +827,19 @@ int mesh_aux_free (Mesh_aux *mesh_aux)
  */
 int mesh_refine(Mesh *mesh, Mesh_aux *mesh_aux)
 {
-    int num_node = mesh->node.row;
-    int dim_node = mesh->node.col;
-    int num_elem = mesh->elem.row;
-    int dim_elem = mesh->elem.col;
-    int num_edge = mesh_aux->edge.row;
-    int dim_edge = mesh_aux->edge.col;
+    INT num_node = mesh->node.row;
+    INT dim_node = mesh->node.col;
+    INT num_elem = mesh->elem.row;
+    INT dim_elem = mesh->elem.col;
+    INT num_edge = mesh_aux->edge.row;
+    INT dim_edge = mesh_aux->edge.col;
     
-    int num_newnode = num_node + num_edge;
-    int num_newedge = 3*num_elem + 2*num_edge;
-    int num_newelem = 4*num_elem;
+    INT num_newnode = num_node + num_edge;
+    INT num_newedge = 3*num_elem + 2*num_edge;
+    INT num_newelem = 4*num_elem;
     
-    int i, j, k;
-    int n[3], e[6] = {0, 0, 0, 0, 0, 0};
+    INT i, j, k;
+    INT n[3], e[6] = {0, 0, 0, 0, 0, 0};
     
     mesh->node.row = num_newnode;
     mesh->elem.row = num_newelem;
@@ -845,20 +849,20 @@ int mesh_refine(Mesh *mesh, Mesh_aux *mesh_aux)
     mesh_aux->edge_bd.row = num_newedge;
     
     // realloc node, elem, edge, elem2edge, node_bd, edge_bd
-    mesh->node.val[0] = (double *)fasp_mem_realloc(mesh->node.val[0], sizeof(double)*num_newnode*dim_node);
-    mesh->node.val = (double **)fasp_mem_realloc(mesh->node.val, sizeof(double *)*num_newnode);
-    double *tmp_node = mesh->node.val[0];
-    mesh->elem.val[0] = (int *)fasp_mem_realloc(mesh->elem.val[0], sizeof(int)*num_newelem*dim_elem);
-    mesh->elem.val = (int **)fasp_mem_realloc(mesh->elem.val, sizeof(int *)*num_newelem);
-    int *tmp_elem = mesh->elem.val[0];
-    mesh_aux->edge.val[0] = (int *)fasp_mem_realloc(mesh_aux->edge.val[0], sizeof(int)*num_newedge*dim_edge);
-    mesh_aux->edge.val = (int **)fasp_mem_realloc(mesh_aux->edge.val, sizeof(int *)*num_newedge);
-    int *tmp_edge = mesh_aux->edge.val[0];
-    mesh_aux->elem2edge.val[0] = (int *)fasp_mem_realloc(mesh_aux->elem2edge.val[0], sizeof(int)*num_newelem*dim_elem);
-    mesh_aux->elem2edge.val = (int **)fasp_mem_realloc(mesh_aux->elem2edge.val, sizeof(int *)*num_newelem);
-    int *tmp_elem2edge = mesh_aux->elem2edge.val[0];
-    mesh->node_bd.val = (int *)fasp_mem_realloc(mesh->node_bd.val, sizeof(int)*num_newnode);
-    mesh_aux->edge_bd.val = (int *)fasp_mem_realloc(mesh_aux->edge_bd.val, sizeof(int)*num_newedge);
+    mesh->node.val[0] = (REAL *)fasp_mem_realloc(mesh->node.val[0], sizeof(REAL)*num_newnode*dim_node);
+    mesh->node.val = (REAL **)fasp_mem_realloc(mesh->node.val, sizeof(REAL *)*num_newnode);
+    REAL *tmp_node = mesh->node.val[0];
+    mesh->elem.val[0] = (INT *)fasp_mem_realloc(mesh->elem.val[0], sizeof(INT)*num_newelem*dim_elem);
+    mesh->elem.val = (INT **)fasp_mem_realloc(mesh->elem.val, sizeof(INT *)*num_newelem);
+    INT *tmp_elem = mesh->elem.val[0];
+    mesh_aux->edge.val[0] = (INT *)fasp_mem_realloc(mesh_aux->edge.val[0], sizeof(INT)*num_newedge*dim_edge);
+    mesh_aux->edge.val = (INT **)fasp_mem_realloc(mesh_aux->edge.val, sizeof(INT *)*num_newedge);
+    INT *tmp_edge = mesh_aux->edge.val[0];
+    mesh_aux->elem2edge.val[0] = (INT *)fasp_mem_realloc(mesh_aux->elem2edge.val[0], sizeof(INT)*num_newelem*dim_elem);
+    mesh_aux->elem2edge.val = (INT **)fasp_mem_realloc(mesh_aux->elem2edge.val, sizeof(INT *)*num_newelem);
+    INT *tmp_elem2edge = mesh_aux->elem2edge.val[0];
+    mesh->node_bd.val = (INT *)fasp_mem_realloc(mesh->node_bd.val, sizeof(INT)*num_newnode);
+    mesh_aux->edge_bd.val = (INT *)fasp_mem_realloc(mesh_aux->edge_bd.val, sizeof(INT)*num_newedge);
     
     for (i=0;i<num_newnode;++i) {
         mesh->node.val[i] = &tmp_node[i*dim_node];

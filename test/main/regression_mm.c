@@ -16,20 +16,20 @@
 #define num_prob      10                /**< how many problems to be used */
 #define num_solvers    8                /**< how many methods  to be used */
 
-unsigned INT  ntest[num_solvers];       /**< number of tests without preconditioner */
-unsigned INT  nfail[num_solvers];       /**< number of failed tests without preconditioner */
-unsigned INT  ntest_diag[num_solvers];  /**< number of tests using diag preconditioner */
-unsigned INT  nfail_diag[num_solvers];  /**< number of failed tests for diag preconditioner */
-unsigned INT  ntest_iluk[num_solvers];  /**< number of tests using ILUk preconditioner */
-unsigned INT  nfail_iluk[num_solvers];  /**< number of failed tests for ILUk preconditioner */
-unsigned INT  ntest_ilut[num_solvers];  /**< number of tests using ILUt preconditioner */
-unsigned INT  nfail_ilut[num_solvers];  /**< number of failed tests for ILUt preconditioner */
-unsigned INT  ntest_ilutp[num_solvers]; /**< number of tests using ILUtp preconditioner */
-unsigned INT  nfail_ilutp[num_solvers]; /**< number of failed tests for ILUtp preconditioner */
-unsigned INT  ntest_amg[num_solvers];   /**< number of tests using AMG preconditioner */
-unsigned INT  nfail_amg[num_solvers];   /**< number of failed tests for AMG preconditioner */
-unsigned INT  ntest_amg_solver;         /**< number of tests using AMG solver */
-unsigned INT  nfail_amg_solver;         /**< number of failed tests for AMG solver */
+unsigned int  ntest[num_solvers];       /**< number of tests without preconditioner */
+unsigned int  nfail[num_solvers];       /**< number of failed tests without preconditioner */
+unsigned int  ntest_diag[num_solvers];  /**< number of tests using diag preconditioner */
+unsigned int  nfail_diag[num_solvers];  /**< number of failed tests for diag preconditioner */
+unsigned int  ntest_iluk[num_solvers];  /**< number of tests using ILUk preconditioner */
+unsigned int  nfail_iluk[num_solvers];  /**< number of failed tests for ILUk preconditioner */
+unsigned int  ntest_ilut[num_solvers];  /**< number of tests using ILUt preconditioner */
+unsigned int  nfail_ilut[num_solvers];  /**< number of failed tests for ILUt preconditioner */
+unsigned int  ntest_ilutp[num_solvers]; /**< number of tests using ILUtp preconditioner */
+unsigned int  nfail_ilutp[num_solvers]; /**< number of failed tests for ILUtp preconditioner */
+unsigned int  ntest_amg[num_solvers];   /**< number of tests using AMG preconditioner */
+unsigned int  nfail_amg[num_solvers];   /**< number of failed tests for AMG preconditioner */
+unsigned int  ntest_amg_solver;         /**< number of tests using AMG solver */
+unsigned int  nfail_amg_solver;         /**< number of failed tests for AMG solver */
 
 /**
  * \fn static void check_solu(dvector *x, dvector *sol, double tol)
@@ -78,8 +78,8 @@ int main (int argc, const char * argv[])
     AMG_param  amgparam;     // input parameters for AMG
     dCSRmat    A;            // coefficient matrix
     dvector    b, x, sol;    // rhs, numerical sol, exact sol
-    INT        indp;         // index for test problems
-    INT        indm;         // index for test methods
+    int        indp;         // index for test problems
+    int        indm;         // index for test methods
     
     time_t     lt  = time(NULL);
     

@@ -116,7 +116,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
     relres = absres/normb;
     
     // output iteration information if needed
-    fasp_itinfo(PrtLvl,StopType,iter+1,relres,absres,factor);
+    fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
     
     // update relative residual here
     absres0 = absres;
@@ -145,7 +145,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
         
         // alpha = (p'r)/(p'Ap)
         alpha = fasp_blas_darray_dotprod(m,r,p+iter*m)
-        / fasp_blas_dcsr_vmv (A, p+iter*m, p+iter*m);
+              / fasp_blas_dcsr_vmv (A, p+iter*m, p+iter*m);
         
         // u = u + alpha *p
         fasp_blas_darray_axpy(m, alpha , p+iter*m, u->val);
@@ -160,7 +160,7 @@ INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
         relres = absres/normb;
         
         // output iteration information if needed
-        fasp_itinfo(PrtLvl,StopType,iter+1,relres,absres,factor);
+        fasp_itinfo(PrtLvl,StopType,iter,relres,absres,factor);
         
         if (relres < tol) break;
         

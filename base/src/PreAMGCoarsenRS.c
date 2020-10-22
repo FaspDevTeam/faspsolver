@@ -442,10 +442,10 @@ static void rem_positive_ff (dCSRmat   *A,
  *
  * \note   Coarsening Phase ONE: find coarse level points
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012: add OMP support
- * Modified by Chensong Zhang on 07/06/2012: fix a data type bug
- * Modified by Chensong Zhang on 05/11/2013: restructure the code
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 12/25/2013: check C1 Criterion
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012: add OMP support.
+ * Modified by Chensong Zhang on 07/06/2012: fix a data type bug.
+ * Modified by Chensong Zhang on 05/11/2013: restructure the code.
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 12/25/2013: check C1 criterion.
  */
 static INT cfsplitting_cls (dCSRmat   *A,
                             iCSRmat   *S,

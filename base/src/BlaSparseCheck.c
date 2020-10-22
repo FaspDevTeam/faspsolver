@@ -60,11 +60,11 @@ INT fasp_check_diagpos (const dCSRmat *A)
 /**
  * \fn SHORT fasp_check_diagzero (const dCSRmat *A)
  *
- * \brief Check wether a CSR sparse matrix has diagonal entries that are very close to zero.
+ * \brief Check if a CSR sparse matrix has diagonal entries that are very close to zero.
  *
- * \param A pointr to the dCSRmat matrix
+ * \param A pointer to the dCSRmat matrix
  * 
- * \return FASP_SUCCESS if no diagonal entry is clase to zero, else ERROR
+ * \return FASP_SUCCESS if no diagonal entry is close to zero, else ERROR
  *
  * \author Shuo Zhang
  * \date   03/29/2009
@@ -298,7 +298,7 @@ void fasp_check_dCSRmat (const dCSRmat *A)
     }
     
     for ( i = 0; i < A->nnz; ++i ) {
-        if ( ( A->JA[i] < 0 ) || ( A->JA[i]-A->col >= 0 ) ) {
+        if ( ( A->JA[i] < 0 ) || ( A->JA[i] >= A->col ) ) {
             printf("### ERROR: Wrong CSR matrix format!\n");
             fasp_chkerr(ERROR_DATA_STRUCTURE, __FUNCTION__);
         }

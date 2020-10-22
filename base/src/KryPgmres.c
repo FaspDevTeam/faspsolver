@@ -52,7 +52,7 @@
  * \param tol          Tolerance for stopping
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
- * \param StopType    Stopping criteria type
+ * \param StopType     Stopping criteria type
  * \param PrtLvl       How much information to print out
  *
  * \return             Iteration number if converges; ERROR otherwise.
@@ -79,8 +79,8 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
     
     // local variables
     INT      iter = 0;
-    INT      i, j, k;
-    
+    int      i, j, k; // must be signed! -zcs
+
     REAL     r_norm, r_normb, gamma, t;
     REAL     absres0 = BIGREAL, absres = BIGREAL;
     REAL     relres  = BIGREAL, normu  = BIGREAL;
@@ -97,8 +97,8 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
     
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
-    
-    // Output some info for debuging
+
+    // Output some info for debugging
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GMRes solver (CSR) ...\n");
 
 #if DEBUG_MODE > 0
@@ -125,7 +125,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
     
     p     = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
     hh    = (REAL **)fasp_mem_calloc(Restart1, sizeof(REAL *));
-    norms = (REAL *) fasp_mem_calloc(MaxIt+1, sizeof(REAL));
+    norms = (REAL *) fasp_mem_calloc(MaxIt+1,  sizeof(REAL));
     
     r = work; w = r + n; rs = w + n; c  = rs + Restart1; s  = c + Restart;
     
@@ -232,12 +232,12 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
             // output iteration information if needed
             fasp_itinfo(PrtLvl, StopType, iter, relres, absres,
                         norms[iter]/norms[iter-1]);
-            
+
             // exit restart cycle if reaches tolerance
             if ( relres < tol && iter >= MIN_ITER ) break;
             
         } /* end of restart cycle */
-        
+
         /* compute solution, first solve upper triangular system */
         rs[i-1] = rs[i-1] / hh[i-1][i-1];
         for ( k = i-2; k >= 0; k-- ) {
@@ -246,13 +246,13 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
             t += rs[k];
             rs[k] = t / hh[k][k];
         }
-        
+
         fasp_darray_cp(n, p[i-1], w);
-        
+
         fasp_blas_darray_ax(n, rs[i-1], w);
-        
+
         for ( j = i-2; j >= 0; j-- ) fasp_blas_darray_axpy(n, rs[j], p[j], w);
-        
+
         /* apply preconditioner */
         if ( pc == NULL )
             fasp_darray_cp(n, w, r);
@@ -260,7 +260,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
             pc->fct(w, r, pc->data);
         
         fasp_blas_darray_axpy(n, 1.0, r, x->val);
-        
+
         // Check: prevent false convergence
         if ( relres < tol && iter >= MIN_ITER ) {
             
@@ -322,10 +322,9 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
         }
         
     } /* end of main while loop */
-    
 FINISHED:
     if ( PrtLvl > PRINT_NONE ) ITS_FINAL(iter,MaxIt,relres);
-    
+
     /*-------------------------------------------
      * Clean up workspace
      *------------------------------------------*/
@@ -383,7 +382,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
 
     // local variables
     INT      iter = 0;
-    INT      i, j, k;
+    int      i, j, k; // must be signed! -zcs
 
     REAL     r_norm, r_normb, gamma, t;
     REAL     absres0 = BIGREAL, absres = BIGREAL;
@@ -402,7 +401,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
 
-    // Output some info for debuging
+    // Output some info for debugging
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GMRes solver (BSR) ...\n");
 
 #if DEBUG_MODE > 0
@@ -688,7 +687,7 @@ INT fasp_solver_dblc_pgmres (dBLCmat     *A,
     
     // local variables
     INT      iter = 0;
-    INT      i, j, k;
+    int      i, j, k; // must be signed! -zcs
     
     REAL     r_norm, r_normb, gamma, t;
     REAL     absres0 = BIGREAL, absres = BIGREAL;
@@ -707,7 +706,7 @@ INT fasp_solver_dblc_pgmres (dBLCmat     *A,
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     
-    // Output some info for debuging
+    // Output some info for debugging
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GMRes solver (BLC) ...\n");
 
 #if DEBUG_MODE > 0
@@ -992,7 +991,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
     
     // local variables
     INT      iter = 0;
-    INT      i, j, k;
+    int      i, j, k; // must be signed! -zcs
     
     REAL     r_norm, r_normb, gamma, t;
     REAL     absres0 = BIGREAL, absres = BIGREAL;
@@ -1011,7 +1010,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
     /* allocate memory and setup temp work space */
     work  = (REAL *) fasp_mem_calloc(worksize, sizeof(REAL));
     
-    // Output some info for debuging
+    // Output some info for debugging
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GMRes solver (STR) ...\n");
 
 #if DEBUG_MODE > 0
@@ -1296,7 +1295,7 @@ INT fasp_solver_pgmres (mxv_matfree  *mf,
     
     // local variables
     INT      iter = 0;
-    INT      i, j, k;
+    int      i, j, k; // must be signed! -zcs
     
     REAL     epsmac = SMALLREAL;
     REAL     r_norm, b_norm, den_norm;
@@ -1312,7 +1311,7 @@ INT fasp_solver_pgmres (mxv_matfree  *mf,
     INT  Restart1 = Restart + 1;
     LONG worksize = (Restart+4)*(Restart+n)+1-n;
     
-    // Output some info for debuging
+    // Output some info for debugging
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling GMRes solver (MatFree) ...\n");
 
 #if DEBUG_MODE > 0

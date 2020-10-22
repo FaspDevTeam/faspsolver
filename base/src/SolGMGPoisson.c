@@ -449,9 +449,10 @@ void fasp_poisson_fgmg1d (REAL         *u,
     const REAL  atol = 1.0E-15;
     REAL        *u0, *r0, *b0;
     REAL        norm_r0, norm_r;
-    int         i, *level;
+    INT         *level;
     REAL        AMG_start = 0, AMG_end;
-    
+    int         i;
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: nx=%d, maxlevel=%d\n", nx, maxlevel);
@@ -543,7 +544,8 @@ void fasp_poisson_fgmg2d (REAL         *u,
     const REAL atol = 1.0E-15;
     REAL       *u0, *r0, *b0;
     REAL       norm_r0, norm_r;
-    INT        i, k, *nxk, *nyk, *level;
+    INT        *nxk, *nyk, *level;
+    int        i, k;
     REAL       AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
@@ -651,7 +653,8 @@ void fasp_poisson_fgmg3d (REAL         *u,
     const REAL  atol = 1.0E-15;
     REAL        *u0, *r0, *b0;
     REAL        norm_r0, norm_r;
-    int         i, k, *nxk, *nyk, *nzk, *level;
+    INT         *nxk, *nyk, *nzk, *level;
+    int         i, k;
     REAL        AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
@@ -760,7 +763,8 @@ INT fasp_poisson_gmgcg1d (REAL         *u,
     
     REAL       *u0, *r0, *b0;
     REAL       norm_r0;
-    int        i, *level, iter = 0;
+    INT        *level;
+    int        i, iter = 0;
     REAL       AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
@@ -855,7 +859,8 @@ INT fasp_poisson_gmgcg2d (REAL         *u,
     
     REAL       *u0,*r0,*b0;
     REAL       norm_r0;
-    int        i, k, *nxk, *nyk, *level, iter = 0;
+    INT        *nxk, *nyk, *level;
+    int        i, k, iter = 0;
     REAL       AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
@@ -965,7 +970,8 @@ INT fasp_poisson_gmgcg3d (REAL         *u,
     
     REAL       *u0,*r0,*b0;
     REAL       norm_r0;
-    int        i, k, *nxk, *nyk, *nzk, *level, iter = 0;
+    INT        *nxk, *nyk, *nzk, *level;
+    int        i, k, iter = 0;
     REAL       AMG_start = 0, AMG_end;
     
 #if DEBUG_MODE > 0
@@ -985,7 +991,7 @@ INT fasp_poisson_gmgcg3d (REAL         *u,
     nzk = (INT *)malloc(maxlevel*sizeof(INT));
     
     nxk[0] = nx+1; nyk[0] = ny+1; nzk[0] = nz+1;
-    for(k=1;k<maxlevel;k++){
+    for (k = 1; k < maxlevel; k++ ) {
         nxk[k] = (int) (nxk[k-1]+1)/2;
         nyk[k] = (int) (nyk[k-1]+1)/2;
         nzk[k] = (int) (nyk[k-1]+1)/2;

@@ -40,16 +40,16 @@ extern "C" {
 /*--      Global Variables       --*/
 /*---------------------------------*/
 
-unsigned INT total_alloc_mem   = 0;        //! Total allocated memory amount
-unsigned INT total_alloc_count = 0;        //! Total number of allocations
-const    INT Million           = 1048576;  //! 1M = 1024*1024
+unsigned long total_alloc_mem   = 0;        //! Total allocated memory amount
+unsigned long total_alloc_count = 0;        //! Total number of allocations
+const    int  Million           = 1048576;  //! 1M = 1024*1024
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn void * fasp_mem_calloc (const LONGLONG size, const INT type)
+ * \fn void * fasp_mem_calloc (const LONGLONG size, const int type)
  *
  * \brief Allocate, initiate, and check memory
  *
@@ -61,19 +61,18 @@ const    INT Million           = 1048576;  //! 1M = 1024*1024
  * \author Chensong Zhang
  * \date   2010/08/12
  *
- * Modified by Chensong Zhang on 07/30/2013: print error if failed
+ * Modified by Chensong Zhang on 07/30/2013: print warnings if failed
  */
-void * fasp_mem_calloc (const LONGLONG  size,
-                        const INT       type)
+void * fasp_mem_calloc (const unsigned int  size,
+                        const unsigned int  type)
 {
-    const LONGLONG tsize = size*type;
-    
+    const unsigned long tsize = size*type;
     void * mem = NULL;
     
 #if DEBUG_MODE > 1
     printf("### DEBUG: Trying to allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
 #endif
-    
+
     if ( tsize > 0 ) {
         
 #if DLMALLOC
@@ -89,9 +88,10 @@ void * fasp_mem_calloc (const LONGLONG  size,
         total_alloc_count++;
 #endif
     }
-    
+
     if ( mem == NULL ) {
-        printf("### WARNING: Cannot allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
+        printf("### WARNING: Trying to allocate %dB RAM...\n", tsize);
+        printf("### WARNING: Cannot allocate %.4fMB RAM!\n", (REAL)tsize/Million);
     }
     
     return mem;
@@ -134,6 +134,7 @@ void * fasp_mem_realloc (void           *oldmem,
     }
     
     if ( mem == NULL ) {
+        printf("### WARNING: Trying to allocate %ldB RAM!\n", tsize);
         printf("### WARNING: Cannot allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
     }
     
@@ -195,7 +196,7 @@ void fasp_mem_usage ( void )
  *
  * \brief Check wether a ILU_data has enough work space
  *
- * \param iludata    Pointer to be cheked
+ * \param iludata    Pointer to be checked
  *
  * \return           FASP_SUCCESS if success, else ERROR (negative value)
  *

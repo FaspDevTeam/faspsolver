@@ -86,7 +86,7 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat      *A,
     
     // local variables
     INT    iter            = 0;
-    INT    i, j, k;
+    int    i, j, k; // must be signed! -zcs
     
     REAL   r_norm, r_normb, gamma, t;
     REAL   absres0 = BIGREAL, absres = BIGREAL;
@@ -98,8 +98,8 @@ INT fasp_solver_dcsr_pvgmres (dCSRmat      *A,
     INT    restart_max  = restart; // upper bound for restart in each restart cycle
     INT    restart_min  = 3;       // lower bound for restart in each restart cycle
     
-    unsigned INT  Restart  = restart; // real restart in some fixed restarted cycle
-    unsigned INT  Restart1 = Restart + 1;
+    INT  Restart  = restart;       // real restart in some fixed restarted cycle
+    INT  Restart1 = Restart + 1;
     unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
@@ -433,7 +433,7 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat      *A,
 
     // local variables
     INT    iter            = 0;
-    INT    i, j, k;
+    int    i, j, k; // must be signed! -zcs
 
     REAL   r_norm, r_normb, gamma, t;
     REAL   absres0 = BIGREAL, absres = BIGREAL;
@@ -445,8 +445,8 @@ INT fasp_solver_dbsr_pvgmres (dBSRmat      *A,
     INT    restart_max  = restart; // upper bound for restart in each restart cycle
     INT    restart_min  = 3;       // lower bound for restart in each restart cycle (should be small)
 
-    unsigned INT  Restart  = restart; // real restart in some fixed restarted cycle
-    unsigned INT  Restart1 = Restart + 1;
+    INT  Restart  = restart;       // real restart in some fixed restarted cycle
+    INT  Restart1 = Restart + 1;
     unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n;
 
     // allocate temp memory (need about (restart+4)*n REAL numbers)
@@ -777,7 +777,7 @@ INT fasp_solver_dblc_pvgmres (dBLCmat     *A,
     
     // local variables
     INT    iter            = 0;
-    INT    i, j, k;
+    int    i, j, k; // must be signed! -zcs
     
     REAL   r_norm, r_normb, gamma, t;
     REAL   absres0 = BIGREAL, absres = BIGREAL;
@@ -789,8 +789,8 @@ INT fasp_solver_dblc_pvgmres (dBLCmat     *A,
     INT    restart_max  = restart; // upper bound for restart in each restart cycle
     INT    restart_min  = 3;       // lower bound for restart in each restart cycle (should be small)
     
-    unsigned INT  Restart  = restart; // real restart in some fixed restarted cycle
-    unsigned INT  Restart1 = Restart + 1;
+    INT  Restart  = restart;       // real restart in some fixed restarted cycle
+    INT  Restart1 = Restart + 1;
     unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
@@ -1124,7 +1124,7 @@ INT fasp_solver_dstr_pvgmres (dSTRmat      *A,
     
     // local variables
     INT    iter            = 0;
-    INT    i, j, k;
+    int    i, j, k; // must be signed! -zcs
     
     REAL   r_norm, r_normb, gamma, t;
     REAL   absres0 = BIGREAL, absres = BIGREAL;
@@ -1136,8 +1136,8 @@ INT fasp_solver_dstr_pvgmres (dSTRmat      *A,
     INT    restart_max  = restart; // upper bound for restart in each restart cycle
     INT    restart_min  = 3;       // lower bound for restart in each restart cycle (should be small)
     
-    unsigned INT  Restart  = restart; // real restart in some fixed restarted cycle
-    unsigned INT  Restart1 = Restart + 1;
+    INT  Restart  = restart;       // real restart in some fixed restarted cycle
+    INT  Restart1 = Restart + 1;
     unsigned LONG worksize = (Restart+4)*(Restart+n)+1-n;
     
     // allocate temp memory (need about (restart+4)*n REAL numbers)
@@ -1470,7 +1470,7 @@ INT fasp_solver_pvgmres (mxv_matfree  *mf,
     
     // local variables
     INT    iter                 = 0;
-    INT    i,j,k;
+    int    i, j, k; // must be signed! -zcs
     
     REAL   epsmac               = SMALLREAL;
     REAL   r_norm, b_norm, den_norm;
@@ -1487,8 +1487,8 @@ INT fasp_solver_pvgmres (mxv_matfree  *mf,
     INT    restart_max  = restart; // upper bound for restart in each restart cycle
     INT    restart_min  = 3;       // lower bound for restart in each restart cycle
     
-    unsigned INT  Restart  = restart; // real restart in some fixed restarted cycle
-    unsigned INT  Restart1 = Restart + 1;
+    INT  Restart  = restart;       // real restart in some fixed restarted cycle
+    INT  Restart1 = Restart + 1;
     unsigned LONG worksize = (restart+4)*(restart+n)+1-n;
     
     // Output some info for debuging

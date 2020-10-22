@@ -13,8 +13,8 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-unsigned INT  ntest;    /**< number of tests all together */
-unsigned INT  nfail;    /**< number of failed tests */
+unsigned int  ntest;    /**< number of tests all together */
+unsigned int  nfail;    /**< number of failed tests */
 
 /**
  * \fn static void check_solu(dvector *x, dvector *sol, double tol)

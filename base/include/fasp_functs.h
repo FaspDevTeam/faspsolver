@@ -55,20 +55,20 @@ void fasp_aux_givens (const REAL      beta,
 
 void fasp_dcsr_subplot (const dCSRmat  *A,
                         const char     *filename,
-                        INT             size);
+                        int             size);
 
 void fasp_dcsr_plot (const dCSRmat  *A,
                      const char     *fname);
 
 void fasp_dbsr_subplot (const dBSRmat  *A,
                         const char     *filename,
-                        INT             size);
+                        int             size);
 
 void fasp_dbsr_plot (const dBSRmat  *A,
                      const char     *fname);
 
 void fasp_grid2d_plot (pgrid2d  pg,
-                       INT      level);
+                       int      level);
 
 
 /*-------- In file: AuxInput.c --------*/
@@ -81,8 +81,8 @@ void fasp_param_input (const char   *fname,
 
 /*-------- In file: AuxMemory.c --------*/
 
-void * fasp_mem_calloc (const LONGLONG  size,
-                        const INT       type);
+void * fasp_mem_calloc (const unsigned int  size,
+                        const unsigned int  type);
 
 void * fasp_mem_realloc (void           *oldmem,
                          const LONGLONG  tsize);
@@ -2383,16 +2383,16 @@ void fasp_solver_mgrecur (AMG_data   *mgl,
 
 void fasp_solver_amli (AMG_data   *mgl,
                        AMG_param  *param,
-                       INT         level);
+                       INT         l);
 
 void fasp_solver_namli (AMG_data   *mgl,
                         AMG_param  *param,
-                        INT         level,
+                        INT         l,
                         INT         num_levels);
 
 void fasp_solver_namli_bsr (AMG_data_bsr  *mgl,
                             AMG_param     *param,
-                            INT            level,
+                            INT            l,
                             INT            num_levels);
 
 void fasp_amg_amli_coef (const REAL  lambda_max,

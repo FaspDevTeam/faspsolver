@@ -10,10 +10,10 @@
 #include "assemble.h"
 #include "fasp.h"
 
-extern double f(double *p);
-extern double u(double *p);
+extern REAL f(REAL *p);
+extern REAL u(REAL *p);
 
-int setup_poisson (dCSRmat *A, 
+INT setup_poisson (dCSRmat *A,
                    dvector *b, 
                    Mesh *mesh, 
                    Mesh_aux *mesh_aux, 
@@ -21,9 +21,9 @@ int setup_poisson (dCSRmat *A,
                    dvector *ptr_uh, 
                    ivector *dof);
 
-double get_l2_error_poisson (ddenmat *node,
-                             idenmat *elem,
-                             dvector *uh,
-                             int num_qp);
+REAL get_l2_error_poisson (ddenmat *node,
+                           idenmat *elem,
+                           dvector *uh,
+                           INT num_qp);
 
 #endif

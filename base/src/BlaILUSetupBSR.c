@@ -1448,7 +1448,7 @@ static void topologic_sort_ILU (ILU_data *iludata)
     nlevL = 0;
     ilevL[0] = 0;
     
-    // form level for each row of lower trianguler matrix.
+    // form level for each row of lower triangular matrix.
     for (i=0; i<n; i++) {
         l = 0;
         for(j=ijlu[i]; j<ijlu[i+1]; j++) if (ijlu[j]<=i) l = MAX(l, level[ijlu[j]]);
@@ -1465,9 +1465,9 @@ static void topologic_sort_ILU (ILU_data *iludata)
         ilevL[level[i]-1]++;
     }
     
-    for ( i=nlevL-1; i>0; i-- ) ilevL[i] = ilevL[i-1];
+    for (i=nlevL-1; i>0; i--) ilevL[i] = ilevL[i-1];
     
-    // form level for each row of upper trianguler matrix.
+    // form level for each row of upper triangular matrix.
     nlevU = 0;
     ilevL[0] = 0;
     

@@ -21,17 +21,17 @@
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
 
-static void put_byte (FILE *fp, const INT c);
-static void put_word (FILE *fp, const INT w);
-static void put_dword (FILE *fp, const INT d);
-static INT write_bmp16 (const char *fname, INT m, INT n, const char map[]);
+static void put_byte (FILE *fp, const int c);
+static void put_word (FILE *fp, const int w);
+static void put_dword (FILE *fp, const int d);
+static int write_bmp16 (const char *fname, int m, int n, const char map[]);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn void fasp_dcsr_subplot (const dCSRmat *A, const char *filename, INT size)
+ * \fn void fasp_dcsr_subplot (const dCSRmat *A, const char *filename, int size)
  *
  * \brief Write sparse matrix pattern in BMP file format
  *
@@ -56,10 +56,10 @@ static INT write_bmp16 (const char *fname, INT m, INT n, const char map[]);
  */
 void fasp_dcsr_subplot (const dCSRmat  *A,
                         const char     *filename,
-                        INT             size)
+                        int             size)
 {
     INT m = A->row, n = A->col, minmn = MIN(m,n);
-    INT i, j, k;
+    int i, j, k;
 	char *map; 
 
     if ( size>minmn ) size = minmn;
@@ -232,7 +232,7 @@ FINISH: if (fp != NULL) fclose(fp);
 }
 
 /**
- * \fn void fasp_dbsr_subplot (const dBSRmat *A, const char *filename, INT size)
+ * \fn void fasp_dbsr_subplot (const dBSRmat *A, const char *filename, int size)
  *
  * \brief Write sparse matrix pattern in BMP file format
  *
@@ -258,7 +258,7 @@ FINISH: if (fp != NULL) fclose(fp);
  */
 void fasp_dbsr_subplot (const dBSRmat  *A,
                         const char     *filename,
-                        INT             size)
+                        int             size)
 {
 	INT m = A->ROW;
     INT n = A->COL;
@@ -465,7 +465,7 @@ FINISH: if (fp != NULL) fclose(fp);
 }
 
 /*!
- * \fn void fasp_grid2d_plot (pgrid2d pg, INT level)
+ * \fn void fasp_grid2d_plot (pgrid2d pg, int level)
  *
  * \brief Output grid to a EPS file
  *
@@ -476,7 +476,7 @@ FINISH: if (fp != NULL) fclose(fp);
  * \date   03/29/2009
  */
 void fasp_grid2d_plot (pgrid2d  pg,
-                       INT      level)
+                       int      level)
 {
     FILE *datei;
     char buf[120];
@@ -504,7 +504,7 @@ void fasp_grid2d_plot (pgrid2d  pg,
     fprintf(datei, "/l{lineto} def\n");
     
     fprintf(datei,"b\n");
-    for(i=0; i<pg->triangles; ++i) {
+    for (i=0; i<pg->triangles; ++i) {
         xc = (pg->p[pg->t[i][0]][0]+pg->p[pg->t[i][1]][0]+pg->p[pg->t[i][2]][0])*150.0;
         yc = (pg->p[pg->t[i][0]][1]+pg->p[pg->t[i][1]][1]+pg->p[pg->t[i][2]][1])*150.0;
         
@@ -557,7 +557,7 @@ void fasp_grid2d_plot (pgrid2d  pg,
 /*---------------------------------*/
 
 /*!
- * \fn static void put_byte (FILE *fp, const INT c)
+ * \fn static void put_byte (FILE *fp, const int c)
  *
  * \brief Write to byte to file
  *
@@ -566,14 +566,14 @@ void fasp_grid2d_plot (pgrid2d  pg,
  *
  */
 static void put_byte (FILE       *fp,
-                      const INT   c)
+                      const int   c)
 {
     fputc(c, fp);
     return;
 }
 
 /*!
- * \fn static void put_word (FILE *fp, const INT w)
+ * \fn static void put_word (FILE *fp, const int w)
  *
  * \brief Write to word to file
  *
@@ -582,7 +582,7 @@ static void put_byte (FILE       *fp,
  *
  */
 static void put_word (FILE       *fp,
-                      const INT   w)
+                      const int   w)
 { /* big endian */
     put_byte(fp, w);
     put_byte(fp, w >> 8);
@@ -590,7 +590,7 @@ static void put_word (FILE       *fp,
 }
 
 /*!
- * \fn static void put_dword (FILE *fp, const INT d)
+ * \fn static void put_dword (FILE *fp, const int d)
  *
  * \brief Write to REAL-word to file
  *
@@ -599,7 +599,7 @@ static void put_word (FILE       *fp,
  *
  */
 static void put_dword (FILE       *fp,
-                       const INT   d)
+                       const int   d)
 { /* big endian */
     put_word(fp, d);
     put_word(fp, d >> 16);
@@ -607,7 +607,7 @@ static void put_dword (FILE       *fp,
 }
 
 /*!
- * \fn static INT write_bmp16 (const char *fname, const INT m, const INT n, 
+ * \fn static int write_bmp16 (const char *fname, const int m, const int n,
  *                             const char map[])
  *
  * \brief Write to BMP file
@@ -671,13 +671,13 @@ static void put_dword (FILE       *fp,
  *  You should have received a copy of the GNU General Public License
  *  along with GLPK. If not, see <http://www.gnu.org/licenses/>.
  */
-static INT write_bmp16 (const char   *fname,
-                        const INT     m,
-                        const INT     n,
+static int write_bmp16 (const char   *fname,
+                        const int     m,
+                        const int     n,
                         const char    map[])
 {
     FILE *fp;
-    INT offset, bmsize, i, j, b, ret = 1;
+    int offset, bmsize, i, j, b, ret = 1;
     
     if (!(1 <= m && m <= 32767))
         printf("### ERROR: %s invalid height %d\n", __FUNCTION__, m);
@@ -697,7 +697,7 @@ static INT write_bmp16 (const char   *fname,
     /* UINT bfType */          put_byte(fp, 'B'); put_byte(fp, 'M');
     /* DWORD bfSize */         put_dword(fp, offset + bmsize * 4);
     /* UINT bfReserved1 */     put_word(fp, 0);
-    /* UNIT bfReserved2 */     put_word(fp, 0);
+    /* UINT bfReserved2 */     put_word(fp, 0);
     /* DWORD bfOffBits */      put_dword(fp, offset);
     /* struct BMPINFOHEADER (40 bytes) */
     /* DWORD biSize */         put_dword(fp, 40);

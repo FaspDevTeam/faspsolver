@@ -109,21 +109,21 @@ void fasp_dbsr_alloc (const INT  ROW,
     else {
         A->IA = NULL;
     }
-    
+
     if ( NNZ > 0 ) {
         A->JA = (INT*)fasp_mem_calloc(NNZ, sizeof(INT));
     }
     else {
         A->JA = NULL;
     }
-    
+
     if ( nb > 0 ) {
         A->val = (REAL*)fasp_mem_calloc(NNZ*nb*nb, sizeof(REAL));
     }
     else {
         A->val = NULL;
     }
-    
+
     A->storage_manner = storage_manner;
     A->ROW = ROW;
     A->COL = COL;
@@ -132,7 +132,6 @@ void fasp_dbsr_alloc (const INT  ROW,
     
     return;
 }
-
 
 /**
  * \fn void fasp_dbsr_free (dBSRmat *A)

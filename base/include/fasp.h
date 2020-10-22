@@ -59,17 +59,17 @@
  * \brief FASP integer and floating point numbers
  */
 #define SHORT            short      /**< short integer type */
-#define INT              int        /**< regular integer type: int or long */
+#define INT              int        /**< signed integer types: signed, long enough */
 #define LONG             long       /**< long integer type */
-#define LONGLONG         long long  /**< long integer type */
+#define LONGLONG         long long  /**< long long integer type */
 #define REAL             double     /**< float type */
 
 /**
  * \brief Definition of max, min, abs
  */
-#define MAX(a,b) (((a)>(b))?(a):(b))   /**< bigger one in a and b */
-#define MIN(a,b) (((a)<(b))?(a):(b))   /**< smaller one in a and b */
-#define ABS(a)   (((a)>=0.0)?(a):-(a)) /**< absolute value of a */
+#define MAX(a,b) (((a)>(b))?(a):(b))     /**< bigger one in a and b */
+#define MIN(a,b) (((a)<(b))?(a):(b))     /**< smaller one in a and b */
+#define ABS(a)   (((a)>=0.0)?(a):-(a))   /**< absolute value of a */
 
 /**
  * \brief Definition of >, >=, <, <=, and isnan
@@ -90,8 +90,8 @@
 /*---  Global variables   ---*/
 /*---------------------------*/
 
-extern unsigned INT total_alloc_mem;   /**< total allocated memory */
-extern unsigned INT total_alloc_count; /**< total allocation times */
+extern unsigned long total_alloc_mem;   /**< total allocated memory */
+extern unsigned long total_alloc_count; /**< total allocation times */
 
 /*---------------------------*/
 /*---  Matrix and vector  ---*/

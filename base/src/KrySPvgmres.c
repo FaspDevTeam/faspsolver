@@ -90,8 +90,8 @@ INT fasp_solver_dcsr_spvgmres (const dCSRmat  *A,
     // local variables
     INT    iter            = 0;
     INT    restart1    = restart + 1;
-    INT    i, j, k;
-    
+    int      i, j, k; // must be signed! -zcs
+
     REAL   r_norm, r_normb, gamma, t;
     REAL   normr0 = BIGREAL, absres = BIGREAL;
     REAL   relres = BIGREAL, normu  = BIGREAL;
@@ -471,7 +471,7 @@ INT fasp_solver_dbsr_spvgmres (const dBSRmat  *A,
     // local variables
     INT    iter            = 0;
     INT    restart1    = restart + 1;
-    INT    i, j, k;
+    int      i, j, k; // must be signed! -zcs
 
     REAL   r_norm, r_normb, gamma, t;
     REAL   normr0 = BIGREAL, absres = BIGREAL;
@@ -851,7 +851,7 @@ INT fasp_solver_dblc_spvgmres (const dBLCmat  *A,
     // local variables
     INT    iter            = 0;
     INT    restart1    = restart + 1;
-    INT    i, j, k;
+    int      i, j, k; // must be signed! -zcs
     
     REAL   r_norm, r_normb, gamma, t;
     REAL   normr0 = BIGREAL, absres = BIGREAL;
@@ -1232,7 +1232,7 @@ INT fasp_solver_dstr_spvgmres (const dSTRmat  *A,
     // local variables
     INT    iter            = 0;
     INT    restart1    = restart + 1;
-    INT    i, j, k;
+    int      i, j, k; // must be signed! -zcs
     
     REAL   r_norm, r_normb, gamma, t;
     REAL   normr0 = BIGREAL, absres = BIGREAL;

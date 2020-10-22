@@ -146,16 +146,16 @@ void extractNondirichletMatrix (dCSRmat *A,
                                 dvector *uh)
 {
     // achieve A11 due to Dirichlet boundary condition
-    int i,j,k,l,i1,j1;
-    int count;
+    INT i,j,k,l,i1,j1;
+    INT count;
     
     A11->col=A11->row=A->row-dirichlet->row;
-    A11->IA=(int*)fasp_mem_calloc(A11->row+1, sizeof(int));
+    A11->IA=(INT*)fasp_mem_calloc(A11->row+1, sizeof(INT));
     
     A11->JA=NULL;
     A11->val=NULL;
     b1->row=A11->row;
-    b1->val=(double*)fasp_mem_calloc(b1->row, sizeof(double));
+    b1->val=(REAL*)fasp_mem_calloc(b1->row, sizeof(REAL));
     
     // form A11->IA
     for (i=0;i<A11->row;++i) {
@@ -169,7 +169,7 @@ void extractNondirichletMatrix (dCSRmat *A,
     for (i=0;i<A11->row;++i) A11->IA[i+1]+=A11->IA[i];
     
     // form A11->JA
-    A11->JA=(int*)fasp_mem_calloc(A11->IA[A11->row]+1, sizeof(int));
+    A11->JA=(INT*)fasp_mem_calloc(A11->IA[A11->row]+1, sizeof(INT));
     
     count=0;
     for (i=0;i<A11->row;++i) {
@@ -184,7 +184,7 @@ void extractNondirichletMatrix (dCSRmat *A,
     }
     
     // form A11->val
-    A11->val=(double*)fasp_mem_calloc(A11->IA[A11->row]+1, sizeof(double));
+    A11->val=(REAL*)fasp_mem_calloc(A11->IA[A11->row]+1, sizeof(REAL));
     
     for (i1=0;i1<A11->row;++i1) {
         i=nondirichlet->val[i1];

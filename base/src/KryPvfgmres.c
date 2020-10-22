@@ -86,7 +86,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
 
     // local variables
     INT    iter                 = 0;
-    INT    i,j,k;
+    int    i, j, k; // must be signed! -zcs
 
     REAL   epsmac               = SMALLREAL;
     REAL   r_norm, b_norm, den_norm;
@@ -408,7 +408,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
 
     // local variables
     INT    iter                 = 0;
-    INT    i,j,k;
+    int    i, j, k; // must be signed! -zcs
 
     REAL   epsmac               = SMALLREAL;
     REAL   r_norm, b_norm, den_norm;
@@ -733,7 +733,7 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
     
     // local variables
     INT    iter                 = 0;
-    INT    i,j,k;
+    int    i, j, k; // must be signed! -zcs
     
     REAL   epsmac               = SMALLREAL;
     REAL   r_norm, b_norm, den_norm;
@@ -1055,7 +1055,7 @@ INT fasp_solver_pvfgmres (mxv_matfree  *mf,
     
     // local variables
     INT    iter                 = 0;
-    INT    i,j,k;
+    int    i, j, k; // must be signed! -zcs
     
     REAL   epsmac               = SMALLREAL;
     REAL   r_norm, b_norm, den_norm;

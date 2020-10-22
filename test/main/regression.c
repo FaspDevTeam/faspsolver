@@ -13,8 +13,8 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
-unsigned INT  ntest;    /**< number of tests all together */
-unsigned INT  nfail;    /**< number of failed tests */
+unsigned int  ntest;    /**< number of tests all together */
+unsigned int  nfail;    /**< number of failed tests */
 
 /**
  * \fn static void check_solu(dvector *x, dvector *sol, double tol)
@@ -134,6 +134,8 @@ int main (int argc, const char * argv[])
         fasp_check_symm(&A);     // check symmetry
         fasp_check_diagpos(&A);  // check sign of diagonal entries
         fasp_check_diagdom(&A);  // check diagonal dominance
+
+        fasp_dcoo_write("testa.coo", &A);
 
         /*****************************/
         /* Step 3. Solve the system  */ 

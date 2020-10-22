@@ -24,8 +24,8 @@
 /*---------------------------------*/
 
 /** 
- * \fn static void localb (double (*node)[2], double *b, int num_qp, int nt,
- *                         double dt)
+ * \fn static void localb (REAL (*node)[2], REAL *b, INT num_qp, INT nt,
+ *                         REAL dt)
  *
  * \brief Form local right-hand side b from triangle node
  *
@@ -40,17 +40,17 @@
  *
  * Modify by Feiteng Huang 04/01/2012: for heat transfer
  */
-static void localb (double (*node)[2],
-                    double *b,
-                    int num_qp,
-                    int nt,
-                    double dt)
+static void localb (REAL (*node)[2],
+                    REAL *b,
+                    INT num_qp,
+                    INT nt,
+                    REAL dt)
 {
-    const double s=2.0*areaT(node[0][0],node[1][0],node[2][0],
+    const REAL s=2.0*areaT(node[0][0],node[1][0],node[2][0],
                              node[0][1],node[1][1],node[2][1]);
-    double p[DIM+1],a;
-    double gauss[MAX_QUAD][3],g;
-    int i, j;
+    REAL p[DIM+1],a;
+    REAL gauss[MAX_QUAD][3],g;
+    INT i, j;
     for (i=0;i<3*nt;++i)
         b[i] = 0;
     
@@ -72,7 +72,7 @@ static void localb (double (*node)[2],
 
 /**
  * \fn static void assemble_stiffmat (dCSRmat *A, dCSRmat *M, dvector *b, Mesh *mesh,
- *                                    Mesh_aux *mesh_aux, FEM_param *pt, double dt)
+ *                                    Mesh_aux *mesh_aux, FEM_param *pt, REAL dt)
  *
  * \brief Assemble stiffness matrix and right-hand side
  *
@@ -97,28 +97,28 @@ static void assemble_stiffmat (dCSRmat *A,
                                Mesh *mesh,
                                Mesh_aux *mesh_aux,
                                FEM_param *pt,
-                               double dt)
+                               REAL dt)
 {
     // assemble option
-    int mat = 0, rhs = 0;
+    INT mat = 0, rhs = 0;
     if ( strcmp(pt->option,"ab") == 0 ) { mat = 1; rhs = 1; }
     if ( strcmp(pt->option,"a") == 0 ) mat = 1;
     if ( strcmp(pt->option,"b") == 0 ) rhs = 1;
     
-    const int num_node = mesh->node.row;
-    const int num_edge = mesh_aux->edge.row;
-    const int nnz = num_node + 2*num_edge;
-    const double epsilon=1;
+    const INT num_node = mesh->node.row;
+    const INT num_edge = mesh_aux->edge.row;
+    const INT nnz = num_node + 2*num_edge;
+    const REAL epsilon=1;
     
-    double T[3][2],phi1[2],phi2[2],phi_1,phi_2;
-    double gauss[MAX_QUAD][DIM+1];
-    double s;
+    REAL T[3][2],phi1[2],phi2[2],phi_1,phi_2;
+    REAL gauss[MAX_QUAD][DIM+1];
+    REAL s;
     
-    int i,j,k,it;
-    int k1,n1,n2,i1;
-    double tmp_a;
-    double *btmp = (double*)fasp_mem_calloc(3*pt->nt, sizeof(double));
-    int tmp, edge_c;
+    INT i,j,k,it;
+    INT k1,n1,n2,i1;
+    REAL tmp_a;
+    REAL *btmp = (REAL*)fasp_mem_calloc(3*pt->nt, sizeof(REAL));
+    INT tmp, edge_c;
     
     fasp_gauss2d(pt->num_qp_mat, 2, gauss); // Gauss integration initial
     
@@ -126,23 +126,23 @@ static void assemble_stiffmat (dCSRmat *A,
     A->row = A->col = num_node;
     M->row = M->col = num_node;
     M->nnz = A->nnz = nnz;
-    A->IA = (int*)fasp_mem_calloc(A->row+1, sizeof(int));
-    M->IA = (int*)fasp_mem_calloc(A->row+1, sizeof(int));
-    A->JA = (int*)fasp_mem_calloc(nnz, sizeof(int));
-    M->JA = (int*)fasp_mem_calloc(nnz, sizeof(int));
-    A->val = (double*)fasp_mem_calloc(nnz, sizeof(double));
-    M->val = (double*)fasp_mem_calloc(nnz, sizeof(double));
+    A->IA = (INT*)fasp_mem_calloc(A->row+1, sizeof(INT));
+    M->IA = (INT*)fasp_mem_calloc(A->row+1, sizeof(INT));
+    A->JA = (INT*)fasp_mem_calloc(nnz, sizeof(INT));
+    M->JA = (INT*)fasp_mem_calloc(nnz, sizeof(INT));
+    A->val = (REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
+    M->val = (REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
     b->row = num_node*pt->nt;
-    b->val = (double*)fasp_mem_calloc(b->row, sizeof(double));
-    total_alloc_mem += 2*(A->row+1)*sizeof(int);
-    total_alloc_mem += 2*nnz*sizeof(int);
-    total_alloc_mem += 2*nnz*sizeof(double);
-    total_alloc_mem += b->row*sizeof(double);
-    int *count = (int*)fasp_mem_calloc(num_node, sizeof(int));
+    b->val = (REAL*)fasp_mem_calloc(b->row, sizeof(REAL));
+    total_alloc_mem += 2*(A->row+1)*sizeof(INT);
+    total_alloc_mem += 2*nnz*sizeof(INT);
+    total_alloc_mem += 2*nnz*sizeof(REAL);
+    total_alloc_mem += b->row*sizeof(REAL);
+    INT *count = (INT*)fasp_mem_calloc(num_node, sizeof(INT));
     
     //edge to global idx of A->val
-    int *edge2idx_g1 = (int*)fasp_mem_calloc(num_edge, sizeof(int));
-    int *edge2idx_g2 = (int*)fasp_mem_calloc(num_edge, sizeof(int));
+    INT *edge2idx_g1 = (INT*)fasp_mem_calloc(num_edge, sizeof(INT));
+    INT *edge2idx_g2 = (INT*)fasp_mem_calloc(num_edge, sizeof(INT));
     
     // get IA
     for (i=0;i<num_edge;++i) {
@@ -307,7 +307,7 @@ static void assemble_stiffmat (dCSRmat *A,
 /*---------------------------------*/
 
 /**
- * \fn int setup_heat (dCSRmat *A_heat,
+ * \fn INT setup_heat (dCSRmat *A_heat,
  *                     dCSRmat *Mass,
  *                     dvector *b_heat,
  *                     Mesh *mesh,
@@ -315,7 +315,7 @@ static void assemble_stiffmat (dCSRmat *A,
  *                     FEM_param *pt,
  *                     dvector *uh_heat,
  *                     Bd_apply_info *bdinfo,
- *                     double dt)
+ *                     REAL dt)
  *
  * \brief Setup P1 FEM for the heat transfer's equation
  *
@@ -337,7 +337,7 @@ static void assemble_stiffmat (dCSRmat *A,
  * Modified by Feiteng Huang on 04/01/2012, output node, elem, uh, and dof for l2 error
  * Modified by Feiteng Huang on 04/09/2012, restructure the code
  */
-int setup_heat (dCSRmat *A_heat,
+INT setup_heat (dCSRmat *A_heat,
                 dCSRmat *Mass,
                 dvector *b_heat,
                 Mesh *mesh,
@@ -345,7 +345,7 @@ int setup_heat (dCSRmat *A_heat,
                 FEM_param *pt,
                 dvector *uh_heat,
                 Bd_apply_info *bdinfo,
-                double dt)
+                REAL dt)
 {
     // assemble
     dCSRmat Stiff;
@@ -356,8 +356,8 @@ int setup_heat (dCSRmat *A_heat,
     
     // get information to deal with Dirichlet boundary condition
     ivector dirichlet,nondirichlet,index;
-    int i,j,k,it;
-    int dirichlet_count = 0;
+    INT i,j,k,it;
+    INT dirichlet_count = 0;
     for (i=0;i<mesh->node_bd.row;++i) {
         if (mesh->node_bd.val[i] == DIRICHLET)
             dirichlet_count++;
@@ -383,7 +383,7 @@ int setup_heat (dCSRmat *A_heat,
     
     // set initial boundary value
     dvector uh = fasp_dvec_create(Stiff.row*pt->nt);
-    double p[DIM+1];
+    REAL p[DIM+1];
     for (i=0;i<Stiff.row;++i) {
         if(mesh->node_bd.val[i]==DIRICHLET) { // the node is on the boundary
             for (j=0;j<DIM;++j)
@@ -409,11 +409,11 @@ int setup_heat (dCSRmat *A_heat,
 }
 
 /** 
- * \fn double get_l2_error_heat (ddenmat *node,
+ * \fn REAL get_l2_error_heat (ddenmat *node,
  *                               idenmat *elem,
  *                               dvector *uh,
- *                               int num_qp,
- *                               double t)
+ *                               INT num_qp,
+ *                               REAL t)
  *
  * \brief get l2 error of fem.
  *
@@ -426,21 +426,21 @@ int setup_heat (dCSRmat *A_heat,
  * \author Feiteng Huang
  * \date   03/30/2012
  */
-double get_l2_error_heat (ddenmat *node,
+REAL get_l2_error_heat (ddenmat *node,
                           idenmat *elem,
                           dvector *uh,
-                          int num_qp,
-                          double t)
+                          INT num_qp,
+                          REAL t)
 {
-    double l2error = 0.0;
+    REAL l2error = 0.0;
     
-    double uh_local[3] = {0, 0, 0};
-    double T[3][2] = {{0, 0}, {0, 0}, {0, 0}};
-    double gauss[MAX_QUAD][DIM+1];
-    double s, l2, a, p[DIM+1], uh_p;
+    REAL uh_local[3] = {0, 0, 0};
+    REAL T[3][2] = {{0, 0}, {0, 0}, {0, 0}};
+    REAL gauss[MAX_QUAD][DIM+1];
+    REAL s, l2, a, p[DIM+1], uh_p;
     p[DIM] = t;
     
-    int i,j,k;
+    INT i,j,k;
     
     fasp_gauss2d(num_qp, 2, gauss); // Gauss integration initial
     

@@ -68,7 +68,7 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
     // level info (fine: 0; coarse: 1)
     ivector    vertices = fasp_ivec_create(m);
 
-    // Output some info for debuging
+    // Output some info for debugging
     if ( prtlvl > PRINT_NONE ) printf("\nSetting up Classical AMG ...\n");
 
 #if DEBUG_MODE > 0

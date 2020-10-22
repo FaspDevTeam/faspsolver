@@ -2,6 +2,9 @@ File Name: CHANGES
 
 10/13/2020 FASP 2.5.5:
 - Important fixes to UA AMG: handle possible divide by zero error.
+- Update INT definition and test INT=int and long.
+- Caution: INT cannot be short or unsigned int.
+- Update other FASP repositories accordingly. 
 
 10/03/2020 FASP 2.5.4:
 - Update Windows version to VS2019 and Intel2020.1.

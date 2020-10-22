@@ -1437,7 +1437,7 @@ INT fasp_solver_pcg (mxv_matfree *mf,
                 ++stag;
                 ++restart_step;
             }
-        } // end of staggnation check!
+        } // end of stagnation check!
         
         // safe-guard check
         if ( relres < tol ) {

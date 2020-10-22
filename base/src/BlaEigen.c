@@ -39,10 +39,9 @@ REAL fasp_dcsr_maxeig (const dCSRmat  *A,
                        const INT       maxit)
 {
     REAL eigenvalue = 0.0, temp = 1.0, L2_norm_y;
-    unsigned INT i;
-    
     dvector x, y;
-    
+    int i;
+
     fasp_dvec_alloc(A->row, &x);
     fasp_dvec_rand(A->row,&x);
     fasp_blas_darray_ax(A->row, 1.0/fasp_blas_dvec_norm2(&x), x.val);
