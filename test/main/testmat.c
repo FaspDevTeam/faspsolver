@@ -3,7 +3,7 @@
  *  \brief Test matrix properties
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -30,10 +30,10 @@ int main(int argc, const char * argv[])
     fasp_param_input(inputfile,&Input);
     
     char filename1[512], *datafile1;    
-    strncpy(filename1,Input.workdir,128);
+    memcpy(filename1,Input.workdir,STRLEN);
     
     char filename2[512], *datafile2;    
-    strncpy(filename2,Input.workdir,128);
+    memcpy(filename2,Input.workdir,STRLEN);
 
     // Read matrix for testing
     dCSRmat A;

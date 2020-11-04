@@ -67,8 +67,8 @@ int main (int argc, const char * argv[])
     char filename1[512], *datafile1;
     char filename2[512], *datafile2;
     
-    strncpy(filename1,inipar.workdir,128);
-    strncpy(filename2,inipar.workdir,128);
+    memcpy(filename1,inipar.workdir,STRLEN);
+    memcpy(filename2,inipar.workdir,STRLEN);
     
     if (problem_num == 10) {
         

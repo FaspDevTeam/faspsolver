@@ -7,7 +7,7 @@
  *         include function declarations here.
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2008--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2008--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -63,6 +63,7 @@
 #define LONG             long       /**< long integer type */
 #define LONGLONG         long long  /**< long long integer type */
 #define REAL             double     /**< float type */
+#define STRLEN           256        /**< length of strings */
 
 /**
  * \brief Definition of max, min, abs
@@ -85,13 +86,6 @@
  */
 #define PUT_INT(A)  printf("### DEBUG: %s = %d\n", #A, (A)) /**< print integer  */
 #define PUT_REAL(A) printf("### DEBUG: %s = %e\n", #A, (A)) /**< print real num */
-
-/*---------------------------*/
-/*---  Global variables   ---*/
-/*---------------------------*/
-
-extern unsigned long total_alloc_mem;   /**< total allocated memory */
-extern unsigned long total_alloc_count; /**< total allocation times */
 
 /*---------------------------*/
 /*---  Matrix and vector  ---*/
@@ -1102,8 +1096,8 @@ typedef struct {
     SHORT output_type;   /**< type of output stream */
 
     // problem parameters
-    char inifile[256];   /**< ini file name */
-    char workdir[256];   /**< working directory for data files */
+    char inifile[STRLEN];/**< ini file name */
+    char workdir[STRLEN];/**< working directory for data files */
     INT  problem_num;    /**< problem number to solve */
 
     // parameters for iterative solvers

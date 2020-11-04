@@ -6,7 +6,7 @@
  *         AuxArray.c, AuxMemory.c, AuxThreads.c, BlaSmallMat.c, and BlaArray.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -256,7 +256,7 @@ void fasp_blas_dbsr_aAxpby (const REAL   alpha,
                         for (k = IA[i]; k < iend; ++k) {
                             j = JA[k];
                             pA = val+k*49; // &val[k*jump];
-                            px0 = x+j*7; // &x[j*nb]£»
+                            px0 = x+j*7; // &x[j*nb]ï¿½ï¿½
                             py = py0;
                             fasp_blas_smat_ypAx_nc7( pA, px0, py );
                         }

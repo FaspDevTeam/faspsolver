@@ -16,7 +16,7 @@
  *    - you call another routine, which uses ic and jc to perform the addition.
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -30,6 +30,9 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+
+extern unsigned long total_alloc_mem;
+extern unsigned long total_alloc_count;
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

@@ -3,20 +3,19 @@
  *  \brief Setup P1 FEM for the Poisson's equation
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
 
 #include <math.h>
-
+#include "fasp.h"
 #include "poisson_fem.h"
+#include "FemBasis.inl"
 
 /*---------------------------------*/
 /*--  Declare Private Functions  --*/
 /*---------------------------------*/
-
-#include "FemBasis.inl"
 
 #define DIM 2          // dimension of space
 #define MAX_QUAD 49    // max number of quadrature points allowed
@@ -144,10 +143,6 @@ static void assemble_stiffmat (dCSRmat *A,
     A->val = (REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
     b->row = num_node;
     b->val = (REAL*)fasp_mem_calloc(num_node, sizeof(REAL));
-    total_alloc_mem += (A->row+1)*sizeof(INT);
-    total_alloc_mem += nnz*sizeof(INT);
-    total_alloc_mem += nnz*sizeof(REAL);
-    total_alloc_mem += num_node*sizeof(REAL);
     INT *count = (INT*)fasp_mem_calloc(num_node, sizeof(INT));
 	
 	// edge to global idx of A->val

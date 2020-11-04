@@ -11,7 +11,7 @@
  *         jam, Tech Report Rice Univ, Aug 2002.
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2011--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2011--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */

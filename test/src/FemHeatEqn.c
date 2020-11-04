@@ -3,7 +3,7 @@
  *  \brief Setup P1 FEM & backward Euler for the heat transfer's equation
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2012--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2012--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -134,10 +134,6 @@ static void assemble_stiffmat (dCSRmat *A,
     M->val = (REAL*)fasp_mem_calloc(nnz, sizeof(REAL));
     b->row = num_node*pt->nt;
     b->val = (REAL*)fasp_mem_calloc(b->row, sizeof(REAL));
-    total_alloc_mem += 2*(A->row+1)*sizeof(INT);
-    total_alloc_mem += 2*nnz*sizeof(INT);
-    total_alloc_mem += 2*nnz*sizeof(REAL);
-    total_alloc_mem += b->row*sizeof(REAL);
     INT *count = (INT*)fasp_mem_calloc(num_node, sizeof(INT));
     
     //edge to global idx of A->val

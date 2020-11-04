@@ -21,7 +21,7 @@ BEGIN {
   print " *  \\brief Function decoration for the FASP package"
   print " *"
   print " *---------------------------------------------------------------------------------"
-  print " *  Copyright (C) 2008--2018 by the FASP team. All rights reserved.                "
+  print " *  Copyright (C) 2008--2020 by the FASP team. All rights reserved.                "
   print " *  Released under the terms of the GNU Lesser General Public License 3.0 or later."
   print " *---------------------------------------------------------------------------------"
   print " *"

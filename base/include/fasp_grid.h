@@ -3,7 +3,7 @@
  *  \brief Header file for FASP grid
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2015--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2015--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */

@@ -3,7 +3,7 @@
  *  \brief The main test function for FASP Block AMG solvers
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2013--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2013--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -60,18 +60,18 @@ int main (int argc, const char * argv[])
     char filename1[512], *datafile1;
     char filename2[512], *datafile2;
     
-    strncpy(filename1,inpar.workdir,128);
-    strncpy(filename2,inpar.workdir,128);
+    memcpy(filename1,inpar.workdir,STRLEN);
+    memcpy(filename2,inpar.workdir,STRLEN);
     
     // Default test problem from black-oil benchmark: SPE01
     if (problem_num == 10) {                
         // Read the stiffness matrix from bsrmat_SPE01.dat
-        strncpy(filename1,inpar.workdir,128);    
+        memcpy(filename1,inpar.workdir,STRLEN);    
         datafile1="bsrmat_SPE01.dat"; strcat(filename1,datafile1);
         fasp_dbsr_read(filename1, &Absr);
         
         // Read the RHS from rhs_SPE01.dat
-        strncpy(filename2,inpar.workdir,128);
+        memcpy(filename2,inpar.workdir,STRLEN);
         datafile2="rhs_SPE01.dat"; strcat(filename2,datafile2);
         fasp_dvec_read(filename2, &b);
     }

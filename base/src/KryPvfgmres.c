@@ -15,7 +15,7 @@
  *         pp. 751-761. UCRL-JRNL-235266.
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2012--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2012--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *

@@ -10,7 +10,7 @@
  *  with Block ILU preconditioned Krylov methods
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2012--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2012--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -54,12 +54,12 @@ int main (int argc, const char * argv[])
     char filename2[512], *datafile2;
     
     // Read the stiffness matrix from bsrmat_SPE01.dat
-    strncpy(filename1, inparam.workdir, 128);
+    memcpy(filename1, inparam.workdir, STRLEN);
     datafile1="bsrmat_SPE01.dat"; strcat(filename1, datafile1);
     fasp_dbsr_read(filename1, &A);
     
     // Read the RHS from rhs_SPE01.dat
-    strncpy(filename2, inparam.workdir, 128);
+    memcpy(filename2, inparam.workdir, STRLEN);
     datafile2="rhs_SPE01.dat"; strcat(filename2, datafile2);
     fasp_dvec_read(filename2, &b);
     

@@ -28,8 +28,6 @@ int main(int argc, char **argv) {
     // fasp_dcsr_read("../../data/fdm_1023X1023.csr", &A);
 
     INT n = A.row;
-    int j;
-
     dvector b, x;
 
     b.row = n;

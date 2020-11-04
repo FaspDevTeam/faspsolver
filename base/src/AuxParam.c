@@ -6,7 +6,7 @@
  *         AuxInput.c and AuxMessage.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -15,6 +15,11 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+
+#if DEBUG_MODE > 1
+unsigned long total_alloc_mem;   /**< total allocated memory */
+unsigned long total_alloc_count; /**< total allocation times */
+#endif
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

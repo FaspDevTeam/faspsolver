@@ -6,7 +6,7 @@
  *         AuxMemory.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -133,9 +133,7 @@ void fasp_smat_inv_nc4 (REAL *a)
     const REAL M44 = a11*a22*a33 + a12*a23*a31 + a13*a21*a32 - a11*a23*a32 - a12*a21*a33 - a13*a22*a31;
     
     const REAL det = a11*M11 + a12*M21 + a13*M31 + a14*M41;
-    
-    REAL det_inv;
-    
+
     if ( ABS(det) < SMALLREAL ) {
         printf("### WARNING: Matrix is nearly singular, det = %e! Ignore.\n", det);
         printf("##----------------------------------------------\n");

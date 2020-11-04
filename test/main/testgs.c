@@ -3,7 +3,7 @@
  *  \brief The test function for FASP GS smoother
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -56,8 +56,8 @@ int main (int argc, const char * argv[])
     char filename1[512], *datafile1;
     char filename2[512], *datafile2;
     
-    strncpy(filename1,inipar.workdir,128);
-    strncpy(filename2,inipar.workdir,128);
+    memcpy(filename1,inipar.workdir,STRLEN);
+    memcpy(filename2,inipar.workdir,STRLEN);
     
     if (problem_num == 10) {
         

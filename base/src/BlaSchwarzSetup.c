@@ -7,7 +7,7 @@
  *         and KryPvgmres.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -102,7 +102,7 @@ INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
     }
     
 #if DEBUG_MODE > 1
-    fprintf("### DEBUG: nsizeall = %d\n", nsizeall);
+    printf("### DEBUG: nsizeall = %d\n", nsizeall);
 #endif
     
     // calculated the size of jblock up to here
@@ -124,7 +124,7 @@ INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
     nblk = MIS.row;
     
 #if DEBUG_MODE > 1
-    fprintf("### DEBUG: nsizeall = %d, %d\n", nsizeall, iblock[nblk]);
+    printf("### DEBUG: nsizeall = %d, %d\n", nsizeall, iblock[nblk]);
 #endif
     
     /*-------------------------------------------*/
@@ -178,8 +178,8 @@ INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
     }
     
 #if DEBUG_MODE > 1
-    fprintf("### DEBUG: n = %d, #blocks = %d, max block size = %d\n",
-            n, nblk, swzdata->maxbs);
+    printf("### DEBUG: n = %d, #blocks = %d, max block size = %d\n",
+           n, nblk, swzdata->maxbs);
 #endif
     
     /*-------------------------------------------*/

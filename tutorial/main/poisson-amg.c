@@ -7,7 +7,7 @@
  *  \note  Solving the Poisson equation (P1 FEM) with AMG: C version
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2011--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2011--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -50,11 +50,11 @@ int main (int argc, const char * argv[])
     char filename2[512], *datafile2;
     
     // Read the stiffness matrix from matFE.dat
-    strncpy(filename1, inparam.workdir, 128);
+    memcpy(filename1, inparam.workdir, STRLEN);
     datafile1="csrmat_FE.dat"; strcat(filename1, datafile1);
     
     // Read the RHS from rhsFE.dat
-    strncpy(filename2, inparam.workdir, 128);
+    memcpy(filename2, inparam.workdir, STRLEN);
     datafile2="rhs_FE.dat"; strcat(filename2, datafile2);
     
     fasp_dcsrvec_read2(filename1, filename2, &A, &b);

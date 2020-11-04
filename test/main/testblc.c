@@ -3,7 +3,7 @@
  *  \brief The main test function for FASP solvers -- BLC format
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2014--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2014--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -77,19 +77,19 @@ int main (int argc, const char * argv[])
     char filename6[512], *datafile6;
     char filename7[512], *datafile7;
     
-    strncpy(filename1,inpar.workdir,128);
-    strncpy(filename2,inpar.workdir,128);
-    strncpy(filename3,inpar.workdir,128);
-    strncpy(filename4,inpar.workdir,128);
-    strncpy(filename5,inpar.workdir,128);
-    strncpy(filename6,inpar.workdir,128);
-    strncpy(filename7,inpar.workdir,128);
+    memcpy(filename1,inpar.workdir,STRLEN);
+    memcpy(filename2,inpar.workdir,STRLEN);
+    memcpy(filename3,inpar.workdir,STRLEN);
+    memcpy(filename4,inpar.workdir,STRLEN);
+    memcpy(filename5,inpar.workdir,STRLEN);
+    memcpy(filename6,inpar.workdir,STRLEN);
+    memcpy(filename7,inpar.workdir,STRLEN);
     
     
     // Default test problem from black-oil benchmark: SPE01
     if (problem_num == 10) {
         
-        strncpy(filename1,inpar.workdir,128);
+        memcpy(filename1,inpar.workdir,STRLEN);
         datafile1="/pnp-data/set-1/A.dat";
         strcat(filename1,datafile1);
 
@@ -138,7 +138,7 @@ int main (int argc, const char * argv[])
         fasp_dcsr_getblk(&A, p_idx.val, p_idx.val, row, row, Ablc.blocks[8]);
         
         // form right hand side
-        strncpy(filename2,inpar.workdir,128);
+        memcpy(filename2,inpar.workdir,STRLEN);
         datafile2="/pnp-data/set-1/rhs.dat"; strcat(filename2,datafile2);
         fasp_dvec_read(filename2, &b_temp);
         
@@ -184,35 +184,35 @@ int main (int argc, const char * argv[])
     else if (problem_num == 11) {
         
         // read in matrix
-        strncpy(filename1,inpar.workdir,128);
+        memcpy(filename1,inpar.workdir,STRLEN);
         datafile1="/pnp-data/set-2/A.dat";
         strcat(filename1,datafile1);
         
         fasp_dcoo_read(filename1, &A);
         
         // read in index
-        strncpy(filename2,inpar.workdir,128);
+        memcpy(filename2,inpar.workdir,STRLEN);
         datafile2="/pnp-data/set-2/phi_idx.dat";
         strcat(filename2,datafile2);
         
         fasp_ivecind_read(filename2, &phi_idx);
         
         // read in index
-        strncpy(filename3,inpar.workdir,128);
+        memcpy(filename3,inpar.workdir,STRLEN);
         datafile3="/pnp-data/set-2/n_idx.dat";
         strcat(filename3,datafile3);
         
         fasp_ivecind_read(filename3, &n_idx);
         
         // read in index
-        strncpy(filename4,inpar.workdir,128);
+        memcpy(filename4,inpar.workdir,STRLEN);
         datafile4="/pnp-data/set-2/p_idx.dat";
         strcat(filename4,datafile4);
         
         fasp_ivecind_read(filename4, &p_idx);
         
         // read in b
-        strncpy(filename5,inpar.workdir,128);
+        memcpy(filename5,inpar.workdir,STRLEN);
         datafile5="/pnp-data/set-2/b.dat";
         strcat(filename5,datafile5);
         
@@ -284,35 +284,35 @@ int main (int argc, const char * argv[])
     else if (problem_num == 12) {
         
         // read in matrix
-        strncpy(filename1,inpar.workdir,128);
+        memcpy(filename1,inpar.workdir,STRLEN);
         datafile1="/pnp-data/set-3/A.dat";
         strcat(filename1,datafile1);
         
         fasp_dcoo_read(filename1, &A);
         
         // read in index
-        strncpy(filename2,inpar.workdir,128);
+        memcpy(filename2,inpar.workdir,STRLEN);
         datafile2="/pnp-data/set-3/phi_idx.dat";
         strcat(filename2,datafile2);
         
         fasp_ivecind_read(filename2, &phi_idx);
         
         // read in index
-        strncpy(filename3,inpar.workdir,128);
+        memcpy(filename3,inpar.workdir,STRLEN);
         datafile3="/pnp-data/set-3/n_idx.dat";
         strcat(filename3,datafile3);
         
         fasp_ivecind_read(filename3, &n_idx);
         
         // read in index
-        strncpy(filename4,inpar.workdir,128);
+        memcpy(filename4,inpar.workdir,STRLEN);
         datafile4="/pnp-data/set-3/p_idx.dat";
         strcat(filename4,datafile4);
         
         fasp_ivecind_read(filename4, &p_idx);
         
         // read in b
-        strncpy(filename5,inpar.workdir,128);
+        memcpy(filename5,inpar.workdir,STRLEN);
         datafile5="/pnp-data/set-3/b.dat";
         strcat(filename5,datafile5);
         
@@ -388,7 +388,7 @@ int main (int argc, const char * argv[])
         printf("Read matrix A\n");
         printf("-------------------------\n");
         
-        strncpy(filename1,inpar.workdir,128);
+        memcpy(filename1,inpar.workdir,STRLEN);
         datafile1="/5layers/A.dat";
         strcat(filename1,datafile1);
         
@@ -399,7 +399,7 @@ int main (int argc, const char * argv[])
         printf("Read right hand size b\n");
         printf("-------------------------\n");
         dvector b_temp;
-        strncpy(filename2,inpar.workdir,128);
+        memcpy(filename2,inpar.workdir,STRLEN);
         datafile2="/5layers/b.dat";
         strcat(filename2,datafile2);
         
@@ -417,7 +417,7 @@ int main (int argc, const char * argv[])
         printf("Read preconditioner Ai\n");
         printf("-------------------------\n");
     
-        strncpy(filename1,inpar.workdir,128);
+        memcpy(filename1,inpar.workdir,STRLEN);
         datafile1="/5layers/Ai.dat";
         strcat(filename1,datafile1);
         
@@ -433,35 +433,35 @@ int main (int argc, const char * argv[])
         {
         
         // layer 0
-        strncpy(filename3,inpar.workdir,128);
+        memcpy(filename3,inpar.workdir,STRLEN);
         datafile3="/5layers/global_idx_0.dat";
         strcat(filename3,datafile3);
         
         fasp_ivecind_read(filename3, &global_idx[0]);
         
         // layer 1
-        strncpy(filename4,inpar.workdir,128);
+        memcpy(filename4,inpar.workdir,STRLEN);
         datafile4="/5layers/global_idx_1.dat";
         strcat(filename4,datafile4);
         
         fasp_ivecind_read(filename4, &global_idx[1]);
         
         // layer 2
-        strncpy(filename5,inpar.workdir,128);
+        memcpy(filename5,inpar.workdir,STRLEN);
         datafile5="/5layers/global_idx_2.dat";
         strcat(filename5,datafile5);
         
         fasp_ivecind_read(filename5, &global_idx[2]);
         
         // layer 3
-        strncpy(filename6,inpar.workdir,128);
+        memcpy(filename6,inpar.workdir,STRLEN);
         datafile6="/5layers/global_idx_3.dat";
         strcat(filename6,datafile6);
         
         fasp_ivecind_read(filename6, &global_idx[3]);
         
         // layer 4
-        strncpy(filename7,inpar.workdir,128);
+        memcpy(filename7,inpar.workdir,STRLEN);
         datafile7="/5layers/global_idx_4.dat";
         strcat(filename7,datafile7);
         
@@ -592,28 +592,28 @@ int main (int argc, const char * argv[])
         // other levels
         {
         // layer 1
-        strncpy(filename1,inpar.workdir,128);
+        memcpy(filename1,inpar.workdir,STRLEN);
         datafile1="/5layers/local_A_0.dat";
         strcat(filename1,datafile1);
         
         fasp_dcoo_shift_read(filename1, &(local_A[1]));
         
         // layer 2
-        strncpy(filename2,inpar.workdir,128);
+        memcpy(filename2,inpar.workdir,STRLEN);
         datafile2="/5layers/local_A_1.dat";
         strcat(filename2,datafile2);
         
         fasp_dcoo_shift_read(filename2, &(local_A[2]));
         
         // layer 3
-        strncpy(filename3,inpar.workdir,128);
+        memcpy(filename3,inpar.workdir,STRLEN);
         datafile3="/5layers/local_A_2.dat";
         strcat(filename3,datafile3);
         
         fasp_dcoo_shift_read(filename3, &(local_A[3]));
         
         // layer 4
-        strncpy(filename4,inpar.workdir,128);
+        memcpy(filename4,inpar.workdir,STRLEN);
         datafile4="/5layers/local_A_3.dat";
         strcat(filename4,datafile4);
         
@@ -633,28 +633,28 @@ int main (int argc, const char * argv[])
             // layer 0 (no need to read)
             
             // layer 1
-            strncpy(filename1,inpar.workdir,128);
+            memcpy(filename1,inpar.workdir,STRLEN);
             datafile1="/5layers/local_ptr_0.dat";
             strcat(filename1,datafile1);
             
             fasp_ivecind_read(filename1, &local_ptr[1]);
             
             // layer 2
-            strncpy(filename2,inpar.workdir,128);
+            memcpy(filename2,inpar.workdir,STRLEN);
             datafile2="/5layers/local_ptr_1.dat";
             strcat(filename2,datafile2);
             
             fasp_ivecind_read(filename2, &local_ptr[2]);
             
             // layer 3
-            strncpy(filename3,inpar.workdir,128);
+            memcpy(filename3,inpar.workdir,STRLEN);
             datafile3="/5layers/local_ptr_2.dat";
             strcat(filename3,datafile3);
             
             fasp_ivecind_read(filename3, &local_ptr[3]);
             
             // layer 4
-            strncpy(filename4,inpar.workdir,128);
+            memcpy(filename4,inpar.workdir,STRLEN);
             datafile4="/5layers/local_ptr_3.dat";
             strcat(filename4,datafile4);
             
@@ -729,7 +729,7 @@ int main (int argc, const char * argv[])
         printf("Read matrix A\n");
         printf("-------------------------\n");
         
-        strncpy(filename1,inpar.workdir,128);
+        memcpy(filename1,inpar.workdir,STRLEN);
         datafile1="/4layers/A.dat";
         strcat(filename1,datafile1);
         
@@ -740,7 +740,7 @@ int main (int argc, const char * argv[])
         printf("Read right hand size b\n");
         printf("-------------------------\n");
         dvector b_temp;
-        strncpy(filename2,inpar.workdir,128);
+        memcpy(filename2,inpar.workdir,STRLEN);
         datafile2="/4layers/b.dat";
         strcat(filename2,datafile2);
         
@@ -758,7 +758,7 @@ int main (int argc, const char * argv[])
         printf("Read preconditioner Ai\n");
         printf("-------------------------\n");
         
-        strncpy(filename1,inpar.workdir,128);
+        memcpy(filename1,inpar.workdir,STRLEN);
         datafile1="/4layers/Ai.dat";
         strcat(filename1,datafile1);
         
@@ -774,28 +774,28 @@ int main (int argc, const char * argv[])
         {
             
             // layer 0
-            strncpy(filename3,inpar.workdir,128);
+            memcpy(filename3,inpar.workdir,STRLEN);
             datafile3="/4layers/global_idx_0.dat";
             strcat(filename3,datafile3);
             
             fasp_ivecind_read(filename3, &global_idx[0]);
             
             // layer 1
-            strncpy(filename4,inpar.workdir,128);
+            memcpy(filename4,inpar.workdir,STRLEN);
             datafile4="/4layers/global_idx_1.dat";
             strcat(filename4,datafile4);
             
             fasp_ivecind_read(filename4, &global_idx[1]);
             
             // layer 2
-            strncpy(filename5,inpar.workdir,128);
+            memcpy(filename5,inpar.workdir,STRLEN);
             datafile5="/4layers/global_idx_2.dat";
             strcat(filename5,datafile5);
             
             fasp_ivecind_read(filename5, &global_idx[2]);
             
             // layer 3
-            strncpy(filename6,inpar.workdir,128);
+            memcpy(filename6,inpar.workdir,STRLEN);
             datafile6="/4layers/global_idx_3.dat";
             strcat(filename6,datafile6);
             
@@ -927,21 +927,21 @@ int main (int argc, const char * argv[])
         // other levels
         {
             // layer 1
-            strncpy(filename1,inpar.workdir,128);
+            memcpy(filename1,inpar.workdir,STRLEN);
             datafile1="/4layers/local_A_0.dat";
             strcat(filename1,datafile1);
             
             fasp_dcoo_shift_read(filename1, &(local_A[1]));
             
             // layer 2
-            strncpy(filename2,inpar.workdir,128);
+            memcpy(filename2,inpar.workdir,STRLEN);
             datafile2="/4layers/local_A_1.dat";
             strcat(filename2,datafile2);
             
             fasp_dcoo_shift_read(filename2, &(local_A[2]));
             
             // layer 3
-            strncpy(filename3,inpar.workdir,128);
+            memcpy(filename3,inpar.workdir,STRLEN);
             datafile3="/4layers/local_A_2.dat";
             strcat(filename3,datafile3);
             
@@ -962,21 +962,21 @@ int main (int argc, const char * argv[])
             // layer 0 (no need to read)
             
             // layer 1
-            strncpy(filename1,inpar.workdir,128);
+            memcpy(filename1,inpar.workdir,STRLEN);
             datafile1="/4layers/local_ptr_0.dat";
             strcat(filename1,datafile1);
             
             fasp_ivecind_read(filename1, &local_ptr[1]);
             
             // layer 2
-            strncpy(filename2,inpar.workdir,128);
+            memcpy(filename2,inpar.workdir,STRLEN);
             datafile2="/4layers/local_ptr_1.dat";
             strcat(filename2,datafile2);
             
             fasp_ivecind_read(filename2, &local_ptr[2]);
             
             // layer 3
-            strncpy(filename3,inpar.workdir,128);
+            memcpy(filename3,inpar.workdir,STRLEN);
             datafile3="/4layers/local_ptr_2.dat";
             strcat(filename3,datafile3);
             
@@ -1052,7 +1052,7 @@ int main (int argc, const char * argv[])
         printf("Read matrix A\n");
         printf("-------------------------\n");
         
-        strncpy(filename1,inpar.workdir,128);
+        memcpy(filename1,inpar.workdir,STRLEN);
         datafile1="/3layers/A.dat";
         strcat(filename1,datafile1);
         
@@ -1063,7 +1063,7 @@ int main (int argc, const char * argv[])
         printf("Read right hand size b\n");
         printf("-------------------------\n");
         dvector b_temp;
-        strncpy(filename2,inpar.workdir,128);
+        memcpy(filename2,inpar.workdir,STRLEN);
         datafile2="/3layers/b.dat";
         strcat(filename2,datafile2);
         
@@ -1081,7 +1081,7 @@ int main (int argc, const char * argv[])
         printf("Read preconditioner Ai\n");
         printf("-------------------------\n");
         
-        strncpy(filename1,inpar.workdir,128);
+        memcpy(filename1,inpar.workdir,STRLEN);
         datafile1="/3layers/Ai.dat";
         strcat(filename1,datafile1);
         
@@ -1097,21 +1097,21 @@ int main (int argc, const char * argv[])
         {
             
             // layer 0
-            strncpy(filename3,inpar.workdir,128);
+            memcpy(filename3,inpar.workdir,STRLEN);
             datafile3="/3layers/global_idx_0.dat";
             strcat(filename3,datafile3);
             
             fasp_ivecind_read(filename3, &global_idx[0]);
             
             // layer 1
-            strncpy(filename4,inpar.workdir,128);
+            memcpy(filename4,inpar.workdir,STRLEN);
             datafile4="/3layers/global_idx_1.dat";
             strcat(filename4,datafile4);
             
             fasp_ivecind_read(filename4, &global_idx[1]);
             
             // layer 2
-            strncpy(filename5,inpar.workdir,128);
+            memcpy(filename5,inpar.workdir,STRLEN);
             datafile5="/3layers/global_idx_2.dat";
             strcat(filename5,datafile5);
             
@@ -1244,14 +1244,14 @@ int main (int argc, const char * argv[])
         // other levels
         {
             // layer 1
-            strncpy(filename1,inpar.workdir,128);
+            memcpy(filename1,inpar.workdir,STRLEN);
             datafile1="/3layers/local_A_0.dat";
             strcat(filename1,datafile1);
             
             fasp_dcoo_shift_read(filename1, &(local_A[1]));
             
             // layer 2
-            strncpy(filename2,inpar.workdir,128);
+            memcpy(filename2,inpar.workdir,STRLEN);
             datafile2="/3layers/local_A_1.dat";
             strcat(filename2,datafile2);
             
@@ -1273,14 +1273,14 @@ int main (int argc, const char * argv[])
             // layer 0 (no need to read)
             
             // layer 1
-            strncpy(filename1,inpar.workdir,128);
+            memcpy(filename1,inpar.workdir,STRLEN);
             datafile1="/3layers/local_ptr_0.dat";
             strcat(filename1,datafile1);
             
             fasp_ivecind_read(filename1, &local_ptr[1]);
             
             // layer 2
-            strncpy(filename2,inpar.workdir,128);
+            memcpy(filename2,inpar.workdir,STRLEN);
             datafile2="/3layers/local_ptr_1.dat";
             strcat(filename2,datafile2);
             
@@ -1360,14 +1360,14 @@ int main (int argc, const char * argv[])
         //----------------------------------
         
         // read in A
-        strncpy(filename1,inpar.workdir,128);
+        memcpy(filename1,inpar.workdir,STRLEN);
         datafile1="/MHD/t0.05_h0.5/A.dat";
         strcat(filename1,datafile1);
         
         fasp_dcoo_read(filename1, &A);
         
         // read in b
-        strncpy(filename2,inpar.workdir,128);
+        memcpy(filename2,inpar.workdir,STRLEN);
         datafile2="/MHD/t0.05_h0.5/b.dat";
         strcat(filename2,datafile2);
         
@@ -1379,28 +1379,28 @@ int main (int argc, const char * argv[])
         A_diag = (dCSRmat *)fasp_mem_calloc(4, sizeof(dCSRmat));
         
         // read in A_U
-        strncpy(filename3,inpar.workdir,128);
+        memcpy(filename3,inpar.workdir,STRLEN);
         datafile3="/MHD/t0.05_h0.5/H1H1.dat";
         strcat(filename3, datafile3);
         
         fasp_dcoo_read(filename3, &(A_diag[0]));
         
         // read in M_P
-        strncpy(filename4,inpar.workdir,128);
+        memcpy(filename4,inpar.workdir,STRLEN);
         datafile4="/MHD/t0.05_h0.5/L2L2.dat";
         strcat(filename4,datafile4);
         
         fasp_dcoo_read(filename4, &(A_diag[1]));
         
         // read in A_E
-        strncpy(filename5,inpar.workdir,128);
+        memcpy(filename5,inpar.workdir,STRLEN);
         datafile5="/MHD/t0.05_h0.5/Hcurl.dat";
         strcat(filename5,datafile5);
         
         fasp_dcoo_read(filename5, &(A_diag[2]));
         
         // read in M_B
-        strncpy(filename6,inpar.workdir,128);
+        memcpy(filename6,inpar.workdir,STRLEN);
         datafile6="/MHD/t0.05_h0.5/Hdiv.dat";
         strcat(filename6,datafile6);
         
@@ -1485,14 +1485,14 @@ int main (int argc, const char * argv[])
         //----------------------------------
         
         // read in A
-        strncpy(filename1,inpar.workdir,128);
+        memcpy(filename1,inpar.workdir,STRLEN);
         datafile1="/MHD/t0.05_h0.25/A.dat";
         strcat(filename1,datafile1);
         
         fasp_dcoo_read(filename1, &A);
         
         // read in b
-        strncpy(filename2,inpar.workdir,128);
+        memcpy(filename2,inpar.workdir,STRLEN);
         datafile2="/MHD/t0.05_h0.25/b.dat";
         strcat(filename2,datafile2);
         
@@ -1504,28 +1504,28 @@ int main (int argc, const char * argv[])
         A_diag = (dCSRmat *)fasp_mem_calloc(4, sizeof(dCSRmat));
         
         // read in A_U
-        strncpy(filename3,inpar.workdir,128);
+        memcpy(filename3,inpar.workdir,STRLEN);
         datafile3="/MHD/t0.05_h0.25/H1H1.dat";
         strcat(filename3, datafile3);
         
         fasp_dcoo_read(filename3, &(A_diag[0]));
         
         // read in M_P
-        strncpy(filename4,inpar.workdir,128);
+        memcpy(filename4,inpar.workdir,STRLEN);
         datafile4="/MHD/t0.05_h0.25/L2L2.dat";
         strcat(filename4,datafile4);
         
         fasp_dcoo_read(filename4, &(A_diag[1]));
         
         // read in A_E
-        strncpy(filename5,inpar.workdir,128);
+        memcpy(filename5,inpar.workdir,STRLEN);
         datafile5="/MHD/t0.05_h0.25/Hcurl.dat";
         strcat(filename5,datafile5);
         
         fasp_dcoo_read(filename5, &(A_diag[2]));
         
         // read in M_B
-        strncpy(filename6,inpar.workdir,128);
+        memcpy(filename6,inpar.workdir,STRLEN);
         datafile6="/MHD/t0.05_h0.25/Hdiv.dat";
         strcat(filename6,datafile6);
         
@@ -1610,14 +1610,14 @@ int main (int argc, const char * argv[])
         //----------------------------------
         
         // read in A
-        strncpy(filename1,inpar.workdir,128);
+        memcpy(filename1,inpar.workdir,STRLEN);
         datafile1="/MHD/t0.05_h0.18/A.dat";
         strcat(filename1,datafile1);
         
         fasp_dcoo_read(filename1, &A);
         
         // read in b
-        strncpy(filename2,inpar.workdir,128);
+        memcpy(filename2,inpar.workdir,STRLEN);
         datafile2="/MHD/t0.05_h0.18/b.dat";
         strcat(filename2,datafile2);
         
@@ -1629,28 +1629,28 @@ int main (int argc, const char * argv[])
         A_diag = (dCSRmat *)fasp_mem_calloc(4, sizeof(dCSRmat));
         
         // read in A_U
-        strncpy(filename3,inpar.workdir,128);
+        memcpy(filename3,inpar.workdir,STRLEN);
         datafile3="/MHD/t0.05_h0.18/H1H1.dat";
         strcat(filename3, datafile3);
         
         fasp_dcoo_read(filename3, &(A_diag[0]));
         
         // read in M_P
-        strncpy(filename4,inpar.workdir,128);
+        memcpy(filename4,inpar.workdir,STRLEN);
         datafile4="/MHD/t0.05_h0.18/L2L2.dat";
         strcat(filename4,datafile4);
         
         fasp_dcoo_read(filename4, &(A_diag[1]));
         
         // read in A_E
-        strncpy(filename5,inpar.workdir,128);
+        memcpy(filename5,inpar.workdir,STRLEN);
         datafile5="/MHD/t0.05_h0.18/Hcurl.dat";
         strcat(filename5,datafile5);
         
         fasp_dcoo_read(filename5, &(A_diag[2]));
         
         // read in M_B
-        strncpy(filename6,inpar.workdir,128);
+        memcpy(filename6,inpar.workdir,STRLEN);
         datafile6="/MHD/t0.05_h0.18/Hdiv.dat";
         strcat(filename6,datafile6);
         

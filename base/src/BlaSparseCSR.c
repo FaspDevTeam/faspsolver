@@ -7,7 +7,7 @@
  *         AuxVector.c, and BlaSpmvCSR.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -136,24 +136,25 @@ void fasp_dcsr_alloc (const INT  m,
                       const INT  nnz,
                       dCSRmat   *A)
 {
+    if ( m <= 0 || n <= 0 ) {
+        printf("### ERROR: Matrix dim %d, %d must be positive! [%s]\n",
+               m, n, __FUNCTION__);
+        return;
+    }
+
     if ( m > 0 ) {
         A->IA = (INT*)fasp_mem_calloc(m+1,sizeof(INT));
     }
     else {
         A->IA = NULL;
     }
-    
-    if ( n > 0 ) {
-        A->JA = (INT*)fasp_mem_calloc(nnz,sizeof(INT));
-    }
-    else {
-        A->JA = NULL;
-    }
-    
+
     if ( nnz > 0 ) {
+        A->JA  = (INT*)fasp_mem_calloc(nnz,sizeof(INT));
         A->val = (REAL*)fasp_mem_calloc(nnz,sizeof(REAL));
     }
     else {
+        A->JA  = NULL;
         A->val = NULL;
     }
     
@@ -1454,7 +1455,7 @@ void fasp_dcsr_multicoloring (dCSRmat *A,
  *
  * Reference: Fred G. Gustavson. Two fast algorithms for sparse
  *            matrices: multiplication and permuted transposition.
- *            ACM Trans. Math. Software, 4(3):250¨C269, 1978.
+ *            ACM Trans. Math. Software, 4(3):250ï¿½C269, 1978.
  *
  * \author Ludmil Zikatanov
  * \date   19951219 (Fortran), 20150912 (C)

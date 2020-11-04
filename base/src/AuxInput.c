@@ -6,7 +6,7 @@
  *         AuxMemory.c and AuxMessage.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -112,7 +112,7 @@ SHORT fasp_param_check (input_param  *inparam)
 void fasp_param_input (const char   *fname,
                        input_param  *inparam)
 {
-    char     buffer[500]; // Note: max number of char for each line!
+    char     buffer[STRLEN]; // Note: max number of char for each line!
     int      val;
     SHORT    status = FASP_SUCCESS;
     FILE    *fp;
@@ -129,7 +129,7 @@ void fasp_param_input (const char   *fname,
     while ( status == FASP_SUCCESS ) {
         int     ibuff;
         double  dbuff;
-        char    sbuff[500];
+        char    sbuff[STRLEN];
     
         val = fscanf(fp,"%s",buffer);
         if (val==EOF) break;
@@ -147,7 +147,7 @@ void fasp_param_input (const char   *fname,
             }
             val = fscanf(fp,"%s",sbuff);
             if (val!=1) { status = ERROR_INPUT_PAR; break; }
-            strncpy(inparam->workdir,sbuff,128);
+            memcpy(inparam->workdir,sbuff,STRLEN);
             if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
     

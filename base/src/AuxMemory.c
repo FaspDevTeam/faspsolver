@@ -5,7 +5,7 @@
  *  \note  This file contains Level-0 (Aux) functions.
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2018 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -14,14 +14,12 @@
 /*-- Declare External Functions  --*/
 /*---------------------------------*/
 
+#include "fasp.h"
+
 #if DLMALLOC
-
 #include "dlmalloc.h"
-
 #elif NEDMALLOC
-
 #include "nedmalloc.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -31,18 +29,18 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
-
 #endif
 
-#include "fasp.h"
+#if DEBUG_MODE > 1
+extern unsigned long total_alloc_mem;
+extern unsigned long total_alloc_count;
+#endif
 
 /*---------------------------------*/
 /*--      Global Variables       --*/
 /*---------------------------------*/
 
-unsigned long total_alloc_mem   = 0;        //! Total allocated memory amount
-unsigned long total_alloc_count = 0;        //! Total number of allocations
-const    int  Million           = 1048576;  //! 1M = 1024*1024
+const int  Million = 1048576;  //! 1M = 1024*1024
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -66,7 +64,7 @@ const    int  Million           = 1048576;  //! 1M = 1024*1024
 void * fasp_mem_calloc (const unsigned int  size,
                         const unsigned int  type)
 {
-    const unsigned long tsize = size*type;
+    const LONGLONG tsize = size*type;
     void * mem = NULL;
     
 #if DEBUG_MODE > 1
@@ -90,7 +88,7 @@ void * fasp_mem_calloc (const unsigned int  size,
     }
 
     if ( mem == NULL ) {
-        printf("### WARNING: Trying to allocate %dB RAM...\n", tsize);
+        printf("### WARNING: Trying to allocate %lldB RAM...\n", tsize);
         printf("### WARNING: Cannot allocate %.4fMB RAM!\n", (REAL)tsize/Million);
     }
     
@@ -134,7 +132,7 @@ void * fasp_mem_realloc (void           *oldmem,
     }
     
     if ( mem == NULL ) {
-        printf("### WARNING: Trying to allocate %ldB RAM!\n", tsize);
+        printf("### WARNING: Trying to allocate %lldB RAM!\n", tsize);
         printf("### WARNING: Cannot allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
     }
     
@@ -186,7 +184,7 @@ void fasp_mem_free (void *mem)
 void fasp_mem_usage ( void )
 {
 #if DEBUG_MODE > 1
-    printf("### DEBUG: Number of alloc = %d, allocated memory = %.3fMB.\n",
+    printf("### DEBUG: Number of alloc = %ld, allocated memory = %.3fMB.\n",
            total_alloc_count, (REAL)total_alloc_mem/Million);
 #endif
 }
