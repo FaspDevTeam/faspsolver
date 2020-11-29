@@ -59,7 +59,7 @@ INT fasp_amg_solve (AMG_data   *mgl,
     
     // local variables
     REAL  solve_start, solve_end;
-    REAL  relres1 = BIGREAL, absres0 = sumb, absres, factor;
+    REAL  relres1 = 1.0, absres0 = sumb, absres, factor;
     INT   iter = 0;
 
 #if DEBUG_MODE > 0
@@ -71,8 +71,11 @@ INT fasp_amg_solve (AMG_data   *mgl,
     fasp_gettime(&solve_start);
     
     // Print iteration information if needed
-    fasp_itinfo(prtlvl, STOP_REL_RES, iter, 1.0, sumb, 0.0);
-    
+    fasp_itinfo(prtlvl, STOP_REL_RES, iter, relres1, sumb, 0.0);
+
+    // If b = 0, set x = 0 to be a trivial solution
+    if ( sumb <= SMALLREAL ) fasp_dvec_set(x->row, x, 0.0);
+
     // MG solver here
     while ( (++iter <= MaxIt) & (sumb > SMALLREAL) ) {
         
@@ -89,10 +92,10 @@ INT fasp_amg_solve (AMG_data   *mgl,
         fasp_blas_dcsr_aAxpy(-1.0, ptrA, x->val, r->val);
         
         // Compute norms of r and convergence factor
-        absres  = fasp_blas_dvec_norm2(r); // residual ||r||
-        relres1 = absres/sumb;             // relative residual ||r||/||b||
-        factor  = absres/absres0;          // contraction factor
-        absres0 = absres;                  // prepare for next iteration
+        absres  = fasp_blas_dvec_norm2(r);     // residual ||r||
+        relres1 = absres/MAX(SMALLREAL,sumb);  // relative residual ||r||/||b||
+        factor  = absres/absres0;              // contraction factor
+        absres0 = absres;                      // prepare for next iteration
         
         // Print iteration information if needed
         fasp_itinfo(prtlvl, STOP_REL_RES, iter, relres1, absres, factor);
@@ -104,7 +107,7 @@ INT fasp_amg_solve (AMG_data   *mgl,
     if ( prtlvl > PRINT_NONE ) {
         ITS_FINAL(iter, MaxIt, relres1);
         fasp_gettime(&solve_end);
-        fasp_cputime("AMG solve",solve_end - solve_start);
+        fasp_cputime("AMG solve", solve_end - solve_start);
     }
     
 #if DEBUG_MODE > 0
@@ -146,8 +149,8 @@ INT fasp_amg_solve_amli (AMG_data   *mgl,
     const REAL   sumb   = fasp_blas_dvec_norm2(b); // L2norm(b)
     
     // local variables
-    REAL         solve_start, solve_end, solve_time;
-    REAL         relres1 = BIGREAL, absres0 = sumb, absres, factor;
+    REAL         solve_start, solve_end;
+    REAL         relres1 = 1.0, absres0 = sumb, absres, factor;
     INT          iter = 0;
     
 #if DEBUG_MODE > 0
@@ -159,8 +162,11 @@ INT fasp_amg_solve_amli (AMG_data   *mgl,
     fasp_gettime(&solve_start);
 
     // Print iteration information if needed
-    fasp_itinfo(prtlvl, STOP_REL_RES, iter, 1.0, sumb, 0.0);
-    
+    fasp_itinfo(prtlvl, STOP_REL_RES, iter, relres1, sumb, 0.0);
+
+    // If b = 0, set x = 0 to be a trivial solution
+    if ( sumb <= SMALLREAL ) fasp_dvec_set(x->row, x, 0.0);
+
     // MG solver here
     while ( (++iter <= MaxIt) & (sumb > SMALLREAL) ) {
         
@@ -172,10 +178,10 @@ INT fasp_amg_solve_amli (AMG_data   *mgl,
         fasp_blas_dcsr_aAxpy(-1.0, ptrA, x->val, r->val);
         
         // Compute norms of r and convergence factor
-        absres  = fasp_blas_dvec_norm2(r); // residual ||r||
-        relres1 = absres/sumb;             // relative residual ||r||/||b||
-        factor  = absres/absres0;          // contraction factor
-        absres0 = absres;                  // prepare for next iteration
+        absres  = fasp_blas_dvec_norm2(r);     // residual ||r||
+        relres1 = absres/MAX(SMALLREAL,sumb);  // relative residual ||r||/||b||
+        factor  = absres/absres0;              // contraction factor
+        absres0 = absres;                      // prepare for next iteration
         
         // Print iteration information if needed
         fasp_itinfo(prtlvl, STOP_REL_RES, iter, relres1, absres, factor);
@@ -187,8 +193,7 @@ INT fasp_amg_solve_amli (AMG_data   *mgl,
     if ( prtlvl > PRINT_NONE ) {
         ITS_FINAL(iter, MaxIt, relres1);
         fasp_gettime(&solve_end);
-        solve_time = solve_end - solve_start;
-        fasp_cputime("AMLI solve", solve_time);
+        fasp_cputime("AMLI solve", solve_end - solve_start);
     }
     
 #if DEBUG_MODE > 0
@@ -230,7 +235,7 @@ INT fasp_amg_solve_namli (AMG_data   *mgl,
     
     // local variables
     REAL          solve_start, solve_end;
-    REAL          relres1 = BIGREAL, absres0 = BIGREAL, absres, factor;
+    REAL          relres1 = 1.0, absres0 = sumb, absres, factor;
     INT           iter = 0;
     
 #if DEBUG_MODE > 0
@@ -242,8 +247,11 @@ INT fasp_amg_solve_namli (AMG_data   *mgl,
     fasp_gettime(&solve_start);
     
     // Print iteration information if needed
-    fasp_itinfo(prtlvl, STOP_REL_RES, iter, 1.0, sumb, 0.0);
-    
+    fasp_itinfo(prtlvl, STOP_REL_RES, iter, relres1, sumb, 0.0);
+
+    // If b = 0, set x = 0 to be a trivial solution
+    if ( sumb <= SMALLREAL ) fasp_dvec_set(x->row, x, 0.0);
+
     while ( (++iter <= MaxIt) & (sumb > SMALLREAL) ) // MG solver here
     {
         // one multigrid cycle
@@ -253,9 +261,9 @@ INT fasp_amg_solve_namli (AMG_data   *mgl,
         fasp_dvec_cp(b, r);
         fasp_blas_dcsr_aAxpy(-1.0, ptrA, x->val, r->val);
         
-        absres  = fasp_blas_dvec_norm2(r); // residual ||r||
-        relres1 = absres/sumb;       // relative residual ||r||/||b||
-        factor  = absres/absres0;    // contraction factor
+        absres  = fasp_blas_dvec_norm2(r);     // residual ||r||
+        relres1 = absres/MAX(SMALLREAL,sumb);  // relative residual ||r||/||b||
+        factor  = absres/absres0;              // contraction factor
         
         // output iteration information if needed
         fasp_itinfo(prtlvl, STOP_REL_RES, iter, relres1, absres, factor);
@@ -300,7 +308,7 @@ void fasp_famg_solve (AMG_data   *mgl,
     
     // local variables
     REAL         solve_start, solve_end;
-    REAL         relres1 = BIGREAL, absres;
+    REAL         relres1 = 1.0, absres;
         
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -310,6 +318,9 @@ void fasp_famg_solve (AMG_data   *mgl,
     
     fasp_gettime(&solve_start);
 
+    // If b = 0, set x = 0 to be a trivial solution
+    if ( sumb <= SMALLREAL ) fasp_dvec_set(x->row, x, 0.0);
+
     // Call one full multigrid cycle
     fasp_solver_fmgcycle(mgl, param);
     
@@ -318,13 +329,13 @@ void fasp_famg_solve (AMG_data   *mgl,
     fasp_blas_dcsr_aAxpy(-1.0, ptrA, x->val, r->val);
     
     // Compute norms of r and convergence factor
-    absres  = fasp_blas_dvec_norm2(r); // residual ||r||
-    relres1 = absres/sumb;             // relative residual ||r||/||b||
+    absres  = fasp_blas_dvec_norm2(r);    // residual ||r||
+    relres1 = absres/MAX(SMALLREAL,sumb); // relative residual ||r||/||b||
     
     if ( prtlvl > PRINT_NONE ) {
         printf("FMG finishes with relative residual %e.\n", relres1);
         fasp_gettime(&solve_end);
-        fasp_cputime("FMG solve",solve_end - solve_start);
+        fasp_cputime("FMG solve", solve_end - solve_start);
     }
     
 #if DEBUG_MODE > 0
