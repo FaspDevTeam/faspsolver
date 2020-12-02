@@ -5,7 +5,7 @@
 # Modified   2019-08-08   --Ludmil Zikatanov & Chensong Zhang
 ############################################################
 
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.0)
 
 # Helper modules
 include(CheckFunctionExists)
