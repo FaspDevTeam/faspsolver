@@ -3,6 +3,7 @@
 # Modified   2015-08-08   --Ludmil Zikatanov
 # Modified   2017-10-20   --Chensong Zhang
 # Modified   2019-08-08   --Ludmil Zikatanov & Chensong Zhang
+# Modified   2020-12-02   --Chensong Zhang
 ############################################################
 
 cmake_minimum_required (VERSION 3.0)
@@ -15,26 +16,28 @@ set(CMAKE_VERBOSE_MAKEFILE 1)
 set(GDB 1 CACHE BOOL "debugging or not")
 set(OPENMP 0 CACHE BOOL "Openmp use")
 set(USE_MUMPS 0 CACHE BOOL "MUMPS use")
+set(USE_UMFPACK 0 CACHE BOOL "UMFPACK use")
+set(USE_SUPERLU 0 CACHE BOOL "SUPERLU use")
+set(USE_PARDISO 0 CACHE BOOL "PARDISOK use")
+set(USE_DOXYGEN 0 CACHE BOOL "Doxygen use")
 
 #######################################################################
 # Search for C compilers in the specified order.
 #######################################################################
 if(DEFINED ENV{CC}) 
-	find_program(THE_C NAMES $ENV{CC} gcc-mp-5 gcc-mp-4.9 gcc-mp-4.8
-	             gcc-mp-4.6 gcc46 gcc45 gcc44 gcc icc clang)
+    find_program(THE_C NAMES $ENV{CC} gcc icc clang)
 else(DEFINED ENV{CC}) 
-	find_program(THE_C NAMES gcc-mp-5 gcc-mp-4.9 gcc-mp-4.8 gcc-mp-4.6
-	             gcc46 gcc45 gcc44 gcc icc clang)
-endif(DEFINED ENV{CC}) 
-
-if( THE_C )
+    find_program(THE_C NAMES gcc icc clang)
+endif(DEFINED ENV{CC})
+if(THE_C)
     set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL "the C compiler" FORCE)
-endif( THE_C )
+endif(THE_C)
 
 #######################################################################
 # name the project at this moment and this will set the compiler id:
-project(FASP C)
 #######################################################################
+project(FASP C)
+
 set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
 
 ########### try to find matching c++ and fortran compilers ############
@@ -67,7 +70,7 @@ if(USE_OPENMP)
     endif(OPENMP_FOUND)
 endif(USE_OPENMP)
 
-########## Additional compiler flags (not defined by the build
+########## Additional compiler flags (not defined by the build) ######
 #
 if(ADD_CFLAGS)
     set (CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
@@ -84,23 +87,23 @@ if(ADD_FFLAGS)
 	 "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_FFLAGS}")	 
 endif(ADD_FFLAGS)
 #
-    set(CMAKE_INSTALL_PREFIX "${FASP_SOURCE_DIR}" )
-    set(FASPLIB_BASE_PATH "base" CACHE PATH "base path to FASPLIB")
-    set(FASP_INSTALL TRUE)
+set(CMAKE_INSTALL_PREFIX "${FASP_SOURCE_DIR}" )
+set(FASPLIB_BASE_PATH "base" CACHE PATH "base path to FASPLIB")
+set(FASP_INSTALL TRUE)
 #
-    if(SHARED) 
-	set(FASP_LIBRARY_TYPE SHARED)
-    else(SHARED)
-	set(FASP_LIBRARY_TYPE STATIC)
-    endif(SHARED)   
+if(SHARED) 
+    set(FASP_LIBRARY_TYPE SHARED)
+else(SHARED)
+    set(FASP_LIBRARY_TYPE STATIC)
+endif(SHARED)   
 #
 
 # FOR MAC OS X to find shared libs in install location
-    set(CMAKE_INSTALL_NAME_DIR 
-	${CMAKE_INSTALL_PREFIX}/lib CACHE PATH "path for Mac OS X")
+set(CMAKE_INSTALL_NAME_DIR 
+    ${CMAKE_INSTALL_PREFIX}/lib CACHE PATH "path for Mac OS X")
 # FOR LINUX to find shared libs in install location
-    set(CMAKE_INSTALL_RPATH
-        ${CMAKE_INSTALL_NAME_DIR} CACHE PATH "path for Linux")
+set(CMAKE_INSTALL_RPATH
+    ${CMAKE_INSTALL_NAME_DIR} CACHE PATH "path for Linux")
 
 file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR} 
 	  		          ${FASP_SOURCE_DIR}/base/src/*.c 
@@ -202,64 +205,63 @@ endif(USE_PARDISO)
 ##################################################################
 # For Doxygen
 ##################################################################
-# target generating the FASP documentation with doxygen
-find_package(Doxygen)
+if(USE_DOXYGEN)
 
-if(DOXYGEN_FOUND)
-    if(EXISTS ${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in)
-    configure_file(
-	${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in
-        ${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf @ONLY)
-    set(DOXY_EXEC "${DOXYGEN_EXECUTABLE}")
-    if(DOXYWIZARD)
-        find_program(WIZARD doxywizard)
-        if(APPLE AND (NOT WIZARD) )
-           find_program(WIZARD 
-	       /Applications/Doxygen.app/Contents/MacOS/Doxywizard)
-        endif()
-        if(WIZARD)
-	       set(DOXY_EXEC "${WIZARD}")
-	    endif()
-    endif(DOXYWIZARD)
-    add_custom_target(docs ${DOXY_EXEC}
- 	       ${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf
-	       WORKING_DIRECTORY 
-	       "${CMAKE_CURRENT_BINARY_DIR}"
-	       COMMENT 
-	       "Generating FASP documentation (Doxygen)" 
-	       VERBATIM)
-    else(EXISTS ${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in)
-        message("   WARNING: Doxygen configuration file cannot be found!")
-    endif(EXISTS ${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in)
-endif(DOXYGEN_FOUND)
-###############end documentation with doxygen
+    find_package(Doxygen)
 
-#MISMATCH CHECK:
+    if(DOXYGEN_FOUND)
+        if(EXISTS ${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in)
+            configure_file(
+	        ${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in
+                ${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf @ONLY)
+            set(DOXY_EXEC "${DOXYGEN_EXECUTABLE}")
+            if(DOXYWIZARD)
+                find_program(WIZARD doxywizard)
+                if(APPLE AND (NOT WIZARD) )
+                    find_program(WIZARD 
+	                /Applications/Doxygen.app/Contents/MacOS/Doxywizard)
+                endif()
+                if(WIZARD)
+	            set(DOXY_EXEC "${WIZARD}")
+	        endif()
+            endif(DOXYWIZARD)
+            add_custom_target(docs ${DOXY_EXEC}
+ 	                      ${CMAKE_CURRENT_BINARY_DIR}/fasp.Doxygen.cnf
+	                      WORKING_DIRECTORY 
+	                      "${CMAKE_CURRENT_BINARY_DIR}"
+	                      COMMENT 
+	                      "Generating FASP documentation (Doxygen)" 
+	                      VERBATIM)
+        else(EXISTS ${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in)
+            message("   WARNING: Doxygen configuration file cannot be found!")
+        endif(EXISTS ${FASP_SOURCE_DIR}/doc/fasp.Doxygen.cnf.in)
+    endif(DOXYGEN_FOUND)
+
+endif(USE_DOXYGEN)
+
+##################################################################
+# CC and FC MISMATCH CHECK
+##################################################################
 if(NOT (CMAKE_Fortran_COMPILER_ID STREQUAL CMAKE_C_COMPILER_ID))
   message("
-** WARNING: Mismatching CC and FC mismatch. CC=\"${CMAKE_C_COMPILER_ID}${CMAKE_C_COMPILER_VERSION}\"; FC=\"${CMAKE_Fortran_COMPILER_ID}${CMAKE_Fortran_COMPILER_VERSION}\"!
+** WARNING: Mismatching CC and FC. CC=\"${CMAKE_C_COMPILER_ID}${CMAKE_C_COMPILER_VERSION}\"; FC=\"${CMAKE_Fortran_COMPILER_ID}${CMAKE_Fortran_COMPILER_VERSION}\"!
 "
 ) 
 endif(NOT (CMAKE_Fortran_COMPILER_ID STREQUAL CMAKE_C_COMPILER_ID))
 
 ##################################################################
 # set FASP library name for the library
-    set(FASP_LIBRARY_NAME fasp)
 ##################################################################
+set(FASP_LIBRARY_NAME fasp)
+
 # Recursively look for CMakeLists.txt in the library subdir.
-    add_subdirectory("base")
-    add_subdirectory("test")
-    add_subdirectory("tutorial")
-# write the configuration
-    include(write_config)
-    
-##################################################################
-# Only the library will be installed with "make". The rest of the
-# targets must be installed separately, so we do EXCLUDE_FROM_ALL
+add_subdirectory("base")
+add_subdirectory("test")
+add_subdirectory("tutorial")
+include(write_config)
+
 ##################################################################
 # We no longer treat "test" and "tutorial" separately due to
 # cmake 3.14+ changes its behavoir on EXCLUDE_FROM_ALL!!! It
 # makes the compilation results unpredictable.
 ##################################################################
-#    add_subdirectory("test" EXCLUDE_FROM_ALL)
-#    add_subdirectory("tutorial" EXCLUDE_FROM_ALL)

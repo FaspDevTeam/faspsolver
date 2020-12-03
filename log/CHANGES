@@ -3,6 +3,8 @@ File Name: CHANGES
 12/02/2020 FASP 2.5.7:
 - Check trivial solution case Ax=0 for AMG cycles.
 - Update cmake required version.
+- Update cmake CC search list.
+- Do not check for Doxygen by default.
 
 11/04/2020 FASP 2.5.6:
 - Fix new warnings in GCC10.
