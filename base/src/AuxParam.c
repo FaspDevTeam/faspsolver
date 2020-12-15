@@ -161,7 +161,7 @@ void fasp_param_set (const int     argc,
         else if ( strcmp(argv[arg_index], "-amgcycle") == 0 ) {
             arg_index++;
             if ( arg_index >= argc ) {
-                printf("### ERROR: Expecting AMG cycle type (1, 2, 3).\n");
+                printf("### ERROR: Expecting AMG cycle type (1, 2, 3, 12, 21).\n");
                 print_usage = TRUE; break;
             }
             iniparam->AMG_cycle_type = atoi(argv[arg_index]);

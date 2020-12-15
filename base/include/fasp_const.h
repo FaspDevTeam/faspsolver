@@ -177,6 +177,8 @@
 #define W_CYCLE                 2  /**< W-cycle */
 #define AMLI_CYCLE              3  /**< AMLI-cycle */
 #define NL_AMLI_CYCLE           4  /**< Nonlinear AMLI-cycle */
+#define VW_CYCLE                12 /**< VW-cycle */
+#define WV_CYCLE                21 /**< WV-cycle */
 
 /**
  * \brief Definition of standard smoother types

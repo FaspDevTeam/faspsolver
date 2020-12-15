@@ -89,9 +89,9 @@ precond *fasp_precond_setup (const SHORT   precond_type,
         switch (amgparam->cycle_type) {
         case AMLI_CYCLE: // AMLI cycle
             pc->fct = fasp_precond_amli; break;
-        case NL_AMLI_CYCLE: // Nonlinear AMLI AMG
+        case NL_AMLI_CYCLE: // Nonlinear AMLI
             pc->fct = fasp_precond_namli; break;
-        default: // V,W-Cycle AMG
+        default: // V,W-cycles or hybrid cycles
             pc->fct = fasp_precond_amg; break;
         }
             

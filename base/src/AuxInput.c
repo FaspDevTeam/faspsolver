@@ -56,7 +56,6 @@ SHORT fasp_param_check (input_param  *inparam)
         || inparam->AMG_type<=0
         || inparam->AMG_type>3
         || inparam->AMG_cycle_type<=0
-        || inparam->AMG_cycle_type>4
         || inparam->AMG_levels<0
         || inparam->AMG_ILU_levels<0
         || inparam->AMG_coarse_dof<=0
@@ -463,7 +462,11 @@ void fasp_param_input (const char   *fname,
             else if ((strcmp(buffer,"A")==0)||(strcmp(buffer,"a")==0))
                 inparam->AMG_cycle_type = AMLI_CYCLE;
             else if ((strcmp(buffer,"NA")==0)||(strcmp(buffer,"na")==0))
-                inparam->AMG_cycle_type = NL_AMLI_CYCLE; 
+                inparam->AMG_cycle_type = NL_AMLI_CYCLE;
+            else if ((strcmp(buffer,"VW")==0)||(strcmp(buffer,"vw")==0))
+                inparam->AMG_cycle_type = VW_CYCLE;
+            else if ((strcmp(buffer,"WV")==0)||(strcmp(buffer,"wv")==0))
+                inparam->AMG_cycle_type = WV_CYCLE;
             else
                 { status = ERROR_INPUT_PAR; break; }
             if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };

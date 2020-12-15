@@ -86,7 +86,7 @@ int main (int argc, const char * argv[])
     else if (problem_num == 11) {
 
         // Read A and b -- P1 FE discretization for Poisson, 1M DoF
-        datafile1="coomat_1046529.dat"; // This file is NOT in ../data!
+        datafile1="Poisson/coomat_1046529.dat"; // This file is NOT in ../data!
         strcat(filename1,datafile1);
         fasp_dcoo_read(filename1, &A);
         
@@ -104,7 +104,7 @@ int main (int argc, const char * argv[])
     else if (problem_num == 12) {
 
         // Read A and b -- P1 FE discretization for Poisson, 0.25M DoF
-        datafile1="coomat_261121.dat"; // This file is NOT in ../data!
+        datafile1="Poisson/coomat_261121.dat"; // This file is NOT in ../data!
         strcat(filename1,datafile1);
         fasp_dcoo_read(filename1, &A);
 
@@ -122,7 +122,7 @@ int main (int argc, const char * argv[])
     else if (problem_num == 13) {
 
         // Read A and b -- P1 FE discretization for Poisson, 65K DoF
-        datafile1="coomat_65025.dat"; // This file is NOT in ../data!
+        datafile1="Poisson/coomat_65025.dat"; // This file is NOT in ../data!
         strcat(filename1,datafile1);
         fasp_dcoo_read(filename1, &A);
 
@@ -140,7 +140,7 @@ int main (int argc, const char * argv[])
         else if (problem_num == 14) {
 
         // Read A and b -- 5pt FD stencil for Poisson, 1M DoF
-        datafile1="fdm_1023X1023.csr"; // This file is NOT in ../data!
+        datafile1="Poisson/fdm_1023X1023.csr"; // This file is NOT in ../data!
         strcat(filename1,datafile1);
         fasp_dcsr_read(filename1, &A);
 
@@ -152,6 +152,32 @@ int main (int argc, const char * argv[])
         b = fasp_dvec_create(A.row);
         fasp_blas_dcsr_mxv(&A, sol.val, b.val);
         fasp_dvec_free(&sol);
+
+    }
+
+    else if (problem_num == 40){
+
+        datafile1="ICF/icf_matrix.dat";
+        strcat(filename1,datafile1);
+
+        datafile2="ICF/icf_rhs.dat";
+        strcat(filename2,datafile2);
+
+        fasp_dcoo_read(filename1, &A);
+        fasp_dvec_read(filename2, &b);
+
+    }
+
+    else if (problem_num == 50){
+
+        datafile1="spe10-uncong/SPE10120.amg";
+        strcat(filename1,datafile1);
+
+        datafile2="spe10-uncong/SPE10120.rhs";
+        strcat(filename2,datafile2);
+
+        fasp_matrix_read_bin(filename1, &A);
+        fasp_dvec_read(filename2, &b);
 
     }
 

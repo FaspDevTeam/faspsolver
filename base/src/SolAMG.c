@@ -48,10 +48,12 @@ void fasp_solver_amg (const dCSRmat  *A,
                       dvector        *x,
                       AMG_param      *param)
 {
+    const REAL    tol         = param->tol;
     const SHORT   max_levels  = param->max_levels;
     const SHORT   prtlvl      = param->print_level;
     const SHORT   amg_type    = param->AMG_type;
     const SHORT   cycle_type  = param->cycle_type;
+    const INT     maxit       = param->maxit;
     const INT     nnz = A->nnz, m = A->row, n = A->col;
     
     // local variables
@@ -103,7 +105,7 @@ void fasp_solver_amg (const dCSRmat  *A,
             case NL_AMLI_CYCLE: // Nonlinear AMLI-cycle
                 fasp_amg_solve_namli(mgl, param); break;
                 
-            default: // V,W-cycles (determined by param)
+            default: // V,W-cycles or hybrid cycles (determined by param)
                 fasp_amg_solve(mgl, param); break;
                 
         }
@@ -118,8 +120,7 @@ void fasp_solver_amg (const dCSRmat  *A,
             printf("### WARNING: AMG setup failed!\n");
             printf("### WARNING: Use a backup solver instead!\n");
         }
-        fasp_solver_dcsr_spgmres (A, b, x, NULL, param->tol, param->maxit,
-                                  20, 1, prtlvl);
+        fasp_solver_dcsr_spgmres (A, b, x, NULL, tol, maxit, 20, 1, prtlvl);
         
     }
 

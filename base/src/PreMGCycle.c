@@ -71,7 +71,17 @@ void fasp_solver_mgcycle (AMG_data   *mgl,
 
     // more general cycling types on each level --zcs 05/07/2020
     INT  ncycles[MAX_AMG_LVL] = {1};
-    for ( SHORT i = 0; i < MAX_AMG_LVL; i += 1 ) ncycles[i] = cycle_type;
+    for ( SHORT i = 0; i < MAX_AMG_LVL; ++i ) ncycles[i] = 1; // initially V-cycle
+    switch(cycle_type) {
+        case 12:
+            for ( SHORT i = MAX_AMG_LVL-2; i > 0; i -= 2 ) ncycles[i] = 2;
+            break;
+        case 21:
+            for ( SHORT i = MAX_AMG_LVL-1; i > 0; i -= 2 ) ncycles[i] = 2;
+            break;
+        default:
+            for ( SHORT i = 0; i < MAX_AMG_LVL; i += 1 ) ncycles[i] = cycle_type;
+    }
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -105,7 +115,7 @@ ForwardSweep:
             }
         }
 
-        // or pre-smoothing with standard smoothers
+        // or pre-smoothing with standard smoother
         else {
             fasp_dcsr_presmoothing(smoother, &mgl[l].A, &mgl[l].b, &mgl[l].x,
                                    param->presmooth_iter, 0, mgl[l].A.row-1, 1,
