@@ -424,7 +424,7 @@ void fasp_dcoo_read1 (const char  *filename,
  *
  * \note i and j suppose to start with index 1!!!
  *
- * \note After read in, it shifts the index to C fashin and converts the matrix 
+ * \note After read in, it shifts the index to C fashion and converts the matrix
  *       to dCSRmat format.
  *
  * \author Xiaozhe Hu

@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+12/29/2020 FASP 2.5.8:
+- Add benchmark test based on SuiteSparse Matrix Market.
+- Modify test/main/test.c slightly.
+
 12/15/2020 FASP 2.5.7:
 - Check trivial solution case Ax=0 for AMG cycles.
 - Update cmake required version.

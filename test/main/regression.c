@@ -156,7 +156,6 @@ int main (int argc, const char * argv[])
             check_solu(&x, &sol, tolerance);
         }
 
-
         if ( indp==1 || indp==2 || indp==3 ) {
             /* AMG V-cycle (Standard interpolation) with GS smoother as a solver */         
             printf("------------------------------------------------------------------\n");
@@ -778,6 +777,7 @@ int main (int argc, const char * argv[])
             
             check_solu(&x, &sol, tolerance);
         }
+
         if ( indp==1 || indp==2 || indp==3 ) {
             /* Using classical AMG as preconditioner for GCR */
             printf("------------------------------------------------------------------\n");

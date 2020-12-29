@@ -137,7 +137,7 @@ int main (int argc, const char * argv[])
 
     }
 
-        else if (problem_num == 14) {
+    else if (problem_num == 14) {
 
         // Read A and b -- 5pt FD stencil for Poisson, 1M DoF
         datafile1="Poisson/fdm_1023X1023.csr"; // This file is NOT in ../data!
@@ -155,20 +155,20 @@ int main (int argc, const char * argv[])
 
     }
 
-    else if (problem_num == 40){
+    else if (problem_num == 50) {
 
-        datafile1="ICF/icf_matrix.dat";
+        datafile1="spe10-uncong/SPE1020.amg";
         strcat(filename1,datafile1);
 
-        datafile2="ICF/icf_rhs.dat";
+        datafile2="spe10-uncong/SPE1020.rhs";
         strcat(filename2,datafile2);
 
-        fasp_dcoo_read(filename1, &A);
+        fasp_matrix_read_bin(filename1, &A);
         fasp_dvec_read(filename2, &b);
 
     }
 
-    else if (problem_num == 50){
+    else if (problem_num == 51) {
 
         datafile1="spe10-uncong/SPE10120.amg";
         strcat(filename1,datafile1);
@@ -178,6 +178,18 @@ int main (int argc, const char * argv[])
 
         fasp_matrix_read_bin(filename1, &A);
         fasp_dvec_read(filename2, &b);
+
+    }
+
+    else if (problem_num == 52) {
+
+        datafile1="lixiang/csrmat_49.dat";
+        strcat(filename1,datafile1);
+
+        datafile2="lixiang/rhs_49.dat";
+        strcat(filename2,datafile2);
+
+        fasp_dcsrvec_read2(filename1, filename2, &A, &b);
 
     }
 
