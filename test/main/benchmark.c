@@ -331,7 +331,7 @@ int main (int argc, const char * argv[])
 
             Score = (Timer1 - Timer0) / b.row / TimeEachPoissonIter;
             printf("Total cost is \033[31;43m%.4e\033[0m (lMVU).\n", Score);
-            fprintf(fp, "UAMG V-cycle scores ............... %.4e (lMVU).\n", Score);
+            fprintf(fp, "UAMG W-cycle scores ............... %.4e (lMVU).\n", Score);
         }
 
         // AMG preconditioned CG
@@ -776,7 +776,6 @@ int main (int argc, const char * argv[])
         }
 
         /* clean up memory */
-        fclose(fp);
         fasp_dcsr_free(&A);
         fasp_dvec_free(&b);
         fasp_dvec_free(&x);
@@ -788,6 +787,8 @@ int main (int argc, const char * argv[])
     printf("---------------------- All test finished at ----------------------\n");
     printf("%s",asctime(localtime(&lt))); // output ending local time
     printf("------------------------------------------------------------------\n");
+
+    fclose(fp);
 }
 
 /*---------------------------------*/
