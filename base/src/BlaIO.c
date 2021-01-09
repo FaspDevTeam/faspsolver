@@ -733,7 +733,7 @@ void fasp_dbsr_read (const char  *filename,
     int     index;
     REAL    value;
     size_t  status;
-    
+
     FILE *fp = fopen(filename,"r");
 
     if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
@@ -745,7 +745,7 @@ void fasp_dbsr_read (const char  *filename,
     status = fscanf(fp, "%d %d %d", &ROW, &COL, &NNZ); // dimensions of the problem
     fasp_chkerr(status, filename);
     A->ROW = ROW; A->COL = COL; A->NNZ = NNZ;
-    
+
     status = fscanf(fp, "%d", &nb); // read the size of each block
     fasp_chkerr(status, filename);
     A->nb = nb;
@@ -769,7 +769,7 @@ void fasp_dbsr_read (const char  *filename,
     // read JA
     status = fscanf(fp, "%d", &n);
     fasp_chkerr(status, filename);
-    for ( i = 0; i < n; ++i ){
+    for ( i = 0; i < n; ++i ) {
         status = fscanf(fp, "%d", &index);
         fasp_chkerr(status, filename);
         A->JA[i] = index;
@@ -788,7 +788,7 @@ void fasp_dbsr_read (const char  *filename,
 }
 
 /**
- * \fn void fasp_dvecind_read (const char *filename, dvector *b)
+ * \fn void fasp_dvecind_read (const char *filename, dBSRmat *b)
  *
  * \brief Read b from matrix disk file
  *
@@ -1208,6 +1208,48 @@ void fasp_dstr_write (const char  *filename,
 }
 
 /**
+ * \fn void fasp_dbsr_print (const char *filename, dBSRmat *A)
+ *
+ * \brief Print a dBSRmat to a disk file in a readable format
+ *
+ * \param filename  File name for A
+ * \param A         Pointer to the dBSRmat matrix A
+ *
+ * \author Chensong Zhang
+ * \date   01/07/2021
+ */
+void fasp_dbsr_print (const char *filename,
+                      dBSRmat *A)
+{
+    const INT ROW = A->ROW, COL = A->COL, NNZ = A->NNZ;
+    const INT nb = A->nb, storage_manner = A->storage_manner;
+    const INT nb2 = nb*nb;
+
+    INT  *ia  = A->IA;
+    INT  *ja  = A->JA;
+    REAL *val = A->val;
+
+    INT i, j, k, ind;
+
+    FILE *fp = fopen(filename,"w");
+
+    if ( fp == NULL ) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
+    printf("%s: printing to file %s...\n", __FUNCTION__, filename);
+
+    for ( i = 0; i < ROW; i++ ) {
+        for ( k = ia[i]; k < ia[i+1]; k++ ) {
+            j = ja[k];
+            fprintf(fp, "A[%d,%d]=\n", i, j);
+            for ( ind = 0; ind < nb2; ind++ ) {
+                fprintf(fp, "%+.10E  ", val[k*nb2+ind]);
+            }
+            fprintf(fp, "\n");
+        }
+    }
+}
+
+/**
  * \fn void fasp_dbsr_write (const char *filename, dBSRmat *A)
  *
  * \brief Write a dBSRmat to a disk file
@@ -1444,41 +1486,6 @@ void fasp_dcoo_print (const dCOOmat *A)
     for ( k = 0; k < A->nnz; k++ ) {
         printf("A_(%d,%d) = %+.10E\n",A->rowind[k],A->colind[k],A->val[k]);
     }
-}
-
-/**
- * \fn void fasp_dbsr_print (const dBSRmat *A)
- *
- * \brief Print out a dBSRmat matrix in coordinate format
- *
- * \param A   Pointer to the dBSRmat matrix A
- *
- * \author Ziteng Wang
- * \date   12/24/2012
- *
- * Modified by Chunsheng Feng on 11/16/2013
- */
-void fasp_dbsr_print (const dBSRmat *A)
-{
-    INT i, j, k, l;
-    INT nb,nb2;
-    nb  = A->nb;
-    nb2 = nb*nb;
-    
-    printf("nrow = %d, ncol = %d, nnz = %d, nb = %d, storage_manner = %d\n",
-           A->ROW, A->COL, A->NNZ, A->nb, A->storage_manner);
-    
-    for ( i = 0; i < A->ROW; i++ ) {
-        for ( j = A->IA[i]; j < A->IA[i+1]; j++ ) {
-            for ( k = 0; k < A->nb; k++ ) {
-                for ( l = 0; l < A->nb; l++ ) {
-                    printf("A_(%d,%d) = %+.10E\n",
-                           i*nb+k+1, A->JA[j]*nb+l+1,  A->val[ A->JA[j]*nb2+k*nb+l]);
-                }
-            }
-        }
-    }
-    
 }
 
 /**
