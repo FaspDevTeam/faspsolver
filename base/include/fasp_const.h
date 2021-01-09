@@ -16,8 +16,9 @@
 /**
  * \brief Definition of return status and error messages
  */
-#define FASP_SUCCESS            0  /**< return from function successfully */
+#define FASP_SUCCESS           0   /**< return from function successfully */
 //---------------------------------------------------------------------------------
+#define ERROR_READ_FILE       -1   /**< fail to read a file */
 #define ERROR_OPEN_FILE       -10  /**< fail to open a file */
 #define ERROR_WRONG_FILE      -11  /**< input contains wrong format */
 #define ERROR_INPUT_PAR       -13  /**< wrong input argument */

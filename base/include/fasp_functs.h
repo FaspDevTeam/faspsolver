@@ -527,6 +527,9 @@ void fasp_dcoo_write (const char  *filename,
 void fasp_dstr_write (const char  *filename,
                       dSTRmat     *A);
 
+void fasp_dbsr_print (const char *filename,
+                      dBSRmat *A);
+
 void fasp_dbsr_write (const char *filename,
                       dBSRmat *A);
 
@@ -548,8 +551,6 @@ void fasp_ivec_print (const INT  n,
 void fasp_dcsr_print (const dCSRmat *A);
 
 void fasp_dcoo_print (const dCOOmat *A);
-
-void fasp_dbsr_print (const dBSRmat *A);
 
 void fasp_dbsr_write_coo (const char    *filename,
                           const dBSRmat *A);
