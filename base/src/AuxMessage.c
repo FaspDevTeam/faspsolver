@@ -208,6 +208,9 @@ void fasp_chkerr (const SHORT  status,
     if ( status >= 0 ) return; // No error found!!!
     
     switch ( status ) {
+        case ERROR_READ_FILE:
+            printf("### ERROR: Cannot read file! [%s]\n", fctname);
+            break;
         case ERROR_OPEN_FILE:
             printf("### ERROR: Cannot open file! [%s]\n", fctname);
             break;
