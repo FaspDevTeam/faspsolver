@@ -3,7 +3,7 @@
  *  \brief Benchmark tests for iterative solvers
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--2021 by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -23,9 +23,15 @@
  */
 int main (int argc, const char * argv[]) 
 {
-    const INT   num_prob      = 4;    // how many problems to be used
+    INT   num_prob      = 235;  // how many problems to be used
+    INT   prob_startID  = 1;    // start solve problem index
     const INT   print_level   = 1;    // how much information to print out
-    const SHORT coarse_solver = 32;   // default coarsest-level solver
+    const SHORT coarse_solver = 32;   // 0:  default coarsest-level solver
+                                      // 31: SuperLU
+                                      // 32: UMFPack
+                                      // 33: MUMPS
+                                      // 34: PARDISO
+                                       
     const INT   maxit         = 500;  // maximal iteration number
     const REAL  tolerance     = 1e-6; // tolerance for accepting the solution
     
@@ -33,12 +39,28 @@ int main (int argc, const char * argv[])
     INT        indp;    // index for test problems
     ITS_param  itspar;  // input parameters for iterative solvers
     AMG_param  amgpar;  // input parameters for AMG
-
     dCSRmat    A;       // coefficient matrix
     dvector    b, x;    // rhs and numerical solution
     int        status;  // iteration number or error message
 
-    FILE *fp = fopen("./BenchmarkResults.log", "w"); // save results
+	char logname[64];
+
+	// Handle command line options
+	int i = 1;
+	while (i < argc) {
+		if (!strcmp(argv[i], "-num_prob")) {
+			num_prob = atoi(argv[i + 1]);
+		 	printf("%s %d\n", argv[i], num_prob);
+		}
+		if (!strcmp(argv[i], "-prob_startID")) {
+			prob_startID = atoi(argv[i + 1]);
+		 	printf("%s %d\n", argv[i], prob_startID);
+		}
+		i += 2;
+	}
+
+    sprintf(logname, "./BenchmarkResults%d-%d.log", prob_startID, num_prob);  
+    FILE *fp = fopen(logname, "w"); // save results
 
     REAL       Timer0, Timer1, TimeEachPoissonIter, Score; // performance timers
     time_t     lt = time(NULL);
@@ -50,14 +72,16 @@ int main (int argc, const char * argv[])
     printf("--------- Obtain local machine Poisson Performance Unit ----------\n");
 
     // Read A and b -- 5pt FD stencil for Poisson, 1M DoF, natural ordering
-    fasp_dcoo_read("../../data/Poisson/baseline.mat", &A);
-    fasp_dvec_read("../../data/Poisson/baseline.rhs", &b);
+    //  fasp_dcoo_read("../data/Poisson/baseline.mat", &A);
+    //  fasp_dvec_read("../data/Poisson/baseline.rhs", &b);
+    fasp_dcoo_read("Poisson/baseline.mat", &A);
+    fasp_dvec_read("Poisson/baseline.rhs", &b);
     // TODO Currently 2D, use 3D baseline in the future.
 
     // Call PCG
     fasp_dvec_alloc(b.row, &x);
     fasp_dvec_set(b.row, &x, 0.0);
-    fasp_param_solver_init(&itspar);
+    fasp_param_solver_init(&itspar); // default choice is CG
     itspar.precond_type  = PREC_NULL;
     itspar.maxit         = 1000;
     itspar.tol           = 1e-12;
@@ -81,108 +105,66 @@ int main (int argc, const char * argv[])
 
     fprintf(fp, "Tests performed at %s", asctime(localtime(&lt)));
     fprintf(fp, "lMVU of this computer is %.4e\n", TimeEachPoissonIter);
+    
+    // zhaoli 
+    FILE *fpread = fopen("./MatrixCollectionName.txt", "r"); // read MatrixCollectionName.txt
+    char buf[32];
+    char dir[48];
+    char name[96];
+    int pageId = 1;
+    indp = 0;
+    while (!feof(fpread))
+    {
+        // pagek
+        fscanf(fpread, "%s\n", buf);
+        // printf("buf = %s\n", buf);
 
-    for ( indp = 1; indp <= num_prob; indp++ ) {
+        // 跳过 page*
+        sprintf(dir, "page%d", pageId);  
+        // printf("dir = %s, buf=?dir = %d\n", dir, strcmp(buf, dir));  
+        if (!strcmp(buf, dir)) {
+            // printf("dir = %s\n", dir);
+            pageId++;
+            continue;
+        }
+        indp++;
+        if (indp > num_prob) break;
 
+        sprintf(dir, "./mtx/page%d", pageId - 1); 
+        sprintf(name, "%s/%s/%s.mtx", dir, buf, buf); 
+        // printf("probem id = %d, name = %s\n", indp, name);
+        
+        if(indp < prob_startID) continue;
+
+#if 1
         /*****************************/
         /* Step 1. Read the systems  */
         /*****************************/
 
         printf("\n=====================================================\n");
         printf("Test Problem Number %d ...\n", indp);   
-        
-        switch (indp) {
 
-            case 1:
+        printf("SuiteSparse Matrix Collection %s problem", buf);
+        printf("\n=====================================================\n");
 
-                printf("Finite Element Matrix for Poisson");
-                printf("\n=====================================================\n");
+        // Read A in MatrixMarket SYM COO format.
+        fasp_dmtxsym_read(name, &A);
 
-                fasp_dcoo_read("../../data/Poisson/coomat_1046529.dat", &A);
+        // printf("%d, %s, （n=%d）\n", indp, buf, A.row); 
+        printf("\nMatrix size =  %d\n", A.row);
 
-                // Generate a random solution
-                dvector sol = fasp_dvec_create(A.row);
-                fasp_dvec_rand(A.row, &sol);
+		// Generate an exact solution randomly
+        dvector sol = fasp_dvec_create(A.row);
+        fasp_dvec_rand(A.row, &sol);
 
-                // Form the right-hand-side b = A*sol
-                b = fasp_dvec_create(A.row);
-                fasp_blas_dcsr_mxv(&A, sol.val, b.val);
-                fasp_dvec_free(&sol);
+        // Form the right-hand-side b = A*sol
+        b = fasp_dvec_create(A.row);
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
 
-                fprintf(fp, "==================================\n");
-                fprintf(fp, "Test Problem: coomat_1046529\n");
-                fprintf(fp, "==================================\n");
+        fprintf(fp, "==================================\n");
+        fprintf(fp, "Test Problem %d: %s \n", indp, buf);
+        fprintf(fp, "==================================\n");
 
-                break;
-
-            case 2:
-
-                printf("SuiteSparse Matrix Collection Thermal2 problem");
-                printf("\n=====================================================\n");
-
-                // Read A in MatrixMarket SYM COO format.
-                fasp_dmtxsym_read("../../data/mtx/thermal2/thermal2.mtx", &A);
-
-                // Generate an exact solution randomly
-                sol = fasp_dvec_create(A.row);
-                fasp_dvec_rand(A.row, &sol);
-
-                // Form the right-hand-side b = A*sol
-                b = fasp_dvec_create(A.row);
-                fasp_blas_dcsr_mxv(&A, sol.val, b.val);
-
-                fprintf(fp, "==================================\n");
-                fprintf(fp, "Test Problem: Thermal2 \n");
-                fprintf(fp, "==================================\n");
-
-                break;
-                
-            case 3:
-
-                printf("SuiteSparse Matrix Collection G3_circuit problem");
-                printf("\n=====================================================\n");
-
-                // Read A in MatrixMarket SYM COO format.
-                fasp_dmtxsym_read("../../data/mtx/G3_circuit/G3_circuit.mtx", &A);
-
-                // Generate an exact solution randomly
-                sol = fasp_dvec_create(A.row);
-                fasp_dvec_rand(A.row, &sol);
-
-                // Form the right-hand-side b = A*sol
-                b = fasp_dvec_create(A.row);
-                fasp_blas_dcsr_mxv(&A, sol.val, b.val);
-
-                fprintf(fp, "==================================\n");
-                fprintf(fp, "Test Problem: G3_circuit \n");
-                fprintf(fp, "==================================\n");
-
-                break;
-                
-            case 4:
-
-                printf("SuiteSparse Matrix Collection StocF-1465 problem");
-                printf("\n=====================================================\n");
-
-                // Read A in MatrixMarket SYM COO format.
-                fasp_dmtxsym_read("../../data/mtx/StocF-1465/StocF-1465.mtx", &A);
-
-                // Generate an exact solution randomly
-                sol = fasp_dvec_create(A.row);
-                fasp_dvec_rand(A.row, &sol);
-
-                // Form the right-hand-side b = A*sol
-                b = fasp_dvec_create(A.row);
-                fasp_blas_dcsr_mxv(&A, sol.val, b.val);
-
-                fprintf(fp, "==================================\n");
-                fprintf(fp, "Test Problem: StocF-1465 \n");
-                fprintf(fp, "==================================\n");
-
-                break;
-
-        }
-        
         /*****************************/
         /* Step 2. Solve the systems */
         /*****************************/
@@ -199,6 +181,7 @@ int main (int argc, const char * argv[])
             fasp_param_amg_init(&amgpar);
             amgpar.print_level = print_level;
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             amgpar.maxit = maxit;
             amgpar.tol = tolerance;
 
@@ -220,9 +203,11 @@ int main (int argc, const char * argv[])
             fasp_param_amg_init(&amgpar);
             amgpar.print_level = print_level;
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             amgpar.maxit = maxit;
             amgpar.tol = tolerance;
             amgpar.cycle_type = W_CYCLE;
+            amgpar.max_levels = 8;
 
             fasp_gettime(&Timer0);
             fasp_solver_amg(&A, &b, &x, &amgpar);
@@ -242,6 +227,7 @@ int main (int argc, const char * argv[])
             fasp_param_amg_init(&amgpar);
             amgpar.print_level = print_level;
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             amgpar.maxit = maxit;
             amgpar.tol = tolerance;
             amgpar.AMG_type = SA_AMG;
@@ -267,6 +253,7 @@ int main (int argc, const char * argv[])
             fasp_param_amg_init(&amgpar);
             amgpar.print_level = print_level;
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             amgpar.maxit = maxit;
             amgpar.tol = tolerance;
             amgpar.AMG_type = SA_AMG;
@@ -274,7 +261,7 @@ int main (int argc, const char * argv[])
             amgpar.aggregation_type = 2; // VMB
             amgpar.smoother = SMOOTHER_GS;
             amgpar.cycle_type = W_CYCLE;
-            if ( indp == 4 ) amgpar.max_levels = 12;
+            amgpar.max_levels = 8;
 
             fasp_gettime(&Timer0);
             fasp_solver_amg(&A, &b, &x, &amgpar);
@@ -294,6 +281,7 @@ int main (int argc, const char * argv[])
             fasp_param_amg_init(&amgpar);
             amgpar.print_level = print_level;
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             amgpar.maxit = maxit;
             amgpar.tol = tolerance;
             amgpar.AMG_type = UA_AMG;
@@ -318,12 +306,14 @@ int main (int argc, const char * argv[])
             fasp_param_amg_init(&amgpar);
             amgpar.print_level = print_level;
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             amgpar.maxit = maxit;
             amgpar.tol = tolerance;
             amgpar.AMG_type = UA_AMG;
             amgpar.smoother = SMOOTHER_GS;
             amgpar.cycle_type = W_CYCLE;
             amgpar.quality_bound = 8.0;
+            amgpar.max_levels = 8;
 
             fasp_gettime(&Timer0);
             fasp_solver_amg(&A, &b, &x, &amgpar);
@@ -343,6 +333,7 @@ int main (int argc, const char * argv[])
             fasp_param_solver_init(&itspar);
             fasp_param_amg_init(&amgpar);
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
             itspar.tol = tolerance;
@@ -364,10 +355,12 @@ int main (int argc, const char * argv[])
             fasp_param_solver_init(&itspar);
             fasp_param_amg_init(&amgpar);
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             amgpar.cycle_type = W_CYCLE;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
             itspar.tol = tolerance;
+            amgpar.max_levels = 8;
 
             fasp_gettime(&Timer0);
             fasp_solver_dcsr_krylov_amg(&A, &b, &x, &itspar, &amgpar);
@@ -389,6 +382,7 @@ int main (int argc, const char * argv[])
             amgpar.strong_coupled = 0.25; // cannot be too big
             amgpar.smoother = SMOOTHER_GS;
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
             itspar.tol = tolerance;
@@ -414,7 +408,7 @@ int main (int argc, const char * argv[])
             amgpar.smoother = SMOOTHER_GS;
             amgpar.coarse_solver = coarse_solver;
             amgpar.cycle_type = W_CYCLE;
-            if ( indp == 4 ) amgpar.max_levels = 12;
+            amgpar.max_levels = 8;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
             itspar.tol = tolerance;
@@ -438,6 +432,7 @@ int main (int argc, const char * argv[])
             amgpar.AMG_type = UA_AMG;
             amgpar.smoother = SMOOTHER_GS;
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
             itspar.tol = tolerance;
@@ -463,6 +458,7 @@ int main (int argc, const char * argv[])
             amgpar.smoother = SMOOTHER_GS;
             amgpar.coarse_solver = coarse_solver;
             amgpar.cycle_type = W_CYCLE;
+            amgpar.max_levels = 8;
             amgpar.quality_bound = 8.0;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
@@ -486,6 +482,7 @@ int main (int argc, const char * argv[])
             fasp_param_solver_init(&itspar);
             fasp_param_amg_init(&amgpar);
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
             itspar.tol = tolerance;
@@ -509,6 +506,7 @@ int main (int argc, const char * argv[])
             fasp_param_amg_init(&amgpar);
             amgpar.coarse_solver = coarse_solver;
             amgpar.cycle_type = W_CYCLE;
+            amgpar.max_levels = 8;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
             itspar.tol = tolerance;
@@ -534,6 +532,7 @@ int main (int argc, const char * argv[])
             amgpar.strong_coupled = 0.25; // cannot be too big
             amgpar.smoother = SMOOTHER_GS;
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
             itspar.tol = tolerance;
@@ -560,7 +559,7 @@ int main (int argc, const char * argv[])
             amgpar.smoother = SMOOTHER_GS;
             amgpar.coarse_solver = coarse_solver;
             amgpar.cycle_type = W_CYCLE;
-            if ( indp == 4 ) amgpar.max_levels = 12;
+            amgpar.max_levels = 8;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
             itspar.tol = tolerance;
@@ -585,6 +584,7 @@ int main (int argc, const char * argv[])
             amgpar.AMG_type = UA_AMG;
             amgpar.smoother = SMOOTHER_GS;
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             amgpar.quality_bound = 8.0;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
@@ -612,6 +612,7 @@ int main (int argc, const char * argv[])
             amgpar.coarse_solver = coarse_solver;
             amgpar.cycle_type = W_CYCLE;
             amgpar.quality_bound = 8.0;
+            amgpar.max_levels = 8;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
             itspar.tol = tolerance;
@@ -635,6 +636,7 @@ int main (int argc, const char * argv[])
             fasp_param_solver_init(&itspar);
             fasp_param_amg_init(&amgpar);
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
             itspar.tol = tolerance;
@@ -658,6 +660,7 @@ int main (int argc, const char * argv[])
             fasp_param_amg_init(&amgpar);
             amgpar.coarse_solver = coarse_solver;
             amgpar.cycle_type = W_CYCLE;
+            amgpar.max_levels = 8;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
             itspar.tol = tolerance;
@@ -683,6 +686,7 @@ int main (int argc, const char * argv[])
             amgpar.strong_coupled = 0.25; // cannot be too big
             amgpar.smoother = SMOOTHER_GS;
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
             itspar.tol = tolerance;
@@ -709,7 +713,7 @@ int main (int argc, const char * argv[])
             amgpar.smoother = SMOOTHER_GS;
             amgpar.coarse_solver = coarse_solver;
             amgpar.cycle_type = W_CYCLE;
-            if ( indp == 4 ) amgpar.max_levels = 12;
+            amgpar.max_levels = 8;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
             itspar.tol = tolerance;
@@ -734,6 +738,7 @@ int main (int argc, const char * argv[])
             amgpar.AMG_type = UA_AMG;
             amgpar.smoother = SMOOTHER_GS;
             amgpar.coarse_solver = coarse_solver;
+            amgpar.max_levels = 8;
             amgpar.quality_bound = 8.0;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
@@ -760,6 +765,7 @@ int main (int argc, const char * argv[])
             amgpar.smoother = SMOOTHER_GS;
             amgpar.coarse_solver = coarse_solver;
             amgpar.cycle_type = W_CYCLE;
+            amgpar.max_levels = 8;
             amgpar.quality_bound = 8.0;
             itspar.print_level = print_level;
             itspar.maxit = maxit;
@@ -779,9 +785,12 @@ int main (int argc, const char * argv[])
         fasp_dcsr_free(&A);
         fasp_dvec_free(&b);
         fasp_dvec_free(&x);
-
+#endif
     } // end of for indp
-    
+
+
+    fclose(fpread);
+
     /* all done */
     lt = time(NULL);    
     printf("---------------------- All test finished at ----------------------\n");
