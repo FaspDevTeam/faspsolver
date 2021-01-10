@@ -1629,7 +1629,7 @@ static double spectral_radius (dCSRmat *A,
         hh[j+1][j] =  fasp_blas_darray_norm2 (n, p[j+1]);
         if ( hh[j+1][j] < 1e-10) break;
         t = 1.0/hh[j+1][j];
-        for (int  k = 0; k < n; k ++) p[j+1][k] *= t;
+        for (k = 0; k < n; k ++) p[j+1][k] *= t;
     }
     
     H    = (REAL **)fasp_mem_calloc(j, sizeof(REAL *));

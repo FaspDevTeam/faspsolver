@@ -71,16 +71,17 @@ void fasp_solver_mgcycle (AMG_data   *mgl,
 
     // more general cycling types on each level --zcs 05/07/2020
     INT  ncycles[MAX_AMG_LVL] = {1};
-    for ( SHORT i = 0; i < MAX_AMG_LVL; ++i ) ncycles[i] = 1; // initially V-cycle
+    SHORT i;
+    for ( i = 0; i < MAX_AMG_LVL; ++i ) ncycles[i] = 1; // initially V-cycle
     switch(cycle_type) {
         case 12:
-            for ( SHORT i = MAX_AMG_LVL-2; i > 0; i -= 2 ) ncycles[i] = 2;
+            for ( i = MAX_AMG_LVL-2; i > 0; i -= 2 ) ncycles[i] = 2;
             break;
         case 21:
-            for ( SHORT i = MAX_AMG_LVL-1; i > 0; i -= 2 ) ncycles[i] = 2;
+            for ( i = MAX_AMG_LVL-1; i > 0; i -= 2 ) ncycles[i] = 2;
             break;
         default:
-            for ( SHORT i = 0; i < MAX_AMG_LVL; i += 1 ) ncycles[i] = cycle_type;
+            for ( i = 0; i < MAX_AMG_LVL; i += 1 ) ncycles[i] = cycle_type;
     }
 
 #if DEBUG_MODE > 0

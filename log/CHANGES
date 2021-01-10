@@ -1,11 +1,12 @@
 File Name: CHANGES
 
-01/09/2021 FASP 2.5.8:
+01/10/2021 FASP 2.5.8:
 - Add benchmark test based on SuiteSparse Matrix Market.
 - Modify test/main/test.c slightly.
 - Update error messages for reading files.
 - Rewrite fasp_dbsr_print.
 - Make a separate dir for benchmark test.
+- Fix problems with icc compiler for Linux.
 
 12/15/2020 FASP 2.5.7:
 - Check trivial solution case Ax=0 for AMG cycles.
