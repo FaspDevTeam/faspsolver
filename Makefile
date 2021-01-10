@@ -126,7 +126,7 @@ install:
 		make -C $(build_dir) $@ ; umask $$umaskz ; \
 	fi
 
-test tutorial:
+test tutorial benchmark:
 	@if [ ! -f $(build_dir)/$@/Makefile ] ; then \
 		echo "*=======================================================================*"; \
 		echo "* WARNING: Configuration not found! Please perform 'make config' first. *"; \
@@ -181,4 +181,5 @@ version:
 	@-git describe --tags > VERSION
 	@-cat VERSION
 
-.PHONY:	backup config fasp install tutorial test clean distclean uninstall docs headers help version 
+.PHONY:	backup config fasp install tutorial test benchmark \
+        clean distclean uninstall docs headers help version 

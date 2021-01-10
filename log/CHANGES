@@ -5,6 +5,7 @@ File Name: CHANGES
 - Modify test/main/test.c slightly.
 - Update error messages for reading files.
 - Rewrite fasp_dbsr_print.
+- Make a separate dir for benchmark test.
 
 12/15/2020 FASP 2.5.7:
 - Check trivial solution case Ax=0 for AMG cycles.

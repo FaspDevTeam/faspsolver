@@ -258,6 +258,7 @@ set(FASP_LIBRARY_NAME fasp)
 add_subdirectory("base")
 add_subdirectory("test")
 add_subdirectory("tutorial")
+add_subdirectory("benchmark")
 include(write_config)
 
 ##################################################################
