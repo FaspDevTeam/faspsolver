@@ -303,9 +303,8 @@ void fasp_solver_namli (AMG_data   *mgl,
     
     // Schwarz parameters
     SWZ_param swzparam;
-    if ( param->SWZ_levels > 0 ) {
+    if ( param->SWZ_levels > 0 )
         swzparam.SWZ_blksolver = param->SWZ_blksolver;
-    }
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -328,11 +327,11 @@ void fasp_solver_namli (AMG_data   *mgl,
             
             switch (mgl[l].Schwarz.SWZ_type) {
                 case SCHWARZ_SYMMETRIC:
-                    fasp_dcsr_swz_forward(&mgl[l].Schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
-                    fasp_dcsr_swz_backward(&mgl[l].Schwarz, &swzparam,&mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_forward (&mgl[l].Schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_backward(&mgl[l].Schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
                     break;
                 default:
-                    fasp_dcsr_swz_forward(&mgl[l].Schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
+                    fasp_dcsr_swz_forward (&mgl[l].Schwarz, &swzparam, &mgl[l].x, &mgl[l].b);
                     break;
             }
         }
@@ -341,7 +340,7 @@ void fasp_solver_namli (AMG_data   *mgl,
             
             fasp_dcsr_presmoothing(smoother,A0,b0,e0,param->presmooth_iter,
                                    0,m0-1,1,relax,ndeg,smooth_order,ordering);
-            
+
         }
         
         // form residual r = b - A x
@@ -355,7 +354,6 @@ void fasp_solver_namli (AMG_data   *mgl,
                 break;
             default:
                 fasp_blas_dcsr_mxv(&mgl[l].R, r, b1->val);
-                break;
         }
         
         // call nonlinear AMLI-cycle recursively
@@ -383,18 +381,15 @@ void fasp_solver_namli (AMG_data   *mgl,
                 pc.fct = fasp_precond_namli;
                 
                 fasp_darray_cp (m1, e1->val, uH.val);
-                
+
                 switch (param->nl_amli_krylov_type) {
-                        
                     case SOLVER_GCG: // Use GCG
-                        Kcycle_dcsr_pgcg(A1,b1,&uH,&pc);
+                        Kcycle_dcsr_pgcg(A1, b1, &uH, &pc);
                         break;
-                        
                     default: // Use GCR
-                        Kcycle_dcsr_pgcr(A1,b1,&uH,&pc);
-                        break;
+                        Kcycle_dcsr_pgcr(A1, b1, &uH, &pc);
                 }
-                
+
                 fasp_darray_cp (m1, uH.val, e1->val);
             }
             
@@ -407,7 +402,6 @@ void fasp_solver_namli (AMG_data   *mgl,
                 break;
             default:
                 fasp_blas_dcsr_aAxpy(1.0, &mgl[l].P, e1->val, e0->val);
-                break;
         }
         
         // post smoothing
@@ -425,7 +419,6 @@ void fasp_solver_namli (AMG_data   *mgl,
                     break;
                 default:
                     fasp_dcsr_swz_backward(&mgl[l].Schwarz, &swzparam,&mgl[l].x, &mgl[l].b);
-                    break;
             }
             
         }
@@ -537,7 +530,7 @@ void fasp_solver_namli_bsr (AMG_data_bsr  *mgl,
 #endif
     
     if (prtlvl>=PRINT_MOST)
-        printf("Nonlinear AMLI level %d, pre-smoother %d.\n", l, smoother);
+        printf("Nonlinear AMLI: level %d, smoother %d.\n", l, smoother);
     
     if (l < num_levels-1) {
         

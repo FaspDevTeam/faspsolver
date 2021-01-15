@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+01/15/2021 FASP 2.5.9:
+- Fix divide-by-zero in GCG for NAMLI.
+- Fix some typos in comments.
+
 01/10/2021 FASP 2.5.8:
 - Add benchmark test based on SuiteSparse Matrix Market.
 - Modify test/main/test.c slightly.

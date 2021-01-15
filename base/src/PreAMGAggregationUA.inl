@@ -1231,6 +1231,7 @@ static SHORT aggregation_nsympair (AMG_data   *mgl,
             for ( domin=k=0; k<ptrA->row; k++ ) {
                 if ( vertices[lvl].val[k] == G0PT ) domin ++;
             }
+            // Ratio b/w num of aggregates and those cannot fit in aggregates
             isorate = (REAL)num_agg/domin;
             if ( isorate < 0.1 ) {
                 status = ERROR_AMG_COARSEING; goto END;

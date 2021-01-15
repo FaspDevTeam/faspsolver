@@ -193,6 +193,23 @@ int main (int argc, const char * argv[])
 
     }
 
+    else if (problem_num == 53) {
+
+        datafile1="mtx/audikw_1/audikw_1.mtx"; // This file is NOT in ../data!
+        strcat(filename1,datafile1);
+        fasp_dmtxsym_read(filename1, &A);
+
+        // Generate a random solution
+        dvector sol = fasp_dvec_create(A.row);
+        fasp_dvec_rand(A.row, &sol);
+
+        // Form the right-hand-side b = A*sol
+        b = fasp_dvec_create(A.row);
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+        fasp_dvec_free(&sol);
+
+    }
+
     else {
 
         printf("### ERROR: Unrecognised problem number %d\n", problem_num);

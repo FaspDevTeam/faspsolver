@@ -33,7 +33,7 @@
 #include "PreAMGAggregationCSR.inl"
 #include "PreAMGAggregationUA.inl"
 
-static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *, AMG_param *);
+static SHORT amg_setup_unsmoothP_unsmoothR(AMG_data *, AMG_param *);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -52,10 +52,9 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data *, AMG_param *);
  * \author Xiaozhe Hu
  * \date   12/28/2011
  */
-SHORT fasp_amg_setup_ua (AMG_data   *mgl,
-                         AMG_param  *param)
-{
-    const SHORT prtlvl     = param->print_level;
+SHORT fasp_amg_setup_ua(AMG_data *mgl,
+                        AMG_param *param) {
+    const SHORT prtlvl = param->print_level;
 
     // Output some info for debuging
     if ( prtlvl > PRINT_NONE ) printf("\nSetting up UA AMG ...\n");
@@ -98,27 +97,26 @@ SHORT fasp_amg_setup_ua (AMG_data   *mgl,
  * Modified by Zheng Li on 03/22/2015: adjust coarsening ratio.
  * Modified by Chunsheng Feng on 10/17/2020: if NPAIR fail auto switch aggregation type to VBM.
  */
-static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
-                                            AMG_param  *param)
-{
-    const SHORT prtlvl     = param->print_level;
+static SHORT amg_setup_unsmoothP_unsmoothR(AMG_data *mgl,
+                                           AMG_param *param) {
+    const SHORT prtlvl = param->print_level;
     const SHORT cycle_type = param->cycle_type;
-    const SHORT csolver    = param->coarse_solver;
-    const SHORT min_cdof   = MAX(param->coarse_dof,50);
-    const INT   m          = mgl[0].A.row;
+    const SHORT csolver = param->coarse_solver;
+    const SHORT min_cdof = MAX(param->coarse_dof, 50);
+    const INT m = mgl[0].A.row;
 
     // empiric value
-    const REAL  cplxmax    = 3.0;
-    const REAL  xsi        = 0.6;
-    INT   icum = 1.0;
-    REAL  eta, fracratio;
+    const REAL cplxmax = 3.0;
+    const REAL xsi = 0.6;
+    INT icum = 1.0;
+    REAL eta, fracratio;
 
     // local variables
-    SHORT      max_levels = param->max_levels, lvl = 0, status = FASP_SUCCESS;
-    INT        i;
-    REAL       setup_start, setup_end;
-    ILU_param  iluparam;
-    SWZ_param  swzparam;
+    SHORT max_levels = param->max_levels, lvl = 0, status = FASP_SUCCESS;
+    INT i;
+    REAL setup_start, setup_end;
+    ILU_param iluparam;
+    SWZ_param swzparam;
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
@@ -129,22 +127,22 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
     fasp_gettime(&setup_start);
 
     // level info (fine: 0; coarse: 1)
-    ivector *vertices = (ivector *)fasp_mem_calloc(max_levels,sizeof(ivector));
+    ivector *vertices = (ivector *) fasp_mem_calloc(max_levels, sizeof(ivector));
 
     // each level stores the information of the number of aggregations
-    INT *num_aggs = (INT *)fasp_mem_calloc(max_levels,sizeof(INT));
+    INT *num_aggs = (INT *) fasp_mem_calloc(max_levels, sizeof(INT));
 
     // each level stores the information of the strongly coupled neighborhoods
-    dCSRmat *Neighbor = (dCSRmat *)fasp_mem_calloc(max_levels,sizeof(dCSRmat));
+    dCSRmat *Neighbor = (dCSRmat *) fasp_mem_calloc(max_levels, sizeof(dCSRmat));
 
     // Initialize level information
     for ( i = 0; i < max_levels; ++i ) num_aggs[i] = 0;
 
-    mgl[0].near_kernel_dim   = 1;
-    mgl[0].near_kernel_basis = (REAL **)fasp_mem_calloc(mgl->near_kernel_dim,sizeof(REAL*));
+    mgl[0].near_kernel_dim = 1;
+    mgl[0].near_kernel_basis = (REAL **) fasp_mem_calloc(mgl->near_kernel_dim, sizeof(REAL * ));
 
     for ( i = 0; i < mgl->near_kernel_dim; ++i ) {
-        mgl[0].near_kernel_basis[i] = (REAL *)fasp_mem_calloc(m,sizeof(REAL));
+        mgl[0].near_kernel_basis[i] = (REAL *) fasp_mem_calloc(m, sizeof(REAL));
         fasp_darray_set(m, mgl[0].near_kernel_basis[i], 1.0);
     }
 
@@ -152,10 +150,10 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
     mgl->ILU_levels = param->ILU_levels;
     if ( param->ILU_levels > 0 ) {
         iluparam.print_level = param->print_level;
-        iluparam.ILU_lfil    = param->ILU_lfil;
+        iluparam.ILU_lfil = param->ILU_lfil;
         iluparam.ILU_droptol = param->ILU_droptol;
-        iluparam.ILU_relax   = param->ILU_relax;
-        iluparam.ILU_type    = param->ILU_type;
+        iluparam.ILU_relax = param->ILU_relax;
+        iluparam.ILU_type = param->ILU_type;
     }
 
     // Initialize Schwarz parameters
@@ -163,15 +161,15 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
     if ( param->SWZ_levels > 0 ) {
         swzparam.SWZ_mmsize = param->SWZ_mmsize;
         swzparam.SWZ_maxlvl = param->SWZ_maxlvl;
-        swzparam.SWZ_type   = param->SWZ_type;
+        swzparam.SWZ_type = param->SWZ_type;
         swzparam.SWZ_blksolver = param->SWZ_blksolver;
     }
 
     // Initialize AMLI coefficients
     if ( cycle_type == AMLI_CYCLE ) {
         const INT amlideg = param->amli_degree;
-        param->amli_coef = (REAL *)fasp_mem_calloc(amlideg+1,sizeof(REAL));
-        REAL lambda_max = 2.0, lambda_min = lambda_max/4;
+        param->amli_coef = (REAL *) fasp_mem_calloc(amlideg + 1, sizeof(REAL));
+        REAL lambda_max = 2.0, lambda_min = lambda_max / 4;
         fasp_amg_amli_coef(lambda_max, lambda_min, amlideg, param->amli_coef);
     }
 
@@ -190,7 +188,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
     }
 
     // Main AMG setup loop
-    while ( (mgl[lvl].A.row > min_cdof) && (lvl < max_levels-1) ) {
+    while ((mgl[lvl].A.row > min_cdof) && (lvl < max_levels - 1)) {
 
 #if DEBUG_MODE > 1
         printf("### DEBUG: level = %d, row = %d, nnz = %d\n",
@@ -227,8 +225,8 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
         switch ( param->aggregation_type ) {
 
             case VMB: // VMB aggregation
-                status = aggregation_vmb (&mgl[lvl].A, &vertices[lvl], param, lvl+1,
-                                          &Neighbor[lvl], &num_aggs[lvl]);
+                status = aggregation_vmb(&mgl[lvl].A, &vertices[lvl], param, lvl + 1,
+                                         &Neighbor[lvl], &num_aggs[lvl]);
 
                 /*-- Choose strength threshold adaptively --*/
                 if ( num_aggs[lvl] * 4.0 > mgl[lvl].A.row )
@@ -239,24 +237,22 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
                 break;
 
             case NPAIR: // non-symmetric pairwise matching aggregation
-                status = aggregation_nsympair (mgl, param, lvl, vertices,
-                                               &num_aggs[lvl]);
-		/*-- Modified by Chunsheng Feng on 10/17/2020: if NPAIR fail auto switch aggregation type to VBM. --*/
-                if ( num_aggs[lvl] * 2.0 > mgl[lvl].A.row ) {  
-		    param->aggregation_type =VMB;
-                    printf("### WARNING: non-symmetric pairwise matching aggregation on level-%d failed!\n", lvl);
-                    printf("### WARNING: switch aggregation type to VMB aggregation on level-%d\n", lvl);
-                    status = aggregation_vmb (&mgl[lvl].A, &vertices[lvl], param, lvl+1,
-                                              &Neighbor[lvl], &num_aggs[lvl]);
-		  }
+                status = aggregation_nsympair(mgl, param, lvl, vertices, &num_aggs[lvl]);
+                /*-- Modified by Chunsheng Feng on 10/17/2020, ZCS on 01/15/2021:
+                     if NPAIR fail auto switch aggregation type to VBM. --*/
+                if ( status != FASP_SUCCESS || num_aggs[lvl] * 2.0 > mgl[lvl].A.row ) {
+                    printf("### WARNING: Non-symmetric pairwise matching failed on level %d!\n", lvl);
+                    printf("### WARNING: Switch to VMB aggregation on level %d!\n", lvl);
+                    param->aggregation_type = VMB;
+                    status = aggregation_vmb(&mgl[lvl].A, &vertices[lvl], param, lvl + 1,
+                                             &Neighbor[lvl], &num_aggs[lvl]);
+                }
 
                 break;
 
             default: // symmetric pairwise matching aggregation
-                status = aggregation_symmpair (mgl, param, lvl, vertices,
-                                               &num_aggs[lvl]);
+                status = aggregation_symmpair(mgl, param, lvl, vertices, &num_aggs[lvl]);
 
-                break;
         }
 
         // Check 1: Did coarsening step succeed?
@@ -265,15 +261,15 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
             if ( prtlvl > PRINT_MIN ) {
                 printf("### WARNING: Stop coarsening on level %d!\n", lvl);
             }
-            status = FASP_SUCCESS; 
+            status = FASP_SUCCESS;
             fasp_ivec_free(&vertices[lvl]);
             fasp_dcsr_free(&Neighbor[lvl]);
             break;
         }
 
         /*-- Form Prolongation --*/
-        form_tentative_p (&vertices[lvl], &mgl[lvl].P, mgl[0].near_kernel_basis,
-                          num_aggs[lvl]);
+        form_tentative_p(&vertices[lvl], &mgl[lvl].P, mgl[0].near_kernel_basis,
+                         num_aggs[lvl]);
 
         // Check 2: Is coarse sparse too small?
         if ( mgl[lvl].P.col < MIN_CDOF ) {
@@ -299,7 +295,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
 
         /*-- Form coarse level stiffness matrix --*/
         fasp_blas_dcsr_rap_agg(&mgl[lvl].R, &mgl[lvl].A, &mgl[lvl].P,
-                               &mgl[lvl+1].A);
+                               &mgl[lvl + 1].A);
 
         fasp_dcsr_free(&Neighbor[lvl]);
         fasp_ivec_free(&vertices[lvl]);
@@ -311,14 +307,14 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
 #endif
 
         // Check 4: Is this coarsening ratio too small?
-        if ( (REAL)mgl[lvl].P.col > mgl[lvl].P.row * MIN_CRATE ) {
+        if ((REAL) mgl[lvl].P.col > mgl[lvl].P.row * MIN_CRATE ) {
             param->quality_bound *= 2.0;
         }
 
     } // end of the main while loop
 
     // Setup coarse level systems for direct solvers
-    switch (csolver) {
+    switch ( csolver ) {
 
 #if WITH_MUMPS
         case SOLVER_MUMPS: {
@@ -359,33 +355,33 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
     }
 
     // setup total level number and current level
-    mgl[0].num_levels = max_levels = lvl+1;
-    mgl[0].w          = fasp_dvec_create(m);
+    mgl[0].num_levels = max_levels = lvl + 1;
+    mgl[0].w = fasp_dvec_create(m);
 
-    for ( lvl = 1; lvl < max_levels; ++lvl) {
+    for ( lvl = 1; lvl < max_levels; ++lvl ) {
         INT mm = mgl[lvl].A.row;
         mgl[lvl].num_levels = max_levels;
-        mgl[lvl].b          = fasp_dvec_create(mm);
-        mgl[lvl].x          = fasp_dvec_create(mm);
+        mgl[lvl].b = fasp_dvec_create(mm);
+        mgl[lvl].x = fasp_dvec_create(mm);
 
         mgl[lvl].cycle_type = cycle_type; // initialize cycle type!
         mgl[lvl].ILU_levels = param->ILU_levels - lvl; // initialize ILU levels!
-        mgl[lvl].SWZ_levels = param->SWZ_levels -lvl; // initialize Schwarz!
+        mgl[lvl].SWZ_levels = param->SWZ_levels - lvl; // initialize Schwarz!
 
         if ( cycle_type == NL_AMLI_CYCLE )
-            mgl[lvl].w = fasp_dvec_create(3*mm);
+            mgl[lvl].w = fasp_dvec_create(3 * mm);
         else
-            mgl[lvl].w = fasp_dvec_create(2*mm);
+            mgl[lvl].w = fasp_dvec_create(2 * mm);
     }
 
     // setup for cycle type of unsmoothed aggregation
-    eta = xsi/((1-xsi)*(cplxmax-1));
+    eta = xsi / ((1 - xsi) * (cplxmax - 1));
     mgl[0].cycle_type = 1;
-    mgl[max_levels-1].cycle_type = 0;
+    mgl[max_levels - 1].cycle_type = 0;
 
-    for (lvl = 1; lvl < max_levels-1; ++lvl) {
-        fracratio = (REAL)mgl[lvl].A.nnz/mgl[0].A.nnz;
-        mgl[lvl].cycle_type = (INT)(pow((REAL)xsi,(REAL)lvl)/(eta*fracratio*icum));
+    for ( lvl = 1; lvl < max_levels - 1; ++lvl ) {
+        fracratio = (REAL) mgl[lvl].A.nnz / mgl[0].A.nnz;
+        mgl[lvl].cycle_type = (INT)(pow((REAL) xsi, (REAL) lvl) / (eta * fracratio * icum));
         // safe-guard step: make cycle type >= 1 and <= 2
         mgl[lvl].cycle_type = MAX(1, MIN(2, mgl[lvl].cycle_type));
         icum = icum * mgl[lvl].cycle_type;
@@ -393,13 +389,16 @@ static SHORT amg_setup_unsmoothP_unsmoothR (AMG_data   *mgl,
 
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
-        fasp_amgcomplexity(mgl,prtlvl);
+        fasp_amgcomplexity(mgl, prtlvl);
         fasp_cputime("Unsmoothed aggregation setup", setup_end - setup_start);
     }
-    
-    fasp_mem_free(Neighbor); Neighbor = NULL;
-    fasp_mem_free(vertices); vertices = NULL;
-    fasp_mem_free(num_aggs); num_aggs = NULL;
+
+    fasp_mem_free(Neighbor);
+    Neighbor = NULL;
+    fasp_mem_free(vertices);
+    vertices = NULL;
+    fasp_mem_free(num_aggs);
+    num_aggs = NULL;
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);

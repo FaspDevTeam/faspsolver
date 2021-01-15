@@ -481,7 +481,7 @@ void fasp_blas_smat_mul (const REAL  *a,
     
         for (i=0; i<n2; i+=n) {
             for (j=0; j<n; ++j) { 
-                temp = 0.0; // Fixed by Cheosong. Feb/22/2011.
+                temp = 0.0; // Fixed by Chensong. Feb/22/2011.
                 for (k=0; k<n; ++k) temp += a[i+k]*b[k*n+j];
                 c[i+j] = temp;
             } // end for j
