@@ -15,8 +15,6 @@ message(STATUS "Checking for dependent packages of 'UMFPACK'")
 find_package(BLAS)
 find_package(AMD)
 find_package(SUITESPARSECONFIG)
-### next one not needed if we only want UMFPACK.
-#find_package(CHOLMOD) 
 
 message(STATUS "Checking for package 'UMFPACK'")
 
@@ -61,8 +59,8 @@ if (UMFPACK_INCLUDE_DIRS AND UMFPACK_LIBRARIES)
   set(CMAKE_REQUIRED_LIBRARIES ${UMFPACK_LIBRARIES})
 
   # Build and run test program
-  include(CheckCXXSourceRuns)
-  check_cxx_source_runs("
+  include(CheckCSourceRuns)
+  check_c_source_runs("
 /* Test program umfpack-ex1.c */
 
 #include <umfpack.h>
