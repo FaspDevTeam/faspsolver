@@ -22,7 +22,7 @@ double ComputeLMVUFromBaseline(char *workdir, Baseline bl);
  * \brief This is the main function for regression test. 
  *
  * \author Chensong Zhang, Li Zhaoli
- * \date   1/21/2021
+ * \date   1/10/2021
  */
 int main (int argc, const char * argv[]) 
 {
