@@ -301,8 +301,8 @@ int main (int argc, const char * argv[])
             Score = (Timer1 - Timer0) / b.row / lMVU;
             // printf("Total cost is \033[31;43m%.4e\033[0m (lMVU).\n", Score);
             printf("Total cost is %.4e (lMVU).\n", Score);
-            fprintf(fp, "%20s scores ............... %.4e (lMVU), iteration is %5d.\n", ag->para[i], \
-                    Score, status > 0 ? status: inipar.itsolver_maxit);
+            fprintf(fp, "%20s scores ............... %.4e (lMVU), iteration is %5d, status is %5d.\n", ag->para[i], \
+                    Score, status > 0 ? status: inipar.itsolver_maxit, status);
         }
 
         // free
