@@ -1,5 +1,11 @@
 File Name: CHANGES
 
+01/23/2021 FASP 2.6.0:
+- Switch cmake style.
+- Use the same compile and link style as fasp4blkoil.
+- Check compatibility with PennSim new version!
+- Update benchmark test input format.
+
 01/15/2021 FASP 2.5.9:
 - Fix divide-by-zero in GCG for NAMLI.
 - Fix some typos in comments.
