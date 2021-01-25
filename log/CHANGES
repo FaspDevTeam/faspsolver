@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+01/25/2021 FASP 2.6.1:
+- Add uninstall target to the new CMakeFile.txt;
+- Now both old and new cmake work!
+
 01/25/2021 FASP 2.6.0:
 - Switch cmake style.
 - Use the same compile and link style as fasp4blkoil.
