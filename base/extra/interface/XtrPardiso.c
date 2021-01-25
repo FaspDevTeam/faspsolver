@@ -6,7 +6,7 @@
  *  https://software.intel.com/en-us/node/470282
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2015--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2015--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -30,8 +30,7 @@
  * \fn INT fasp_solver_pardiso (dCSRmat *ptrA, dvector *b, dvector *u,
  *                              const SHORT prtlvl)
  *
- * \brief Solve Ax=b by PARDISO directly. Each row of A should be
- *        in ascending order w.r.t. column indices.
+ * \brief Solve Ax=b by PARDISO directly.
  *
  * \param ptrA      Pointer to a dCSRmat matrix
  * \param b         Pointer to the dvector of right-hand side term
@@ -40,6 +39,8 @@
  *
  * \author Hongxuan Zhang
  * \date   11/28/2015
+ *
+ * \note   Each row of A should be in ascending order w.r.t. column indices.
  */
 INT fasp_solver_pardiso (dCSRmat * ptrA,
                          dvector *b,
@@ -47,6 +48,7 @@ INT fasp_solver_pardiso (dCSRmat * ptrA,
                          const SHORT prtlvl)
 {
 #if WITH_PARDISO
+
     INT status = FASP_SUCCESS;
     
     MKL_INT n = ptrA->col;
