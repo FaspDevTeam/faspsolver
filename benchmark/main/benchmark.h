@@ -1,8 +1,19 @@
+/*! \file  benchmark.h
+ *
+ *  \brief Definitions used by benchmark.c
+ *
+ *---------------------------------------------------------------------------------
+ *  Copyright (C) 2021--Present by the FASP team. All rights reserved.
+ *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
+ *---------------------------------------------------------------------------------
+ */
+
 #define MAXCHARLEN 128
 
 /*---------------------------------*/
 /*--      Define Baseline        --*/
 /*---------------------------------*/
+
 typedef struct baseline* Baseline;
 struct baseline{
     int num; // number of baseline problems.
@@ -35,7 +46,6 @@ void FreeBaseline(Baseline bl)
     free(bl->prob); bl->prob = NULL;
 }
 
-
 void PrintBaseline(Baseline bl)
 {
     int i;
@@ -50,11 +60,10 @@ void PrintBaseline(Baseline bl)
     }
 }
 
-
-
 /*---------------------------------*/
 /*--      Define Problem         --*/
 /*---------------------------------*/
+
 typedef struct problem* Problem;
 struct problem{
     int num; // number of problem problems.
@@ -84,7 +93,6 @@ void FreeProblem(Problem pb)
     free(pb->prob); pb->prob = NULL;
 }
 
-
 void PrintProblem(Problem pb)
 {
     int i;
@@ -95,11 +103,10 @@ void PrintProblem(Problem pb)
     }
 }
 
-
-
 /*---------------------------------*/
-/*--      Define Algorithm         --*/
+/*--      Define Algorithm       --*/
 /*---------------------------------*/
+
 typedef struct algorithm* Algorithm;
 struct algorithm{
     int num; // number of algorithms.
@@ -112,8 +119,7 @@ Algorithm CreateAlgorithm(int n)
     ag->num = n;
     ag->para = (char **)malloc(sizeof(char *)*n);
     int i;
-    for(i = 0; i < n; i++)
-    {
+    for (i = 0; i < n; i++) {
         ag->para[i] = (char *)malloc(MAXCHARLEN * sizeof(char));
     }
     return ag;
@@ -129,7 +135,6 @@ void FreeAlgorithm(Algorithm ag)
     free(ag->para); ag->para = NULL;
 }
 
-
 void PrintAlgorithm(Algorithm ag)
 {
     int i;
@@ -140,10 +145,10 @@ void PrintAlgorithm(Algorithm ag)
     }
 }
 
-
 /*---------------------------------*/
 /*--       ReadInputFile         --*/
 /*---------------------------------*/
+
 int ReadInputFile(const char *filename, Baseline *blOut, Problem *pbOut, Algorithm *agOut)
 {
     Baseline bl;
@@ -155,9 +160,9 @@ int ReadInputFile(const char *filename, Baseline *blOut, Problem *pbOut, Algorit
     int isBaseline = 0, isProblem = 0, isAlgorithm = 0;
     int baselineID = 0, baselineNum = 0;
     int probID;
-    if(!fpReadInput)
+    if (!fpReadInput)
     {
-        printf("%s file does not exist!!!\n", filename);
+        printf("### ERROR: %s file does not exist!!!\n", filename);
         return -1;
     }
     
@@ -178,7 +183,7 @@ int ReadInputFile(const char *filename, Baseline *blOut, Problem *pbOut, Algorit
         }
         
         // printf("buffer = %s\n", buffer);
-        if(strcmp(buffer, "Baseline")==0){
+        if(strcmp(buffer, "Baseline")==0) {
             // printf("buffer = %s\n", buffer);
             isBaseline = 1;
             isProblem = 0;
@@ -186,7 +191,7 @@ int ReadInputFile(const char *filename, Baseline *blOut, Problem *pbOut, Algorit
             fscanf(fpReadInput, "%*[^\n]");
             continue;
         }
-        if(strcmp(buffer, "Problem")==0){
+        if(strcmp(buffer, "Problem")==0) {
             // printf("buffer = %s\n", buffer);
             isBaseline = 0;
             isProblem = 1;
@@ -194,7 +199,7 @@ int ReadInputFile(const char *filename, Baseline *blOut, Problem *pbOut, Algorit
             fscanf(fpReadInput, "%*[^\n]");
             continue;
         }
-        if(strcmp(buffer, "Algorithm")==0){
+        if(strcmp(buffer, "Algorithm")==0) {
             // printf("buffer = %s\n", buffer);
             isBaseline = 0;
             isProblem = 0;
@@ -203,11 +208,12 @@ int ReadInputFile(const char *filename, Baseline *blOut, Problem *pbOut, Algorit
             continue;
         }
 
-        if(strcmp(buffer, "/")==0){
+        if(strcmp(buffer, "/")==0) {
             fscanf(fpReadInput, "%*[^\n]");
-        }else{ 
+        }
+        else{ 
             // Read Baseline
-            if(isBaseline){
+            if(isBaseline) {
                 fscanf(fpReadInput, "%s %d\n", bufTemp, &baselineNum);
                 baselineID = atoi(buffer);
                 strcpy(bl->prob[baselineID - 1], bufTemp);
@@ -215,14 +221,14 @@ int ReadInputFile(const char *filename, Baseline *blOut, Problem *pbOut, Algorit
                 // printf("baselineID = %d, baseline_prob = %s, baselineCount = %d\n", baselineID, bufTemp, baselineNum);
             }
             // Read Problem
-            if(isProblem){
+            if(isProblem) {
                 fscanf(fpReadInput, "%s\n", bufTemp);
                 probID = atoi(buffer);
                 strcpy(pb->prob[probID - 1], bufTemp);
                 // printf("probID = %d, buffer = %s\n", probID, bufTemp);
             }
             // Read Algorithm
-            if(isAlgorithm){
+            if(isAlgorithm) {
                 fscanf(fpReadInput, "%s\n", bufTemp);
                 probID = atoi(buffer);
                 strcpy(ag->para[probID - 1], bufTemp);
@@ -236,4 +242,8 @@ int ReadInputFile(const char *filename, Baseline *blOut, Problem *pbOut, Algorit
     *pbOut = pb;
     *agOut = ag;
     return 1;
-} 
+}
+
+/*---------------------------------*/
+/*--        End of File          --*/
+/*---------------------------------*/
