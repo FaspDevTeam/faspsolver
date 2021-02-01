@@ -8,7 +8,7 @@
  *         and PreMGSolve.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -23,8 +23,8 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_solver_famg (const dCSRmat *A, const dvector *b, dvector *x, 
- *                            AMG_param *param)
+ * \fn INT fasp_solver_famg (const dCSRmat *A, const dvector *b, dvector *x,
+ *                           AMG_param *param)
  *
  * \brief Solve Ax=b by full AMG.
  *

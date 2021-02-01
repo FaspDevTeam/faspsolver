@@ -14,7 +14,7 @@
  *         An Algebraic Multigrid Method with Guaranteed Convergence Rate, 2012
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2011--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2011--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -52,8 +52,9 @@ static SHORT amg_setup_unsmoothP_unsmoothR(AMG_data *, AMG_param *);
  * \author Xiaozhe Hu
  * \date   12/28/2011
  */
-SHORT fasp_amg_setup_ua(AMG_data *mgl,
-                        AMG_param *param) {
+SHORT fasp_amg_setup_ua (AMG_data *mgl,
+                         AMG_param *param)
+{
     const SHORT prtlvl = param->print_level;
 
     // Output some info for debuging

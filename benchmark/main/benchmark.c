@@ -34,12 +34,7 @@ int main (int argc, const char * argv[])
     INT         startID       = 1;     // start solve problem index
     INT         endID         = 1;     // end solve problem index
     INT         MinProbSize   = 10000; // Filter small matrices
-    const INT   maxit         = 500;   // maximal iteration number
-    const REAL  tolerance     = 1e-6;  // tolerance for accepting the solution
-    const INT   print_level   = 2;     // how much information to print out
-    const SHORT coarse_solver = 34;    // 0:  default coarsest-level solver
-                                       // 31: SuperLU, 32: UMFPack, 33: MUMPS
-                                       // 34: PARDISO
+    const INT   print_level   = 1;     // how much information to print out
 
     /* Local Variables */
     Baseline     bl;
@@ -219,15 +214,7 @@ int main (int argc, const char * argv[])
             else if (solver_type == SOLVER_AMG) {
                 if (print_level>PRINT_NONE) fasp_param_amg_print(&amgpar);
                 fasp_gettime(&Timer0);
-                fasp_solver_amg(&A, &b, &x, &amgpar);
-                fasp_gettime(&Timer1);
-            }
-
-            // Full AMG as the iterative solver
-            else if (solver_type == SOLVER_FMG) {
-                if (print_level>PRINT_NONE) fasp_param_amg_print(&amgpar);
-                fasp_gettime(&Timer0);
-                fasp_solver_famg(&A, &b, &x, &amgpar);
+                status = fasp_solver_amg(&A, &b, &x, &amgpar);
                 fasp_gettime(&Timer1);
             }
 
@@ -316,7 +303,7 @@ static double ComputeLMVUFromBaseline(char *workdir, Baseline bl)
     FILE *fpCheckBaseA = NULL, *fpCheckBaseb = NULL;
     double t1, t2, baselineTime = 0;
 
-    printf("--------- Obtain local machine Baseline Performance Unit ----------\n");
+    printf("-------- Obtaining local machine baseline performance unit --------\n");
     fasp_gettime(&t1);
     for (i = 0; i < bl->num; i++)
     {

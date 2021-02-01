@@ -3,7 +3,7 @@
  *  \brief Function decoration for the FASP package
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2008--2020 by the FASP team. All rights reserved.                
+ *  Copyright (C) 2008--Present by the FASP team. All rights reserved.             
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
@@ -2184,8 +2184,8 @@ SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr  *mgl,
 
 /*-------- In file: PreAMGSetupUA.c --------*/
 
-SHORT fasp_amg_setup_ua (AMG_data   *mgl,
-                         AMG_param  *param);
+SHORT fasp_amg_setup_ua (AMG_data *mgl,
+                         AMG_param *param);
 
 
 /*-------- In file: PreAMGSetupUABSR.c --------*/
@@ -2454,10 +2454,10 @@ void fasp_precond_dstr_blockgs (REAL *r,
 
 /*-------- In file: SolAMG.c --------*/
 
-void fasp_solver_amg (const dCSRmat  *A,
-                      const dvector  *b,
-                      dvector        *x,
-                      AMG_param      *param);
+INT fasp_solver_amg (const dCSRmat  *A,
+                     const dvector  *b,
+                     dvector        *x,
+                     AMG_param      *param);
 
 
 /*-------- In file: SolBLC.c --------*/

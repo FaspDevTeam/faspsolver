@@ -8,7 +8,7 @@
  *         PreAMGSetupUA.c, PreDataInit.c, and PreMGSolve.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -23,8 +23,8 @@
 /*---------------------------------*/
 
 /**
- * \fn void fasp_solver_amg (const dCSRmat *A, const dvector *b, dvector *x,
- *                           AMG_param *param)
+ * \fn INT fasp_solver_amg (const dCSRmat *A, const dvector *b, dvector *x,
+ *                          AMG_param *param)
  *
  * \brief Solve Ax = b by algebraic multigrid methods
  *
@@ -32,6 +32,8 @@
  * \param b      Pointer to dvector: the right hand side
  * \param x      Pointer to dvector: the unknowns
  * \param param  Pointer to AMG_param: AMG parameters
+ *
+ * \return       Iteration number if converges; ERROR otherwise.
  *
  * \author Chensong Zhang
  * \date   04/06/2010
@@ -42,11 +44,12 @@
  *       Academic Press Inc., San Diego, CA, 2001.
  *
  * Modified by Chensong Zhang on 07/26/2014: Add error handling for AMG setup
+ * Modified by Chensong Zhang on 02/01/2021: Add return value
  */
-void fasp_solver_amg (const dCSRmat  *A,
-                      const dvector  *b,
-                      dvector        *x,
-                      AMG_param      *param)
+INT fasp_solver_amg (const dCSRmat  *A,
+                     const dvector  *b,
+                     dvector        *x,
+                     AMG_param      *param)
 {
     const REAL    tol         = param->tol;
     const SHORT   max_levels  = param->max_levels;
@@ -58,6 +61,7 @@ void fasp_solver_amg (const dCSRmat  *A,
     
     // local variables
     SHORT         status;
+    INT           iter;
     AMG_data *    mgl = fasp_amg_data_create(max_levels);
     REAL          AMG_start = 0, AMG_end;
     
@@ -100,13 +104,13 @@ void fasp_solver_amg (const dCSRmat  *A,
         switch (cycle_type) {
                 
             case AMLI_CYCLE: // AMLI-cycle
-                fasp_amg_solve_amli(mgl, param); break;
+                iter = fasp_amg_solve_amli(mgl, param); break;
                 
             case NL_AMLI_CYCLE: // Nonlinear AMLI-cycle
-                fasp_amg_solve_namli(mgl, param); break;
+                iter = fasp_amg_solve_namli(mgl, param); break;
                 
             default: // V,W-cycles or hybrid cycles (determined by param)
-                fasp_amg_solve(mgl, param); break;
+                iter = fasp_amg_solve(mgl, param); break;
                 
         }
         
@@ -137,7 +141,7 @@ void fasp_solver_amg (const dCSRmat  *A,
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
     
-    return;
+    return iter;
 }
 
 /*---------------------------------*/
