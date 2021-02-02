@@ -96,6 +96,7 @@ int main (int argc, const char * argv[])
     // Loop through the problem to be tested
     for (indp = 1; indp < pb->num+1; indp++)
     {
+        if (!pb->isvalid[indp-1]) continue;
         sprintf(matrix_file_name, "%s/%s/%s.mtx", mat_dir, pb->prob[indp-1], pb->prob[indp-1]);
 
         if (indp < startID || indp > endID) continue;
@@ -147,6 +148,7 @@ int main (int argc, const char * argv[])
         // Loop the algorithm file and call the corresponding algorithm
         for (i = 0; i < ag->num; i++)
         {
+            if (!ag->isvalid[i]) continue;
             printf("\n\n-----------------------------------------------\n");
             sprintf(algorithm_file_name, "%s/%s.dat", alg_dir, ag->para[i]);
             printf("Algorithm ID: %d, param filename: %s", i+1, algorithm_file_name);
@@ -307,6 +309,7 @@ static double ComputeLMVUFromBaseline(char *workdir, Baseline bl)
     fasp_gettime(&t1);
     for (i = 0; i < bl->num; i++)
     {
+        if (!bl->isvalid[i]) continue;
         sprintf(baseAfile, "%s/%s/%s.mat", workdir, bl->prob[i], bl->prob[i]);
         sprintf(basebfile, "%s/%s/%s.rhs", workdir, bl->prob[i], bl->prob[i]);
         printf("Baseline matrix filename          = %s\n", baseAfile);
