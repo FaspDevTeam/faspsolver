@@ -77,7 +77,7 @@ INT fasp_amg_solve (AMG_data   *mgl,
     if ( sumb <= SMALLREAL ) fasp_dvec_set(x->row, x, 0.0);
 
     // MG solver here
-    while ( (++iter <= MaxIt) & (sumb > SMALLREAL) ) {
+    while ( (iter++ < MaxIt) & (sumb > SMALLREAL) ) {
         
 #if TRUE
         // Call one multigrid cycle -- non recursive version
@@ -113,9 +113,11 @@ INT fasp_amg_solve (AMG_data   *mgl,
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
-    
-    return iter;
-}
+
+    if ( iter > MaxIt )
+        return ERROR_SOLVER_MAXIT;
+    else
+        return iter;}
 
 /**
  * \fn INT fasp_amg_solve_amli (AMG_data *mgl, AMG_param *param)
@@ -168,7 +170,7 @@ INT fasp_amg_solve_amli (AMG_data   *mgl,
     if ( sumb <= SMALLREAL ) fasp_dvec_set(x->row, x, 0.0);
 
     // MG solver here
-    while ( (++iter <= MaxIt) & (sumb > SMALLREAL) ) {
+    while ( (iter++ < MaxIt) & (sumb > SMALLREAL) ) {
         
         // Call one AMLI cycle
         fasp_solver_amli(mgl, param, 0);
@@ -199,8 +201,11 @@ INT fasp_amg_solve_amli (AMG_data   *mgl,
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
-    
-    return iter;
+
+    if ( iter > MaxIt )
+        return ERROR_SOLVER_MAXIT;
+    else
+        return iter;
 }
 
 /**
@@ -252,7 +257,7 @@ INT fasp_amg_solve_namli (AMG_data   *mgl,
     // If b = 0, set x = 0 to be a trivial solution
     if ( sumb <= SMALLREAL ) fasp_dvec_set(x->row, x, 0.0);
 
-    while ( (++iter <= MaxIt) & (sumb > SMALLREAL) ) // MG solver here
+    while ( (iter++ < MaxIt) & (sumb > SMALLREAL) ) // MG solver here
     {
         // one multigrid cycle
         fasp_solver_namli(mgl, param, 0, mgl[0].num_levels);
@@ -282,8 +287,11 @@ INT fasp_amg_solve_namli (AMG_data   *mgl,
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
-    
-    return iter;
+
+    if ( iter > MaxIt )
+        return ERROR_SOLVER_MAXIT;
+    else
+        return iter;
 }
 
 /**

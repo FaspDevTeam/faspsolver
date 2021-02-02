@@ -140,7 +140,7 @@ INT fasp_solver_amg (const dCSRmat  *A,
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
 #endif
-    
+
     return iter;
 }
 

@@ -1,10 +1,11 @@
 File Name: CHANGES
 
-02/01/2021 FASP 2.6.1:
+02/02/2021 FASP 2.6.1:
 - Add uninstall target to the new CMakeFile.txt;
 - Now both old and new cmake work!
 - Change output of fasp_solver_amg();
-- Update header file. 
+- Update header file;
+- Update return values for AMG solvers.
 
 01/25/2021 FASP 2.6.0:
 - Switch cmake style.
