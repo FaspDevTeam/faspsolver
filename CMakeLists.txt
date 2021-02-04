@@ -45,6 +45,24 @@ set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
 #######################################################################
 include(get_cxx_fc_compilers)
 
+# Default configuration types and flags
+set(CMAKE_CONFIGURATION_TYPES "Release;Debug" CACHE STRING "Configs" FORCE)
+if (MSVC)
+    # Compiler flags for Windows MSVC
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W4 /WX")
+else()
+    # Compiler flags for Linux or Mac OS X
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g")
+endif()
+
+set(build_type "Release")
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "${build_type}" CACHE STRING "the build type" FORCE)
+endif()
+message(STATUS "Set build type to ${CMAKE_BUILD_TYPE} configuration")
+
 ########### check the prefix for installation #########################
 include(install_prefix)
  
