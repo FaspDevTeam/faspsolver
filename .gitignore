@@ -1,6 +1,7 @@
 config.mk*
 FASP.mk*
 *.ex
-./BUILD_FASP/
-./include/
-./lib/
+Build/
+BUILD_FASP/
+include/
+lib/
