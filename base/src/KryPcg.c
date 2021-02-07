@@ -13,7 +13,7 @@
  *         Iterative methods for sparse linear systems (2nd Edition), SIAM
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
@@ -120,7 +120,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
     REAL *work = (REAL *)fasp_mem_calloc(4*m,sizeof(REAL));
     REAL *p = work, *z = work+m, *r = z+m, *t = r+m;
 
-    // Output some info for debuging
+    // Output some info for debugging
     if ( PrtLvl > PRINT_NONE ) printf("\nCalling CG solver (CSR) ...\n");
 
 #if DEBUG_MODE > 0

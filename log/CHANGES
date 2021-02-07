@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+02/07/2021 FASP 2.6.2:
+- Update output information for UA AMG setup;
+
 02/05/2021 FASP 2.6.1:
 - Add uninstall target to the new CMakeFile.txt;
 - Now both old and new cmake work!
