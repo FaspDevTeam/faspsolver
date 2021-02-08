@@ -38,6 +38,7 @@ SHORT fasp_param_check (input_param  *inparam)
         || inparam->solver_type<0
         || inparam->solver_type>50
         || inparam->precond_type<0
+        || inparam->decoup_type<0
         || inparam->itsolver_tol<0
         || inparam->itsolver_maxit<0
         || inparam->stop_type<=0
@@ -204,7 +205,18 @@ void fasp_param_input (const char   *fname,
             inparam->stop_type = ibuff;
             if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
         }
-    
+
+        else if (strcmp(buffer,"decoup_type")==0) {
+            val = fscanf(fp,"%s",buffer);
+            if (val!=1 || strcmp(buffer,"=")!=0) {
+                status = ERROR_INPUT_PAR; break;
+            }
+            val = fscanf(fp,"%d",&ibuff);
+            if (val!=1) { status = ERROR_INPUT_PAR; break; }
+            inparam->decoup_type = ibuff;
+            if (fscanf(fp, "%*[^\n]")) {/* skip rest of line and do nothing */ };
+        }
+
         else if (strcmp(buffer,"precond_type")==0) {
             val = fscanf(fp,"%s",buffer);
             if (val!=1 || strcmp(buffer,"=")!=0) {

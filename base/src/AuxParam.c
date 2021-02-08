@@ -6,7 +6,7 @@
  *         AuxInput.c and AuxMessage.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -333,6 +333,7 @@ void fasp_param_input_init (input_param *iniparam)
     // Problem information
     iniparam->problem_num              = 10;
     iniparam->solver_type              = SOLVER_CG;
+    iniparam->decoup_type              = 1;
     iniparam->precond_type             = PREC_AMG;
     iniparam->stop_type                = STOP_REL_RES;
 
@@ -473,6 +474,7 @@ void fasp_param_solver_init (ITS_param *itsparam)
 {
     itsparam->print_level   = PRINT_NONE;
     itsparam->itsolver_type = SOLVER_CG;
+    itsparam->decoup_type   = 1;
     itsparam->precond_type  = PREC_AMG;
     itsparam->stop_type     = STOP_REL_RES;
     itsparam->maxit         = 500;
@@ -656,6 +658,7 @@ void fasp_param_solver_set (ITS_param          *itsparam,
 {
     itsparam->print_level    = iniparam->print_level;
     itsparam->itsolver_type  = iniparam->solver_type;
+    itsparam->decoup_type    = iniparam->decoup_type;
     itsparam->precond_type   = iniparam->precond_type;
     itsparam->stop_type      = iniparam->stop_type;
     itsparam->restart        = iniparam->restart;

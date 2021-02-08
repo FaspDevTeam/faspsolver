@@ -365,13 +365,14 @@ typedef struct ivector{
  */
 typedef struct {
     
-    SHORT print_level;   /**< print level: 0--10 */
-    SHORT itsolver_type; /**< solver type: see fasp_const.h */
-    SHORT precond_type;  /**< preconditioner type: see fasp_const.h */
-    SHORT stop_type;     /**< stopping criteria type */
-    INT   restart;       /**< number of steps for restarting: for GMRES etc */
-    INT   maxit;         /**< max number of iterations */
-    REAL  tol;           /**< convergence tolerance */
+    SHORT print_level;     /**< print level: 0--10 */
+    SHORT itsolver_type;   /**< solver type: see fasp_const.h */
+    SHORT decoup_type;     /**< decoupling type */
+    SHORT precond_type;    /**< preconditioner type */
+    SHORT stop_type;       /**< stopping type */
+    INT   restart;         /**< number of steps for restarting: for GMRES etc */
+    INT   maxit;           /**< max number of iterations */
+    REAL  tol;             /**< convergence tolerance */
     
 } ITS_param; /**< Parameters for iterative solvers */
 
@@ -1102,6 +1103,7 @@ typedef struct {
 
     // parameters for iterative solvers
     SHORT solver_type;   /**< type of iterative solvers */
+    SHORT decoup_type;   /**< type of decoupling method for PDE systems */
     SHORT precond_type;  /**< type of preconditioner for iterative solvers */
     SHORT stop_type;     /**< type of stopping criteria for iterative solvers */
     REAL itsolver_tol;   /**< tolerance for iterative linear solver */
