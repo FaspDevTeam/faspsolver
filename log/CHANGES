@@ -1,7 +1,9 @@
 File Name: CHANGES
 
-02/07/2021 FASP 2.6.2:
+02/08/2021 FASP 2.6.2:
 - Update output information for UA AMG setup;
+- Add decoup_type for choosing decoupling methods in BSR;
+- Update test problems in main/test.c.
 
 02/05/2021 FASP 2.6.1:
 - Add uninstall target to the new CMakeFile.txt;

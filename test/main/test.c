@@ -3,7 +3,7 @@
  *  \brief The main test function for FASP solvers
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -195,7 +195,7 @@ int main (int argc, const char * argv[])
 
     else if (problem_num == 53) {
 
-        datafile1="mtx/audikw_1/audikw_1.mtx"; // This file is NOT in ../data!
+        datafile1="mtx/parabolic_fem/parabolic_fem.mtx";
         strcat(filename1,datafile1);
         fasp_dmtxsym_read(filename1, &A);
 
