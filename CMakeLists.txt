@@ -4,6 +4,7 @@
 # Modified   2017-10-20   --Chensong Zhang
 # Modified   2019-08-08   --Ludmil Zikatanov & Chensong Zhang
 # Modified   2020-12-02   --Chensong Zhang
+# Modified   2021-01-12   --Chensong Zhang
 ############################################################
 
 cmake_minimum_required (VERSION 3.0)
@@ -40,19 +41,15 @@ project(FASP C)
 
 set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
 
-########### try to find matching c++ and fortran compilers ############
-# Fortran compiler is needed for Fortran examples and demos
-#######################################################################
-include(get_cxx_fc_compilers)
-
 # Default configuration types and flags
 set(CMAKE_CONFIGURATION_TYPES "Release;Debug" CACHE STRING "Configs" FORCE)
 if (MSVC)
-    # Compiler flags for Windows MSVC
+    # Compiler flags for Windows MSVC, skip Fortran
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W4 /WX")
 else()
     # Compiler flags for Linux or Mac OS X
+    include(get_cxx_fc_compilers) # find matching Fortran compiler
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g")
 endif()
@@ -123,13 +120,13 @@ set(CMAKE_INSTALL_NAME_DIR
 set(CMAKE_INSTALL_RPATH
     ${CMAKE_INSTALL_NAME_DIR} CACHE PATH "path for Linux")
 
-file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR} 
-	  		                      ${FASP_SOURCE_DIR}/base/src/*.c
-	  		                      ${FASP_SOURCE_DIR}/base/src/*.inl )
+file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR}
+                                  ${FASP_SOURCE_DIR}/base/src/*.c
+				  ${FASP_SOURCE_DIR}/base/src/*.inl )
 
 # keep here for auto generating headers if needed
 add_custom_target(headers ${FASP_SOURCE_DIR}/util/fhead.sh "${FASP_SOURCE_DIR}/base"
-         	      DEPENDS ${FASP_C_SOURCES}
+                  DEPENDS ${FASP_C_SOURCES}
                   WORKING_DIRECTORY "${FASP_SOURCE_DIR}/util"
                   COMMENT "Auto-generating header file for C functions..."
                   VERBATIM)
@@ -138,7 +135,7 @@ add_custom_target(headers ${FASP_SOURCE_DIR}/util/fhead.sh "${FASP_SOURCE_DIR}/b
 include(external)
 
 # uninstall target
-if(NOT TARGET uninstall)
+if (NOT TARGET uninstall)
   configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/modules/cmake_uninstall.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
@@ -149,25 +146,16 @@ if(NOT TARGET uninstall)
 endif()
 
 ##################################################################
-# CC and FC MISMATCH CHECK
-##################################################################
-if(NOT (CMAKE_Fortran_COMPILER_ID STREQUAL CMAKE_C_COMPILER_ID))
-  message("
-** WARNING: Mismatching CC and FC. CC=\"${CMAKE_C_COMPILER_ID}${CMAKE_C_COMPILER_VERSION}\"; FC=\"${CMAKE_Fortran_COMPILER_ID}${CMAKE_Fortran_COMPILER_VERSION}\"!
-"
-) 
-endif(NOT (CMAKE_Fortran_COMPILER_ID STREQUAL CMAKE_C_COMPILER_ID))
-
-##################################################################
 # set FASP library name for the library
 ##################################################################
 set(FASP_LIBRARY_NAME fasp)
 
 # Recursively look for CMakeLists.txt in the library subdir.
 add_subdirectory("base")
-add_subdirectory("test")
-add_subdirectory("tutorial")
+add_subdirectory("test") # Requires Fortran compiler
+add_subdirectory("tutorial") # Requires Fortran compiler
 add_subdirectory("benchmark")
+
 include(write_config)
 
 ##################################################################
