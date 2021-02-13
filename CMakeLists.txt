@@ -4,7 +4,6 @@
 # Modified   2017-10-20   --Chensong Zhang
 # Modified   2019-08-08   --Ludmil Zikatanov & Chensong Zhang
 # Modified   2020-12-02   --Chensong Zhang
-# Modified   2021-01-12   --Chensong Zhang
 ############################################################
 
 cmake_minimum_required (VERSION 3.0)
@@ -45,11 +44,16 @@ set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
 set(CMAKE_CONFIGURATION_TYPES "Release;Debug" CACHE STRING "Configs" FORCE)
 if (MSVC)
     # Compiler flags for Windows MSVC, skip Fortran
+    add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /O2")
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /W4 /WX")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W4 /WX")
 else()
     # Compiler flags for Linux or Mac OS X
     include(get_cxx_fc_compilers) # find matching Fortran compiler
+    set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -g")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g")
 endif()
@@ -76,9 +80,9 @@ if(USE_OPENMP)
         set (CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
              "${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}} ${OpenMP_C_FLAGS}")	 
         set (CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE} 
-	     "${CMAKE_CXX_FLAGS_${CMAKE_CBUILD_TYPE}} ${OpenMP_CXX_FLAGS}")
+             "${CMAKE_CXX_FLAGS_${CMAKE_CBUILD_TYPE}} ${OpenMP_CXX_FLAGS}")
         set (CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE} 
-	     "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${OpenMP_C_FLAGS}")
+             "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${OpenMP_C_FLAGS}")
         set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
     else(OPENMP_FOUND)
         message(" WARNING: OpenMP was requested but not supported!")
@@ -120,13 +124,13 @@ set(CMAKE_INSTALL_NAME_DIR
 set(CMAKE_INSTALL_RPATH
     ${CMAKE_INSTALL_NAME_DIR} CACHE PATH "path for Linux")
 
-file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR}
-                                  ${FASP_SOURCE_DIR}/base/src/*.c
-				  ${FASP_SOURCE_DIR}/base/src/*.inl )
+file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR} 
+	  		                      ${FASP_SOURCE_DIR}/base/src/*.c
+	  		                      ${FASP_SOURCE_DIR}/base/src/*.inl )
 
 # keep here for auto generating headers if needed
 add_custom_target(headers ${FASP_SOURCE_DIR}/util/fhead.sh "${FASP_SOURCE_DIR}/base"
-                  DEPENDS ${FASP_C_SOURCES}
+         	      DEPENDS ${FASP_C_SOURCES}
                   WORKING_DIRECTORY "${FASP_SOURCE_DIR}/util"
                   COMMENT "Auto-generating header file for C functions..."
                   VERBATIM)

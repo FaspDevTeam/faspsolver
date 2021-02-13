@@ -1,8 +1,9 @@
 File Name: CHANGES
 
-02/12/2021 FASP 2.6.3:
+02/13/2021 FASP 2.6.3:
 - Remove BLAS from CMake;
-- Make CMake work on Windows + VSCode + CMake.
+- Make CMake work on Windows + VSCode + CMake;
+- Fix MSVC flag: _CRT_SECURE_NO_WARNINGS.
 
 02/10/2021 FASP 2.6.2:
 - Update output information for UA AMG setup;
