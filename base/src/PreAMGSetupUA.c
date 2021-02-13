@@ -109,7 +109,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR(AMG_data *mgl,
     // empiric value
     const REAL cplxmax = 3.0;
     const REAL xsi = 0.6;
-    INT icum = 1.0;
+    INT icum = 1;
     REAL eta, fracratio;
 
     // local variables

@@ -23,10 +23,10 @@ static void rap_setup(AMG_data *mgl, AMG_param *param)
 {
     const int print_level=param->print_level;
     const int m=mgl[0].A.row, n=mgl[0].A.col, nnz=mgl[0].A.nnz; 
-    int max_levels=param->max_levels;   
-    ivector vertices=fasp_ivec_create(m); // stores level info
-    unsigned int level=0;   
+    SHORT max_levels=param->max_levels;   
+    SHORT level=0;   
     iCSRmat S;
+    ivector vertices=fasp_ivec_create(m); // stores level info
 
     REAL setup_start, setup_end;
 

@@ -290,13 +290,12 @@ int main (int argc, const char * argv[])
 static double ComputeLMVUFromBaseline(char *workdir, Baseline bl)
 {
     ITS_param  itspar;  // input parameters for iterative solvers
-    AMG_param  amgpar;  // input parameters for AMG
     dCSRmat    A;       // coefficient matrix
     dvector    b, x;    // rhs and numerical solution
     int        status;  // iteration number or error message
     double     Timer0, Timer1;
 
-    int baselineID, baselineNum, callnum, i;
+    int callnum, i;
     int baselineTotNum = 0;
     double TotlMVU = 0, lMVU;
     char baseAfile[64];

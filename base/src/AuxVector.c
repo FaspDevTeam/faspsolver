@@ -171,7 +171,7 @@ void fasp_ivec_free (ivector *u)
 /**
  * \fn void fasp_dvec_rand (const INT n, dvector *x)
  *
- * \brief Generate random REAL vector in the range from 0 to 1
+ * \brief Generate fake random REAL vector in the range from 0 to 1
  *
  * \param n    Size of the vector
  * \param x    Pointer to dvector
@@ -192,8 +192,8 @@ void fasp_ivec_free (ivector *u)
 void fasp_dvec_rand (const INT  n,
                      dvector   *x)
 {
-    const INT va = (REAL) 0;
-    const INT vb = (REAL) n;
+    const INT va = 0;
+    const INT vb = n;
     
     INT s=1, i,j;
     

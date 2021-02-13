@@ -232,7 +232,7 @@ int main (int argc, const char * argv[])
     
     // Set initial guess
     fasp_dvec_alloc(A.row, &x);
-    fasp_dvec_set(A.row,&x,0.0);
+    fasp_dvec_set(A.row, &x, 0.0);
 
     // Preconditioned Krylov methods
     if (solver_type >= 1 && solver_type <= 20) {

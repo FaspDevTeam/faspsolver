@@ -203,8 +203,8 @@ void fasp_smoother_dcsr_poly_old (dCSRmat *Amat,
     th1=1e+00/th;
     sq=(th-th1)*(th-th1);
     //
-    ndeg0=floor(log(2*(2e0+th+th1)/sq)/log(th)+1e0);
-    if(ndeg0 < ndeg) ndeg0=ndeg;
+    ndeg0=(int)floor(log(2*(2e0+th+th1)/sq)/log(th)+1e0);
+    if (ndeg0 < ndeg) ndeg0=ndeg;
     //
     smu0=1e+00/smaxa;
     smu1=1e+00/smina;

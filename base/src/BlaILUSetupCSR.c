@@ -65,16 +65,15 @@ SHORT fasp_ilu_dcsr_setup (dCSRmat    *A,
     switch (type) {
         case ILUt:
             iwk=100*nnz;     // iwk is the maxim possible nnz for ILU
-            lfilt=floor(n*0.5)+1;
+            lfilt=(int)floor(n*0.5)+1;
             break;
         case ILUtp:
             iwk=100*nnz;     // iwk is the maxim possible nnz for ILU
-            lfilt=floor(n*0.5)+1;
+            lfilt=(int)floor(n*0.5)+1;
             break;
         default: // ILUk
             if (lfil == 0) iwk=nnz+500;
             else iwk=(lfil+5)*nnz;
-            break;
     } 
     
     nwork = 4*n;

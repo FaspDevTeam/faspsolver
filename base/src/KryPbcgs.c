@@ -315,8 +315,7 @@ INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
             imin = iter;
         }
         
-        if ( stag >= maxstagsteps )
-        {
+        if ( stag >= maxstagsteps ) {
             flag = 3;
             goto FINISHED;
         }
@@ -336,7 +335,7 @@ FINISHED:  // finish iterative method
         normr = fasp_blas_darray_norm2(m,r);
         
         if ( normr <= normr_act) {
-            fasp_darray_cp(m, xmin,x);
+            fasp_darray_cp(m, xmin, x);
             iter = imin;
             relres = normr/n2b;
         }
