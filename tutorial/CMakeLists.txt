@@ -7,8 +7,13 @@ if(UNIX OR LINUX)
 	set(ADD_STDLIBS m)
 endif()
 
-file( GLOB FASP_TUTSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
-      main/*.c main/*.f main/*.f90 )
+if(MSVC)
+    file( GLOB FASP_TUTSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
+          main/*.c )
+else()
+    file( GLOB FASP_TUTSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
+          main/*.c main/*.f main/*.f90 )
+endif()
 
 include_directories(${FASP_SOURCE_DIR}/base/include)
 

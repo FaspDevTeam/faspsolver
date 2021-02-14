@@ -20,8 +20,13 @@ file(GLOB FASP_TLIB_SRC src/*.c src/*.f )
 
 add_library(fasptest STATIC ${FASP_TLIB_SRC}) 
 
-file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
-      	   	     	      main/*.c main/*.cpp main/*.f main/*.f90 )
+if(MSVC)
+    file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
+          main/*.c )
+else()
+    file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
+          main/*.c main/*.cpp main/*.f main/*.f90 )
+endif()
 
 foreach( srcfile ${FASP_TSRC} )
 	 string( REGEX REPLACE "\\.[^\\.]*$" ".ex" execfile ${srcfile} )
