@@ -352,8 +352,7 @@ static SHORT amg_setup_unsmoothP_unsmoothR(AMG_data *mgl,
          }
 #endif
 
-        default:
-            // Do nothing!
+        default: // Do nothing!
             break;
     }
 
