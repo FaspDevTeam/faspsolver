@@ -45,11 +45,11 @@ int main (int argc, const char * argv[])
     fasp_param_init(&inipar, &itspar, &amgpar, &ilupar, &swzpar);
     
     // Set local parameters
-    const int print_level   = inipar.print_level;
-    const int problem_num   = inipar.problem_num;
-    const int solver_type   = inipar.solver_type;
-    const int precond_type  = inipar.precond_type;
-    const int output_type   = inipar.output_type;
+    const int print_level  = inipar.print_level;
+    const int problem_num  = inipar.problem_num;
+    const int solver_type  = inipar.solver_type;
+    const int precond_type = inipar.precond_type;
+    const int output_type  = inipar.output_type;
 
     // Set output device
     if (output_type) {
