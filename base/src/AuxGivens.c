@@ -5,7 +5,7 @@
  *  \note  This file contains Level-0 (Aux) functions.
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2008--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2008--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -13,6 +13,7 @@
 #include <math.h>
 
 #include "fasp.h"
+#include "fasp_functs.h"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

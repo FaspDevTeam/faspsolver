@@ -35,11 +35,11 @@ BEGIN {
   print " "
   print "#pragma once"
 
-  print "#ifdef WIN32 // Windows"
+  print "#if defined(WIN32) && defined(_DLL) // Windows DLL version"
   print "#ifdef FASP_DLL_EXPORTS"
   print "  #define FASP_API __declspec(dllexport)"
   print "#else"
-  print "  #define FASP_API"
+  print "  #define FASP_API __declspec(dllimport)"
   print "#endif"
   print "#else // Linux and Mac OS X"
   print "  #define FASP_API"
