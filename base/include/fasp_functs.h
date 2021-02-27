@@ -15,11 +15,11 @@
 #include "fasp_grid.h" 
  
 #pragma once
-#ifdef WIN32 // Windows
+#if defined(WIN32) && defined(_DLL) // Windows DLL version
 #ifdef FASP_DLL_EXPORTS
   #define FASP_API __declspec(dllexport)
 #else
-  #define FASP_API
+  #define FASP_API __declspec(dllimport)
 #endif
 #else // Linux and Mac OS X
   #define FASP_API

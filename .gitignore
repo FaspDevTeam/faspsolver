@@ -4,5 +4,4 @@ FASP.mk*
 *.ex
 Build/
 BUILD_FASP/
-include/
 lib/
