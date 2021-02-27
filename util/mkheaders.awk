@@ -13,6 +13,7 @@
 # modified by Chensong Zhang to add fasp_grid.h ( 01/28/2017 )
 # modified by Chensong Zhang to update output format ( 01/31/2017 )
 # modified by Chensong Zhang to update copyright info ( 03/18/2018 )
+# modified by Chensong Zhang to add DLL export ( 02/28/2021 )
 
 BEGIN {
   inheader=0;
@@ -32,15 +33,27 @@ BEGIN {
   print "#include \"fasp_block.h\" "
   print "#include \"fasp_grid.h\" "
   print " "
+  print "#pragma once"
+
+  print "#ifdef WIN32 // Windows"
+  print "#ifdef FASP_DLL_EXPORTS"
+  print "  #define FASP_API __declspec(dllexport)"
+  print "#else"
+  print "  #define FASP_API"
+  print "#endif"
+  print "#else // Linux and Mac OS X"
+  print "  #define FASP_API"
+  print "#endif"
 }
 
+# continue for functions with multiple lines
 {
   if (inheader) {
     if (match($0,"[)][ \t]*$")) {
       inheader = 0;
-      printf "%s;\n\n",$0;
+      printf "         %s;\n\n",$0;
     } else {
-      printf "%s\n",$0;
+      printf "         %s\n",$0;
     }
     next;
   }
@@ -58,14 +71,16 @@ BEGIN {
   next;
 }
 
+# functions with only one line
 /[(].*[)][ \t]*$/ {
-    printf "%s;\n\n",$0;
+    printf "FASP_API %s;\n\n",$0;
     next;
 }
 
+# functions with multiple lines
 /[(]/ {
   inheader=1;
-  printf "%s\n",$0;
+  printf "FASP_API %s\n",$0;
   next;
 }
 
