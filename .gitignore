@@ -2,6 +2,7 @@
 config.mk*
 FASP.mk*
 *.ex
+.vscode/
 Build/
 BUILD_FASP/
 lib/

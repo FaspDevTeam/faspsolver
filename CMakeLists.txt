@@ -6,7 +6,8 @@
 # Modified   2020-12-02   --Chensong Zhang
 ############################################################
 
-cmake_minimum_required (VERSION 2.8)
+# Minimum cmake version needed
+cmake_minimum_required (VERSION 2.8.12)
 
 # Helper modules
 include(CheckFunctionExists)
