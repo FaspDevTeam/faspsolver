@@ -35,7 +35,7 @@ BEGIN {
   print " "
   print "#pragma once"
 
-  print "#if defined(WIN32) && defined(_DLL) // Windows DLL version"
+  print "#if defined(WIN32) && defined(FASP_DLL) // Windows DLL version"
   print "#ifdef FASP_DLL_EXPORTS"
   print "  #define FASP_API __declspec(dllexport)"
   print "#else"
