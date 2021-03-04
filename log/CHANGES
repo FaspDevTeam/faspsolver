@@ -1,9 +1,10 @@
 File Name: CHANGES
 
-03/03/2021 FASP 2.6.4:
+03/05/2021 FASP 2.6.4:
 - Remove testlib from VS19;
 - Add DLL version for Windows;
 - Fix DLL version for vscode/cmake/msvc;
+- Fix OpenMP version for cmake.
 
 02/13/2021 FASP 2.6.3:
 - Remove BLAS from CMake;
