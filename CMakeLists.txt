@@ -25,7 +25,6 @@ cmake_minimum_required (VERSION 2.8.12)
 include(CheckFunctionExists)
 include(CheckIncludeFile)
 
-set(CMAKE_VERBOSE_MAKEFILE 1) 
 set(GDB         1 CACHE BOOL "debugging or not")
 set(OPENMP      0 CACHE BOOL "Openmp use")
 set(USE_MUMPS   0 CACHE BOOL "MUMPS use")
