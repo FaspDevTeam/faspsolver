@@ -2,6 +2,7 @@ File Name: CHANGES
 
 03/10/2021 FASP 2.6.5:
 - Fix DEBUG information in SmatInv;
+- Fix Windows VS19 OpenMP flag;
 
 03/05/2021 FASP 2.6.4:
 - Remove testlib from VS19;
