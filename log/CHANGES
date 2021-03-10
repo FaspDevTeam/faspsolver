@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+03/10/2021 FASP 2.6.5:
+- Fix DEBUG information in SmatInv;
+
 03/05/2021 FASP 2.6.4:
 - Remove testlib from VS19;
 - Add DLL version for Windows;

@@ -993,7 +993,9 @@ dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A,
                             fasp_smat_identity_nc3(valb+m);
                         }
                     }
-                    
+#if DEBUG_MODE > 0
+                    printf("### DEBUG: row, col = %d\n", i);
+#endif
                     // compute the inverses of the diagonal sub-blocks
                     fasp_smat_inv_nc3(diaginv+i*9);
                     
