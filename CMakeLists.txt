@@ -34,14 +34,8 @@ set(USE_PARDISO 0 CACHE BOOL "PARDISO use")
 set(USE_DOXYGEN 0 CACHE BOOL "Doxygen use")
 
 # Search for C compilers in the specified order
-if(DEFINED ENV{CC}) 
-    find_program(THE_C NAMES $ENV{CC} gcc icc clang)
-else(DEFINED ENV{CC}) 
-    find_program(THE_C NAMES gcc icc clang)
-endif(DEFINED ENV{CC})
-if(THE_C)
-    set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL "the C compiler" FORCE)
-endif(THE_C)
+find_program(THE_C NAMES $ENV{CC} gcc icc clang)
+set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL "the C compiler" FORCE)
 
 # Name the project at this moment and this will set the compiler id:
 project(FASP C)
@@ -86,8 +80,8 @@ if(USE_OPENMP)
     if(CMAKE_VERSION VERSION_GREATER 3)
         cmake_policy(SET "CMP0054" NEW)
     endif()
-    find_package(OpenMP)
 
+    find_package(OpenMP)
     if(OPENMP_FOUND)
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")	 
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
@@ -102,18 +96,18 @@ endif(USE_OPENMP)
 #####################################################################################
 
 if(ADD_CFLAGS)
-    set (CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
-	 "${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CFLAGS}")	 
+    set(CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
+        "${CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CFLAGS}")	 
 endif(ADD_CFLAGS)
 
 if(ADD_CXXFLAGS)
-    set (CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE} 
-	 "${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CXXFLAGS}")
+    set(CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE} 
+        "${CMAKE_CXX_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_CXXFLAGS}")
 endif(ADD_CXXFLAGS)
 
 if(ADD_FFLAGS)
-    set (CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE} 
-	 "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_FFLAGS}")	 
+    set(CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE} 
+        "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_FFLAGS}")	 
 endif(ADD_FFLAGS)
 
 # FOR MAC OS X to find shared libs in install location
@@ -158,13 +152,11 @@ set(FASP_LIBRARY_NAME fasp)
 
 # Uninstall target
 if (NOT TARGET uninstall)
-  configure_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/modules/cmake_uninstall.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-    IMMEDIATE @ONLY)
-
-  add_custom_target(uninstall
-    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+    configure_file("${CMAKE_CURRENT_SOURCE_DIR}/modules/cmake_uninstall.cmake.in"
+                   "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+                   IMMEDIATE @ONLY)
+    add_custom_target(uninstall
+        COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
 endif()
 
 # Recursively look for CMakeLists.txt in the library subdir
