@@ -1,9 +1,9 @@
 # CMake script to detect Intel(R) Math Kernel Library (MKL)
 #
 # This will try to find Intel MKL libraries, and include path by automatic
-# search through typical install locations and if failed it will
-# examine MKLROOT environment variable.
-# Note, MKLROOT is not set by IPP installer, it should be set manually.
+# search through typical install locations and if failed it will examine
+# MKLROOT environment variable. Note, MKLROOT is not set by IPP installer, 
+# it should be set manually.
 #
 # Usage example:
 #   set(MKL_USE_STATIC_LIBS ON)

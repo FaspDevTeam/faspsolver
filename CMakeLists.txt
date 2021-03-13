@@ -5,7 +5,7 @@
 # Ludmil Zikatanov  Aug/08/2015    Create CMakeLists
 # Chensong Zhang    Oct/20/2017    Update to new FASP code
 # Ludmil Zikatanov  Aug/08/2019    Fix installation problem for cmake 3.14+
-# Chensong Zhang    Mar/05/2021    Fix OpenMP problems
+# Chensong Zhang    Mar/13/2021    Fix OpenMP problems
 #
 # Some sample usages:
 #   cmake .                                 // build in default configuration
@@ -76,9 +76,12 @@ message(STATUS "Set build type to ${CMAKE_BUILD_TYPE} configuration")
 ########### check the prefix for installation #########################
 include(install_prefix)
  
-#####################################################################################
-## OpenMP : defined on command line in the top Makefile
-#####################################################################################
+#######################################################################
+# OpenMP : defined on command line in the top Makefile
+# For cmake since 3.9, we can use find_package(OpenMP REQUIRED)
+# We keep this for older cmake versions!!!
+#######################################################################
+
 if(USE_OPENMP)
     if(CMAKE_VERSION VERSION_GREATER 3)
         cmake_policy(SET "CMP0054" NEW)
@@ -86,16 +89,11 @@ if(USE_OPENMP)
     find_package(OpenMP)
 
     if(OPENMP_FOUND)
-        set (CMAKE_C_FLAGS 
-             "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")	 
-        set (CMAKE_CXX_FLAGS 
-             "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-        set (CMAKE_Fortran_FLAGS 
-             "${CMAKE_Fortran_FLAGS} ${OpenMP_C_FLAGS}")
-        set (CMAKE_EXE_LINKER_FLAGS 
-             "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_EXE_LINKER_FLAGS}")
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")	 
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+        set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS} ${OpenMP_C_FLAGS}")
     else(OPENMP_FOUND)
-        message(" WARNING: OpenMP was requested but disabled!")
+        message("   WARNING: OpenMP was requested but disabled!")
     endif(OPENMP_FOUND)
 endif(USE_OPENMP)
 
