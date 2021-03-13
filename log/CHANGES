@@ -4,6 +4,7 @@ File Name: CHANGES
 - Fix DEBUG information in SmatInv;
 - Fix Windows VS19 OpenMP flag;
 - Test OpenMP for icc;
+- Rewrite cmake: Replace FASP_SOURCE_DIR with general dir.
 
 03/05/2021 FASP 2.6.4:
 - Remove testlib from VS19;

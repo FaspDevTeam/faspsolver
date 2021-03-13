@@ -1,8 +1,8 @@
 ## build test library
 
-set(FASP_TLIB_DIR ${FASP_SOURCE_DIR}/test)
-set(FASP_TINC_DIR ${FASP_SOURCE_DIR}/test/include)
-set(RUNTIME_OUTPUT_DIRECTORY ${FASP_SOURCE_DIR}/test)
+set(FASP_TLIB_DIR ${PROJECT_SOURCE_DIR}/test)
+set(FASP_TINC_DIR ${PROJECT_SOURCE_DIR}/test/include)
+set(RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/test)
 
 ## requires math library
 if(UNIX OR LINUX)
@@ -10,7 +10,7 @@ if(UNIX OR LINUX)
 endif()
 
 include_directories(${FASP_TINC_DIR}
-		    ${FASP_SOURCE_DIR}/base/include )
+		    ${PROJECT_SOURCE_DIR}/base/include )
 
 file(GLOB FASP_TLIB_SRC src/*.c src/*.f )
 
@@ -29,20 +29,18 @@ else()
 endif()
 
 foreach( srcfile ${FASP_TSRC} )
-	 string( REGEX REPLACE "\\.[^\\.]*$" ".ex" execfile ${srcfile} )
-#
-	 add_executable( ${execfile} main/${srcfile} )
+    string( REGEX REPLACE "\\.[^\\.]*$" ".ex" execfile ${srcfile} )
+    add_executable( ${execfile} main/${srcfile} )
 # 
-         target_link_libraries( ${execfile} 
-	 			fasptest 
-	 			${FASP_LIBRARY_NAME}
-				${UMFPACK_LIBRARIES} 
-				${SUPERLU_LIBRARIES} 
-				${MUMPS_LIBRARIES}
-				${MKL_LIBRARIES}
-				${ADD_STDLIBS} )
+    target_link_libraries(${execfile} fasptest 
+                          ${FASP_LIBRARY_NAME}
+                          ${UMFPACK_LIBRARIES} 
+                          ${SUPERLU_LIBRARIES} 
+                          ${MUMPS_LIBRARIES}
+                          ${MKL_LIBRARIES}
+                          ${ADD_STDLIBS} )
 #
-         install(TARGETS ${execfile} 
-                 DESTINATION ${FASP_SOURCE_DIR}/test)
+    install(TARGETS ${execfile} 
+            DESTINATION ${PROJECT_SOURCE_DIR}/test)
 endforeach( srcfile ${FASP_TSRC} )
 

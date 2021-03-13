@@ -1,6 +1,6 @@
 ## build tutorial programs
 
-set(RUNTIME_OUTPUT_DIRECTORY ${FASP_SOURCE_DIR}/tutorial)
+set(RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/tutorial)
 
 ## requires math library
 if(UNIX OR LINUX)
@@ -15,7 +15,7 @@ else()
           main/*.c main/*.f main/*.f90 )
 endif()
 
-include_directories(${FASP_SOURCE_DIR}/base/include)
+include_directories(${PROJECT_SOURCE_DIR}/base/include)
 
 foreach( srcfile ${FASP_TUTSRC} )
  	string( REGEX MATCH "\\.c$|\\.f90$|\\.cpp$" X ${srcfile} )
@@ -27,15 +27,15 @@ foreach( srcfile ${FASP_TUTSRC} )
         string( REGEX REPLACE "\\.cpp$" "-cpp.ex" execfile ${srcfile} )
     endif()
     if(execfile)
-      add_executable( ${execfile} main/${srcfile} )
-      target_link_libraries( ${execfile} 
-      			       ${FASP_LIBRARY_NAME}
-			       ${UMFPACK_LIBRARIES} 
-			       ${SUPERLU_LIBRARIES} 
-			       ${MUMPS_LIBRARIES}
-			       ${MKL_LIBRARIES}
-			       ${ADD_STDLIBS} )      
-      install(TARGETS ${execfile} DESTINATION ${FASP_SOURCE_DIR}/tutorial)
+        add_executable( ${execfile} main/${srcfile} )
+        target_link_libraries( ${execfile} 
+                               ${FASP_LIBRARY_NAME}
+                               ${UMFPACK_LIBRARIES} 
+                               ${SUPERLU_LIBRARIES} 
+                               ${MUMPS_LIBRARIES}
+                               ${MKL_LIBRARIES}
+                               ${ADD_STDLIBS} )      
+        install(TARGETS ${execfile} DESTINATION ${PROJECT_SOURCE_DIR}/tutorial)
     endif(execfile)
 endforeach( srcfile ${FASP_TUTSRC} )
 

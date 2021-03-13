@@ -3,7 +3,7 @@
 #
 #  Modified   20151017   --ltz
 ###################################################################
-set(CONFIGMK ${FASP_SOURCE_DIR}/Config.mk)
+set(CONFIGMK ${PROJECT_SOURCE_DIR}/Config.mk)
 message("-- Writing FASP configuration to ${CONFIGMK}")
 # determinining library name; this is  a bit hard coding here
 if(SHARED)

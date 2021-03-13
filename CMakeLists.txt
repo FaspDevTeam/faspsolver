@@ -1,11 +1,11 @@
-# CMakeLists for FASP 
+# CMakeLists for faspsolver 
 # 
 # Author            Date           Action
 # -----------------------------------------------------------------------------------
 # Ludmil Zikatanov  Aug/08/2015    Create CMakeLists
 # Chensong Zhang    Oct/20/2017    Update to new FASP code
 # Ludmil Zikatanov  Aug/08/2019    Fix installation problem for cmake 3.14+
-# Chensong Zhang    Mar/13/2021    Fix OpenMP problems
+# Chensong Zhang    Mar/13/2021    Replace FASP_SOURCE_DIR with general dir
 #
 # Some sample usages:
 #   cmake .                                 // build in default configuration
@@ -38,9 +38,9 @@ find_program(THE_C NAMES $ENV{CC} gcc icc clang)
 set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL "the C compiler" FORCE)
 
 # Name the project at this moment and this will set the compiler id:
-project(FASP C)
+project(faspsolver C)
 
-set(CMAKE_MODULE_PATH ${FASP_SOURCE_DIR}/modules)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/modules)
 
 # Default configuration types and flags
 set(CMAKE_CONFIGURATION_TYPES "Release;Debug" CACHE STRING "Configs" FORCE)
@@ -119,14 +119,14 @@ set(CMAKE_INSTALL_RPATH
     ${CMAKE_INSTALL_NAME_DIR} CACHE PATH "path for Linux")
 
 # Set source files required for FASP
-file(GLOB FASP_C_SOURCES RELATIVE ${FASP_SOURCE_DIR} 
-	  		                      ${FASP_SOURCE_DIR}/base/src/*.c
-	  		                      ${FASP_SOURCE_DIR}/base/src/*.inl )
+file(GLOB FASP_C_SOURCES RELATIVE ${PROJECT_SOURCE_DIR} 
+	  		                      ${PROJECT_SOURCE_DIR}/base/src/*.c
+	  		                      ${PROJECT_SOURCE_DIR}/base/src/*.inl )
 
 # Auto generating headers if needed
-add_custom_target(headers ${FASP_SOURCE_DIR}/util/fhead.sh "${FASP_SOURCE_DIR}/base"
+add_custom_target(headers ${PROJECT_SOURCE_DIR}/util/fhead.sh "${PROJECT_SOURCE_DIR}/base"
          	      DEPENDS ${FASP_C_SOURCES}
-                  WORKING_DIRECTORY "${FASP_SOURCE_DIR}/util"
+                  WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/util"
                   COMMENT "Auto-generating header file for C functions..."
                   VERBATIM)
 
@@ -138,7 +138,7 @@ include(external)
 #####################################################################################
 ## Installtion targets for lib and exe files
 #####################################################################################
-set(CMAKE_INSTALL_PREFIX "${FASP_SOURCE_DIR}" )
+set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}" )
 set(FASPLIB_BASE_PATH "base" CACHE PATH "base path to FASPLIB")
 set(FASP_INSTALL TRUE)
 
