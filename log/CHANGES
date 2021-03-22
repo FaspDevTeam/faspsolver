@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+03/23/2021 FASP 2.6.6:
+- Update CMake and add backup target;
+- Saving coarse matrices for debugging;
+
 03/13/2021 FASP 2.6.5:
 - Fix DEBUG information in SmatInv;
 - Fix Windows VS19 OpenMP flag;

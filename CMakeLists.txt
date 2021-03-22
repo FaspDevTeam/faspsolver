@@ -6,6 +6,7 @@
 # Chensong Zhang    Oct/20/2017    Update to new FASP code
 # Ludmil Zikatanov  Aug/08/2019    Fix installation problem for cmake 3.14+
 # Chensong Zhang    Mar/13/2021    Replace FASP_SOURCE_DIR with general dir
+# Chensong Zhang    Mar/23/2021    Add headers and backup target
 #
 # Some sample usages:
 #   cmake .                                 // build in default configuration
@@ -123,6 +124,13 @@ file(GLOB FASP_C_SOURCES RELATIVE ${PROJECT_SOURCE_DIR}
 	  		                      ${PROJECT_SOURCE_DIR}/base/src/*.c
 	  		                      ${PROJECT_SOURCE_DIR}/base/src/*.inl )
 
+# Auto backup FASP code
+add_custom_target(backup  ${PROJECT_SOURCE_DIR}/util/backup.sh
+         	      DEPENDS ${FASP_C_SOURCES}
+                  WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
+                  COMMENT "Backup FASP files..."
+                  VERBATIM)
+
 # Auto generating headers if needed
 add_custom_target(headers ${PROJECT_SOURCE_DIR}/util/fhead.sh "${PROJECT_SOURCE_DIR}/base"
          	      DEPENDS ${FASP_C_SOURCES}
@@ -163,6 +171,9 @@ endif()
 add_subdirectory("base")
 add_subdirectory("test")      # Requires Fortran compiler
 add_subdirectory("tutorial")  # Requires Fortran compiler
-add_subdirectory("benchmark") # Only needed for benchmark tests
+
+if(EXISTS "benchmark")
+    add_subdirectory("benchmark") # Optional, only needed for benchmark tests
+endif()
 
 include(write_config)

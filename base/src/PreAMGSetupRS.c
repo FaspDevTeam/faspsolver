@@ -290,7 +290,7 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
 
         mgl[lvl].cycle_type = cycle_type; // initialize cycle type!
         mgl[lvl].ILU_levels = param->ILU_levels - lvl; // initialize ILU levels!
-        mgl[lvl].SWZ_levels = param->SWZ_levels -lvl; // initialize Schwarz!
+        mgl[lvl].SWZ_levels = param->SWZ_levels - lvl; // initialize Schwarz!
 
         // allocate work arrays for the solve phase
         if ( cycle_type == NL_AMLI_CYCLE )

@@ -73,7 +73,7 @@ void fasp_itinfo (const INT   ptrlvl,
 /**
  * \fn void void fasp_amgcomplexity (const AMG_data *mgl, const SHORT prtlvl)
  *
- * \brief Print complexities of AMG method
+ * \brief Print level and complexity information of AMG
  *
  * \param mgl      Multilevel hierachy for AMG
  * \param prtlvl   How much information to print
@@ -93,13 +93,22 @@ void fasp_amgcomplexity (const AMG_data  *mgl,
         printf("-----------------------------------------------------------\n");
         printf("  Level   Num of rows   Num of nonzeros   Avg. NNZ / row   \n");
         printf("-----------------------------------------------------------\n");
-        
+
         for ( level = 0; level < max_levels; ++level) {
             const REAL AvgNNZ = (REAL) mgl[level].A.nnz/mgl[level].A.row;
             printf("%5d %13d %17d %14.2f\n",
                    level, mgl[level].A.row, mgl[level].A.nnz, AvgNNZ);
             gridcom += mgl[level].A.row;
             opcom   += mgl[level].A.nnz;
+
+#if 0 // Save coarser linear systems for debug
+            char matA[max_levels], rhsb[max_levels];
+            if (level > 0) {
+                sprintf(matA, "A%d.coo", level);
+                sprintf(rhsb, "b%d.coo", level);
+                fasp_dcsrvec_write2(matA, rhsb, &(mgl[level].A), &(mgl[level].b));
+            }
+#endif
         }
         printf("-----------------------------------------------------------\n");
         
@@ -109,7 +118,6 @@ void fasp_amgcomplexity (const AMG_data  *mgl,
         printf("  Operator complexity = %.3f\n", opcom);
         
         printf("-----------------------------------------------------------\n");
-        
     }
 }
 
