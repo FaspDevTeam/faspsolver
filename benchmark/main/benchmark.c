@@ -14,7 +14,12 @@
 #include "fasp_functs.h"
 #include "benchmark.h"
 
+// define matrix type
+#define MATRIX_MTX 0
+#define MATRIX_CSR 1
+
 static double ComputeLMVUFromBaseline(char *workdir, Baseline bl);
+void print_help_information();
 
 /**
  * \fn int main (int argc, const char * argv[])
@@ -22,7 +27,7 @@ static double ComputeLMVUFromBaseline(char *workdir, Baseline bl);
  * \brief This is the main function for benchmark test.
  *
  * \author Chensong Zhang, Li Zhao
- * \date   1/10/2021
+ * \date   04/02/2021
  */
 int main (int argc, const char * argv[])
 {
@@ -32,9 +37,13 @@ int main (int argc, const char * argv[])
     char        alg_dir[20]   = "algorithm";
     
     INT         startID       = 1;     // start solve problem index
-    INT         endID         = 1;     // end solve problem index
-    INT         MinProbSize   = 10000; // Filter small matrices
+    INT         endID         = 235;   // end solve problem index
+    INT         MinProbSize   = 10000; // filter small matrices
     const INT   print_level   = 1;     // how much information to print out
+    INT         print_help    = 0;     // print the help information
+    INT         mat_type      = 0;     // matrix type: 0: mtx, 1: csr 
+    INT         read_rhs      = 0;     // whether to read the right-hand-side, 
+                                       // the default value is false (right-hand-side is equal to the matrix multiplied by the randomly vector)
 
     /* Local Variables */
     Baseline     bl;
@@ -52,8 +61,8 @@ int main (int argc, const char * argv[])
     dvector      b, x;   // rhs and numerical solution
     int          solver_type, precond_type;
     char         logname[64];
-    REAL         Timer0, Timer1, lMVU, Score; // performance timers
-    time_t       lt = time(NULL);
+    REAL         Timer0, Timer1, lMVU = -1, Score; // performance timers
+    time_t       lt = time(NULL); 
 
     printf("------------------------- Test starts at -------------------------\n");
     printf("%s",asctime(localtime(&lt))); // output starting local time
@@ -62,12 +71,25 @@ int main (int argc, const char * argv[])
     // Handle command line options
     int i = 1;
     while (i < argc) {
-        if (!strcmp(argv[i], "-startID")) startID = atoi(argv[i + 1]);
-        if (!strcmp(argv[i], "-endID"))   endID = atoi(argv[i + 1]);
-        if (!strcmp(argv[i], "-f"))       strcpy(ini_file, argv[i + 1]);
-        if (!strcmp(argv[i], "-mps"))     MinProbSize = atoi(argv[i + 1]);
+        if (!strcmp(argv[i], "-startID"))  startID = atoi(argv[i + 1]);
+        if (!strcmp(argv[i], "-endID"))    endID = atoi(argv[i + 1]);
+        if (!strcmp(argv[i], "-f"))        strcpy(ini_file, argv[i + 1]);
+        if (!strcmp(argv[i], "-mps"))      MinProbSize = atoi(argv[i + 1]);
+        if (!strcmp(argv[i], "-mat_dir"))  strcpy(mat_dir, argv[i + 1]);
+        if (!strcmp(argv[i], "-mat_type")) mat_type = atoi(argv[i + 1]);
+        if (!strcmp(argv[i], "-read_rhs")) read_rhs = atoi(argv[i + 1]);
+        if (!strcmp(argv[i], "-help")){
+            print_help = 1;
+            break;
+        }    
         i += 2;
     }
+    if (print_help)
+    {
+        print_help_information();
+        return -1;
+    }
+    
     printf("Start ID of test problem = %d\n", startID);
     printf("Ending ID of test problem = %d\n", endID);
     printf("Test problem size larger than %d\n", MinProbSize);
@@ -91,13 +113,25 @@ int main (int argc, const char * argv[])
 
     FILE *fpCheck = NULL;
     char matrix_file_name[128];
+    char rhs_file_name[128];
     char algorithm_file_name[128];
 
     // Loop through the problem to be tested
     for (indp = 1; indp < pb->num+1; indp++)
     {
         if (!pb->isvalid[indp-1]) continue;
-        sprintf(matrix_file_name, "%s/%s/%s.mtx", mat_dir, pb->prob[indp-1], pb->prob[indp-1]);
+        
+        if (mat_type == MATRIX_MTX)
+        {
+            sprintf(matrix_file_name, "%s/%s/%s.mtx",   mat_dir, pb->prob[indp-1], pb->prob[indp-1]);
+            sprintf(rhs_file_name,    "%s/%s/%s_b.mtx", mat_dir, pb->prob[indp-1], pb->prob[indp-1]);
+        }else if (mat_type == MATRIX_CSR)
+        {
+            sprintf(matrix_file_name, "%s/%s/A.%s", mat_dir, pb->prob[indp-1], pb->prob[indp-1]);
+            sprintf(rhs_file_name,    "%s/%s/b.%s", mat_dir, pb->prob[indp-1], pb->prob[indp-1]);
+        }else{
+
+        }
 
         if (indp < startID || indp > endID) continue;
         printf("\n=====================================================\n");
@@ -116,8 +150,17 @@ int main (int argc, const char * argv[])
         /*****************************/
         /* Step 1. Read the systems  */
         /*****************************/
-        // Read A in MatrixMarket SYM COO format.
-        fasp_dmtxsym_read(matrix_file_name, &A);
+        if (mat_type == MATRIX_MTX)
+        {
+            // Read A in MatrixMarket SYM COO format.
+            fasp_dmtxsym_read(matrix_file_name, &A);
+        }else if (mat_type == MATRIX_CSR)
+        {
+            fasp_dcsr_read(matrix_file_name, &A);
+            // fasp_dcsrvec_read2(matrix_file_name, rhs_file_name, &A, &b);
+        }else{
+
+        }
 
         // Filter small matrix
         if (A.row < MinProbSize) {
@@ -125,13 +168,18 @@ int main (int argc, const char * argv[])
             continue;
         }
 
-        // Generate an exact solution randomly
-        dvector sol = fasp_dvec_create(A.row);
-        fasp_dvec_rand(A.row, &sol);
+        if (read_rhs)
+        {
+            fasp_dvec_read(rhs_file_name, &b);
+        }else{    
+            // Generate an exact solution randomly
+            dvector sol = fasp_dvec_create(A.row);
+            fasp_dvec_rand(A.row, &sol);
 
-        // Form the right-hand-side b = A*sol
-        b = fasp_dvec_create(A.row);
-        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+            // Form the right-hand-side b = A*sol
+            b = fasp_dvec_create(A.row);
+            fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+        }
 
         printf("Problem Size:         %d\n", A.row);
         printf("=====================================================\n");
@@ -381,6 +429,21 @@ static double ComputeLMVUFromBaseline(char *workdir, Baseline bl)
 
     // return
     return lMVU;
+}
+
+
+void print_help_information()
+{
+    printf("help information:\n");
+    printf("-startID : Start ID of test problem.\n");
+    printf("-endID   : Ending ID of test problem.\n");
+    printf("-f       : Input file.\n");
+    printf("-mps     : Test problem size larger than mps.\n");
+    printf("-mat_dir : The root directory of the matrix and the right-hand-vector.\n");
+    printf("-mat_type: Matrix type, optional value: 0(mtx) or 1(csr), the default value is 0.\n");
+    printf("-read_rhs: Whether to read the right-hand-side, optional value: 0 or 1, the default value is 0\n");
+    printf("           (right-hand-side is equal to the matrix multiplied by the randomly vector).\n");
+    printf("-help    : Print the help information.\n\n");
 }
 
 /*---------------------------------*/
