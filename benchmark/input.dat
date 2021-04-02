@@ -1,10 +1,10 @@
-1 235 14            #基准问题数 待测问题数 解法器数（与下文保持一致）
+1 235 14            #基准问题总数 待测问题总数 解法器总数（含注释掉的数目）
 Baseline            #基准问题
-1 poisson2D 10      #编号 基准问题名称（与baseline目录相对应） 调用10次
+1 poisson2D 10      #编号 基准问题名称（与baseline目录相对应） 调用次数
 /                   #结束符
 Problem             #待测问题
 1   1138_bus        #编号 待测问题名称（与mtx目录相对应）
-2   494_bus
+2   494_bus         #若2号问题不测，可在前面添加"#"注释掉
 3   662_bus
 4   685_bus
 5   bcsstk01
@@ -241,17 +241,17 @@ Problem             #待测问题
 / #结束符
 Algorithm           #解法器参数
 1 para_cg           #编号 解法器参数文件名称（与algorithm目录相对应）
-2 para_bicgstab
+2 para_bicgstab     #若 2 号算法不测，可在前面添加"#"注释掉
 3 para_minres
 4 para_gmres
-5 para_vgmres
-6 para_vfgmres
-7 para_gcg
-8 para_gcr
-9 para_amg 
-10 para_fmg
-11 para_amg_cg
-12 para_ilu_cg    
-13 para_ds_cg
-14 para_schwarz_cg
+5 para_amg 
+6 para_amg_cg
+7 para_ilu_cg    
+8 para_ds_cg
+9 para_amg_gmres
+10 para_ilu_gmres 
+11 para_ds_gmres
+12 para_amg_bicgstab
+13 para_ilu_bicgstab    
+14 para_ds_bicgstab
 /                   #结束符
