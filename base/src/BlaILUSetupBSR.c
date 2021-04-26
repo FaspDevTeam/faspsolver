@@ -645,7 +645,7 @@ static INT numfactor (dBSRmat   *A,
             
             break;
             
-        case 5:
+        case -5:
             
             for (k = 0; k < n; ++k) {
                 
@@ -686,12 +686,13 @@ static INT numfactor (dBSRmat   *A,
                 
                 colptrs[k] =  0;
                 
-                fasp_smat_inv_nc5(&(luval[k*nb2]));
+                // fasp_smat_inv_nc5(&(luval[k*nb2])); // not numerically stable --zcs 04/26/2021
+                fasp_smat_invp_nc(&(luval[k*nb2]), 5);
             }
             
             break;
             
-        case 7:
+        case -7:
             
             for (k = 0; k < n; ++k) {
                 
@@ -732,7 +733,8 @@ static INT numfactor (dBSRmat   *A,
                 
                 colptrs[k] =  0;
                 
-                fasp_smat_inv(&(luval[k*nb2]),nb);
+                // fasp_smat_inv(&(luval[k*nb2]),nb); // not numerically stable --zcs 04/26/2021
+                fasp_smat_invp_nc(&(luval[k*nb2]), nb);
             }
             
             break;
@@ -741,7 +743,7 @@ static INT numfactor (dBSRmat   *A,
             
             for (k=0;k<n;k++) {
                 
-                for (indj = jlu[k];indj<jlu[k+1];++indj) {
+                for (indj = jlu[k]; indj < jlu[k+1]; ++indj) {
                     colptrs[jlu[indj]] = indj;
                     ibstart=indj*nb2;
                     for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = 0;
@@ -749,7 +751,7 @@ static INT numfactor (dBSRmat   *A,
                 
                 colptrs[k] =  k;
                 
-                for (indja = A->IA[k]; indja < A->IA[k+1];indja++) {
+                for (indja = A->IA[k]; indja < A->IA[k+1]; indja++) {
                     ijaj = A->JA[indja];
                     ibstart=colptrs[ijaj]*nb2;
                     ibstart1=indja*nb2;
@@ -774,12 +776,13 @@ static INT numfactor (dBSRmat   *A,
                     
                 }
                 
-                for (indj = jlu[k];indj<jlu[k+1];++indj)
+                for (indj = jlu[k]; indj < jlu[k+1]; ++indj)
                     colptrs[jlu[indj]] = 0;
                 
                 colptrs[k] =  0;
                 
-                fasp_smat_inv(&(luval[k*nb2]),nb);
+                //fasp_smat_inv(&(luval[k*nb2]),nb); // not numerically stable --zcs 04/26/2021
+                fasp_smat_invp_nc(&(luval[k * nb2]), nb);
             }
     }
     

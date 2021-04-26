@@ -1681,7 +1681,7 @@ void fasp_symbfactor (INT   n,
             //  from row i:
             //  ------------------------------------------------------------
 #if DEBUG_MODE > 0
-            printf("### DEBUG: %s %d row", __FUNCTION__, i);
+            printf("### DEBUG: %s %d row\n", __FUNCTION__, i);
 #endif
 
             for ( j = ibegin; j <= iend; ++j) {
@@ -1693,7 +1693,7 @@ void fasp_symbfactor (INT   n,
                     rowll[rowct] = icolindj;
                 }
 #if DEBUG_MODE > 0
-                printf("### DEBUG: %d", icolindj);
+                printf("### DEBUG: %d\n", icolindj);
 #endif
             }
             

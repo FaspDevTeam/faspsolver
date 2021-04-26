@@ -1,8 +1,14 @@
 File Name: CHANGES
 
+04/26/2021 FASP 2.6.7:
+- Eamon Zhang reported several bugs;
+- Fix the bug caused by inversion of smat matrices;
+- Fix the bug cuased by uninitialized ILU param;
+- Fix other small problems in DEBUG mode.
+
 03/23/2021 FASP 2.6.6:
 - Update CMake and add backup target;
-- Saving coarse matrices for debugging;
+- Saving coarse matrices for debugging.
 
 03/13/2021 FASP 2.6.5:
 - Fix DEBUG information in SmatInv;

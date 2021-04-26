@@ -82,7 +82,7 @@ int main (int argc, const char * argv[])
         fasp_dcsrvec_read2(filename1, filename2, &A, &b);
     
     }
-    
+
     else if (problem_num == 11) {
 
         // Read A and b -- P1 FE discretization for Poisson, 1M DoF

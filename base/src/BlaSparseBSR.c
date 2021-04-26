@@ -1010,7 +1010,7 @@ dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A,
             
             break;
             
-        case 5:
+        case -5:
             // main loop
             if (use_openmp) {
 #ifdef _OPENMP
@@ -1046,6 +1046,7 @@ dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A,
             }
             
             else {
+
                 for (i = 0; i < ROW; ++i) {
                     // get the diagonal sub-blocks
                     for (k = IA[i]; k < IA[i+1]; ++k) {
@@ -1058,8 +1059,49 @@ dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A,
                     }
                     
                     // compute the inverses of the diagonal sub-blocks
-                    fasp_smat_inv_nc5(diaginv+i*25);
-                    
+                    // fasp_smat_inv_nc5(diaginv+i*25); // Not numerically stable!!! --zcs 04/26/2021
+                    fasp_smat_invp_nc(diaginv + i * 25, 5);
+
+#if 0
+                    REAL aa[25], bb[25]; // for debug inverse of diag
+                    for (k = 0; k < 25; k++) bb[k] = diaginv[i * 25 + k]; // before inversion
+                    for (k = 0; k < 25; k++) aa[k] = diaginv[i * 25 + k]; // aftger inversion
+
+                    printf("### DEBUG: Check inverse matrix...\n");
+                    printf("##----------------------------------------------\n");
+                    printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n",
+                        bb[0]* aa[0] + bb[1] * aa[5] + bb[2] * aa[10] + bb[3] * aa[15] + bb[4] * aa[20],
+                        bb[0]* aa[1] + bb[1] * aa[6] + bb[2] * aa[11] + bb[3] * aa[16] + bb[4] * aa[21],
+                        bb[0]* aa[2] + bb[1] * aa[7] + bb[2] * aa[12] + bb[3] * aa[17] + bb[4] * aa[22],
+                        bb[0]* aa[3] + bb[1] * aa[8] + bb[2] * aa[13] + bb[3] * aa[18] + bb[4] * aa[23],
+                        bb[0]* aa[4] + bb[1] * aa[9] + bb[3] * aa[14] + bb[3] * aa[19] + bb[4] * aa[24]);
+                    printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n",
+                        bb[5]* aa[0] + bb[6] * aa[5] + bb[7] * aa[10] + bb[8] * aa[15] + bb[9] * aa[20],
+                        bb[5]* aa[1] + bb[6] * aa[6] + bb[7] * aa[11] + bb[8] * aa[16] + bb[9] * aa[21],
+                        bb[5]* aa[2] + bb[6] * aa[7] + bb[7] * aa[12] + bb[8] * aa[17] + bb[9] * aa[22],
+                        bb[5]* aa[3] + bb[6] * aa[8] + bb[7] * aa[13] + bb[8] * aa[18] + bb[9] * aa[23],
+                        bb[5]* aa[4] + bb[6] * aa[9] + bb[7] * aa[14] + bb[8] * aa[19] + bb[9] * aa[24]);
+                    printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n",
+                        bb[10]* aa[0] + bb[11] * aa[5] + bb[12] * aa[10] + bb[13] * aa[15] + bb[14] * aa[20],
+                        bb[10]* aa[1] + bb[11] * aa[6] + bb[12] * aa[11] + bb[13] * aa[16] + bb[14] * aa[21],
+                        bb[10]* aa[2] + bb[11] * aa[7] + bb[12] * aa[12] + bb[13] * aa[17] + bb[14] * aa[22],
+                        bb[10]* aa[3] + bb[11] * aa[8] + bb[12] * aa[13] + bb[13] * aa[18] + bb[14] * aa[23],
+                        bb[10]* aa[4] + bb[11] * aa[9] + bb[12] * aa[14] + bb[13] * aa[19] + bb[14] * aa[24]);
+                    printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n",
+                        bb[15]* aa[0] + bb[16] * aa[5] + bb[17] * aa[10] + bb[18] * aa[15] + bb[19] * aa[20],
+                        bb[15]* aa[1] + bb[16] * aa[6] + bb[17] * aa[11] + bb[18] * aa[16] + bb[19] * aa[21],
+                        bb[15]* aa[2] + bb[16] * aa[7] + bb[17] * aa[12] + bb[18] * aa[17] + bb[19] * aa[22],
+                        bb[15]* aa[3] + bb[16] * aa[8] + bb[17] * aa[13] + bb[18] * aa[18] + bb[19] * aa[23],
+                        bb[15]* aa[4] + bb[16] * aa[9] + bb[17] * aa[14] + bb[18] * aa[19] + bb[19] * aa[24]);
+                    printf("## %12.5e %12.5e %12.5e %12.5e %12.5e\n",
+                        bb[20]* aa[0] + bb[21] * aa[5] + bb[22] * aa[10] + bb[23] * aa[15] + bb[24] * aa[20],
+                        bb[20]* aa[1] + bb[21] * aa[6] + bb[22] * aa[11] + bb[23] * aa[16] + bb[24] * aa[21],
+                        bb[20]* aa[2] + bb[21] * aa[7] + bb[22] * aa[12] + bb[23] * aa[17] + bb[24] * aa[22],
+                        bb[20]* aa[3] + bb[21] * aa[8] + bb[22] * aa[13] + bb[23] * aa[18] + bb[24] * aa[23],
+                        bb[20]* aa[4] + bb[21] * aa[9] + bb[22] * aa[14] + bb[23] * aa[19] + bb[24] * aa[24]);
+                    printf("##----------------------------------------------\n");
+#endif
+
                     // compute D^{-1}*A
                     for (k = IA[i]; k < IA[i+1]; ++k) {
                         m = k*25;
@@ -1071,7 +1113,7 @@ dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A,
             
             break;
             
-        case 7:
+        case -7:
             // main loop
             if (use_openmp) {
 #ifdef _OPENMP
@@ -1118,8 +1160,9 @@ dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A,
                     }
                     
                     // compute the inverses of the diagonal sub-blocks
-                    fasp_smat_inv_nc7(diaginv+i*49);
-                    
+                    // fasp_smat_inv_nc7(diaginv+i*49); // Not numerically stable!!! --zcs 04/26/2021
+                    fasp_smat_invp_nc(diaginv + i * 49, 7);
+
                     // compute D^{-1}*A
                     for (k = IA[i]; k < IA[i+1]; ++k) {
                         m = k*49;
@@ -1177,7 +1220,8 @@ dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A,
                     }
                     
                     // compute the inverses of the diagonal sub-blocks
-                    fasp_smat_inv(diaginv+i*nb2, nb);
+                    // fasp_smat_inv(diaginv+i*nb2, nb); // Not numerically stable!!! --zcs 04/26/2021
+                    fasp_smat_invp_nc(diaginv + i * nb2, nb);
                     
                     // compute D^{-1}*A
                     for (k = IA[i]; k < IA[i+1]; ++k) {

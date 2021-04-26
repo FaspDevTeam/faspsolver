@@ -101,7 +101,7 @@ void fasp_amgcomplexity (const AMG_data  *mgl,
             gridcom += mgl[level].A.row;
             opcom   += mgl[level].A.nnz;
 
-#if 0 // Save coarser linear systems for debug
+#if 0 // Save coarser linear systems for debugging purposes --Chensong
             char matA[max_levels], rhsb[max_levels];
             if (level > 0) {
                 sprintf(matA, "A%d.coo", level);
