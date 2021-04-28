@@ -23,8 +23,6 @@ endif(USE_UMFPACK)
 if(USE_SUPERLU)
 
     # set the path to find specific modules
-    set(CMAKE_MODULE_PATH "${FASP_SOURCE_DIR}/modules")
-
     set(SUPERLU_DIR "${SUPERLU_DIR}")
 
     # try to find SuperLU
@@ -45,8 +43,6 @@ endif(USE_SUPERLU)
 if(USE_MUMPS)
 
     # set the path to find specific modules
-    set(CMAKE_MODULE_PATH "${FASP_SOURCE_DIR}/modules")
-
     set(MUMPS_DIR "${MUMPS_DIR}")
 
     # try to find MUMPS
@@ -67,8 +63,6 @@ endif(USE_MUMPS)
 if(USE_PARDISO)
 
     # set the path to find specific modules
-    set(CMAKE_MODULE_PATH "${FASP_SOURCE_DIR}/modules")
-
     set(MKL_DIR "${MKL_DIR}")
 
     # try to find MKL

@@ -1,10 +1,11 @@
 File Name: CHANGES
 
-04/26/2021 FASP 2.6.7:
+04/27/2021 FASP 2.6.7:
 - Eamon Zhang reported several bugs;
 - Fix the bug caused by inversion of smat matrices;
 - Fix the bug cuased by uninitialized ILU param;
-- Fix other small problems in DEBUG mode.
+- Fix other small problems in DEBUG mode;
+- Fix a bug in external.cmake for linking to MKL etc.
 
 03/23/2021 FASP 2.6.6:
 - Update CMake and add backup target;
