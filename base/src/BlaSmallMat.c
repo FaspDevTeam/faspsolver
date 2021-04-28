@@ -124,6 +124,30 @@ void fasp_blas_smat_mxv_nc3 (const REAL  *a,
 }
 
 /**
+ * \fn void fasp_blas_smat_mxv_nc4 (const REAL *a, const REAL *b, REAL *c)
+ *
+ * \brief Compute the product of a 4*4 matrix a and a array b, stored in c
+ *
+ * \param a   Pointer to the REAL array which stands a 4*4 matrix
+ * \param b   Pointer to the REAL array with length 4
+ * \param c   Pointer to the REAL array with length 4
+ * 
+ * \author Li Zhao
+ * \date   04/18/2021
+ */
+void fasp_blas_smat_mxv_nc4 (const REAL  *a,
+                             const REAL  *b,
+                             REAL        *c)
+{    
+    const REAL b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
+
+    c[0] = a[0] *b0 + a[1] *b1 + a[2] *b2 + a[3] *b3;
+    c[1] = a[4] *b0 + a[5] *b1 + a[6] *b2 + a[7] *b3;
+    c[2] = a[8] *b0 + a[9] *b1 + a[10]*b2 + a[11]*b3;
+    c[3] = a[12]*b0 + a[13]*b1 + a[14]*b2 + a[15]*b3;
+}
+
+/**
  * \fn void fasp_blas_smat_mxv_nc5 (const REAL *a, const REAL *b, REAL *c)
  *
  * \brief Compute the product of a 5*5 matrix a and a array b, stored in c
@@ -189,7 +213,11 @@ void fasp_blas_smat_mxv_nc7 (const REAL  *a,
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   04/21/2010  
+ *
+ * \author Li Zhao, the case of adding n = 4
+ * \date   04/18/2021  
  */
+
 void fasp_blas_smat_mxv (const REAL  *a,
                          const REAL  *b,
                          REAL        *c,
@@ -202,6 +230,10 @@ void fasp_blas_smat_mxv (const REAL  *a,
     
     case 3: 
         fasp_blas_smat_mxv_nc3(a, b, c);
+        break;
+    
+    case 4: 
+        fasp_blas_smat_mxv_nc4(a, b, c);
         break;
     
     case 5:
@@ -292,6 +324,53 @@ void fasp_blas_smat_mul_nc3 (const REAL  *a,
     c[6] = a6*b0 + a7*b3 + a8*b6;
     c[7] = a6*b1 + a7*b4 + a8*b7;
     c[8] = a6*b2 + a7*b5 + a8*b8;
+}
+
+/**
+ * \fn void fasp_blas_smat_mul_nc4 (const REAL *a, const REAL *b, REAL *c)
+ *
+ * \brief Compute the matrix product of two 4*4 matrices a and b, stored in c
+ *
+ * \param a   Pointer to the REAL array which stands a n*n matrix
+ * \param b   Pointer to the REAL array which stands a n*n matrix
+ * \param c   Pointer to the REAL array which stands a n*n matrix
+ * 
+ * \author Li Zhao
+ * \date   04/18/2021
+ */
+void fasp_blas_smat_mul_nc4 (const REAL  *a,
+                             const REAL  *b,
+                             REAL        *c)
+{ 
+    const REAL a0  = a[0],  a1  = a[1],  a2  = a[2],   a3  = a[3];
+    const REAL a4  = a[4],  a5  = a[5],  a6  = a[6],   a7  = a[7];
+    const REAL a8  = a[8],  a9  = a[9],  a10 = a[10], a11 = a[11];
+    const REAL a12 = a[12], a13 = a[13], a14 = a[14], a15 = a[15];
+    
+    const REAL b0  = b[0],  b1  = b[1],  b2  = b[2],   b3 = b[3];
+    const REAL b4  = b[4],  b5  = b[5],  b6  = b[6],   b7 = b[7];
+    const REAL b8  = b[8],  b9  = b[9],  b10 = b[10], b11 = b[11];
+    const REAL b12 = b[12], b13 = b[13], b14 = b[14], b15 = b[15];
+    
+    c[0] = a0*b0 + a1*b4 + a2*b8  + a3*b12;
+    c[1] = a0*b1 + a1*b5 + a2*b9  + a3*b13;
+    c[2] = a0*b2 + a1*b6 + a2*b10 + a3*b14;
+    c[3] = a0*b3 + a1*b7 + a2*b11 + a3*b15;
+    
+    c[4] = a4*b0 + a5*b4 + a6*b8  + a7*b12;
+    c[5] = a4*b1 + a5*b5 + a6*b9  + a7*b13;
+    c[6] = a4*b2 + a5*b6 + a6*b10 + a7*b14;
+    c[7] = a4*b3 + a5*b7 + a6*b11 + a7*b15;
+    
+    c[8]  = a8*b0 + a9*b4 + a10*b8  + a11*b12;
+    c[9]  = a8*b1 + a9*b5 + a10*b9  + a11*b13;
+    c[10] = a8*b2 + a9*b6 + a10*b10 + a11*b14;
+    c[11] = a8*b3 + a9*b7 + a10*b11 + a11*b15;
+    
+    c[12] = a12*b0 + a13*b4 + a14*b8  + a15*b12;
+    c[13] = a12*b1 + a13*b5 + a14*b9  + a15*b13;
+    c[14] = a12*b2 + a13*b6 + a14*b10 + a15*b14;
+    c[15] = a12*b3 + a13*b7 + a14*b11 + a15*b15;
 }
 
 /**
@@ -454,6 +533,9 @@ void fasp_blas_smat_mul_nc7 (const REAL  *a,
  * 
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   04/21/2010  
+ *
+ * \author Li Zhao, the case of adding n = 4
+ * \date   04/18/2021  
  */
 void fasp_blas_smat_mul (const REAL  *a,
                          const REAL  *b,
@@ -539,6 +621,31 @@ void fasp_blas_smat_ypAx_nc3 (const REAL  *A,
     y[2] += A[6]*x0 + A[7]*x1 + A[8]*x2;
     return;
 } 
+
+/** 
+ * \fn void fasp_blas_smat_ypAx_nc4 (const REAL *A, const REAL *x, REAL *y)
+ *
+ * \brief Compute y := y + Ax, where 'A' is a 4*4 dense matrix 
+ *
+ * \param A   Pointer to the 4*4 dense matrix
+ * \param x   Pointer to the REAL array with length 4
+ * \param y   Pointer to the REAL array with length 4
+ *
+ * \author Li Zhao
+ * \date   2021/04/18
+ */
+void fasp_blas_smat_ypAx_nc4 (const REAL  *A,
+                              const REAL  *x,
+                              REAL        *y)
+{
+     const REAL x0 = x[0], x1 = x[1], x2 = x[2], x3 = x[3];
+ 
+    y[0] +=  A[0]*x0 + A[1]*x1 +  A[2]*x2 + A[3]*x3;
+    y[1] +=  A[4]*x0 + A[5]*x1 +  A[6]*x2 + A[7]*x3;
+    y[2] +=  A[8]*x0 + A[9]*x1 + A[10]*x2 + A[11]*x3;
+    y[3] += A[12]*x0 + A[13]*x1 +A[14]*x2 + A[15]*x3;
+    return;
+}
 
 /**
  * \fn void fasp_blas_smat_ypAx_nc5 (const REAL *A, const REAL *x, REAL *y)
@@ -748,6 +855,33 @@ void fasp_blas_smat_ymAx_nc3 (const REAL  *A,
     
     return;
 } 
+
+/**
+ * \fn void fasp_blas_smat_ymAx_nc4 (const REAL *A, const REAL *x, REAL *y)
+ *
+ * \brief Compute y := y - Ax, where 'A' is a 4*4 dense matrix
+ *
+ * \param A   Pointer to the 4*4 dense matrix
+ * \param x   Pointer to the REAL array with length 4
+ * \param y   Pointer to the REAL array with length 4
+ *
+ * \author Li Zhao
+ * \date   04/18/2021
+ *
+ * \note Works for 4-component
+ */
+void fasp_blas_smat_ymAx_nc4 (const REAL  *A,
+                              const REAL  *x,
+                              REAL        *y)
+{   
+    const REAL  x0 = x[0], x1 = x[1], x2 = x[2], x3 = x[3];
+
+    y[0] -=  A[0]*x0 + A[1]*x1 +  A[2]*x2 + A[3]*x3;
+    y[1] -=  A[4]*x0 + A[5]*x1 +  A[6]*x2 + A[7]*x3;
+    y[2] -=  A[8]*x0 + A[9]*x1 + A[10]*x2 + A[11]*x3;
+    y[3] -= A[12]*x0 + A[13]*x1 +A[14]*x2 + A[15]*x3;
+    return;
+}
 
 /**
  * \fn void fasp_blas_smat_ymAx_nc5 (const REAL *A, const REAL *x, REAL *y)
