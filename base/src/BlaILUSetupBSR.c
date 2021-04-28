@@ -430,6 +430,137 @@ FINISHED:
     return status;
 }
 
+SHORT fasp_ilu_dbsr_setup_levsch_step (dBSRmat    *A,
+                                      ILU_data   *iludata,
+                                      ILU_param  *iluparam,
+									  INT step)
+{
+    const SHORT  prtlvl = iluparam->print_level;
+    const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
+    
+    // local variables
+    INT lfil = iluparam->ILU_lfil;
+    static INT ierr, iwk, nzlu, nwork, *ijlu, *uptr;
+    SHORT   status = FASP_SUCCESS;
+
+    REAL    setup_start, setup_end, setup_duration;
+    REAL    symbolic_start, symbolic_end, numfac_start, numfac_end;
+
+#if DEBUG_MODE > 0 
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
+    printf("### DEBUG: m=%d, n=%d, nnz=%d\n", A->ROW, n, nnz);
+    printf("### DEBUG: step=%d(1: symbolic factoration, 2: numerical factoration)\n", step);// zhaoli 2021.03.24
+#endif
+    
+    fasp_gettime(&setup_start);
+   if (step==1) { 
+    // Expected amount of memory for ILU needed and allocate memory
+    iwk = (lfil+2)*nnz;
+    
+#if DEBUG_MODE > 0
+    if (iluparam->ILU_type == ILUtp) {
+        printf("### WARNING: iludata->type = %d not supported!\n",
+               iluparam->ILU_type);
+    }
+#endif
+
+    // setup preconditioner
+    iludata->type  = 0; // Must be initialized
+    iludata->iperm = NULL;
+    iludata->A     = NULL; // No need for BSR matrix
+    iludata->row   = iludata->col=n;
+    iludata->nb    = nb;
+    
+    fasp_mem_free(ijlu); 
+    ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
+
+    fasp_mem_free(uptr); 
+    uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
+    
+#if DEBUG_MODE > 1
+    printf("### DEBUG: symbolic factorization ... \n");
+#endif
+    
+    fasp_gettime(&symbolic_start);
+    
+    // ILU decomposition
+    // (1) symbolic factoration
+    fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
+    
+    fasp_gettime(&symbolic_end);
+
+#if prtlvl > PRINT_MIN
+    printf("ILU symbolic factorization time = %f\n", symbolic_end-symbolic_start);
+#endif
+
+    nwork = 5*A->ROW*A->nb;
+    iludata->nzlu  = nzlu;
+    iludata->nwork = nwork;
+    iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu,sizeof(INT));
+    iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
+    iludata->work  = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
+    memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
+    fasp_mem_free(ijlu);  ijlu = NULL;
+
+    fasp_darray_set(nzlu*nb2, iludata->luval, 0.0);
+    iludata->uptr = NULL; iludata->ic = NULL; iludata->icmap = NULL;
+    
+    topologic_sort_ILU(iludata);
+#if DEBUG_MODE > 1
+    printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
+    printf("### DEBUG: iwk = %d, nzlu = %d\n", iwk, nzlu);
+#endif
+    
+    if ( ierr != 0 ) {
+        printf("### ERROR: ILU setup failed (ierr=%d)! [%s]\n", ierr, __FUNCTION__);
+        status = ERROR_SOLVER_ILUSETUP;
+        goto FINISHED;
+    }
+    
+    if ( iwk < nzlu ) {
+        printf("### ERROR: ILU needs more RAM %d! [%s]\n", iwk-nzlu, __FUNCTION__);
+        status = ERROR_SOLVER_ILUSETUP;
+        goto FINISHED;
+    }
+    
+
+   } else if (step==2) {
+
+#if DEBUG_MODE > 1
+    printf("### DEBUG: numerical factorization ... \n");
+#endif
+    
+    fasp_gettime(&numfac_start);
+    
+    // (2) numerical factoration
+    numfactor_levsch(A, iludata->luval, iludata->ijlu, uptr, iludata->nlevL,
+                     iludata->ilevL, iludata->jlevL);
+    fasp_gettime(&numfac_end);
+    
+#if prtlvl > PRINT_MIN
+    printf("ILU numerical factorization time = %f\n", numfac_end-numfac_start);
+#endif
+   } else {
+
+FINISHED:
+//    fasp_mem_free(ijlu);  ijlu = NULL;
+    fasp_mem_free(uptr);  uptr = NULL;
+   }
+    
+    if ( prtlvl > PRINT_NONE ) {
+        fasp_gettime(&setup_end);
+        setup_duration = setup_end - setup_start;
+        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil, setup_duration);
+    }
+    
+#if DEBUG_MODE > 0
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
+#endif
+
+    
+    return status;
+}
+
 /**
  * \fn SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat *A, dCSRmat *Ap, 
  *                                       ILU_data *iludata, ILU_param *iluparam)
@@ -1007,10 +1138,11 @@ static INT numfactor_mulcol (dBSRmat   *A,
  * \param ic       Pointer to number of vertices in each color
  * \param icmap    Mapping
  *
- * \author Zheng Li
- * \date   12/04/2016
+ * \author Zheng Li, Li Zhao
+ * \date   12/04/2016, 04/18/2021
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
+ * \note Only works for 1, 2, 3, 4, 5 nb modified by Li Zhao
  */
 static INT numfactor_levsch (dBSRmat *A,
                              REAL *luval,
@@ -1183,10 +1315,107 @@ static INT numfactor_levsch (dBSRmat *A,
             }
             break;
             
+        case 4:
+            
+            for (i = 0; i < ncolors; ++i) {
+#pragma omp parallel private(k,indj,ibstart,ib,indja,ijaj,ibstart1,jluj,inds,jlus,mult,mult1,colptrs,ii)
+                {
+                    colptrs=(INT*)fasp_mem_calloc(n,sizeof(INT));
+                    memset(colptrs, 0, sizeof(INT)*n);
+                    mult=(REAL*)fasp_mem_calloc(nb2,sizeof(REAL));
+                    mult1=(REAL*)fasp_mem_calloc(nb2,sizeof(REAL));
+#pragma omp for
+                    for (ii = ic[i]; ii < ic[i+1]; ++ii) {
+                        k = icmap[ii];
+                        for (indj = jlu[k]; indj < jlu[k+1]; ++indj) {
+                            colptrs[jlu[indj]] = indj;
+                            ibstart=indj*nb2;
+                            for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = 0;
+                        }
+                        colptrs[k] =  k;
+                        for (indja = A->IA[k]; indja < A->IA[k+1]; ++indja) {
+                            ijaj = A->JA[indja];
+                            ibstart=colptrs[ijaj]*nb2;
+                            ibstart1=indja*nb2;
+                            for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = A->val[ibstart1+ib];
+                        }
+                        for (indj = jlu[k]; indj < uptr[k]; ++indj) {
+                            jluj = jlu[indj];
+                            ibstart=indj*nb2;
+                            fasp_blas_smat_mul_nc4(&(luval[ibstart]),&(luval[jluj*nb2]),mult);
+                            for (ib=0;ib<nb2;++ib) luval[ibstart+ib]=mult[ib];
+                            for (inds = uptr[jluj]; inds < jlu[jluj+1]; ++inds) {
+                                jlus = jlu[inds];
+                                if (colptrs[jlus] != 0) {
+                                    fasp_blas_smat_mul_nc4(mult,&(luval[inds*nb2]),mult1);
+                                    ibstart=colptrs[jlus]*nb2;
+                                    for (ib=0;ib<nb2;++ib) luval[ibstart+ib]-=mult1[ib];
+                                }
+                            }
+                        }
+                        for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
+                        colptrs[k] =  0;
+                        fasp_smat_inv_nc4(&(luval[k*nb2]));
+                    }
+                    fasp_mem_free(colptrs); colptrs = NULL;
+                    fasp_mem_free(mult);    mult    = NULL;
+                    fasp_mem_free(mult1);   mult1   = NULL;
+                }
+            }
+            break;
+
+        case 5:
+            
+            for (i = 0; i < ncolors; ++i) {
+#pragma omp parallel private(k,indj,ibstart,ib,indja,ijaj,ibstart1,jluj,inds,jlus,mult,mult1,colptrs,ii)
+                {
+                    colptrs=(INT*)fasp_mem_calloc(n,sizeof(INT));
+                    memset(colptrs, 0, sizeof(INT)*n);
+                    mult=(REAL*)fasp_mem_calloc(nb2,sizeof(REAL));
+                    mult1=(REAL*)fasp_mem_calloc(nb2,sizeof(REAL));
+#pragma omp for
+                    for (ii = ic[i]; ii < ic[i+1]; ++ii) {
+                        k = icmap[ii];
+                        for (indj = jlu[k]; indj < jlu[k+1]; ++indj) {
+                            colptrs[jlu[indj]] = indj;
+                            ibstart=indj*nb2;
+                            for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = 0;
+                        }
+                        colptrs[k] =  k;
+                        for (indja = A->IA[k]; indja < A->IA[k+1]; ++indja) {
+                            ijaj = A->JA[indja];
+                            ibstart=colptrs[ijaj]*nb2;
+                            ibstart1=indja*nb2;
+                            for (ib=0;ib<nb2;++ib) luval[ibstart+ib] = A->val[ibstart1+ib];
+                        }
+                        for (indj = jlu[k]; indj < uptr[k]; ++indj) {
+                            jluj = jlu[indj];
+                            ibstart=indj*nb2;
+                            fasp_blas_smat_mul_nc5(&(luval[ibstart]),&(luval[jluj*nb2]),mult);
+                            for (ib=0;ib<nb2;++ib) luval[ibstart+ib]=mult[ib];
+                            for (inds = uptr[jluj]; inds < jlu[jluj+1]; ++inds) {
+                                jlus = jlu[inds];
+                                if (colptrs[jlus] != 0) {
+                                    fasp_blas_smat_mul_nc5(mult,&(luval[inds*nb2]),mult1);
+                                    ibstart=colptrs[jlus]*nb2;
+                                    for (ib=0;ib<nb2;++ib) luval[ibstart+ib]-=mult1[ib];
+                                }
+                            }
+                        }
+                        for (indj = jlu[k]; indj < jlu[k+1]; ++indj) colptrs[jlu[indj]] = 0;
+                        colptrs[k] =  0;
+                        fasp_smat_inv_nc5(&(luval[k*nb2]));
+                    }
+                    fasp_mem_free(colptrs); colptrs = NULL;
+                    fasp_mem_free(mult);    mult    = NULL;
+                    fasp_mem_free(mult1);   mult1   = NULL;
+                }
+            }
+            break;
+     
         default:
         {
-            if (nb > 3) printf("Multi-thread ILU numerical decomposition for %d \
-                               components has not been implemented!!!", nb);
+            if (nb > 5) printf("Multi-thread ILU numerical decomposition for %d components has not been implemented!!!\n", nb);
             exit(0);
             break;
         }
