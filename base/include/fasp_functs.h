@@ -445,6 +445,11 @@ FASP_API SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
                                     ILU_data   *iludata,
                                     ILU_param  *iluparam);
 
+FASP_API SHORT fasp_ilu_dbsr_setup_step (dBSRmat    *A,
+                                         ILU_data   *iludata,
+                                         ILU_param  *iluparam,
+                                         INT        step);
+
 FASP_API SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
                                         ILU_data   *iludata,
                                         ILU_param  *iluparam);
@@ -452,6 +457,11 @@ FASP_API SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
 FASP_API SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
                                                ILU_data   *iludata,
                                                ILU_param  *iluparam);
+
+FASP_API SHORT fasp_ilu_dbsr_setup_levsch_step (dBSRmat    *A,
+                                                ILU_data   *iludata,
+                                                ILU_param  *iluparam,
+                                                INT         step);
 
 FASP_API SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
                                            dCSRmat    *Ap,
