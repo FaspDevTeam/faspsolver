@@ -157,6 +157,143 @@ FINISHED:
 }
 
 /**
+ * \fn SHORT fasp_ilu_dbsr_setup_step (dBSRmat *A, ILU_data *iludata, ILU_param *iluparam)
+ *
+ * \brief Get ILU decoposition of a BSR matrix A
+ *
+ * \param A         Pointer to dBSRmat matrix
+ * \param iludata   Pointer to ILU_data
+ * \param iluparam  Pointer to ILU_param
+ *
+ * \return          FASP_SUCCESS if successed; otherwise, error information.
+ *
+ * \author Shiquan Zhang, Xiaozhe Hu
+ * \date   11/08/2010
+ *
+ * \note Works for general nb (Xiaozhe)
+ * \note Change the size of work space by Zheng Li 04/26/2015.
+ * \note Modified by Chunsheng Feng on 08/11/2017 for iludata->type not inited.
+ * \note Modified by Li Zhao on 04/29/2021 for ILU decompositionis divided into two steps,
+ * which are only determined by the last input parameter "step".
+ * if step == 1: only symbolic factoration;
+ * if step == 2: only numerical factoration. 
+ */
+SHORT fasp_ilu_dbsr_setup_step (dBSRmat    *A,
+								ILU_data   *iludata,
+								ILU_param  *iluparam,
+								INT step)
+{
+    
+    const SHORT  prtlvl = iluparam->print_level;
+    const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
+    
+    // local variables
+       INT     lfil = iluparam->ILU_lfil;
+    static INT     ierr, iwk, nzlu, nwork, *ijlu, *uptr;
+    SHORT   status = FASP_SUCCESS;
+
+    REAL    setup_start, setup_end, setup_duration;
+
+#if DEBUG_MODE > 0
+    printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
+    printf("### DEBUG: m = %d, n = %d, nnz = %d\n", A->ROW, n, nnz);
+#endif
+    
+    fasp_gettime(&setup_start);
+
+    if (step==1) {
+        // Expected amount of memory for ILU needed and allocate memory
+        iwk = (lfil+2)*nnz;
+        
+    #if DEBUG_MODE > 0
+        if (iluparam->ILU_type == ILUtp) {
+            printf("### WARNING: iludata->type = %d not supported!\n",
+                iluparam->ILU_type);
+        }
+    #endif
+
+        // setup preconditioner
+        iludata->type  = 0; // Must be initialized
+        iludata->iperm = NULL;
+        iludata->A     = NULL; // No need for BSR matrix
+        iludata->row   = iludata->col = n;
+        iludata->nb    = nb;
+        iludata->ilevL = iludata->jlevL = NULL;
+        iludata->ilevU = iludata->jlevU = NULL;
+        
+        ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
+
+        if (uptr != NULL)   fasp_mem_free(uptr);
+        uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
+        
+    #if DEBUG_MODE > 1
+        printf("### DEBUG: symbolic factorization ... \n");
+    #endif
+        
+        // ILU decomposition
+        // (1) symbolic factoration
+        fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
+        
+        iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
+        
+
+    #if DEBUG_MODE > 1
+        printf("### DEBUG: numerical factorization ... \n");
+    #endif
+        
+        //nwork = 6*nzlu*nb;
+        nwork = 5*A->ROW*A->nb;
+        iludata->nwork = nwork;
+        iludata->nzlu  = nzlu;
+        iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu, sizeof(INT));
+        
+        memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
+        fasp_mem_free(ijlu);  ijlu = NULL;
+
+        iludata->work = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
+        // Check: Is the work space too large? --Xiaozhe
+        
+    #if DEBUG_MODE > 1
+        printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
+        printf("### DEBUG: iwk = %d, nzlu = %d\n", iwk, nzlu);
+    #endif
+        
+        if ( ierr != 0 ) {
+            printf("### ERROR: ILU setup failed (ierr=%d)! [%s]\n", ierr, __FUNCTION__);
+            status = ERROR_SOLVER_ILUSETUP;
+            goto FINISHED;
+        }
+        
+        if ( iwk < nzlu ) {
+            printf("### ERROR: ILU needs more RAM %d! [%s]\n", iwk-nzlu, __FUNCTION__);
+            status = ERROR_SOLVER_ILUSETUP;
+            goto FINISHED;
+        }
+    }
+    else if (step==2) {
+        // (2) numerical factoration
+        numfactor(A, iludata->luval, iludata->ijlu, uptr);
+
+    } else {
+
+FINISHED:
+            fasp_mem_free(uptr);  uptr = NULL;
+    }
+
+    if ( prtlvl > PRINT_NONE ) {
+        fasp_gettime(&setup_end);
+        setup_duration = setup_end - setup_start;
+        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil, setup_duration);
+    }
+
+#if DEBUG_MODE > 0
+    printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
+#endif
+    
+    return status;
+}
+
+/**
  * \fn SHORT fasp_ilu_dbsr_setup_omp (dBSRmat *A, ILU_data *iludata, 
  *                                    ILU_param *iluparam)
  *
@@ -430,10 +567,32 @@ FINISHED:
     return status;
 }
 
+/**
+ * \fn SHORT fasp_ilu_dbsr_setup_levsch_step (dBSRmat *A, ILU_data *iludata, 
+ *                                           ILU_param *iluparam)
+ *
+ * \brief Get ILU decoposition of a BSR matrix A based on level schedule strategy
+ *
+ * \param A         Pointer to dBSRmat matrix
+ * \param iludata   Pointer to ILU_data
+ * \param iluparam  Pointer to ILU_param
+ *
+ * \return          FASP_SUCCESS if successed; otherwise, error information.
+ *
+ * \author Zheng Li
+ * \date   12/04/2016
+ *
+ * \note Only works for nb = 1, 2, 3 (Zheng)
+ * \note Modified by Chunsheng Feng on 09/06/2017 for iludata->type not inited
+ * \note Modified by Li Zhao on 04/29/2021 for ILU decompositionis divided into two steps,
+ * which are only determined by the last input parameter "step".
+ * if step == 1: only symbolic factoration;
+ * if step == 2: only numerical factoration. 
+ */
 SHORT fasp_ilu_dbsr_setup_levsch_step (dBSRmat    *A,
-                                      ILU_data   *iludata,
-                                      ILU_param  *iluparam,
-									  INT step)
+                                       ILU_data   *iludata,
+                                       ILU_param  *iluparam,
+									   INT step)
 {
     const SHORT  prtlvl = iluparam->print_level;
     const INT    n = A->COL, nnz = A->NNZ, nb = A->nb, nb2 = nb*nb;
@@ -454,89 +613,87 @@ SHORT fasp_ilu_dbsr_setup_levsch_step (dBSRmat    *A,
     
     fasp_gettime(&setup_start);
    if (step==1) { 
-    // Expected amount of memory for ILU needed and allocate memory
-    iwk = (lfil+2)*nnz;
-    
-#if DEBUG_MODE > 0
-    if (iluparam->ILU_type == ILUtp) {
-        printf("### WARNING: iludata->type = %d not supported!\n",
-               iluparam->ILU_type);
-    }
-#endif
+        // Expected amount of memory for ILU needed and allocate memory
+        iwk = (lfil+2)*nnz;
+        
+    #if DEBUG_MODE > 0
+        if (iluparam->ILU_type == ILUtp) {
+            printf("### WARNING: iludata->type = %d not supported!\n",
+                iluparam->ILU_type);
+        }
+    #endif
 
-    // setup preconditioner
-    iludata->type  = 0; // Must be initialized
-    iludata->iperm = NULL;
-    iludata->A     = NULL; // No need for BSR matrix
-    iludata->row   = iludata->col=n;
-    iludata->nb    = nb;
-    
-    fasp_mem_free(ijlu); 
-    ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
+        // setup preconditioner
+        iludata->type  = 0; // Must be initialized
+        iludata->iperm = NULL;
+        iludata->A     = NULL; // No need for BSR matrix
+        iludata->row   = iludata->col=n;
+        iludata->nb    = nb;
+        
+        fasp_mem_free(ijlu); 
+        ijlu = (INT*)fasp_mem_calloc(iwk,sizeof(INT));
 
-    fasp_mem_free(uptr); 
-    uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
-    
-#if DEBUG_MODE > 1
-    printf("### DEBUG: symbolic factorization ... \n");
-#endif
-    
-    fasp_gettime(&symbolic_start);
-    
-    // ILU decomposition
-    // (1) symbolic factoration
-    fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
-    
-    fasp_gettime(&symbolic_end);
+        fasp_mem_free(uptr); 
+        uptr = (INT*)fasp_mem_calloc(A->ROW,sizeof(INT));
+        
+    #if DEBUG_MODE > 1
+        printf("### DEBUG: symbolic factorization ... \n");
+    #endif
+        
+        fasp_gettime(&symbolic_start);
+        
+        // ILU decomposition
+        // (1) symbolic factoration
+        fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
+        
+        fasp_gettime(&symbolic_end);
 
-#if prtlvl > PRINT_MIN
-    printf("ILU symbolic factorization time = %f\n", symbolic_end-symbolic_start);
-#endif
+    #if prtlvl > PRINT_MIN
+        printf("ILU symbolic factorization time = %f\n", symbolic_end-symbolic_start);
+    #endif
 
-    nwork = 5*A->ROW*A->nb;
-    iludata->nzlu  = nzlu;
-    iludata->nwork = nwork;
-    iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu,sizeof(INT));
-    iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
-    iludata->work  = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
-    memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
-    fasp_mem_free(ijlu);  ijlu = NULL;
+        nwork = 5*A->ROW*A->nb;
+        iludata->nzlu  = nzlu;
+        iludata->nwork = nwork;
+        iludata->ijlu  = (INT*)fasp_mem_calloc(nzlu,sizeof(INT));
+        iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
+        iludata->work  = (REAL*)fasp_mem_calloc(nwork, sizeof(REAL));
+        memcpy(iludata->ijlu,ijlu,nzlu*sizeof(INT));
+        fasp_mem_free(ijlu);  ijlu = NULL;
 
-    fasp_darray_set(nzlu*nb2, iludata->luval, 0.0);
-    iludata->uptr = NULL; iludata->ic = NULL; iludata->icmap = NULL;
-    
-    topologic_sort_ILU(iludata);
-#if DEBUG_MODE > 1
-    printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
-    printf("### DEBUG: iwk = %d, nzlu = %d\n", iwk, nzlu);
-#endif
-    
-    if ( ierr != 0 ) {
-        printf("### ERROR: ILU setup failed (ierr=%d)! [%s]\n", ierr, __FUNCTION__);
-        status = ERROR_SOLVER_ILUSETUP;
-        goto FINISHED;
-    }
-    
-    if ( iwk < nzlu ) {
-        printf("### ERROR: ILU needs more RAM %d! [%s]\n", iwk-nzlu, __FUNCTION__);
-        status = ERROR_SOLVER_ILUSETUP;
-        goto FINISHED;
-    }
-    
-
+        fasp_darray_set(nzlu*nb2, iludata->luval, 0.0);
+        iludata->uptr = NULL; iludata->ic = NULL; iludata->icmap = NULL;
+        
+        topologic_sort_ILU(iludata);
+    #if DEBUG_MODE > 1
+        printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
+        printf("### DEBUG: iwk = %d, nzlu = %d\n", iwk, nzlu);
+    #endif
+        
+        if ( ierr != 0 ) {
+            printf("### ERROR: ILU setup failed (ierr=%d)! [%s]\n", ierr, __FUNCTION__);
+            status = ERROR_SOLVER_ILUSETUP;
+            goto FINISHED;
+        }
+        
+        if ( iwk < nzlu ) {
+            printf("### ERROR: ILU needs more RAM %d! [%s]\n", iwk-nzlu, __FUNCTION__);
+            status = ERROR_SOLVER_ILUSETUP;
+            goto FINISHED;
+        }
    } else if (step==2) {
 
 #if DEBUG_MODE > 1
     printf("### DEBUG: numerical factorization ... \n");
 #endif
-    
-    fasp_gettime(&numfac_start);
-    
-    // (2) numerical factoration
-    numfactor_levsch(A, iludata->luval, iludata->ijlu, uptr, iludata->nlevL,
-                     iludata->ilevL, iludata->jlevL);
-    fasp_gettime(&numfac_end);
-    
+        
+        fasp_gettime(&numfac_start);
+        
+        // (2) numerical factoration
+        numfactor_levsch(A, iludata->luval, iludata->ijlu, uptr, iludata->nlevL,
+                        iludata->ilevL, iludata->jlevL);
+        fasp_gettime(&numfac_end);
+        
 #if prtlvl > PRINT_MIN
     printf("ILU numerical factorization time = %f\n", numfac_end-numfac_start);
 #endif
@@ -544,7 +701,7 @@ SHORT fasp_ilu_dbsr_setup_levsch_step (dBSRmat    *A,
 
 FINISHED:
 //    fasp_mem_free(ijlu);  ijlu = NULL;
-    fasp_mem_free(uptr);  uptr = NULL;
+        fasp_mem_free(uptr);  uptr = NULL;
    }
     
     if ( prtlvl > PRINT_NONE ) {
