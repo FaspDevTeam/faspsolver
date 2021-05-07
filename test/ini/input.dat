@@ -15,10 +15,10 @@ print_level              = 3      % how much information to print out
 output_type              = 0      % 0 to screen | 1 to file
 solver_type              = 1      % 1 CG | 2 BiCGstab | 3 MinRes | 4 GMRes |
                                   % 5 vGMRes | 6 vFGMRes | 7 GCG | 8 GCR   |
-                                  %--------------------------------------
+                                  %-------------------------------------------------
                                   % 21 AMG Solver | 22 FMG Solver |
-                                  %--------------------------------------
-                                  % 31 SuperLU | 32 UMFPACK | 33 MUMPS
+                                  %-------------------------------------------------
+                                  % 31 SuperLU | 32 UMFPACK | 33 MUMPS | 34 PARDISO
 
 %----------------------------------------------%
 % parameters for iterative solvers             %
@@ -50,7 +50,7 @@ SWZ_mmsize               = 200    % max block size
 SWZ_maxlvl               = 2      % level used to form blocks
 SWZ_type                 = 1      % 1 forward | 2 backward | 3 symmetric
 SWZ_blksolver            = 0      % sub-block solvers: 0 iterative |
-                                  % 31 SuperLU | 32 UMFPack | 33 MUMPS
+                                  % 31 SuperLU | 32 UMFPack | 33 MUMPS | 34 PARDISO
 
 %----------------------------------------------%
 % parameters for multilevel iteration          %
@@ -65,8 +65,8 @@ AMG_tol                  = 1e-6   % tolerance for AMG
 AMG_maxit                = 1      % number of AMG iterations
 AMG_levels               = 20     % max number of levels
 AMG_coarse_dof           = 500    % max number of coarse degrees of freedom
-AMG_coarse_solver        = 0      % coarsest solver: 0 iterative |
-                                  % 31 SuperLU | 32 UMFPack | 33 MUMPS
+AMG_coarse_solver        = 0      % coarsest level solver: 0 iterative |
+                                  % 31 SuperLU | 32 UMFPack | 33 MUMPS | 34 PARDISO
 AMG_coarse_scaling       = OFF    % switch of scaling of the coarse grid correction
 AMG_amli_degree          = 2      % degree of the polynomial used by AMLI cycle
 AMG_nl_amli_krylov_type  = 6      % Krylov method in NLAMLI cycle: 6 FGMRES | 7 GCG
