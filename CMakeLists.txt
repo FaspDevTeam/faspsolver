@@ -7,13 +7,15 @@
 # Ludmil Zikatanov  Aug/08/2019    Fix installation problem for cmake 3.14+
 # Chensong Zhang    Mar/13/2021    Replace FASP_SOURCE_DIR with general dir
 # Chensong Zhang    Mar/23/2021    Add headers and backup target
+# Chensong Zhang    May/10/2021    Test the new OpenMP code
 #
-# Some sample usages:
-#   cmake .                                 // build in default configuration
-#   cmake -DCMAKE_BUILD_TYPE=Release .      // build in Release configuration
-#   cmake -DCMAKE_BUILD_TYPE=Debug .        // build in Debug configuration
-#   cmake -DCMAKE_VERBOSE_MAKEFILE=ON .     // build with verbose on
-#   cmake -DUSE_UMFPACK=ON .                // build with UMFPACK package support
+# Some sample usages (It is better to use a separate dir for building):
+#   mkdir Build; cd Build; cmake ..         // build in Release configuration
+#   cmake -DCMAKE_BUILD_TYPE=Debug ..       // build in Debug configuration
+#   cmake CC=clang ..                       // build with specified compiler
+#   cmake -DCMAKE_VERBOSE_MAKEFILE=ON ..    // build with verbose on
+#   cmake -DUSE_UMFPACK=ON ..               // build with UMFPACK package support
+#   cmake -DOPENMP=ON ..                    // build with OpenMP support
 
 #####################################################################################
 ## General environment setting
@@ -128,14 +130,14 @@ file(GLOB FASP_C_SOURCES RELATIVE ${PROJECT_SOURCE_DIR}
 add_custom_target(backup  ${PROJECT_SOURCE_DIR}/util/backup.sh
          	      DEPENDS ${FASP_C_SOURCES}
                   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-                  COMMENT "Backup FASP files..."
+                  COMMENT "Backup FASP files ..."
                   VERBATIM)
 
 # Auto generating headers if needed
 add_custom_target(headers ${PROJECT_SOURCE_DIR}/util/fhead.sh "${PROJECT_SOURCE_DIR}/base"
          	      DEPENDS ${FASP_C_SOURCES}
                   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/util"
-                  COMMENT "Auto-generating header file for C functions..."
+                  COMMENT "Auto-generating header file for C functions ..."
                   VERBATIM)
 
 #####################################################################################
