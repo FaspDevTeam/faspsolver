@@ -450,8 +450,8 @@
       <AdditionalIncludeDirectories>..\..\base\include;..\..\base\extra\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;WIN32;FASP_DLL;FASP_DLL_EXPORTS;WITH_PARDISO;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <FloatingPointModel>Strict</FloatingPointModel>
+      <FunctionLevelLinking>false</FunctionLevelLinking>
+      <FloatingPointModel>Fast2</FloatingPointModel>
       <OpenMPSupport>false</OpenMPSupport>
       <PrecompiledHeader>
       </PrecompiledHeader>
@@ -462,11 +462,14 @@
       <OptimizeForWindowsApplication>true</OptimizeForWindowsApplication>
       <FloatingPointSpeculation>Off</FloatingPointSpeculation>
       <EnableMatrixMultiplyLibraryCall>No</EnableMatrixMultiplyLibraryCall>
-      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <C99Support>true</C99Support>
       <OmitFramePointers>true</OmitFramePointers>
       <FloatingPointExceptions>false</FloatingPointExceptions>
+      <Optimization>MaxSpeedHighLevel</Optimization>
+      <LoopUnrolling>
+      </LoopUnrolling>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
