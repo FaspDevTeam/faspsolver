@@ -518,6 +518,16 @@ void fasp_smat_invp_nc (REAL      *a,
     // ipiv, indxr, and indxc are used for book-keeping on the pivoting.
     for ( j=0; j<n; j++ ) ipiv[j] = 0;
     
+#if DEBUG_MODE > 1
+    printf("### DEBUG: Matrix block\n");
+    for ( i = 0; i < n; ++i ) {
+        for ( j = 0; j < n; ++j ) {
+            printf(" %10.5e,", a[i * n + j]);
+        }
+        printf("\n");
+    }
+#endif
+
     // This is the main loop over the columns to be reduced.
     for ( i=0; i<n; i++ ) {
         
