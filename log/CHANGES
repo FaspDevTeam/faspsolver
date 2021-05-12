@@ -1,12 +1,12 @@
 File Name: CHANGES
 
-05/08/2021 FASP 2.6.8:
+05/12/2021 FASP 2.6.8:
 - Update README and cmake examples;
 - Remove support for VS10 and VS15;
 - Update webpage and documentation;
 - Update VS19 setting with more aggressive optimization;
 - Change README to MarkDown format;
-- Update matrix inversion subroutine.
+- Update matrix inversion subroutine and give return values.
 
 04/27/2021 FASP 2.6.7:
 - Eamon Zhang reported several bugs;
