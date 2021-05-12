@@ -63,7 +63,6 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     INT     lfil = iluparam->ILU_lfil;
     INT     ierr, iwk, nzlu, nwork, *ijlu, *uptr;
     SHORT   status = FASP_SUCCESS;
-
     REAL    setup_start, setup_end, setup_duration;
 
 #if DEBUG_MODE > 0
@@ -103,6 +102,12 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     // (1) symbolic factoration
     fasp_symbfactor(A->ROW,A->JA,A->IA,lfil,iwk,&nzlu,ijlu,uptr,&ierr);
     
+    if ( ierr != 0 ) {
+        printf("### ERROR: ILU setup failed (ierr=%d)! [%s]\n", ierr, __FUNCTION__);
+        status = ERROR_SOLVER_ILUSETUP;
+        goto FINISHED;
+    }
+
     iludata->luval = (REAL*)fasp_mem_calloc(nzlu*nb2,sizeof(REAL));
     
 #if DEBUG_MODE > 1
@@ -110,8 +115,14 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
 #endif
     
     // (2) numerical factoration
-    numfactor(A, iludata->luval, ijlu, uptr);
+    status = numfactor(A, iludata->luval, ijlu, uptr);
     
+    if ( status < 0 ) {
+        printf("### ERROR: ILU factorization failed! [%s]\n", __FUNCTION__);
+        status = ERROR_SOLVER_ILUSETUP;
+        goto FINISHED;
+    }
+
     //nwork = 6*nzlu*nb;
     nwork = 20*A->ROW*A->nb;
     iludata->nzlu  = nzlu;
@@ -126,12 +137,6 @@ SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
     printf("### DEBUG: fill-in = %d, nwork = %d\n", lfil, nwork);
     printf("### DEBUG: iwk = %d, nzlu = %d\n", iwk, nzlu);
 #endif
-    
-    if ( ierr != 0 ) {
-        printf("### ERROR: ILU setup failed (ierr=%d)! [%s]\n", ierr, __FUNCTION__);
-        status = ERROR_SOLVER_ILUSETUP;
-        goto FINISHED;
-    }
     
     if ( iwk < nzlu ) {
         printf("### ERROR: ILU needs more RAM %d! [%s]\n", iwk-nzlu, __FUNCTION__);
@@ -975,7 +980,7 @@ static INT numfactor (dBSRmat   *A,
                 colptrs[k] =  0;
                 
                 // fasp_smat_inv_nc5(&(luval[k*nb2])); // not numerically stable --zcs 04/26/2021
-                fasp_smat_invp_nc(&(luval[k*nb2]), 5);
+                status = fasp_smat_invp_nc(&(luval[k*nb2]), 5);
             }
             
             break;
@@ -1022,7 +1027,7 @@ static INT numfactor (dBSRmat   *A,
                 colptrs[k] =  0;
                 
                 // fasp_smat_inv(&(luval[k*nb2]),nb); // not numerically stable --zcs 04/26/2021
-                fasp_smat_invp_nc(&(luval[k*nb2]), nb);
+                status = fasp_smat_invp_nc(&(luval[k*nb2]), nb);
             }
             
             break;
@@ -1070,7 +1075,7 @@ static INT numfactor (dBSRmat   *A,
                 colptrs[k] =  0;
                 
                 //fasp_smat_inv(&(luval[k*nb2]),nb); // not numerically stable --zcs 04/26/2021
-                fasp_smat_invp_nc(&(luval[k * nb2]), nb);
+                status = fasp_smat_invp_nc(&(luval[k * nb2]), nb);
             }
     }
     

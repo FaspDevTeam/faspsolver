@@ -446,9 +446,9 @@ FASP_API SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
                                     ILU_param  *iluparam);
 
 FASP_API SHORT fasp_ilu_dbsr_setup_step (dBSRmat    *A,
-                                         ILU_data   *iludata,
-                                         ILU_param  *iluparam,
-                                         INT        step);
+         								ILU_data   *iludata,
+         								ILU_param  *iluparam,
+         								INT step);
 
 FASP_API SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
                                         ILU_data   *iludata,
@@ -461,7 +461,7 @@ FASP_API SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
 FASP_API SHORT fasp_ilu_dbsr_setup_levsch_step (dBSRmat    *A,
                                                 ILU_data   *iludata,
                                                 ILU_param  *iluparam,
-                                                INT         step);
+         									   INT step);
 
 FASP_API SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
                                            dCSRmat    *Ap,
@@ -651,6 +651,10 @@ FASP_API void fasp_blas_smat_mxv_nc3 (const REAL  *a,
                                       const REAL  *b,
                                       REAL        *c);
 
+FASP_API void fasp_blas_smat_mxv_nc4 (const REAL  *a,
+                                      const REAL  *b,
+                                      REAL        *c);
+
 FASP_API void fasp_blas_smat_mxv_nc5 (const REAL  *a,
                                       const REAL  *b,
                                       REAL        *c);
@@ -669,6 +673,10 @@ FASP_API void fasp_blas_smat_mul_nc2 (const REAL  *a,
                                       REAL        *c);
 
 FASP_API void fasp_blas_smat_mul_nc3 (const REAL  *a,
+                                      const REAL  *b,
+                                      REAL        *c);
+
+FASP_API void fasp_blas_smat_mul_nc4 (const REAL  *a,
                                       const REAL  *b,
                                       REAL        *c);
 
@@ -693,6 +701,10 @@ FASP_API void fasp_blas_smat_ypAx_nc3 (const REAL  *A,
                                        const REAL  *x,
                                        REAL        *y);
 
+FASP_API void fasp_blas_smat_ypAx_nc4 (const REAL  *A,
+                                       const REAL  *x,
+                                       REAL        *y);
+
 FASP_API void fasp_blas_smat_ypAx_nc5 (const REAL  *A,
                                        const REAL  *x,
                                        REAL        *y);
@@ -711,6 +723,10 @@ FASP_API void fasp_blas_smat_ymAx_nc2 (const REAL  *A,
                                        REAL        *y);
 
 FASP_API void fasp_blas_smat_ymAx_nc3 (const REAL  *A,
+                                       const REAL  *x,
+                                       REAL        *y);
+
+FASP_API void fasp_blas_smat_ymAx_nc4 (const REAL  *A,
                                        const REAL  *x,
                                        REAL        *y);
 
@@ -750,11 +766,11 @@ FASP_API void fasp_smat_inv_nc7 (REAL *a);
 FASP_API void fasp_smat_inv_nc (REAL      *a,
                                 const INT  n);
 
-FASP_API void fasp_smat_invp_nc (REAL      *a,
-                                 const INT  n);
+FASP_API SHORT fasp_smat_invp_nc (REAL      *a,
+                                  const INT  n);
 
-FASP_API INT fasp_smat_inv (REAL      *a,
-                            const INT  n);
+FASP_API SHORT fasp_smat_inv (REAL      *a,
+                              const INT  n);
 
 FASP_API REAL fasp_smat_Linf (const REAL  *A,
                               const INT    n);

@@ -493,7 +493,7 @@ void fasp_smat_inv_nc (REAL      *a,
 }
 
 /**
- * \fn void fasp_smat_invp_nc (REAL *a, const INT n)
+ * \fn SHORT fasp_smat_invp_nc (REAL *a, const INT n)
  *
  * \brief Compute the inverse of a matrix using Gauss Elimination with Pivoting
  *
@@ -505,8 +505,8 @@ void fasp_smat_inv_nc (REAL      *a,
  *
  * \note   This routine is based on gaussj() from "Numerical Recipies in C"!
  */
-void fasp_smat_invp_nc (REAL      *a,
-                        const INT  n)
+SHORT fasp_smat_invp_nc (REAL      *a,
+                         const INT  n)
 {
     INT   i, j, k, l, ll, u;
     INT   icol = 0, irow = 0;
@@ -563,6 +563,7 @@ void fasp_smat_invp_nc (REAL      *a,
         u = icol*n+icol;
         if ( ABS(a[u]) < SMALLREAL ) {
             printf("### WARNING: The matrix is nearly singular!\n");
+            return ERROR_SOLVER_EXIT;
         }
         pivinv = 1.0/a[u]; a[u]=1.0;
         for ( l=0; l<n; l++ ) a[icol*n+l] *= pivinv;
@@ -584,10 +585,12 @@ void fasp_smat_invp_nc (REAL      *a,
     } // And we are done.
     
     fasp_mem_free(work); work = NULL;
+
+    return FASP_SUCCESS;
 }
 
 /**
- * \fn INT fasp_smat_inv (REAL *a, const INT n)
+ * \fn SHORT fasp_smat_inv (REAL *a, const INT n)
  *
  * \brief Compute the inverse matrix of a small full matrix a
  *
@@ -597,9 +600,11 @@ void fasp_smat_invp_nc (REAL      *a,
  * \author Xiaozhe Hu, Shiquan Zhang
  * \date   04/21/2010
  */
-INT fasp_smat_inv (REAL      *a,
-                   const INT  n)
+SHORT fasp_smat_inv (REAL      *a,
+                     const INT  n)
 {
+    SHORT status = FASP_SUCCESS;
+
     switch (n) {
             
         case 2:
@@ -614,17 +619,17 @@ INT fasp_smat_inv (REAL      *a,
             fasp_smat_inv_nc4(a);
             break;
             
-        case 5:
+        case -5:
             fasp_smat_inv_nc5(a);
             break;
             
         default:
-            fasp_smat_invp_nc(a,n);
+            status = fasp_smat_invp_nc(a,n);
             break;
             
     }
     
-    return FASP_SUCCESS;
+    return status;
 }
 
 /**
