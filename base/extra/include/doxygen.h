@@ -2,7 +2,7 @@
  *  \brief Main page for Doygen documentation
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2010--2017 by the FASP team. All rights reserved.
+ *  Copyright (C) 2010--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Less Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -86,7 +86,7 @@
  * To compile, you need a Fortran and a C compiler.  First, you can type in the "faspsolver/"
  * root directory:
  *
- * > $ make config
+ * > $ mkdir Build; cd Build; cmake ..
  * 
  * which will config the environment automatically. And, then, you can need to type:
  *
@@ -124,13 +124,7 @@
  *
  * - Feng, Chunsheng (Xiangtan University, China)
  *
- * - Hu, Xiaozhe (Tufts University, USA)
- * 
- * - Li, Zheng (Kunming University of Science and Technology, China)
- *
  * - Zhang, Chensong (Chinese Academy of Sciences, China)
- *
- * - Zhang, Hongxuan (Penn State Univeristy, USA)
  *
  * With contributions from (in alphabetic order):
  *
@@ -138,9 +132,13 @@
  *
  * - Chen, Long (University of California, Irvine, USA)
  *
+ * - Hu, Xiaozhe (Tufts University, USA)
+ *
  * - Huang, Feiteng (Sichuang University, China)
  *
  * - Huang, Xuehai (Shanghai Jiaotong University, China)
+ * 
+ * - Li, Zheng (Kunming University of Science and Technology, China)
  *
  * - Qiao, Changhe (Penn State University, USA)
  *
@@ -159,6 +157,8 @@
  * - Zhang, Shiquan (Sichuan University, China)
  *
  * - Zhang, Shuo (Chinese Academy of Sciences, China)
+ *
+ * - Zhang, Hongxuan (Penn State Univeristy, USA)
  *
  * - Zhang, Weifeng (Kunming University of Science and Technology, China)
  *

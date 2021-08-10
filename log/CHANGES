@@ -1,5 +1,10 @@
 File Name: CHANGES
 
+08/10/2021 FASP 2.7.0:
+- Update webpage;
+- Update warning level in UA AMG;
+- Update Doxygen.
+
 05/12/2021 FASP 2.6.8:
 - Update README and cmake examples;
 - Remove support for VS10 and VS15;

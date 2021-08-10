@@ -240,9 +240,9 @@ static SHORT amg_setup_unsmoothP_unsmoothR(AMG_data *mgl,
             case NPAIR: // non-symmetric pairwise matching aggregation
                 status = aggregation_nsympair(mgl, param, lvl, vertices, &num_aggs[lvl]);
                 /*-- Modified by Chunsheng Feng on 10/17/2020, ZCS on 01/15/2021:
-                     if NPAIR fail auto switch aggregation type to VBM. --*/
+                     if NPAIR fail, switch aggregation type to VBM. --*/
                 if ( status != FASP_SUCCESS || num_aggs[lvl] * 2.0 > mgl[lvl].A.row ) {
-                    if ( prtlvl > PRINT_MIN ) {
+                    if ( prtlvl > PRINT_MORE ) {
                         printf("### WARNING: Non-symmetric pairwise matching failed on level %d!\n", lvl);
                         printf("### WARNING: Switch to VMB aggregation on level %d!\n", lvl);
                     }

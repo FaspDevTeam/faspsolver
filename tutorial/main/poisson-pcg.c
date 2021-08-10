@@ -7,7 +7,7 @@
  *  \note  Solving the Poisson equation (P1 FEM) with PCG: C version
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2012--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2012--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
