@@ -65,11 +65,11 @@
  *
  * > http://www.multigrid.org/fasp/download/faspsolver.zip
  *
- * We use HG (Mecurial) as our main version control tool. HG is easy to use and it is 
- * available at all OS platforms. For people who is interested in the developer version, 
- * you can obtain the FASP package with hg: 
+ * We use Git as our main version control tool. Git is easy to use and it is available
+ * at all OS platforms. For people who is interested in the developer version, you can 
+ * obtain the FASP package with Git: 
  * 
- * > $ hg clone https://faspusers@bitbucket.org/fasp/faspsolver 
+ * > $ git clone git@github.com:FaspDevTeam/faspsolver.git
  * 
  * will give you the developer version of the FASP package. 
  *
@@ -80,7 +80,7 @@
  *
  * This is a simple instruction on building and testing. For more details, please refer to 
  * the README files and the short
- * <a href="http://fasp.sourceforge.net/download/userguide.pdf">User's Guide</a> in 
+ * <a href="http://www.multigrid.org/fasp/download/userguide.pdf">User's Guide</a> in 
  * "faspsolver/doc/".
  *
  * To compile, you need a Fortran and a C compiler.  First, you can type in the "faspsolver/"
@@ -134,11 +134,11 @@
  *
  * - Hu, Xiaozhe (Tufts University, USA)
  *
- * - Huang, Feiteng (Sichuang University, China)
+ * - Huang, Feiteng (Sichuan University, China)
  *
  * - Huang, Xuehai (Shanghai Jiaotong University, China)
  * 
- * - Li, Zheng (Kunming University of Science and Technology, China)
+ * - Li, Zheng (Xiangtan University, China)
  *
  * - Qiao, Changhe (Penn State University, USA)
  *
