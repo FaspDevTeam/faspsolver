@@ -74,6 +74,9 @@ AMG_data * fasp_amg_data_create (SHORT max_levels)
         mgl[i].near_kernel_dim = 0;
         mgl[i].near_kernel_basis = NULL;
         mgl[i].cycle_type = 0;
+#if MULTI_COLOR_ORDER    
+        mgl[i].GS_Theta = 0.0E-2; //0.0; //1.0E-2;
+#endif     
     }
     
     return(mgl);
