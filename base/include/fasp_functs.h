@@ -468,6 +468,10 @@ FASP_API SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
                                            ILU_data   *iludata,
                                            ILU_param  *iluparam);
 
+FASP_API void topologic_sort_ILU(ILU_data*); // GPU program needs
+
+FASP_API void mulcol_independ_set(AMG_data*, INT); // GPU program needs
+
 
 /*-------- In file: BlaILUSetupCSR.c --------*/
 
@@ -984,8 +988,8 @@ FASP_API void dCSRmat_Multicoloring(dCSRmat *A,
                                     INT *groups);
 
 FASP_API static void generate_S_theta (dCSRmat *A, 
-									   iCSRmat *S, 
-									   REAL theta );
+                                iCSRmat *S, 
+                                REAL theta );
 
 FASP_API void dCSRmat_Multicoloring_Strong_Coupled(dCSRmat *A,
                                                   iCSRmat *S,
