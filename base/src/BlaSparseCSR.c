@@ -68,7 +68,13 @@ dCSRmat fasp_dcsr_create (const INT  m,
     }
     
     A.row = m; A.col = n; A.nnz = nnz;
-        
+
+#if MULTI_COLOR_ORDER
+    A.color = 0;
+    A.IC = NULL;
+    A.ICMAP = NULL;
+#endif
+
     return A;
 }
 
@@ -160,6 +166,12 @@ void fasp_dcsr_alloc (const INT  m,
     
     A->row = m; A->col = n; A->nnz = nnz;
     
+#if MULTI_COLOR_ORDER
+    A->color = 0;
+    A->IC = NULL;
+    A->ICMAP = NULL;
+#endif
+
     return;
 }
 
@@ -181,6 +193,12 @@ void fasp_dcsr_free (dCSRmat *A)
     fasp_mem_free(A->IA);  A->IA  = NULL;
     fasp_mem_free(A->JA);  A->JA  = NULL;
     fasp_mem_free(A->val); A->val = NULL;
+
+#if MULTI_COLOR_ORDER 
+    fasp_mem_free(A->IC); A->IC = NULL;
+    fasp_mem_free(A->ICMAP); A->ICMAP = NULL;
+#endif
+
     A->col = 0;
     A->row = 0;
     A->nnz = 0;
@@ -1347,87 +1365,6 @@ dCSRmat fasp_dcsr_sympart (dCSRmat *A)
     return SA;
 }
 
-/**
- * \fn void fasp_dcsr_multicoloring (dCSRmat *A, INT *flags, INT *groups)
- *
- * \brief Use the greedy multi-coloring to get color groups of the adjacency graph of A
- *
- * \param A       Input dCSRmat
- * \param flags   flags for the independent group
- * \param groups  Return group numbers
- *
- * \author Chunsheng Feng
- * \date   09/15/2012
- */
-void fasp_dcsr_multicoloring (dCSRmat *A,
-                              INT     *flags,
-                              INT     *groups)
-{
-#ifdef MULTI_COLOR_ORDER
-    INT k,i,j,pre,group;
-    INT iend;
-    INT icount;
-    INT front,rear;
-    INT n=A->row;
-    INT *IA = A -> IA;
-    INT *JA = A -> JA;
-    INT *cq = (INT *)malloc(sizeof(INT)*(n+1));
-    INT *newr = (INT *)malloc(sizeof(INT)*(n+1));
-    
-#ifdef _OPENMP
-#pragma omp parallel for private(k)
-#endif
-    for (k=0;k<n;k++) cq[k]= k;
-    
-    group = 0;
-    for (k=0;k<n;k++) {
-        if ((IA[k+1]-IA[k]) > group )
-            group = IA[k+1]-IA[k];
-    }
-    
-    A->IC = (INT *)malloc(sizeof(INT)*(group+2));
-    A->ICMAP = (INT *)malloc(sizeof(INT)*(n));
-    
-    front = n-1;     rear = n-1;
-    
-    memset(newr, -1, sizeof(INT)*(n+1));
-    memset(A->ICMAP, 0, sizeof(INT)*n);
-    
-    group = 0;  icount = 0;
-    A->IC[ 0 ] = 0;   pre=0;
-    
-    do {
-        front ++;  if (front == n) front =0;
-        i = cq[front];
-        if (i <= pre)  {
-            A->IC[group] = icount; A->ICMAP[icount] = i;
-            group++; icount++;
-            iend = IA[i+1];
-            for (j= IA[i]; j< iend; j++) newr[ JA[j] ] = group;
-        }
-        else if (newr[i] == group) {
-            rear ++;  if (rear == n) rear = 0;
-            cq[rear] = i;
-        }
-        else {
-            A->ICMAP[icount] = i;
-            icount++;
-            iend = IA[i+1];
-            for (j = IA[i]; j< iend; j++) newr[ JA[j] ] = group;
-        }
-        pre=i;
-        
-    } while (rear != front);
-    
-    A->IC[group] = icount;
-    A->color = group;
-    free(cq);
-    free(newr);
-    *groups = group;
-#else
-    printf("### ERROR: %s has not been defined!\n", __FUNCTION__);
-#endif
-}
 
 /**
  * \fn void fasp_dcsr_transz (dCSRmat *A,  INT *p, dCSRmat *AT)
@@ -1630,6 +1567,603 @@ void fasp_dcsr_sortz (dCSRmat      *A,
     
     // clean up
     fasp_dcsr_free(&AT);
+}
+
+
+/**
+ * \fn void fasp_dcsr_multicoloring (dCSRmat *A, INT *flags, INT *groups)
+ *
+ * \brief Use the greedy multi-coloring to get color groups of the adjacency graph of A
+ *
+ * \param A       Input dCSRmat
+ * \param flags   flags for the independent group
+ * \param groups  Return group numbers
+ *
+ * \author Chunsheng Feng
+ * \date   09/15/2012
+ */
+void fasp_dcsr_multicoloring (dCSRmat *A,
+                              INT     *flags,
+                              INT     *groups)
+{
+#if MULTI_COLOR_ORDER
+    INT k,i,j,pre,group;
+    INT iend;
+    INT icount;
+    INT front,rear;
+    INT n=A->row;
+    INT *IA = A -> IA;
+    INT *JA = A -> JA;
+    INT *cq = (INT *)malloc(sizeof(INT)*(n+1));
+    INT *newr = (INT *)malloc(sizeof(INT)*(n+1));
+    
+#ifdef _OPENMP
+#pragma omp parallel for private(k)
+#endif
+    for (k=0;k<n;k++) cq[k]= k;
+    
+    group = 0;
+    for (k=0;k<n;k++) {
+        if ((IA[k+1]-IA[k]) > group )
+            group = IA[k+1]-IA[k];
+    }
+    
+    A->IC = (INT *)malloc(sizeof(INT)*(group+2));
+    A->ICMAP = (INT *)malloc(sizeof(INT)*(n));
+    
+    front = n-1;     rear = n-1;
+    
+    memset(newr, -1, sizeof(INT)*(n+1));
+    memset(A->ICMAP, 0, sizeof(INT)*n);
+    
+    group = 0;  icount = 0;
+    A->IC[ 0 ] = 0;   pre=0;
+    
+    do {
+        front ++;  if (front == n) front =0;
+        i = cq[front];
+        if (i <= pre)  {
+            A->IC[group] = icount; A->ICMAP[icount] = i;
+            group++; icount++;
+            iend = IA[i+1];
+            for (j= IA[i]; j< iend; j++) newr[ JA[j] ] = group;
+        }
+        else if (newr[i] == group) {
+            rear ++;  if (rear == n) rear = 0;
+            cq[rear] = i;
+        }
+        else {
+            A->ICMAP[icount] = i;
+            icount++;
+            iend = IA[i+1];
+            for (j = IA[i]; j< iend; j++) newr[ JA[j] ] = group;
+        }
+        pre=i;
+        
+    } while (rear != front);
+    
+    A->IC[group] = icount;
+    A->color = group;
+    free(cq);
+    free(newr);
+    *groups = group;
+#else
+    printf("### ERROR: %s has not been defined!\n", __FUNCTION__);
+#endif
+}
+
+/**
+ * \fn void dCSRmat_Multicoloring(dCSRmat A, INT *rowmax , INT *groups)
+ *
+ * \brief Use the greedy multicoloring algorithm to get color groups for for the adjacency graph of A
+ *
+ * \param A    Input dCSRmat
+ * \param rowmax  max row nonzeros of A
+ * \param groups  Return group numbers
+ *
+ * \author Chunsheng Feng
+ * \date   09/15/2012
+ */
+void dCSRmat_Multicoloring(dCSRmat *A,
+                           INT *rowmax,
+                           INT *groups)
+{
+#if MULTI_COLOR_ORDER    
+    INT k,i,j,pre,group;
+    INT igold,iend,iavg;
+    INT icount;
+    INT front,rear;
+    INT n=A->row;
+    INT *IA = A -> IA;
+    INT *JA = A -> JA;
+
+    INT *cq = (INT *)malloc(sizeof(INT)*(n+1));
+    INT *newr = (INT *)malloc(sizeof(INT)*(n+1));
+	
+    for(k=0;k<n;k++) cq[k]= k;
+
+    group = 0;
+
+    for(k=0;k<n;k++) {
+        if ((IA[k+1]-IA[k]) > group)
+           group = IA[k+1]-IA[k];
+    }
+    *rowmax = group;
+#if 0
+    iavg = IA[n]/n ;	
+    igold = (INT)MAX(iavg,group*0.618) +1;
+    igold =group ;
+#endif	
+
+    A->IC = (INT *)malloc(sizeof(INT)*(group+2));
+    A->ICMAP = (INT *)malloc(sizeof(INT)*(n));
+	
+    front = n-1;     rear = n-1;
+
+    memset(newr, -1, sizeof(INT)*(n+1));
+    memset(A->ICMAP, 0, sizeof(INT)*n);
+
+    group=0;
+    icount = 0;
+    A->IC[0] = 0; 
+    pre=0;
+    
+    do{
+        //front = (front+1)%n;
+        front ++;
+        if (front == n ) front =0; // front = front < n ? front : 0 ; 
+        i = cq[front];
+
+        if(i <= pre)
+        {  
+            A->IC[group] = icount; 
+            A->ICMAP[icount] = i;
+            group++; 
+            icount++;
+            iend = IA[i+1];
+            for(j= IA[i]; j< iend; j++)  newr[ JA[j] ] = group;
+        }
+        else if (newr[i] == group)
+        { 
+            //rear = (rear +1)%n;
+            rear ++;  
+            if (rear == n) rear = 0;
+            cq[rear] = i;
+        }
+        else
+        {  
+            A->ICMAP[icount] = i;
+            icount++;
+            iend = IA[i+1];
+            for(j = IA[i]; j< iend; j++)  newr[JA[j]] =  group;
+        }
+        pre=i;
+    }while(rear != front);
+
+    A->IC[group] = icount;  
+    A->color = group;
+
+#if 0
+    for(i=0; i < A->color; i++ ){
+        for(j=A -> IC[i]; j < A-> IC[i+1];j++) 			
+            printf("color %d  ICMAP[%d] = %d \n", i,j,A-> ICMAP[j]);
+            printf( "A.color = %d A.row= %d %d\n",A -> color,A -> row,A-> IC[i+1] - A-> IC[i] );
+	    getchar();
+    }
+#endif
+    
+    //printf(" Max Row Numbers %d avg %d igold %d max %d %d\n", group, iavg, igold, (INT)MAX(iavg,group*0.618),A->IA[n]/n );
+    free(cq);
+    free(newr);
+    *groups = group;
+#endif
+}
+
+
+void generate_S_theta ( dCSRmat *A, 
+                        iCSRmat *S, 
+                        REAL theta )
+{
+    const INT row=A->row, col=A->col;
+    const INT row_plus_one = row+1;
+    const INT nnz=A->IA[row]-A->IA[0];
+    
+    INT index, i, j, begin_row, end_row;
+    INT *ia=A->IA, *ja=A->JA;
+    REAL *aj=A->val;
+
+    // get the diagnal entry of A
+    //dvector diag; fasp_dcsr_getdiag(0, A, &diag);
+    
+    /* generate S */
+    REAL row_abs_sum;     
+
+    // copy the structure of A to S
+    S->row=row; S->col=col; S->nnz=nnz; S->val=NULL;
+    
+    S->IA=(INT*)fasp_mem_calloc(row_plus_one, sizeof(INT));
+    
+    S->JA=(INT*)fasp_mem_calloc(nnz, sizeof(INT));
+    
+    fasp_iarray_cp(row_plus_one, ia, S->IA);
+    fasp_iarray_cp(nnz, ja, S->JA);
+    
+#ifdef _OPENMP
+#pragma omp parallel for private(i,j,begin_row,end_row,row_abs_sum)
+#endif
+    for (i=0;i<row;++i) {
+        /* compute scaling factor and row sum */
+        row_abs_sum=0;
+        begin_row=ia[i]; end_row=ia[i+1];
+        for (j=begin_row;j<end_row;j++) {
+            row_abs_sum+=ABS(aj[j]);
+        }
+	    row_abs_sum = row_abs_sum*theta;
+            
+        /* deal with  the element of S */
+        for (j=begin_row;j<end_row;j++){
+            if ( (row_abs_sum >= ABS(aj[j])) && (ja[j] !=i) )  {		    
+                S->JA[j]=-1;
+	    } 
+        }
+    } // end for i
+    
+    /* Compress the strength matrix */
+    index=0;
+    for (i=0;i<row;++i) {
+        S->IA[i]=index;
+        begin_row=ia[i]; end_row=ia[i+1]-1;
+        for (j=begin_row;j<=end_row;j++) {
+            if (S->JA[j]>-1) {
+                S->JA[index]=S->JA[j];
+                index++;
+            }
+        }
+    }
+    
+    if (index > 0) {
+        S->IA[row]=index;
+        S->nnz=index;
+        S->JA=(INT*)fasp_mem_realloc(S->JA,index*sizeof(INT));
+    }
+    else {
+        S->nnz = 0;
+        S->JA = NULL;
+    }
+    
+}
+
+
+/**
+ * \fn void dCSRmat_Multicoloring(dCSRmat *A, iCSRmat *S, INT *flags, INT *groups)
+ *
+ * \brief Use the greedy multicoloring algorithm to get color groups for for the adjacency graph of A
+ *
+ * \param A    Input dCSRmat
+ * \param S    Input iCSRmat Strong Coupled Matrix of A.
+ * \param flags   flags for the independent group
+ * \param groups  Return group numbers
+ *
+ * \author Chunsheng Feng
+ * \date   09/15/2012
+ */
+void dCSRmat_Multicoloring_Strong_Coupled(dCSRmat *A,
+                                          iCSRmat *S,
+                                          INT *flags,
+                                          INT *groups)
+{
+#if MULTI_COLOR_ORDER    
+    INT k,i,j,pre,group;
+    INT igold,iend,iavg;
+    INT icount;
+    INT front,rear;
+    INT n=A->row;
+    INT *IA = S->IA;
+    INT *JA = S->JA;
+
+    INT *cq = (INT *)malloc(sizeof(INT)*(n+1));
+    INT *newr = (INT *)malloc(sizeof(INT)*(n+1));
+  
+#ifdef _OPENMP
+#pragma omp parallel for private(k)
+#endif
+    for(k=0;k<n;k++) {
+        cq[k]= k;
+    }
+    group = 0;
+    for(k=0;k<n;k++) {
+        if ((IA[k+1]-IA[k]) > group ) group = IA[k+1]-IA[k];
+    }
+    *flags = group;
+#if 1
+    iavg = IA[n]/n ;	
+    igold = (INT)MAX(iavg,group*0.618) +1;
+    igold = group ;
+#endif	
+
+    A->IC = (INT *)malloc(sizeof(INT)*(group+2));
+    A->ICMAP = (INT *)malloc(sizeof(INT)*(n+1));
+	
+    front = n-1;     
+    rear = n-1;
+
+    memset(newr, -1, sizeof(INT)*(n+1));
+    memset(A->ICMAP, 0, sizeof(INT)*n);
+
+    group=0;
+    icount = 0;
+    A->IC[0] = 0; 
+    pre=0;
+    
+    do{
+        //front = (front+1)%n;
+        front ++;
+        if (front == n ) front =0; // front = front < n ? front : 0 ; 
+        i = cq[front];
+
+        if(i <= pre) {
+            A->IC[group] = icount; 
+            A->ICMAP[icount] = i;
+            group++; 
+            icount++;
+#if 0
+            if ((IA[i+1]-IA[i]) > igold) 
+                iend = MIN(IA[i+1], (IA[i] + igold));
+	    else
+#endif
+            iend = IA[i+1];
+            for(j= IA[i]; j< iend; j++)  newr[JA[j]] = group;
+        }
+        else if (newr[i] == group) { 
+            //rear = (rear +1)%n;
+            rear ++;  
+            if (rear == n) rear = 0;
+            cq[rear] = i;
+        }
+        else {
+            A->ICMAP[icount] = i;
+            icount++;
+#if  0
+            if ((IA[i+1] - IA[i]) > igold)  iend =MIN(IA[i+1], (IA[i] + igold));
+            else
+#endif 
+            iend = IA[i+1];
+            for(j = IA[i]; j< iend; j++)  newr[JA[j]] =  group;
+        }
+        pre=i;
+		
+    }while(rear != front);
+
+    A->IC[group] = icount;  
+    A->color = group;
+
+#if 0
+    for(i=0; i < A->color; i++ ){
+        for(j=A -> IC[i]; j < A-> IC[i+1];j++) 			
+            printf("color %d  ICMAP[%d] = %d \n", i,j,A-> ICMAP[j]);
+        printf( "A.color = %d A.row= %d %d\n",A -> color,A -> row,A-> IC[i+1] - A-> IC[i] );
+        getchar();
+    }
+#endif
+    printf(" Max Row Numbers %d avg %d igold %d max %d %d\n", group, iavg, igold, (INT)MAX(iavg,group*0.618),A->IA[n]/n );
+    free(cq);
+    free(newr);
+    *groups = group;
+#endif
+}
+
+
+void dCSRmat_Multicoloring_Theta(dCSRmat *A,
+				                 REAL theta,
+                                 INT *rowmax,
+                                 INT *groups)
+{
+#if MULTI_COLOR_ORDER    
+    INT k,i,j,pre,group;
+    INT igold,iend,iavg;
+    INT icount;
+    INT front,rear;
+    INT n=A->row;
+//---------------------------------------------------------------------------
+     iCSRmat S;
+     INT *IA,*JA;
+     if (theta > 0 && theta < 1.0){
+     generate_S_theta(A, &S, theta);
+     IA = S.IA;
+     JA = S.JA;
+     } else if (theta == 1.0 ){
+
+     A->IC = (INT *)malloc(sizeof(INT)*2);
+     A->ICMAP = (INT *)malloc(sizeof(INT)*(n+1));
+     A-> IC[0] = 0;
+     A-> IC[1] = n;
+#ifdef _OPENMP
+#pragma omp parallel for private(k)
+#endif
+     for(k=0; k<n; k++)  A->ICMAP[k]= k;
+
+     A->color = 1;
+     *groups = 1;
+     *rowmax = 1;
+     printf( "Theta = %lf \n",theta );
+
+     return;
+
+     } else{
+        IA = A->IA;
+        JA = A->JA;
+     }
+//---------------------------------------------------------------------------
+    INT *cq = (INT *)malloc(sizeof(INT)*(n+1));
+    INT *newr = (INT *)malloc(sizeof(INT)*(n+1));
+
+  
+#ifdef _OPENMP
+#pragma omp parallel for private(k)
+#endif
+    for(k=0;k<n;k++) {
+        cq[k]= k;
+    }
+    group = 0;
+    for(k=0;k<n;k++) {
+        if ((A->IA[k+1] - A->IA[k]) > group ) group = A->IA[k+1] - A->IA[k];
+    }
+    *rowmax = group;
+
+#if 0
+    iavg = IA[n]/n ;	
+    igold = (INT)MAX(iavg,group*0.618) +1;
+    igold = group ;
+#endif	
+
+    A->IC = (INT *)malloc(sizeof(INT)*(group+2));
+    A->ICMAP = (INT *)malloc(sizeof(INT)*(n+1));
+	
+    front = n-1;     
+    rear = n-1;
+
+    memset(newr, -1, sizeof(INT)*(n+1));
+    memset(A->ICMAP, 0, sizeof(INT)*n);
+
+    group=0;
+    icount = 0;
+    A->IC[0] = 0; 
+    pre=0;
+   
+    do{
+        //front = (front+1)%n;
+        front ++;
+        if (front == n ) front =0; // front = front < n ? front : 0 ; 
+        i = cq[front];
+
+        if(i <= pre) {
+            A->IC[group] = icount; 
+            A->ICMAP[icount] = i;
+            group++; 
+            icount++;
+#if 0
+            if ((IA[i+1]-IA[i]) > igold) 
+                iend = MIN(IA[i+1], (IA[i] + igold));
+	    else
+#endif
+            iend = IA[i+1];
+            for(j= IA[i]; j< iend; j++)  newr[JA[j]] = group;
+        }
+        else if (newr[i] == group) { 
+            //rear = (rear +1)%n;
+            rear ++;  
+            if (rear == n) rear = 0;
+            cq[rear] = i;
+        }
+        else {
+            A->ICMAP[icount] = i;
+            icount++;
+#if  0
+            if ((IA[i+1] - IA[i]) > igold)  iend =MIN(IA[i+1], (IA[i] + igold));
+            else
+#endif 
+            iend = IA[i+1];
+            for(j = IA[i]; j< iend; j++)  newr[JA[j]] =  group;
+        }
+        pre=i;
+		
+//    printf("pre = %d\n",pre); 
+    }while(rear != front);
+
+//    printf("group\n"); 
+    A->IC[group] = icount;  
+    A->color = group;
+
+#if 0
+    for(i=0; i < A->color; i++ ){
+        for(j=A -> IC[i]; j < A-> IC[i+1];j++) 			
+            printf("color %d  ICMAP[%d] = %d \n", i,j,A-> ICMAP[j]);
+        printf( "A.color = %d A.row= %d %d\n",A -> color,A -> row,A-> IC[i+1] - A-> IC[i] );
+        getchar();
+    }
+    printf(" Max Row Numbers %d avg %d igold %d max %d %d\n", group, iavg, igold, (INT)MAX(iavg,group*0.618),A->IA[n]/n );
+#endif
+    free(cq);
+    free(newr);
+    if (theta >0 ){
+        fasp_mem_free(S.IA);
+        fasp_mem_free(S.JA);
+    }
+    *groups = group;
+#endif
+    return;
+}
+
+
+void fasp_smoother_dcsr_gs_multicolor (dvector *u,
+                                       dCSRmat *A,
+                                       dvector *b,
+                                       INT L,
+                                       const INT order)
+{
+    const INT    nrow = A->row; // number of rows
+    const INT   *ia = A->IA, *ja = A->JA;
+    const REAL  *aj = A->val, *bval = b->val;
+    REAL        *uval = u->val;
+    
+    INT i,j,k,begin_row,end_row;    
+    REAL t,d=0.0;
+
+    INT myid,mybegin,myend;
+#if MULTI_COLOR_ORDER 
+    INT color =   A->color;
+    INT *IC =	A->IC;
+    INT *ICMAP = A->ICMAP;
+    INT I;
+    
+    // From color to 0 order
+    if (order == -1) {
+        while (L--) {
+            for (myid = color-1; myid > -1; myid --) {
+                mybegin = IC[myid]; myend = IC[myid+1];
+#ifdef _OPENMP
+#pragma omp parallel for private(I,i,t,begin_row,end_row,k,j,d)
+#endif
+                for (I=mybegin; I<myend; I++) {
+                    i = ICMAP[I];
+                    t = bval[i];
+                    begin_row = ia[i], end_row = ia[i+1];
+                    for (k = begin_row; k < end_row; k ++) {
+                        j = ja[k];
+                        if (i!=j) t -= aj[k]*uval[j];
+                        else d = aj[k];
+                    } // end for k
+                    if (ABS(d) > SMALLREAL) uval[i] = t/d;
+                } // end for I
+            } // end for myid
+        } // end while
+    }
+    // From 0 to color order
+    else {
+        while (L--) {
+          for (myid = 0; myid < color; myid ++) {
+              mybegin = IC[myid]; myend = IC[myid+1];
+#ifdef _OPENMP
+#pragma omp parallel for private(I,i,t,begin_row,end_row,k,j,d)
+#endif
+              for (I=mybegin; I<myend; I++) {
+                   i = ICMAP[I];
+                   t = bval[i];
+                   begin_row = ia[i], end_row = ia[i+1];
+                   for (k = begin_row; k < end_row; k ++) {
+                       j = ja[k];
+                       if (i!=j) t -= aj[k]*uval[j];
+                       else d = aj[k];
+                   } // end for k
+                   if (ABS(d) > SMALLREAL) uval[i] = t/d;
+              } // end for I
+          } // end for myid
+       } // end while
+    } // end if order
+#else
+	 printf("### ERROR: MULTI_COLOR_ORDER  has not been turn on!!! \n");
+#endif
+    return;
 }
 
 /*---------------------------------*/
