@@ -983,9 +983,9 @@ FASP_API void dCSRmat_Multicoloring(dCSRmat *A,
                                     INT *rowmax,
                                     INT *groups);
 
-FASP_API void generate_S_theta (dCSRmat *A, 
-                                iCSRmat *S, 
-                                REAL theta );
+FASP_API static void generate_S_theta (dCSRmat *A, 
+									   iCSRmat *S, 
+									   REAL theta );
 
 FASP_API void dCSRmat_Multicoloring_Strong_Coupled(dCSRmat *A,
                                                   iCSRmat *S,
