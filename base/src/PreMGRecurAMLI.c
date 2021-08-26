@@ -123,8 +123,13 @@ void fasp_solver_amli (AMG_data   *mgl,
         }
         
         else {
+#if MULTI_COLOR_ORDER
+            // printf("fasp_smoother_dcsr_gs_multicolor, %s, %d\n",  __FUNCTION__, __LINE__);
+            fasp_smoother_dcsr_gs_multicolor (&mgl[l].x, &mgl[l].A, &mgl[l].b, param->presmooth_iter,1);
+#else            
             fasp_dcsr_presmoothing(smoother,A0,b0,e0,param->presmooth_iter,
                                    0,m0-1,1,relax,ndeg,smooth_order,ordering);
+#endif             
         }
         
         // form residual r = b - A x
@@ -199,8 +204,12 @@ void fasp_solver_amli (AMG_data   *mgl,
         }
         
         else {
+#if MULTI_COLOR_ORDER
+	        fasp_smoother_dcsr_gs_multicolor (&mgl[l].x, &mgl[l].A, &mgl[l].b, param->postsmooth_iter,-1);
+#else
             fasp_dcsr_postsmoothing(smoother,A0,b0,e0,param->postsmooth_iter,
                                     0,m0-1,-1,relax,ndeg,smooth_order,ordering);
+#endif 	
         }
         
     }
@@ -337,10 +346,13 @@ void fasp_solver_namli (AMG_data   *mgl,
         }
         
         else {
-            
+#if MULTI_COLOR_ORDER
+            // printf("fasp_smoother_dcsr_gs_multicolor, %s, %d\n",  __FUNCTION__, __LINE__);
+            fasp_smoother_dcsr_gs_multicolor (&mgl[l].x, &mgl[l].A, &mgl[l].b, param->presmooth_iter,1);
+#else            
             fasp_dcsr_presmoothing(smoother,A0,b0,e0,param->presmooth_iter,
                                    0,m0-1,1,relax,ndeg,smooth_order,ordering);
-
+#endif            
         }
         
         // form residual r = b - A x
@@ -424,8 +436,12 @@ void fasp_solver_namli (AMG_data   *mgl,
         }
         
         else {
+#if MULTI_COLOR_ORDER
+	        fasp_smoother_dcsr_gs_multicolor (&mgl[l].x, &mgl[l].A, &mgl[l].b, param->postsmooth_iter,-1);
+#else
             fasp_dcsr_postsmoothing(smoother,A0,b0,e0,param->postsmooth_iter,
                                     0,m0-1,-1,relax,ndeg,smooth_order,ordering);
+#endif             
         }
         
     }
