@@ -46,8 +46,8 @@
  * Modified by Chensong Zhang on 07/26/2014: Add error handling for AMG setup
  * Modified by Chensong Zhang on 02/01/2021: Add return value
  */
-INT fasp_solver_amg (const dCSRmat  *A,
-                     const dvector  *b,
+INT fasp_solver_amg (dCSRmat  *A,
+                     dvector  *b,
                      dvector        *x,
                      AMG_param      *param)
 {
@@ -64,6 +64,12 @@ INT fasp_solver_amg (const dCSRmat  *A,
     INT           iter;
     AMG_data *    mgl = fasp_amg_data_create(max_levels);
     REAL          AMG_start = 0, AMG_end;
+    
+#if MULTI_COLOR_ORDER
+    A->color = 0;
+    A->IC = NULL;
+    A->ICMAP = NULL;
+#endif 
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
