@@ -493,7 +493,13 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat    *A,
     /* Local Variables */
     INT      status = FASP_SUCCESS;
     REAL     solve_start, solve_end;
-    
+
+#if MULTI_COLOR_ORDER
+    A->color = 0;
+    A->IC = NULL;
+    A->ICMAP = NULL;
+#endif 
+
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
     printf("### DEBUG: matrix size: %d %d %d\n", A->row, A->col, A->nnz);
@@ -766,6 +772,12 @@ INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat    *A,
     /* Local Variables */
     INT      status = FASP_SUCCESS;
     REAL     solve_start, solve_end, solve_time;
+    
+#if MULTI_COLOR_ORDER
+    A->color = 0;
+    A->IC = NULL;
+    A->ICMAP = NULL;
+#endif 
     
 #if DEBUG_MODE > 0
     printf("### DEBUG: [-Begin-] %s ...\n", __FUNCTION__);
