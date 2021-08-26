@@ -301,6 +301,27 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
 
     fasp_ivec_free(&vertices);
 
+#if MULTI_COLOR_ORDER
+    INT Colors,rowmax;
+#ifdef _OPENMP
+    int threads = fasp_get_num_threads();
+    if (threads  > max_lvls-1  ) threads = max_lvls-1;
+#pragma omp parallel for private(lvl,rowmax,Colors) schedule(static, 1) num_threads(threads)
+#endif
+    for (lvl=0; lvl<max_lvls-1; lvl++){
+
+#if 1
+        dCSRmat_Multicoloring(&mgl[lvl].A, &rowmax, &Colors);
+#else
+        dCSRmat_Multicoloring_Theta(&mgl[lvl].A, mgl[lvl].GS_Theta, &rowmax, &Colors);
+#endif
+        if ( prtlvl > 1 )	
+            printf("mgl[%3d].A.row = %12d, rowmax = %5d, rowavg = %7.2lf, colors = %5d, Theta = %le.\n",
+            lvl, mgl[lvl].A.row, rowmax, (double)mgl[lvl].A.nnz/mgl[lvl].A.row,
+            mgl[lvl].A.color, mgl[lvl].GS_Theta);
+    }
+#endif
+
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         fasp_amgcomplexity(mgl, prtlvl);
