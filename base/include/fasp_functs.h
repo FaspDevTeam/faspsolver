@@ -965,10 +965,6 @@ FASP_API void fasp_dcsr_symdiagscale (dCSRmat       *A,
 
 FASP_API dCSRmat fasp_dcsr_sympart (dCSRmat *A);
 
-FASP_API void fasp_dcsr_multicoloring (dCSRmat *A,
-                                       INT     *flags,
-                                       INT     *groups);
-
 FASP_API void fasp_dcsr_transz (dCSRmat *A,
                                 INT     *p,
                                 dCSRmat *AT);
@@ -978,6 +974,34 @@ FASP_API dCSRmat fasp_dcsr_permz (dCSRmat *A,
 
 FASP_API void fasp_dcsr_sortz (dCSRmat      *A,
                                const SHORT   isym);
+
+FASP_API void fasp_dcsr_multicoloring (dCSRmat *A,
+                                       INT     *flags,
+                                       INT     *groups);
+
+FASP_API void dCSRmat_Multicoloring(dCSRmat *A,
+                                    INT *rowmax,
+                                    INT *groups);
+
+FASP_API void generate_S_theta (dCSRmat *A, 
+                                iCSRmat *S, 
+                                REAL theta );
+
+FASP_API void dCSRmat_Multicoloring_Strong_Coupled(dCSRmat *A,
+                                                  iCSRmat *S,
+                                                  INT *flags,
+                                                  INT *groups);
+
+FASP_API void dCSRmat_Multicoloring_Theta(dCSRmat *A,
+                                          REAL theta,
+                                          INT *rowmax,
+                                          INT *groups);
+
+FASP_API void fasp_smoother_dcsr_gs_multicolor (dvector *u,
+                                                dCSRmat *A,
+                                                dvector *b,
+                                                INT L,
+                                                const INT order);
 
 
 /*-------- In file: BlaSparseCSRL.c --------*/
@@ -2490,8 +2514,8 @@ FASP_API void fasp_precond_dstr_blockgs (REAL *r,
 
 /*-------- In file: SolAMG.c --------*/
 
-FASP_API INT fasp_solver_amg (const dCSRmat  *A,
-                              const dvector  *b,
+FASP_API INT fasp_solver_amg (dCSRmat  *A,
+                              dvector  *b,
                               dvector        *x,
                               AMG_param      *param);
 
