@@ -26,8 +26,8 @@
 static INT numfactor (dBSRmat *, REAL *, INT *, INT *);
 static INT numfactor_mulcol (dBSRmat *, REAL *, INT *, INT *, INT, INT *, INT *);
 static INT numfactor_levsch (dBSRmat *, REAL *, INT *, INT *, INT, INT *, INT *);
-static void topologic_sort_ILU (ILU_data *);
-static void mulcol_independ_set (AMG_data *, INT);
+// static void topologic_sort_ILU (ILU_data *);
+// static void mulcol_independ_set (AMG_data *, INT);
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -1815,7 +1815,7 @@ static void multicoloring (AMG_data *mgl,
 }
 
 /**
- * \fn static void topologic_sort_ILU (ILU_data *iludata)
+ * \fn void topologic_sort_ILU (ILU_data *iludata)
  *
  * \brief Reordering vertices according to level schedule strategy
  *
@@ -1824,7 +1824,7 @@ static void multicoloring (AMG_data *mgl,
  * \author Zheng Li, Chensong Zhang
  * \date   12/04/2016
  */
-static void topologic_sort_ILU (ILU_data *iludata)
+void topologic_sort_ILU (ILU_data *iludata)
 {
     INT i, j, k, l;
     INT nlevL, nlevU;
@@ -1896,7 +1896,7 @@ static void topologic_sort_ILU (ILU_data *iludata)
 }
 
 /**
- * \fn static void mulcol_independ_set (AMG_data *mgl, INT gslvl)
+ * \fn void mulcol_independ_set (AMG_data *mgl, INT gslvl)
  *
  * \brief Multi-coloring vertices of adjacency graph of A
  *
@@ -1906,8 +1906,8 @@ static void topologic_sort_ILU (ILU_data *iludata)
  * \author Zheng Li, Chunsheng Feng
  * \date   12/04/2016
  */
-static void mulcol_independ_set (AMG_data *mgl,
-                                 INT       gslvl)
+void mulcol_independ_set (AMG_data *mgl,
+                          INT       gslvl)
 {
     
     INT Colors, rowmax, level, prtlvl = 0;
