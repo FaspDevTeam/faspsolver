@@ -39,6 +39,8 @@
  */
 #define FASP_VERSION     2.0 /**< faspsolver version */
 
+#define MULTI_COLOR_ORDER OFF   /**< Multicolor parallel GS smoothing method based on strongly connected matrix */
+
 /**
  * \brief For external software package support
  */
@@ -156,6 +158,15 @@ typedef struct dCSRmat{
 
     //! nonzero entries of A
     REAL *val;
+
+#if MULTI_COLOR_ORDER
+	//! color numbers for the adjacency graph of A
+	INT color; 
+	//! integer array of row pointers, the size is colors+1
+	INT *IC;
+	//!  inv map form multicolor order to original order of A.
+	INT *ICMAP;
+#endif    
 
 } dCSRmat; /**< Sparse matrix of REAL type in CSR format */
 
@@ -852,7 +863,12 @@ typedef struct {
     
     //! weight for smoother
     REAL weight;
-    
+
+#if MULTI_COLOR_ORDER    
+    //! Gauss-Seidel Multicoloring factors. zhaoli,2021.08.25
+    REAL GS_Theta; 
+#endif
+
 } AMG_data; /**< Data for AMG methods */
 
 /**
