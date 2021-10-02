@@ -441,9 +441,9 @@ FASP_API void fasp_symbfactor (INT   n,
 
 /*-------- In file: BlaILUSetupBSR.c --------*/
 
-FASP_API SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
-                                    ILU_data   *iludata,
-                                    ILU_param  *iluparam);
+FASP_API SHORT fasp_ilu_dbsr_setup(dBSRmat *A,
+                                   ILU_data *iludata,
+                                   ILU_param *iluparam);
 
 FASP_API SHORT fasp_ilu_dbsr_setup_step (dBSRmat    *A,
          								ILU_data   *iludata,
@@ -468,9 +468,10 @@ FASP_API SHORT fasp_ilu_dbsr_setup_mc_omp (dBSRmat    *A,
                                            ILU_data   *iludata,
                                            ILU_param  *iluparam);
 
-FASP_API void topologic_sort_ILU(ILU_data*); // GPU program needs
+FASP_API void topologic_sort_ILU (ILU_data *iludata);
 
-FASP_API void mulcol_independ_set(AMG_data*, INT); // GPU program needs
+FASP_API void mulcol_independ_set (AMG_data *mgl,
+                                   INT       gslvl);
 
 
 /*-------- In file: BlaILUSetupCSR.c --------*/
@@ -892,9 +893,9 @@ FASP_API void fasp_dcoo_shift (dCOOmat   *A,
 
 /*-------- In file: BlaSparseCSR.c --------*/
 
-FASP_API dCSRmat fasp_dcsr_create (const INT  m,
-                                   const INT  n,
-                                   const INT  nnz);
+FASP_API dCSRmat fasp_dcsr_create(const INT m,
+                                  const INT n,
+                                  const INT nnz);
 
 FASP_API iCSRmat fasp_icsr_create (const INT  m,
                                    const INT  n,
@@ -987,17 +988,13 @@ FASP_API void dCSRmat_Multicoloring(dCSRmat *A,
                                     INT *rowmax,
                                     INT *groups);
 
-FASP_API static void generate_S_theta (dCSRmat *A, 
-                                iCSRmat *S, 
-                                REAL theta );
-
 FASP_API void dCSRmat_Multicoloring_Strong_Coupled(dCSRmat *A,
-                                                  iCSRmat *S,
-                                                  INT *flags,
-                                                  INT *groups);
+                                                   iCSRmat *S,
+                                                   INT *flags,
+                                                   INT *groups);
 
 FASP_API void dCSRmat_Multicoloring_Theta(dCSRmat *A,
-                                          REAL theta,
+         				                 REAL theta,
                                           INT *rowmax,
                                           INT *groups);
 

@@ -1221,8 +1221,8 @@ void fasp_dstr_write (const char  *filename,
 void fasp_dbsr_print (const char *filename,
                       dBSRmat *A)
 {
-    const INT ROW = A->ROW, COL = A->COL, NNZ = A->NNZ;
-    const INT nb = A->nb, storage_manner = A->storage_manner;
+    const INT ROW = A->ROW;
+    const INT nb = A->nb;
     const INT nb2 = nb*nb;
 
     INT  *ia  = A->IA;

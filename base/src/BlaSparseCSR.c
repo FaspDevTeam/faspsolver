@@ -22,6 +22,10 @@
 #include "fasp.h"
 #include "fasp_functs.h"
 
+#if MULTI_COLOR_ORDER
+static void generate_S_theta(dCSRmat *, iCSRmat *, REAL);
+#endif 
+
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
@@ -40,9 +44,9 @@
  * \author Chensong Zhang
  * \date   2010/04/06
  */
-dCSRmat fasp_dcsr_create (const INT  m,
-                          const INT  n,
-                          const INT  nnz)
+dCSRmat fasp_dcsr_create(const INT m,
+                         const INT n,
+                         const INT nnz)
 {
     dCSRmat A;
     
@@ -1759,10 +1763,10 @@ void dCSRmat_Multicoloring(dCSRmat *A,
 #endif
 }
 
-
-void generate_S_theta ( dCSRmat *A, 
-                        iCSRmat *S, 
-                        REAL theta )
+#if MULTI_COLOR_ORDER
+static void generate_S_theta(dCSRmat *A,
+                            iCSRmat *S,
+                            REAL theta)
 {
     const INT row=A->row, col=A->col;
     const INT row_plus_one = row+1;
@@ -1832,7 +1836,7 @@ void generate_S_theta ( dCSRmat *A,
     }
     
 }
-
+#endif
 
 /**
  * \fn void dCSRmat_Multicoloring(dCSRmat *A, iCSRmat *S, INT *flags, INT *groups)
@@ -2101,7 +2105,8 @@ void fasp_smoother_dcsr_gs_multicolor (dvector *u,
                                        INT L,
                                        const INT order)
 {
-    const INT    nrow = A->row; // number of rows
+#if MULTI_COLOR_ORDER
+    const INT nrow = A->row; // number of rows
     const INT   *ia = A->IA, *ja = A->JA;
     const REAL  *aj = A->val, *bval = b->val;
     REAL        *uval = u->val;
@@ -2109,9 +2114,8 @@ void fasp_smoother_dcsr_gs_multicolor (dvector *u,
     INT i,j,k,begin_row,end_row;    
     REAL t,d=0.0;
 
-    INT myid,mybegin,myend;
-#if MULTI_COLOR_ORDER 
-    INT color =   A->color;
+    INT myid, mybegin, myend;
+    INT color = A->color;
     INT *IC =	A->IC;
     INT *ICMAP = A->ICMAP;
     INT I;

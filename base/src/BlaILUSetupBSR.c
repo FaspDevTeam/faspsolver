@@ -26,6 +26,7 @@
 static INT numfactor (dBSRmat *, REAL *, INT *, INT *);
 static INT numfactor_mulcol (dBSRmat *, REAL *, INT *, INT *, INT, INT *, INT *);
 static INT numfactor_levsch (dBSRmat *, REAL *, INT *, INT *, INT, INT *, INT *);
+static void generate_S_theta(dCSRmat *, iCSRmat *, REAL);
 // static void topologic_sort_ILU (ILU_data *);
 // static void mulcol_independ_set (AMG_data *, INT);
 
@@ -51,9 +52,9 @@ static INT numfactor_levsch (dBSRmat *, REAL *, INT *, INT *, INT, INT *, INT *)
  * \note Change the size of work space by Zheng Li 04/26/2015.
  * \note Modified by Chunsheng Feng on 08/11/2017 for iludata->type not inited.
  */
-SHORT fasp_ilu_dbsr_setup (dBSRmat    *A,
-                           ILU_data   *iludata,
-                           ILU_param  *iluparam)
+SHORT fasp_ilu_dbsr_setup(dBSRmat *A,
+                          ILU_data *iludata,
+                          ILU_param *iluparam)
 {
     
     const SHORT  prtlvl = iluparam->print_level;
