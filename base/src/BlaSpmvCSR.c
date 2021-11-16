@@ -191,6 +191,12 @@ SHORT fasp_blas_dcsr_add (const dCSRmat  *A,
     C->nnz = count;
     C->JA  = (INT *)fasp_mem_realloc(C->JA, (count)*sizeof(INT));
     C->val = (REAL *)fasp_mem_realloc(C->val, (count)*sizeof(REAL));
+
+#if MULTI_COLOR_ORDER
+    C->color = 0;
+    C->IC = NULL;
+    C->ICMAP = NULL;
+#endif
     
 FINISHED:
     return status;
