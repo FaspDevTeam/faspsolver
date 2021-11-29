@@ -15,7 +15,7 @@
 #   cmake CC=clang ..                       // build with specified compiler
 #   cmake -DCMAKE_VERBOSE_MAKEFILE=ON ..    // build with verbose on
 #   cmake -DUSE_UMFPACK=ON ..               // build with UMFPACK package support
-#   cmake -DOPENMP=ON ..                    // build with OpenMP support
+#   cmake -DUSE_OPENMP=ON ..                // build with OpenMP support
 
 #####################################################################################
 ## General environment setting
@@ -29,7 +29,7 @@ include(CheckFunctionExists)
 include(CheckIncludeFile)
 
 set(GDB         1 CACHE BOOL "debugging or not")
-set(OPENMP      0 CACHE BOOL "Openmp use")
+set(USE_OPENMP  0 CACHE BOOL "Openmp use")
 set(USE_MUMPS   0 CACHE BOOL "MUMPS use")
 set(USE_UMFPACK 0 CACHE BOOL "UMFPACK use")
 set(USE_SUPERLU 0 CACHE BOOL "SUPERLU use")
