@@ -964,6 +964,12 @@ INT fasp_dcsr_trans (const dCSRmat *A,
     }
     else { AT->val=NULL; }
     
+#if MULTI_COLOR_ORDER
+    AT->color = 0;
+    AT->IC = NULL;
+    AT->ICMAP = NULL;
+#endif
+	
     // first pass: find the Number of nonzeros in the first m-1 columns of A
     // Note: these Numbers are stored in the array AT.IA from 1 to m-1
     
