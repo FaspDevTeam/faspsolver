@@ -2,28 +2,31 @@
 ||   Fast Auxiliary Space Preconditioners (FASP)    ||
 ======================================================
 
-Quick start:
+Quick start with CMake
+======================
+# Some sample usages (It is better to use a separate dir for building):
+#   mkdir Build; cd Build; cmake ..         // build in Release configuration
+#   cmake -DCMAKE_BUILD_TYPE=Debug ..       // build in Debug configuration
+#   cmake CC=clang ..                       // build with specified compiler
+#   cmake -DCMAKE_VERBOSE_MAKEFILE=ON ..    // build with verbose on
+#   cmake -DUSE_UMFPACK=ON ..               // build with UMFPACK package support
+#   cmake -DUSE_PARDISO=ON ..               // build with PARDISO package support
+#   cmake -DUSE_OPENMP=ON ..                // build with OpenMP support
 
-To tune compiling options for FASP, copy "FASP.mk.example" to "FASP.mk" and put
-user-defined setting there and then type "make config; make install".
 
-More options:
-===============================================================================
-$ make config             # Configure the building environment
-$ make config CC=gcc      # Configure with a specific C compiler
-$ make config shared=yes  # Configure to build shared library instead of static
-$ make config debug=yes   # Configure with compiler debug options ON
-$ make config debug=all   # Configure with FASP internal debug options ON
-$ make config openmp=yes  # Configure with OpenMP support
-$ make config prefix=dir  # Configure installation directory
-===============================================================================
-$ make                    # Compile the library (after "make config")
-$ make install            # Install FASP library, header files, examples
-$ make uninstall          # Remove the files installed by "make install"
-$ make headers            # Generate function declarations automatically
-$ make version            # Show version information
-$ make docs               # Generate the FASP documentation with Doxygen
-$ make clean              # Remove obj files but retain configuration options
-$ make distclean          # Remove build directory and cleans test & tutorial 
-$ make help               # Show this screen
-===============================================================================
+Sequential build:
+    cd faspsolver
+    mkdir Build; cd Build; 
+    cmake -DUSE_PARDISO=ON ..
+    make -j 8
+    make install
+
+
+OpenMP Parallel build:
+    cd faspsolver
+    mkdir Build; cd Build; 
+    cmake -DUSE_PARDISO=ON -DUSE_OPENMP=ON ..
+    make -j 8
+    make install
+
+
