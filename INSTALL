@@ -13,20 +13,14 @@ Quick start with CMake
 #   cmake -DUSE_PARDISO=ON ..               // build with PARDISO package support
 #   cmake -DUSE_OPENMP=ON ..                // build with OpenMP support
 
-
-Sequential build:
-    cd faspsolver
+Build (sequential version):
     mkdir Build; cd Build; 
     cmake -DUSE_PARDISO=ON ..
     make -j 8
     make install
 
-
-OpenMP Parallel build:
-    cd faspsolver
+Build (OpenMP version)::
     mkdir Build; cd Build; 
     cmake -DUSE_PARDISO=ON -DUSE_OPENMP=ON ..
     make -j 8
     make install
-
-
