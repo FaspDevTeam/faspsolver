@@ -52,8 +52,6 @@ INT fasp_solver_pardiso (dCSRmat * ptrA,
     INT status = FASP_SUCCESS;
     
     MKL_INT n = ptrA->col;
-    MKL_INT m = ptrA->row;
-    MKL_INT nnz = ptrA->nnz;
     MKL_INT *ia = ptrA->IA;
     MKL_INT *ja = ptrA->JA;
     REAL *a = ptrA->val;
@@ -154,8 +152,6 @@ INT fasp_pardiso_factorize (dCSRmat *ptrA,
     INT status = FASP_SUCCESS;
     
     MKL_INT n = ptrA->col;
-    MKL_INT m = ptrA->row;
-    MKL_INT nnz = ptrA->nnz;
     MKL_INT *ia = ptrA->IA;
     MKL_INT *ja = ptrA->JA;
     REAL *a = ptrA->val;
@@ -241,15 +237,12 @@ INT fasp_pardiso_solve (dCSRmat *ptrA,
     INT status = FASP_SUCCESS;
     
     MKL_INT n = ptrA->col;
-    MKL_INT m = ptrA->row;
-    MKL_INT nnz = ptrA->nnz;
     MKL_INT *ia = ptrA->IA;
     MKL_INT *ja = ptrA->JA;
     
     REAL *a = ptrA->val;
     REAL * f = b->val;     /* RHS vector */
     REAL * x = u->val;     /* Solution vector */
-    MKL_INT mtype = 11;    /* Real unsymmetric matrix */
     MKL_INT nrhs = 1;      /* Number of right hand sides */
     MKL_INT idum;          /* Integer dummy */
     MKL_INT phase, error, msglvl;    /* Auxiliary variables */
@@ -293,7 +286,6 @@ INT fasp_pardiso_free_internal_mem (Pardiso_data *pdata)
 {
     INT status = FASP_SUCCESS;
     
-    MKL_INT n, m, nnz;
     MKL_INT *ia = NULL;
     MKL_INT *ja = NULL;
 

@@ -61,7 +61,7 @@ INT fasp_solver_amg (dCSRmat  *A,
     
     // local variables
     SHORT         status;
-    INT           iter;
+    INT           iter = 0;
     AMG_data *    mgl = fasp_amg_data_create(max_levels);
     REAL          AMG_start = 0, AMG_end;
     

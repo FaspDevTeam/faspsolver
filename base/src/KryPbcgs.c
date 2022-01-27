@@ -340,7 +340,6 @@ FINISHED:  // finish iterative method
             relres = normr/n2b;
         }
         else {
-            iter = iter;
             relres = normr_act/n2b;
         }
     }
@@ -667,7 +666,6 @@ FINISHED:  // finish iterative method
             relres = normr/n2b;
         }
         else {
-            iter = iter;
             relres = normr_act/n2b;
         }
     }
@@ -994,7 +992,6 @@ FINISHED:  // finish iterative method
             relres = normr/n2b;
         }
         else {
-            iter = iter;
             relres = normr_act/n2b;
         }
     }
@@ -1321,7 +1318,6 @@ FINISHED:  // finish iterative method
             relres = normr/n2b;
         }
         else {
-            iter = iter;
             relres = normr_act/n2b;
         }
     }
@@ -1660,7 +1656,6 @@ FINISHED:  // finish iterative method
             relres = normr/n2b;
         }
         else {
-            iter = iter;
             relres = normr_act/n2b;
         }
     }

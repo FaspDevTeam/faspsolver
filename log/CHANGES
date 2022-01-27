@@ -1,5 +1,11 @@
 File Name: CHANGES
 
+01/27/2022 FASP 2.7.1:
+- Add VS2022 + Intel 2022 oneAPI solution file;
+- Fix unused variables and other warnings by oneAPI;
+- Update webpage;
+- Update Doxygen.
+
 08/14/2021 FASP 2.7.0:
 - Update webpage;
 - Update warning level in UA AMG;
