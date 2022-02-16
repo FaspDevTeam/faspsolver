@@ -42,13 +42,13 @@ static inline void fasp_coarse_itsolver (const dCSRmat  *A,
 {
     const INT n     = A->row;
     const INT maxit = MAX(250,MIN(n*n, 1000)); // Should NOT be less!
-    
+
     // Default solver is SPCG for safty purposes
-    INT status = fasp_solver_dcsr_spcg(A, b, x, NULL, ctol, maxit, 1, PrtLvl-4);
+    INT status = fasp_solver_dcsr_spcg(A, b, x, NULL, ctol, maxit, 1, PrtLvl - 4);
     
-    // If CG fails to converge, use GMRES as a safety net
+    // If CG fails to converge, use SPVGMRES as a safety net
     if ( status < 0 ) {
-        status = fasp_solver_dcsr_spvgmres(A, b, x, NULL, ctol, maxit, 20, 1, PrtLvl-4);
+        status = fasp_solver_dcsr_spvgmres(A, b, x, NULL, ctol, maxit, 20, 1, PrtLvl - 4);
     }
     
     if ( status < 0 && PrtLvl >= PRINT_MORE ) {

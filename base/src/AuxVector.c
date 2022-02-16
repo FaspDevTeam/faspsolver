@@ -41,7 +41,7 @@ SHORT fasp_dvec_isnan (const dvector *u)
     INT i;
     
     for ( i = 0; i < u->row; i++ ) {
-        if ( ISNAN(u->val[i]) ) return TRUE;
+        if ( isnan(u->val[i]) ) return TRUE;
     }
 
     return FALSE;

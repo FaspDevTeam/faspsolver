@@ -464,7 +464,7 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
                 break;
         }
         
-        if ( absres > absres_best + maxdiff ) {
+        if ( absres > absres_best + maxdiff || isnan(absres) ) {
             if ( PrtLvl > PRINT_NONE ) ITS_RESTORE(iter_best);
             fasp_darray_cp(m,u_best,u->val);
             relres = absres_best / normr0;
@@ -915,7 +915,7 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
                 break;
         }
         
-        if ( absres > absres_best + maxdiff ) {
+        if ( absres > absres_best + maxdiff || isnan(absres) ) {
             if ( PrtLvl > PRINT_NONE ) ITS_RESTORE(iter_best);
             fasp_darray_cp(m,u_best,u->val);
             relres = absres_best / normr0;
@@ -1366,7 +1366,7 @@ RESTORE_BESTSOL: // restore the best-so-far solution if necessary
                 break;
         }
         
-        if ( absres > absres_best + maxdiff ) {
+        if ( absres > absres_best + maxdiff || isnan(absres) ) {
             if ( PrtLvl > PRINT_NONE ) ITS_RESTORE(iter_best);
             fasp_darray_cp(m,u_best,u->val);
             relres = absres_best / normr0;
