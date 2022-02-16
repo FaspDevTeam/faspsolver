@@ -1,5 +1,12 @@
 File Name: CHANGES
 
+02/16/2022 FASP 2.7.2:
+- Fix a bug due the ISNAN macro not recognized by some compilers;
+- Use isnan() to replace ISNAN;
+- Fix a TeX problem with Doxygen;
+- Update webpage;
+- Update Doxygen.
+
 01/27/2022 FASP 2.7.1:
 - Add VS2022 + Intel 2022 oneAPI solution file;
 - Fix unused variables and other warnings by oneAPI;
