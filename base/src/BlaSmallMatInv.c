@@ -443,7 +443,7 @@ void fasp_smat_inv_nc (REAL      *a,
 {
     INT i,j,k,l,u,kn,in;
     REAL alinv;
-    
+
     for (k=0; k<n; ++k) {
         
         kn = k*n;
@@ -552,7 +552,7 @@ SHORT fasp_smat_invp_nc (REAL      *a,
         // the pivot element on the diagonal. The columns are not physically
         // interchanged, only relabeled: indxc[i], the column of the ith pivot
         // element, is the ith column that is reduced, while indxr[i] is the row in
-        // which that pivot element was originally located. If indxr[i] ̸= indxc[i]
+        // which that pivot element was originally located. If indxr[i] != indxc[i]
         // there is an implied column interchange. With this form of bookkeeping,
         // the inverse matrix will be scrambled by columns.
         if ( irow != icol ) {
