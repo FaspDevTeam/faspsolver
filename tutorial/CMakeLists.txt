@@ -28,14 +28,13 @@ foreach( srcfile ${FASP_TUTSRC} )
     endif()
     if(execfile)
         add_executable( ${execfile} main/${srcfile} )
-        target_link_libraries( ${execfile} 
-                               ${FASP_LIBRARY_NAME}
-                               ${UMFPACK_LIBRARIES} 
-                               ${SUPERLU_LIBRARIES} 
-                               ${MUMPS_LIBRARIES}
-                               ${MKL_LIBRARIES}
-                               ${ADD_STDLIBS} )      
+        target_link_libraries(${execfile} 
+                              ${FASP_LIBRARY_NAME}
+                              ${UMFPACK_LIBRARIES} 
+                              ${SUPERLU_LIBRARIES} 
+                              ${MUMPS_LIBRARIES}
+                              ${MKL_LIBRARIES}
+                              ${ADD_STDLIBS})      
         install(TARGETS ${execfile} DESTINATION ${PROJECT_SOURCE_DIR}/tutorial)
     endif(execfile)
 endforeach( srcfile ${FASP_TUTSRC} )
-

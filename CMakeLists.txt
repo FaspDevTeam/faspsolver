@@ -1,25 +1,26 @@
 # CMakeLists for faspsolver 
 # 
 # Author            Date           Action
-# -----------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Ludmil Zikatanov  Aug/08/2015    Create CMakeLists
 # Chensong Zhang    Oct/20/2017    Update to new FASP code
 # Ludmil Zikatanov  Aug/08/2019    Fix installation problem for cmake 3.14+
 # Chensong Zhang    Mar/13/2021    Replace FASP_SOURCE_DIR with general dir
 # Chensong Zhang    Mar/23/2021    Add headers and backup target
 # Chensong Zhang    May/10/2021    Test the new OpenMP code
+# Chensong Zhang    Feb/18/2022    Fix math.lib linkage problem
 #
 # Some sample usages (It is better to use a separate dir for building):
-#   mkdir Build; cd Build; cmake ..         // build in Release configuration
-#   cmake -DCMAKE_BUILD_TYPE=Debug ..       // build in Debug configuration
-#   cmake CC=clang ..                       // build with specified compiler
-#   cmake -DCMAKE_VERBOSE_MAKEFILE=ON ..    // build with verbose on
-#   cmake -DUSE_UMFPACK=ON ..               // build with UMFPACK package support
-#   cmake -DUSE_OPENMP=ON ..                // build with OpenMP support
+#   mkdir Build; cd Build; cmake ..      // build in Release configuration
+#   cmake -DCMAKE_BUILD_TYPE=Debug ..    // build in Debug configuration
+#   cmake CC=clang ..                    // build with specified compiler
+#   cmake -DCMAKE_VERBOSE_MAKEFILE=ON .. // build with verbose on
+#   cmake -DUSE_UMFPACK=ON ..            // build with UMFPACK package support
+#   cmake -DUSE_OPENMP=ON ..             // build with OpenMP support
 
-#####################################################################################
+###############################################################################
 ## General environment setting
-#####################################################################################
+###############################################################################
 
 # Minimum cmake version needed
 cmake_minimum_required (VERSION 2.8.12)
@@ -56,6 +57,8 @@ if (MSVC)
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /W4 /WX")
 else()
     # Compiler flags for Linux or Mac OS X
+    set(ADD_STDLIBS "${ADD_STDLIBS} m")
+    string(STRIP ${ADD_STDLIBS} ADD_STDLIBS)
     include(get_cxx_fc_compilers) # find matching Fortran compiler
     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -g")
@@ -94,9 +97,9 @@ if(USE_OPENMP)
     endif(OPENMP_FOUND)
 endif(USE_OPENMP)
 
-#####################################################################################
+###############################################################################
 ## Project specific parameters
-#####################################################################################
+###############################################################################
 
 if(ADD_CFLAGS)
     set(CMAKE_C_FLAGS_${CMAKE_BUILD_TYPE} 
@@ -140,14 +143,15 @@ add_custom_target(headers ${PROJECT_SOURCE_DIR}/util/fhead.sh "${PROJECT_SOURCE_
                   COMMENT "Auto-generating header file for C functions ..."
                   VERBATIM)
 
-#####################################################################################
+###############################################################################
 ## External libraries (Optional)
-#####################################################################################
+###############################################################################
+
 include(external)
 
-#####################################################################################
+###############################################################################
 ## Installtion targets for lib and exe files
-#####################################################################################
+###############################################################################
 set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}" )
 set(FASPLIB_BASE_PATH "base" CACHE PATH "base path to FASPLIB")
 set(FASP_INSTALL TRUE)

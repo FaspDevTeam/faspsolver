@@ -10,9 +10,9 @@ if(UNIX OR LINUX)
 endif()
 
 include_directories(${FASP_TINC_DIR}
-		    ${PROJECT_SOURCE_DIR}/base/include )
+		    ${PROJECT_SOURCE_DIR}/base/include)
 
-file(GLOB FASP_TLIB_SRC src/*.c src/*.f )
+file(GLOB FASP_TLIB_SRC src/*.c src/*.f)
 
 # Build libfasptest as STATIC and do not install it. If we want
 # SHARED, then we need to figure out how apple works with multiple
@@ -29,8 +29,8 @@ else()
 endif()
 
 foreach( srcfile ${FASP_TSRC} )
-    string( REGEX REPLACE "\\.[^\\.]*$" ".ex" execfile ${srcfile} )
-    add_executable( ${execfile} main/${srcfile} )
+    string( REGEX REPLACE "\\.[^\\.]*$" ".ex" execfile ${srcfile})
+    add_executable( ${execfile} main/${srcfile})
 # 
     target_link_libraries(${execfile} fasptest 
                           ${FASP_LIBRARY_NAME}
@@ -38,9 +38,8 @@ foreach( srcfile ${FASP_TSRC} )
                           ${SUPERLU_LIBRARIES} 
                           ${MUMPS_LIBRARIES}
                           ${MKL_LIBRARIES}
-                          ${ADD_STDLIBS} )
+                          ${ADD_STDLIBS})
 #
     install(TARGETS ${execfile} 
             DESTINATION ${PROJECT_SOURCE_DIR}/test)
 endforeach( srcfile ${FASP_TSRC} )
-

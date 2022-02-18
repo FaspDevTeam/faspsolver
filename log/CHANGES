@@ -1,9 +1,10 @@
 File Name: CHANGES
 
-02/16/2022 FASP 2.7.2:
+02/18/2022 FASP 2.7.2:
 - Fix a bug due the ISNAN macro not recognized by some compilers;
 - Use isnan() to replace ISNAN;
 - Fix a TeX problem with Doxygen;
+- Fix math.lib linkage problem;
 - Update webpage;
 - Update Doxygen.
 
