@@ -256,6 +256,7 @@
 #define MAX_RESTART            20  /**< Maximal restarting number */
 #define MAX_STAG               20  /**< Maximal number of stagnation times */
 #define STAG_RATIO           1e-4  /**< Stagnation tolerance = tol*STAGRATIO */
+#define FPNA_RATIO           1e-8  /**< Float-point number arithmetic threshold = tol*FPNA_RATIO */
 #define OPENMP_HOLDS         2000  /**< Smallest size for OpenMP version */
 
 #endif                             /* end if for __FASP_CONST__ */
