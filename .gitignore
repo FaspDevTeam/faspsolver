@@ -4,7 +4,7 @@ FASP.mk*
 *.ex
 .vscode/
 .VSCode**/
-Build/
-BUILD_FASP/
-lib/
-include/
+./Build/
+./BUILD_FASP/
+./lib/
+./include/
