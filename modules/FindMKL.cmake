@@ -220,6 +220,7 @@ set(_INTEL_LIBRARY_SEARCH_DIRS
 foreach(_MKL_DIR ${_MKL_ROOT_SEARCH_DIRS})
     list(APPEND _INTEL_LIBRARY_SEARCH_DIRS "${_MKL_DIR}/..")
     list(APPEND _INTEL_LIBRARY_SEARCH_DIRS "${_MKL_DIR}/../compiler")
+    list(APPEND _INTEL_LIBRARY_SEARCH_DIRS "${_MKL_DIR}/../../compiler/latest/linux/compiler")
 endforeach()
 
 if (MKL_FIND_DEBUG)
@@ -265,7 +266,7 @@ endif()
 set(_MATH_LIB imf)  # linked by default with Intel compiler
 if (WIN32)
   if (MKL_USE_STATIC_LIBS)
-    list(APPEND _MATH_LIB libmmds.lib)  # assumes (/MD) otherwise libmmt.lib (for /MT)
+      list(APPEND _MATH_LIB libmmds.lib)  # assumes (/MD) otherwise libmmt.lib (for /MT)
   else()
       list(APPEND _MATH_LIB libmmd.lib)
   endif()
