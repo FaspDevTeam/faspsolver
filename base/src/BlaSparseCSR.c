@@ -1361,6 +1361,13 @@ dCSRmat fasp_dcsr_sympart (dCSRmat *A)
     
     //return variable
     dCSRmat SA;
+
+#if MULTI_COLOR_ORDER 
+    AT.IC = NULL;
+    SA.IC = NULL;
+    AT.ICMAP = NULL;
+    SA.ICMAP = NULL;
+#endif
     
     // get the transpose of A
     fasp_dcsr_trans (A,  &AT);
