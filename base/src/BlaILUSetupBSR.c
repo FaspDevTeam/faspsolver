@@ -148,7 +148,7 @@ SHORT fasp_ilu_dbsr_setup(dBSRmat *A,
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;
-        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil, setup_duration);
+        printf("BSR ILU(%d)-seq setup costs %f seconds.\n", lfil, setup_duration);
     }
     
 FINISHED:
@@ -421,7 +421,7 @@ SHORT fasp_ilu_dbsr_setup_omp (dBSRmat    *A,
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;
-        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil, setup_duration);
+        printf("BSR ILU(%d)-mc setup costs %f seconds.\n", lfil, setup_duration);
     }
     
 FINISHED:
@@ -559,7 +559,7 @@ SHORT fasp_ilu_dbsr_setup_levsch_omp (dBSRmat    *A,
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;
-        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil, setup_duration);
+        printf("BSR ILU(%d)-ls setup costs %f seconds.\n", lfil, setup_duration);
     }
     
 FINISHED:
@@ -713,7 +713,7 @@ FINISHED:
     if ( prtlvl > PRINT_NONE ) {
         fasp_gettime(&setup_end);
         setup_duration = setup_end - setup_start;
-        printf("BSR ILU(%d) setup costs %f seconds.\n", lfil, setup_duration);
+        printf("BSR ILU(%d)-ls setup costs %f seconds.\n", lfil, setup_duration);
     }
     
 #if DEBUG_MODE > 0
