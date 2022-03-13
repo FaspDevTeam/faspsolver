@@ -1583,7 +1583,7 @@ void fasp_smoother_dbsr_ilu (dBSRmat *A,
     fasp_darray_cp(m,bval,zr); fasp_blas_dbsr_aAxpy(-1.0,A,xval,zr);
     
     /** solve LU z=zr */
-#ifdef _OPENMP
+#ifdef __OPENMP
     
 #if ILU_MC_OMP
     REAL *tz = (REAL*)fasp_mem_calloc(A->ROW*A->nb, sizeof(REAL));
