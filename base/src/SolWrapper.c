@@ -42,28 +42,34 @@
  * \author Chensong Zhang
  * \date   01/09/2020
  */
-void fasp_fwrapper_dcsr_pardiso_(INT  *n,
-							     INT  *nnz,
-								 INT  *ia,
-								 INT  *ja,
-								 REAL *a,
-								 REAL *b,
-								 REAL *u,
-								 INT  *ptrlvl)
+void fasp_fwrapper_dcsr_pardiso_(INT *n,
+                                 INT *nnz,
+                                 INT *ia,
+                                 INT *ja,
+                                 REAL *a,
+                                 REAL *b,
+                                 REAL *u,
+                                 INT *ptrlvl)
 {
-	dCSRmat    mat;      // coefficient matrix
-	dvector    rhs, sol; // right-hand-side, solution
+    dCSRmat mat;      // coefficient matrix
+    dvector rhs, sol; // right-hand-side, solution
 
-	// set up coefficient matrix
-	mat.row = *n; mat.col = *n; mat.nnz = *nnz;
-	mat.IA = ia; mat.JA = ja; mat.val = a;
+    // set up coefficient matrix
+    mat.row = *n;
+    mat.col = *n;
+    mat.nnz = *nnz;
+    mat.IA = ia;
+    mat.JA = ja;
+    mat.val = a;
 
-	rhs.row = *n; rhs.val = b;
-	sol.row = *n; sol.val = u;
+    rhs.row = *n;
+    rhs.val = b;
+    sol.row = *n;
+    sol.val = u;
 
-	fasp_dcsr_sort(&mat);
+    fasp_dcsr_sort(&mat);
 
-	fasp_solver_pardiso(&mat, &rhs, &sol, *ptrlvl);
+    fasp_solver_pardiso(&mat, &rhs, &sol, *ptrlvl);
 }
 
 /**
@@ -87,35 +93,41 @@ void fasp_fwrapper_dcsr_pardiso_(INT  *n,
  * \author Chensong Zhang
  * \date   09/16/2010
  */
-void fasp_fwrapper_dcsr_amg_ (INT  *n,
-                              INT  *nnz,
-                              INT  *ia,
-                              INT  *ja,
-                              REAL *a,
-                              REAL *b,
-                              REAL *u,
-                              REAL *tol,
-                              INT  *maxit,
-                              INT  *ptrlvl)
+void fasp_fwrapper_dcsr_amg_(INT *n,
+                             INT *nnz,
+                             INT *ia,
+                             INT *ja,
+                             REAL *a,
+                             REAL *b,
+                             REAL *u,
+                             REAL *tol,
+                             INT *maxit,
+                             INT *ptrlvl)
 {
-    dCSRmat    mat;      // coefficient matrix
-    dvector    rhs, sol; // right-hand-side, solution
-    AMG_param  amgparam; // parameters for AMG
-    
+    dCSRmat mat;        // coefficient matrix
+    dvector rhs, sol;   // right-hand-side, solution
+    AMG_param amgparam; // parameters for AMG
+
     // setup AMG parameters
     fasp_param_amg_init(&amgparam);
-    
-    amgparam.tol         = *tol;
+
+    amgparam.tol = *tol;
     amgparam.print_level = *ptrlvl;
-    amgparam.maxit       = *maxit;
-    
+    amgparam.maxit = *maxit;
+
     // set up coefficient matrix
-    mat.row = *n; mat.col = *n; mat.nnz = *nnz;
-    mat.IA  = ia; mat.JA  = ja; mat.val = a;
-    
-    rhs.row = *n; rhs.val = b;
-    sol.row = *n; sol.val = u;
-    
+    mat.row = *n;
+    mat.col = *n;
+    mat.nnz = *nnz;
+    mat.IA = ia;
+    mat.JA = ja;
+    mat.val = a;
+
+    rhs.row = *n;
+    rhs.val = b;
+    sol.row = *n;
+    sol.val = u;
+
     fasp_solver_amg(&mat, &rhs, &sol, &amgparam);
 }
 
@@ -140,42 +152,48 @@ void fasp_fwrapper_dcsr_amg_ (INT  *n,
  * \author Chensong Zhang
  * \date   03/24/2018
  */
-void fasp_fwrapper_dcsr_krylov_ilu_ (INT  *n,
-                                     INT  *nnz,
-                                     INT  *ia,
-                                     INT  *ja,
-                                     REAL *a,
-                                     REAL *b,
-                                     REAL *u,
-                                     REAL *tol,
-                                     INT  *maxit,
-                                     INT  *ptrlvl)
+void fasp_fwrapper_dcsr_krylov_ilu_(INT *n,
+                                    INT *nnz,
+                                    INT *ia,
+                                    INT *ja,
+                                    REAL *a,
+                                    REAL *b,
+                                    REAL *u,
+                                    REAL *tol,
+                                    INT *maxit,
+                                    INT *ptrlvl)
 {
-    dCSRmat    mat;      // coefficient matrix
-    dvector    rhs, sol; // right-hand-side, solution
-    ILU_param  iluparam; // parameters for ILU
-    ITS_param  itsparam; // parameters for itsolver
-    
+    dCSRmat mat;        // coefficient matrix
+    dvector rhs, sol;   // right-hand-side, solution
+    ILU_param iluparam; // parameters for ILU
+    ITS_param itsparam; // parameters for itsolver
+
     // setup ILU parameters
     fasp_param_ilu_init(&iluparam);
-    
-    iluparam.print_level   = *ptrlvl;
-    
+
+    iluparam.print_level = *ptrlvl;
+
     // setup Krylov method parameters
     fasp_param_solver_init(&itsparam);
-    
+
     itsparam.itsolver_type = SOLVER_VFGMRES;
-    itsparam.tol           = *tol;
-    itsparam.maxit         = *maxit;
-    itsparam.print_level   = *ptrlvl;
-    
+    itsparam.tol = *tol;
+    itsparam.maxit = *maxit;
+    itsparam.print_level = *ptrlvl;
+
     // set up coefficient matrix
-    mat.row = *n; mat.col = *n; mat.nnz = *nnz;
-    mat.IA  = ia;  mat.JA = ja; mat.val = a;
-    
-    rhs.row = *n; rhs.val = b;
-    sol.row = *n; sol.val = u;
-    
+    mat.row = *n;
+    mat.col = *n;
+    mat.nnz = *nnz;
+    mat.IA = ia;
+    mat.JA = ja;
+    mat.val = a;
+
+    rhs.row = *n;
+    rhs.val = b;
+    sol.row = *n;
+    sol.val = u;
+
     fasp_solver_dcsr_krylov_ilu(&mat, &rhs, &sol, &itsparam, &iluparam);
 }
 
@@ -200,48 +218,61 @@ void fasp_fwrapper_dcsr_krylov_ilu_ (INT  *n,
  * \author Chensong Zhang
  * \date   09/16/2010
  */
-void fasp_fwrapper_dcsr_krylov_amg_ (INT  *n,
-                                     INT  *nnz,
-                                     INT  *ia,
-                                     INT  *ja,
-                                     REAL *a,
-                                     REAL *b,
-                                     REAL *u,
-                                     REAL *tol,
-                                     INT  *maxit,
-                                     INT  *ptrlvl)
+void fasp_fwrapper_dcsr_krylov_amg_(INT *n,
+                                    INT *nnz,
+                                    INT *ia,
+                                    INT *ja,
+                                    REAL *a,
+                                    REAL *b,
+                                    REAL *u,
+                                    REAL *tol,
+                                    INT *maxit,
+                                    INT *ptrlvl)
 {
-    dCSRmat    mat;      // coefficient matrix
-    dvector    rhs, sol; // right-hand-side, solution
-    AMG_param  amgparam; // parameters for AMG
-    ITS_param  itsparam; // parameters for itsolver
-    
+    dCSRmat mat;         // coefficient matrix
+    dvector rhs, sol;    // right-hand-side, solution
+    input_param inparam; // parameters from input files
+    AMG_param amgparam;  // parameters for AMG
+    ITS_param itsparam;  // parameters for itsolver
+    ILU_param iluparam;  // parameters for ILU
+
+    /** Step 0. Read input parameters */
+    char *inputfile = "ini/amg.dat"; // Added for fasp4ns 2022.04.08 --zcs
+    fasp_param_input(inputfile, &inparam);
+    fasp_param_init(&inparam, &itsparam, &amgparam, &iluparam, NULL);
+
     // setup AMG parameters
     fasp_param_amg_init(&amgparam);
-    
-    amgparam.AMG_type             = UA_AMG;
-    amgparam.aggregation_type     = VMB;
-    amgparam.coarse_dof           = 100;
-    amgparam.max_aggregation      = 100;
-    amgparam.presmooth_iter       = 1;
-    amgparam.postsmooth_iter      = 1;
-    amgparam.strong_coupled       = 0.00;
-    amgparam.print_level          = *ptrlvl;
-    
+
+    amgparam.AMG_type = UA_AMG;
+    amgparam.aggregation_type = VMB;
+    amgparam.coarse_dof = 100;
+    amgparam.max_aggregation = 100;
+    amgparam.presmooth_iter = 1;
+    amgparam.postsmooth_iter = 1;
+    amgparam.strong_coupled = 0.00;
+    amgparam.print_level = *ptrlvl;
+
     // setup Krylov method parameters
     fasp_param_solver_init(&itsparam);
-    
-    itsparam.tol                  = *tol;
-    itsparam.maxit                = *maxit;
-    itsparam.print_level          = *ptrlvl;
-    
+
+    itsparam.tol = *tol;
+    itsparam.maxit = *maxit;
+    itsparam.print_level = *ptrlvl;
+
     // set up coefficient matrix
-    mat.row = *n; mat.col = *n; mat.nnz = *nnz;
-    mat.IA  = ia;  mat.JA = ja; mat.val = a;
-    
-    rhs.row = *n; rhs.val = b;
-    sol.row = *n; sol.val = u;
-    
+    mat.row = *n;
+    mat.col = *n;
+    mat.nnz = *nnz;
+    mat.IA = ia;
+    mat.JA = ja;
+    mat.val = a;
+
+    rhs.row = *n;
+    rhs.val = b;
+    sol.row = *n;
+    sol.val = u;
+
     fasp_solver_dcsr_krylov_amg(&mat, &rhs, &sol, &itsparam, &amgparam);
 }
 
@@ -267,43 +298,50 @@ void fasp_fwrapper_dcsr_krylov_amg_ (INT  *n,
  * \author Chensong Zhang
  * \date   03/25/2018
  */
-void fasp_fwrapper_dbsr_krylov_ilu_ (INT  *n,
-                                     INT  *nnz,
-                                     INT  *nb,
-                                     INT  *ia,
-                                     INT  *ja,
-                                     REAL *a,
-                                     REAL *b,
-                                     REAL *u,
-                                     REAL *tol,
-                                     INT  *maxit,
-                                     INT  *ptrlvl)
+void fasp_fwrapper_dbsr_krylov_ilu_(INT *n,
+                                    INT *nnz,
+                                    INT *nb,
+                                    INT *ia,
+                                    INT *ja,
+                                    REAL *a,
+                                    REAL *b,
+                                    REAL *u,
+                                    REAL *tol,
+                                    INT *maxit,
+                                    INT *ptrlvl)
 {
-    dBSRmat    mat;      // coefficient matrix in BSR format
-    dvector    rhs, sol; // right-hand-side, solution
-    
-    ILU_param  iluparam; // parameters for ILU
-    ITS_param  itsparam; // parameters for itsolver
-    
+    dBSRmat mat;      // coefficient matrix in BSR format
+    dvector rhs, sol; // right-hand-side, solution
+
+    ILU_param iluparam; // parameters for ILU
+    ITS_param itsparam; // parameters for itsolver
+
     // setup ILU parameters
     fasp_param_ilu_init(&iluparam);
-    iluparam.ILU_lfil      = 0;
-    iluparam.print_level   = *ptrlvl;
-    
+    iluparam.ILU_lfil = 0;
+    iluparam.print_level = *ptrlvl;
+
     // setup Krylov method parameters
     fasp_param_solver_init(&itsparam);
-    
+
     itsparam.itsolver_type = SOLVER_VFGMRES;
-    itsparam.tol           = *tol;
-    itsparam.maxit         = *maxit;
-    itsparam.print_level   = *ptrlvl;
-    
+    itsparam.tol = *tol;
+    itsparam.maxit = *maxit;
+    itsparam.print_level = *ptrlvl;
+
     // set up coefficient matrix
-    mat.ROW = *n; mat.COL = *n; mat.NNZ = *nnz; mat.nb = *nb;
-    mat.IA  = ia; mat.JA  = ja; mat.val = a;
-    
-    rhs.row = *n * *nb; rhs.val = b;
-    sol.row = *n * *nb; sol.val = u;
+    mat.ROW = *n;
+    mat.COL = *n;
+    mat.NNZ = *nnz;
+    mat.nb = *nb;
+    mat.IA = ia;
+    mat.JA = ja;
+    mat.val = a;
+
+    rhs.row = *n * *nb;
+    rhs.val = b;
+    sol.row = *n * *nb;
+    sol.val = u;
 
     // solve
     fasp_solver_dbsr_krylov_ilu(&mat, &rhs, &sol, &itsparam, &iluparam);
@@ -331,42 +369,49 @@ void fasp_fwrapper_dbsr_krylov_ilu_ (INT  *n,
  * \author Chensong Zhang
  * \date   04/05/2018
  */
-void fasp_fwrapper_dbsr_krylov_amg_ (INT  *n,
-                                     INT  *nnz,
-                                     INT  *nb,
-                                     INT  *ia,
-                                     INT  *ja,
-                                     REAL *a,
-                                     REAL *b,
-                                     REAL *u,
-                                     REAL *tol,
-                                     INT  *maxit,
-                                     INT  *ptrlvl)
+void fasp_fwrapper_dbsr_krylov_amg_(INT *n,
+                                    INT *nnz,
+                                    INT *nb,
+                                    INT *ia,
+                                    INT *ja,
+                                    REAL *a,
+                                    REAL *b,
+                                    REAL *u,
+                                    REAL *tol,
+                                    INT *maxit,
+                                    INT *ptrlvl)
 {
-    dBSRmat    mat;      // coefficient matrix in CSR format
-    dvector    rhs, sol; // right-hand-side, solution
+    dBSRmat mat;      // coefficient matrix in CSR format
+    dvector rhs, sol; // right-hand-side, solution
 
-    AMG_param  amgparam; // parameters for AMG
-    ITS_param  itsparam; // parameters for itsolver
+    AMG_param amgparam; // parameters for AMG
+    ITS_param itsparam; // parameters for itsolver
 
     // setup AMG parameters
     fasp_param_amg_init(&amgparam);
-    amgparam.AMG_type         = UA_AMG;
-    amgparam.print_level      = *ptrlvl;
+    amgparam.AMG_type = UA_AMG;
+    amgparam.print_level = *ptrlvl;
 
     // setup Krylov method parameters
     fasp_param_solver_init(&itsparam);
-    itsparam.tol              = *tol;
-    itsparam.print_level      = *ptrlvl;
-    itsparam.maxit            = *maxit;
-    itsparam.itsolver_type    = SOLVER_VFGMRES;
+    itsparam.tol = *tol;
+    itsparam.print_level = *ptrlvl;
+    itsparam.maxit = *maxit;
+    itsparam.itsolver_type = SOLVER_VFGMRES;
 
     // set up coefficient matrix
-    mat.ROW = *n; mat.COL = *n; mat.NNZ = *nnz; mat.nb = *nb;
-    mat.IA  = ia; mat.JA  = ja; mat.val = a;
+    mat.ROW = *n;
+    mat.COL = *n;
+    mat.NNZ = *nnz;
+    mat.nb = *nb;
+    mat.IA = ia;
+    mat.JA = ja;
+    mat.val = a;
 
-    rhs.row = *n * *nb; rhs.val = b;
-    sol.row = *n * *nb; sol.val = u;
+    rhs.row = *n * *nb;
+    rhs.val = b;
+    sol.row = *n * *nb;
+    sol.val = u;
 
     // solve
     fasp_solver_dbsr_krylov_amg(&mat, &rhs, &sol, &itsparam, &amgparam);
