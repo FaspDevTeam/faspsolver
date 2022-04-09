@@ -2,6 +2,8 @@ File Name: CHANGES
 
 04/08/2022 FASP 2.7.3:
 - Reading input parameters from a file for fasp4ns project;
+- Remove unused variables in UMFPACK interface;
+- Update Fortran wrapper for Krylov_AMG;
 
 03/08/2022 FASP 2.7.2:
 - Fix a bug due the ISNAN macro not recognized by some compilers;

@@ -49,8 +49,6 @@ INT fasp_solver_umfpack (dCSRmat *ptrA,
 #if WITH_UMFPACK
     
     const INT n = ptrA->col;
-    const INT m = ptrA->row;
-    const INT nnz = ptrA->nnz;
     
     INT *Ap = ptrA->IA;
     INT *Ai = ptrA->JA;
@@ -59,6 +57,8 @@ INT fasp_solver_umfpack (dCSRmat *ptrA,
     INT status = FASP_SUCCESS;
     
 #if DEBUG_MODE
+    const INT m = ptrA->row;
+    const INT nnz = ptrA->nnz;
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
@@ -107,17 +107,17 @@ void* fasp_umfpack_factorize (dCSRmat *ptrA,
                               const SHORT prtlvl)
 {
     const INT n = ptrA->col;
-    const INT m = ptrA->row;
-    const INT nnz = ptrA->nnz;
     
     INT *Ap = ptrA->IA;
     INT *Ai = ptrA->JA;
     double *Ax = ptrA->val;
     void *Symbolic;
     void *Numeric;
-    INT status = FASP_SUCCESS;
+    INT status;
     
 #if DEBUG_MODE
+    const INT m = ptrA->row;
+    const INT nnz = ptrA->nnz;
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
@@ -162,8 +162,6 @@ INT fasp_umfpack_solve (dCSRmat *ptrA,
                         const SHORT prtlvl)
 {
     const INT n = ptrA->col;
-    const INT m = ptrA->row;
-    const INT nnz = ptrA->nnz;
     
     INT *Ap = ptrA->IA;
     INT *Ai = ptrA->JA;
@@ -171,6 +169,8 @@ INT fasp_umfpack_solve (dCSRmat *ptrA,
     INT status = FASP_SUCCESS;
     
 #if DEBUG_MODE
+    const INT m = ptrA->row;
+    const INT nnz = ptrA->nnz;
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
