@@ -241,23 +241,6 @@ void fasp_fwrapper_dcsr_krylov_amg_(INT *n,
     fasp_param_input(inputfile, &inparam);
     fasp_param_init(&inparam, &itsparam, &amgparam, &iluparam, NULL);
 
-    // setup AMG parameters
-    fasp_param_amg_init(&amgparam);
-
-/*
-    amgparam.AMG_type = UA_AMG;
-    amgparam.aggregation_type = VMB;
-    amgparam.coarse_dof = 100;
-    amgparam.max_aggregation = 100;
-    amgparam.presmooth_iter = 1;
-    amgparam.postsmooth_iter = 1;
-    amgparam.strong_coupled = 0.00;
-    amgparam.print_level = *ptrlvl;
-*/
-
-    // setup Krylov method parameters
-    fasp_param_solver_init(&itsparam);
-
     itsparam.tol = *tol;
     itsparam.maxit = *maxit;
     itsparam.print_level = *ptrlvl;
