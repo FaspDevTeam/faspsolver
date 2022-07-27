@@ -62,9 +62,10 @@ INT fasp_solver_umfpack (dCSRmat *ptrA,
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
-    
-    clock_t start_time = clock();
-    
+
+    REAL start_time, end_time;
+    fasp_gettime(&start_time);
+
     status = umfpack_di_symbolic (n, n, Ap, Ai, Ax, &Symbolic, NULL, NULL);
     status = umfpack_di_numeric (Ap, Ai, Ax, Symbolic, &Numeric, NULL, NULL);
     umfpack_di_free_symbolic (&Symbolic);
@@ -72,9 +73,8 @@ INT fasp_solver_umfpack (dCSRmat *ptrA,
     umfpack_di_free_numeric (&Numeric);
     
     if ( prtlvl > PRINT_MIN ) {
-        clock_t end_time = clock();
-        double solve_time = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
-        printf("UMFPACK costs %f seconds.\n", solve_time);
+        fasp_gettime(&end_time);
+        fasp_cputime("UMFPACK costs", end_time - start_time);
     }
     
 #if DEBUG_MODE

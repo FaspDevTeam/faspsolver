@@ -66,13 +66,15 @@ INT fasp_solver_pardiso (dCSRmat * ptrA,
     REAL * x = u->val;     /* Solution vector */
     void *pt[64];          /* Internal solver memory pointer pt */
     double ddum;           /* Double dummy */
-    clock_t start_time = clock();
-    
+
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
-    
+
+    REAL start_time, end_time;
+    fasp_gettime(&start_time);
+
     PARDISOINIT(pt, &mtype, iparm); /* Initialize */
     iparm[34] = 1;        /* Use 0-based indexing */
     maxfct = 1;           /* Maximum number of numerical factorizations */
@@ -106,9 +108,8 @@ INT fasp_solver_pardiso (dCSRmat * ptrA,
     }
     
     if ( prtlvl > PRINT_MIN ) {
-        clock_t end_time = clock();
-        double solve_time = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
-        printf("PARDISO costs %f seconds.\n", solve_time);
+        fasp_gettime(&end_time);
+        fasp_cputime("PARDISO costs", end_time - start_time);
     }
     
     phase = -1; /* Release internal memory */
@@ -203,7 +204,7 @@ INT fasp_pardiso_factorize (dCSRmat *ptrA,
     
     if ( prtlvl > PRINT_MIN ) {
         fasp_gettime(&end_time);
-        fasp_cputime("PARDISO solve", end_time - start_time);
+        fasp_cputime("PARDISO setup", end_time - start_time);
     }
     
 #if DEBUG_MODE
