@@ -176,13 +176,14 @@ INT fasp_pardiso_factorize (dCSRmat *ptrA,
     pdata->iparm[2]  = fasp_get_num_threads();
 #endif
 
+    REAL start_time, end_time;
+    fasp_gettime(&start_time);
+
     pdata->maxfct = 1;     /* Maximum number of numerical factorizations */
     pdata->mnum = 1;       /* Which factorization to use */
     msglvl = 0;            /* Do not print statistical information in file */
     error = 0;             /* Initialize error flag */
-    
-    clock_t start_time = clock();
-    
+        
     phase = 11; /* Reordering and symbolic factorization */
     PARDISO (pdata->pt, &(pdata->maxfct), &(pdata->mnum), &(pdata->mtype), &phase, &n,
              a, ia, ja, &idum, &nrhs, pdata->iparm, &msglvl, &ddum, &ddum, &error);
@@ -201,9 +202,8 @@ INT fasp_pardiso_factorize (dCSRmat *ptrA,
     }
     
     if ( prtlvl > PRINT_MIN ) {
-        clock_t end_time = clock();
-        double solve_time = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
-        printf("PARDISO factoization costs %f seconds.\n", solve_time);
+        fasp_gettime(&end_time);
+        fasp_cputime("PARDISO solve", end_time - start_time);
     }
     
 #if DEBUG_MODE
@@ -246,11 +246,12 @@ INT fasp_pardiso_solve (dCSRmat *ptrA,
     MKL_INT nrhs = 1;      /* Number of right hand sides */
     MKL_INT idum;          /* Integer dummy */
     MKL_INT phase, error, msglvl;    /* Auxiliary variables */
-    
+
+    REAL start_time, end_time;
+    fasp_gettime(&start_time);
+
     msglvl = 0; /* Do not print statistical information in file */
-    
-    clock_t start_time = clock();
-    
+
     phase = 33; /* Back substitution and iterative refinement */
     PARDISO (pdata->pt, &(pdata->maxfct), &(pdata->mnum), &(pdata->mtype), &phase,
              &n, a, ia, ja, &idum, &nrhs, pdata->iparm, &msglvl, f, x, &error);
@@ -261,9 +262,8 @@ INT fasp_pardiso_solve (dCSRmat *ptrA,
     }
     
     if ( prtlvl > PRINT_MIN ) {
-        clock_t end_time = clock();
-        double solve_time = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
-        printf("PARDISO costs %f seconds.\n", solve_time);
+        fasp_gettime(&end_time);
+        fasp_cputime("PARDISO solve", end_time - start_time);
     }
     
 #if DEBUG_MODE

@@ -113,7 +113,6 @@ void* fasp_umfpack_factorize (dCSRmat *ptrA,
     double *Ax = ptrA->val;
     void *Symbolic;
     void *Numeric;
-    INT status;
     
 #if DEBUG_MODE
     const INT m = ptrA->row;
@@ -121,17 +120,17 @@ void* fasp_umfpack_factorize (dCSRmat *ptrA,
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
-    
-    clock_t start_time = clock();
-    
-    status = umfpack_di_symbolic (n, n, Ap, Ai, Ax, &Symbolic, NULL, NULL);
-    status = umfpack_di_numeric (Ap, Ai, Ax, Symbolic, &Numeric, NULL, NULL);
+
+    REAL start_time, end_time;
+    fasp_gettime(&start_time);
+
+    umfpack_di_symbolic (n, n, Ap, Ai, Ax, &Symbolic, NULL, NULL);
+    umfpack_di_numeric (Ap, Ai, Ax, Symbolic, &Numeric, NULL, NULL);
     umfpack_di_free_symbolic (&Symbolic);
     
     if ( prtlvl > PRINT_MIN ) {
-        clock_t end_time = clock();
-        double fac_time = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
-        printf("UMFPACK factorize costs %f seconds.\n", fac_time);
+        fasp_gettime(&end_time);
+        fasp_cputime("UMFPACK setup", end_time - start_time);
     }
     
 #if DEBUG_MODE
@@ -160,9 +159,7 @@ INT fasp_umfpack_solve (dCSRmat *ptrA,
                         dvector *u,
                         void *Numeric,
                         const SHORT prtlvl)
-{
-    const INT n = ptrA->col;
-    
+{    
     INT *Ap = ptrA->IA;
     INT *Ai = ptrA->JA;
     double *Ax = ptrA->val;
@@ -170,19 +167,20 @@ INT fasp_umfpack_solve (dCSRmat *ptrA,
     
 #if DEBUG_MODE
     const INT m = ptrA->row;
+    const INT n = ptrA->col;
     const INT nnz = ptrA->nnz;
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
 #endif
-    
-    clock_t start_time = clock();
-    
+
+    REAL start_time, end_time;
+    fasp_gettime(&start_time);
+
     status = umfpack_di_solve (UMFPACK_A, Ap, Ai, Ax, u->val, b->val, Numeric, NULL, NULL);
     
     if ( prtlvl > PRINT_NONE ) {
-        clock_t end_time = clock();
-        double solve_time = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
-        printf("UMFPACK costs %f seconds.\n", solve_time);
+        fasp_gettime(&end_time);
+        fasp_cputime("UMFPACK solve", end_time - start_time);
     }
     
 #if DEBUG_MODE
