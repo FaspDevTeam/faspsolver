@@ -61,9 +61,9 @@ else()
     string(STRIP ${ADD_STDLIBS} ADD_STDLIBS)
     include(get_cxx_fc_compilers) # find matching Fortran compiler
     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
-    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -g")
+    set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -g")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 endif()
 
 # Set default build type to Release
@@ -125,20 +125,20 @@ set(CMAKE_INSTALL_RPATH
     ${CMAKE_INSTALL_NAME_DIR} CACHE PATH "path for Linux")
 
 # Set source files required for FASP
-file(GLOB FASP_C_SOURCES RELATIVE ${PROJECT_SOURCE_DIR} 
-	  		                      ${PROJECT_SOURCE_DIR}/base/src/*.c
-	  		                      ${PROJECT_SOURCE_DIR}/base/src/*.inl )
+file(GLOB FASP_C_SOURCES RELATIVE ${PROJECT_SOURCE_DIR}
+                                  ${PROJECT_SOURCE_DIR}/base/src/*.c
+                                  ${PROJECT_SOURCE_DIR}/base/src/*.inl )
 
 # Auto backup FASP code
-add_custom_target(backup  ${PROJECT_SOURCE_DIR}/util/backup.sh
-         	      DEPENDS ${FASP_C_SOURCES}
+add_custom_target(backup ${PROJECT_SOURCE_DIR}/util/backup.sh
+                  DEPENDS ${FASP_C_SOURCES}
                   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
                   COMMENT "Backup FASP files ..."
                   VERBATIM)
 
 # Auto generating headers if needed
 add_custom_target(headers ${PROJECT_SOURCE_DIR}/util/fhead.sh "${PROJECT_SOURCE_DIR}/base"
-         	      DEPENDS ${FASP_C_SOURCES}
+                  DEPENDS ${FASP_C_SOURCES}
                   WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}/util"
                   COMMENT "Auto-generating header file for C functions ..."
                   VERBATIM)
