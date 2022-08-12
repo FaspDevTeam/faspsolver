@@ -471,6 +471,12 @@ SHORT fasp_dcsr_getblk (const dCSRmat  *A,
     B->JA  = (INT*)fasp_mem_calloc(A->nnz,sizeof(INT));
     B->val = (REAL*)fasp_mem_calloc(A->nnz,sizeof(REAL));
     
+#if MULTI_COLOR_ORDER
+	B->color = 0; 
+	B->IC = NULL;
+	B->ICMAP = NULL;
+#endif     
+
     if (use_openmp) {
 #ifdef _OPENMP
         stride_i = n/nthreads;
