@@ -25,7 +25,7 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_umfpack (dCSRmat *ptrA, dvector *b, dvector *u, 
+ * \fn INT fasp_solver_umfpack (dCSRmat *ptrA, dvector *b, dvector *u,
  *                              const SHORT prtlvl)
  *
  * \brief Solve Au=b by UMFpack
@@ -39,6 +39,7 @@
  * \date   05/20/2010
  *
  * Modified by Chensong Zhang on 02/27/2013 for new FASP function names.
+ * Modified by Chensong Zhang on 08/14/2022 for checking return status.
  */
 INT fasp_solver_umfpack (dCSRmat *ptrA,
                          dvector *b,
@@ -66,12 +67,29 @@ INT fasp_solver_umfpack (dCSRmat *ptrA,
     REAL start_time, end_time;
     fasp_gettime(&start_time);
 
-    status = umfpack_di_symbolic (n, n, Ap, Ai, Ax, &Symbolic, NULL, NULL);
-    status = umfpack_di_numeric (Ap, Ai, Ax, Symbolic, &Numeric, NULL, NULL);
-    umfpack_di_free_symbolic (&Symbolic);
-    status = umfpack_di_solve (UMFPACK_A, Ap, Ai, Ax, u->val, b->val, Numeric, NULL, NULL);
-    umfpack_di_free_numeric (&Numeric);
-    
+    status = umfpack_di_symbolic(n, n, Ap, Ai, Ax, &Symbolic, NULL, NULL);
+    if (status < 0) {
+        printf("### ERROR: %d, %s %d\n", status, __FUNCTION__, __LINE__);
+        printf("### ERROR: Symbolic factorization failed!\n");
+        exit(ERROR_SOLVER_MISC);
+    }
+
+    status = umfpack_di_numeric(Ap, Ai, Ax, Symbolic, &Numeric, NULL, NULL);
+    if (status < 0) {
+        printf("### ERROR: %d, %s %d\n", status, __FUNCTION__, __LINE__);
+        printf("### ERROR: Numerica factorization failed!\n");
+        exit(ERROR_SOLVER_MISC);
+    }
+    umfpack_di_free_symbolic(&Symbolic);
+
+    status = umfpack_di_solve(UMFPACK_A, Ap, Ai, Ax, u->val, b->val, Numeric, NULL, NULL);
+    if (status < 0) {
+        printf("### ERROR: %d, %s %d\n", status, __FUNCTION__, __LINE__);
+        printf("### ERROR: UMFPACK solver failed!\n");
+        exit(ERROR_SOLVER_MISC);
+    }
+    umfpack_di_free_numeric(&Numeric);
+
     if ( prtlvl > PRINT_MIN ) {
         fasp_gettime(&end_time);
         fasp_cputime("UMFPACK costs", end_time - start_time);

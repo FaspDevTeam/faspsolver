@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+08/14/2022 FASP 2.7.5:
+- Checking return status of UMFPACK;
+- Fixing regression test failure of fasp4blkoil;
+
 07/27/2022 FASP 2.7.4:
 - Fix Pardiso and Umfpack timer output;
 - Test OpenMP for DLD problem;
