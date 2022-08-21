@@ -163,7 +163,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
     epsilon = tol*den_norm;
 
     // if initial residual is small, no need to iterate!
-    if ( r_norm < epsilon || r_norm < 1e-6*tol ) goto FINISHED;
+    if ( r_norm < epsilon || r_norm < 1e-12*tol ) goto FINISHED;
 
     if ( b_norm > 0.0 ) {
         fasp_itinfo(PrtLvl, StopType, iter, norms[iter]/b_norm, norms[iter], 0);
@@ -485,7 +485,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
     epsilon = tol*den_norm;
 
     // if initial residual is small, no need to iterate!
-    if ( r_norm < epsilon || r_norm < 1e-6*tol ) goto FINISHED;
+    if ( r_norm < epsilon || r_norm < 1e-12*tol ) goto FINISHED;
 
     if ( b_norm > 0.0 ) {
         fasp_itinfo(PrtLvl, StopType, iter, norms[iter]/b_norm, norms[iter], 0);
@@ -810,7 +810,7 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
     epsilon = tol*den_norm;
 
     // if initial residual is small, no need to iterate!
-    if ( r_norm < epsilon || r_norm < FPNA_RATIO * tol ) goto FINISHED;
+    if ( r_norm < epsilon || r_norm < 1e-12 * tol ) goto FINISHED;
     
     if ( b_norm > 0.0 ) {
         fasp_itinfo(PrtLvl, StopType, iter, norms[iter]/b_norm, norms[iter], 0);
