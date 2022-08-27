@@ -42,117 +42,123 @@
  *
  * Modified by Chensong Zhang on 02/27/2013 for new FASP function names.
  */
-int fasp_solver_mumps (dCSRmat *ptrA,
-                       dvector *b,
-                       dvector *u,
-                       const SHORT prtlvl)
+int fasp_solver_mumps(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl)
 {
-    
+
 #if WITH_MUMPS
-    
+
     DMUMPS_STRUC_C id;
-    
-    const  int n =  ptrA->row;
-    const  int nz = ptrA->nnz;
-    int *IA = ptrA->IA;
-    int *JA = ptrA->JA;
-    double *AA =  ptrA->val;
-    double *b1 = b->val;
-    double *x  = u->val;
-    
-    int *irn;
-    int *jcn;
-    double *a;
-    double *rhs;
-    int i,j;
-    int begin_row, end_row;
-    
+
+    const int n  = ptrA->row;
+    const int nz = ptrA->nnz;
+    int*      IA = ptrA->IA;
+    int*      JA = ptrA->JA;
+    double*   AA = ptrA->val;
+    double*   f  = b->val;
+    double*   x  = u->val;
+
+    int*    irn;
+    int*    jcn;
+    double* a;
+    double* rhs;
+    int     i, j;
+    int     begin_row, end_row;
+
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_mumps ... [Start]\n");
-    printf("### DEBUG: nr=%d,  nnz=%d\n",  n, nz);
+    printf("### DEBUG: nr=%d,  nnz=%d\n", n, nz);
 #endif
-    
+
     // First check the matrix format
-    if ( IA[0] != 0 && IA[0] != 1 ) {
+    if (IA[0] != 0 && IA[0] != 1) {
         printf("### ERROR: Matrix format is wrong -- IA[0] = %d\n", IA[0]);
         return ERROR_SOLVER_EXIT;
     }
-    
+
     clock_t start_time = clock();
-    
+
     /* Define A and rhs */
-    irn = (int *)malloc( sizeof(int)*nz );
-    jcn = (int *)malloc( sizeof(int)*nz );
-    a   = (double *)malloc( sizeof(double)*nz );
-    rhs = (double *)malloc( sizeof(double)*n );
-    
-    if ( IA[0] == 0 ) { // C-convention
-        for (i=0; i<n; i++) {
-            begin_row = IA[i]; end_row = IA[i+1];
-            for (j=begin_row; j< end_row; j++) {
+    irn = (int*)malloc(sizeof(int) * nz);
+    jcn = (int*)malloc(sizeof(int) * nz);
+    a   = (double*)malloc(sizeof(double) * nz);
+    rhs = (double*)malloc(sizeof(double) * n);
+
+    if (IA[0] == 0) { // C-convention
+        for (i = 0; i < n; i++) {
+            begin_row = IA[i];
+            end_row   = IA[i + 1];
+            for (j = begin_row; j < end_row; j++) {
                 irn[j] = i + 1;
-                jcn[j] = JA[j]+1;
+                jcn[j] = JA[j] + 1;
                 a[j]   = AA[j];
             }
         }
-    }
-    else { // For-convention
-        for (i=0; i<n; i++) {
-            begin_row = IA[i]-1; end_row = IA[i+1]-1;
-            for (j=begin_row; j< end_row; j++) {
+    } else { // For-convention
+        for (i = 0; i < n; i++) {
+            begin_row = IA[i] - 1;
+            end_row   = IA[i + 1] - 1;
+            for (j = begin_row; j < end_row; j++) {
                 irn[j] = i + 1;
                 jcn[j] = JA[j];
                 a[j]   = AA[j];
             }
         }
     }
-    
+
     /* Initialize a MUMPS instance. */
-    id.job=-1; id.par=1; id.sym=0; id.comm_fortran=0;
+    id.job          = -1;
+    id.par          = 1;
+    id.sym          = 0;
+    id.comm_fortran = 0;
     dmumps_c(&id);
-    
+
     /* Define the problem on the host */
-    id.n = n; id.nz =nz; id.irn=irn; id.jcn=jcn;
-    id.a = a; id.rhs = rhs;
-    
+    id.n   = n;
+    id.nz  = nz;
+    id.irn = irn;
+    id.jcn = jcn;
+    id.a   = a;
+    id.rhs = rhs;
+
     /* No outputs */
     id.ICNTL(1) = -1;
     id.ICNTL(2) = -1;
     id.ICNTL(3) = -1;
-    id.ICNTL(4) =  0;
-    
+    id.ICNTL(4) = 0;
+
     /* Call the MUMPS package */
-    for (i=0; i<n; i++) rhs[i] = b1[i];
-    
-    id.job = 6; dmumps_c(&id);
-    
-    for (i=0; i<n; i++) x[i] = id.rhs[i];
-    
+    for (i = 0; i < n; i++) rhs[i] = f[i];
+
+    id.job = 6;
+    dmumps_c(&id);
+
+    for (i = 0; i < n; i++) x[i] = id.rhs[i];
+
     id.job = -2;
     dmumps_c(&id); /* Terminate instance */
-    
+
     free(irn);
     free(jcn);
     free(a);
     free(rhs);
-    
-    if ( prtlvl > PRINT_MIN ) {
-        clock_t end_time = clock();
-        double solve_time = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
+
+    if (prtlvl > PRINT_MIN) {
+        clock_t end_time   = clock();
+        double  solve_time = (double)(end_time - start_time) / (double)(CLOCKS_PER_SEC);
         printf("MUMPS costs %f seconds.\n", solve_time);
     }
-    
+
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_mumps ... [Finish]\n");
 #endif
     return FASP_SUCCESS;
+
 #else
-    
+
     printf("### ERROR: MUMPS is not available!\n");
     return ERROR_SOLVER_EXIT;
-    
+
 #endif
-    
 }
 
 /**
@@ -173,162 +179,168 @@ int fasp_solver_mumps (dCSRmat *ptrA,
  * Modified by Zheng Li on 10/10/2014 to adjust input parameters.
  * Modified by Chunsheng Feng on 08/11/2017 for debug information.
  */
-int fasp_solver_mumps_steps (dCSRmat *ptrA,
-                             dvector *b,
-                             dvector *u,
-                             Mumps_data *mumps)
+int fasp_solver_mumps_steps(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data* mumps)
 {
 #if WITH_MUMPS
-    
+
     DMUMPS_STRUC_C id;
-    
+
     int job = mumps->job;
-    
+
     static int job_stat = 0;
-    int i,j;
-    
-    int *irn;
-    int *jcn;
-    double *a;
-    double *rhs;
-    
-    switch ( job ) {
-            
+    int        i, j;
+
+    int*    irn;
+    int*    jcn;
+    double* a;
+    double* rhs;
+
+    switch (job) {
+
         case 1:
-        {
+            {
 #if DEBUG_MODE
-            printf("### DEBUG: %s, step %d, job_stat = %d... [Start]\n",
-                   __FUNCTION__, job, job_stat);
+                printf("### DEBUG: %s, step %d, job_stat = %d... [Start]\n",
+                       __FUNCTION__, job, job_stat);
 #endif
-            int begin_row, end_row;
-            const int n  = ptrA->row;
-            const int nz = ptrA->nnz;
-            int *IA = ptrA->IA;
-            int *JA = ptrA->JA;
-            double *AA = ptrA->val;
-            
-            irn = id.irn = (int *)malloc( sizeof(int)*nz );
-            jcn = id.jcn = (int *)malloc( sizeof(int)*nz );
-            a   = id.a   = (double *)malloc( sizeof(double)*nz );
-            rhs = id.rhs = (double *)malloc( sizeof(double)*n );
-            
-            // First check the matrix format
-            if ( IA[0] != 0 && IA[0] != 1 ) {
-                printf("### ERROR: Matrix format is wrong, IA[0] = %d!\n", IA[0]);
-                return ERROR_SOLVER_EXIT;
-            }
-            
-            // Define A and rhs
-            if ( IA[0] == 0 ) { // C-convention
-                for (i=0; i<n; i++) {
-                    begin_row = IA[i]; end_row = IA[i+1];
-                    for (j=begin_row; j< end_row; j++) {
-                        irn[j] = i + 1;
-                        jcn[j] = JA[j]+1;
-                        a[j]   = AA[j];
+                int       begin_row, end_row;
+                const int n  = ptrA->row;
+                const int nz = ptrA->nnz;
+                int*      IA = ptrA->IA;
+                int*      JA = ptrA->JA;
+                double*   AA = ptrA->val;
+
+                irn = id.irn = (int*)malloc(sizeof(int) * nz);
+                jcn = id.jcn = (int*)malloc(sizeof(int) * nz);
+                a = id.a = (double*)malloc(sizeof(double) * nz);
+                rhs = id.rhs = (double*)malloc(sizeof(double) * n);
+
+                // First check the matrix format
+                if (IA[0] != 0 && IA[0] != 1) {
+                    printf("### ERROR: Matrix format is wrong, IA[0] = %d!\n", IA[0]);
+                    return ERROR_SOLVER_EXIT;
+                }
+
+                // Define A and rhs
+                if (IA[0] == 0) { // C-convention
+                    for (i = 0; i < n; i++) {
+                        begin_row = IA[i];
+                        end_row   = IA[i + 1];
+                        for (j = begin_row; j < end_row; j++) {
+                            irn[j] = i + 1;
+                            jcn[j] = JA[j] + 1;
+                            a[j]   = AA[j];
+                        }
+                    }
+                } else { // For-convention
+                    for (i = 0; i < n; i++) {
+                        begin_row = IA[i] - 1;
+                        end_row   = IA[i + 1] - 1;
+                        for (j = begin_row; j < end_row; j++) {
+                            irn[j] = i + 1;
+                            jcn[j] = JA[j];
+                            a[j]   = AA[j];
+                        }
                     }
                 }
-            }
-            else { // For-convention
-                for (i=0; i<n; i++) {
-                    begin_row = IA[i]-1; end_row = IA[i+1]-1;
-                    for (j=begin_row; j< end_row; j++) {
-                        irn[j] = i + 1;
-                        jcn[j] = JA[j];
-                        a[j]   = AA[j];
-                    }
-                }
-            }
-            
-            /* Initialize a MUMPS instance. */
-            id.job = -1; id.par = 1; id.sym = 0; id.comm_fortran = 0;
-            dmumps_c(&id);
-            /* Define the problem on the host */
-            id.n = n; id.nz = nz; id.irn = irn; id.jcn = jcn;
-            id.a = a; id.rhs = rhs;
-            
-            /* No outputs */
-            id.ICNTL(1) = -1;
-            id.ICNTL(2) = -1;
-            id.ICNTL(3) = -1;
-            id.ICNTL(4) = 0;
-            
-            id.job = 4; dmumps_c(&id);
-            job_stat = 1;
-            
-            mumps->id = id;
-            
+
+                /* Initialize a MUMPS instance. */
+                id.job          = -1;
+                id.par          = 1;
+                id.sym          = 0;
+                id.comm_fortran = 0;
+                dmumps_c(&id);
+                /* Define the problem on the host */
+                id.n   = n;
+                id.nz  = nz;
+                id.irn = irn;
+                id.jcn = jcn;
+                id.a   = a;
+                id.rhs = rhs;
+
+                /* No outputs */
+                id.ICNTL(1) = -1;
+                id.ICNTL(2) = -1;
+                id.ICNTL(3) = -1;
+                id.ICNTL(4) = 0;
+
+                id.job = 4;
+                dmumps_c(&id);
+                job_stat = 1;
+
+                mumps->id = id;
+
 #if DEBUG_MODE
-            printf("### DEBUG: %s, step %d, job_stat = %d... [Finish]\n",
-                   __FUNCTION__, job, job_stat);
+                printf("### DEBUG: %s, step %d, job_stat = %d... [Finish]\n",
+                       __FUNCTION__, job, job_stat);
 #endif
-            break;
-        }
-            
+                break;
+            }
+
         case 2:
-        {
+            {
 #if DEBUG_MODE
-            printf("### DEBUG: %s, step %d, job_stat = %d... [Start]\n",
-                   __FUNCTION__, job, job_stat);
+                printf("### DEBUG: %s, step %d, job_stat = %d... [Start]\n",
+                       __FUNCTION__, job, job_stat);
 #endif
-            id = mumps->id;
-            
-            if ( job_stat != 1 )
-                printf("### ERROR: %s setup failed!\n", __FUNCTION__);
-            
-            /* Call the MUMPS package. */
-            for(i=0; i<id.n; i++) id.rhs[i] = b->val[i];
-            
-            id.job=3; dmumps_c(&id);
-            
-            for(i=0; i<id.n; i++) u->val[i] = id.rhs[i];
-            
+                id = mumps->id;
+
+                if (job_stat != 1)
+                    printf("### ERROR: %s setup failed!\n", __FUNCTION__);
+
+                /* Call the MUMPS package. */
+                for (i = 0; i < id.n; i++) id.rhs[i] = b->val[i];
+
+                id.job = 3;
+                dmumps_c(&id);
+
+                for (i = 0; i < id.n; i++) u->val[i] = id.rhs[i];
+
 #if DEBUG_MODE
-            printf("### DEBUG: %s, step %d, job_stat = %d... [Finish]\n",
-                   __FUNCTION__, job, job_stat);
+                printf("### DEBUG: %s, step %d, job_stat = %d... [Finish]\n",
+                       __FUNCTION__, job, job_stat);
 #endif
-            break;
-        }
-            
+                break;
+            }
+
         case 3:
-        {
+            {
 #if DEBUG_MODE
-            printf("### DEBUG: %s, step %d, job_stat = %d... [Start]\n",
-                   __FUNCTION__, job, job_stat);
+                printf("### DEBUG: %s, step %d, job_stat = %d... [Start]\n",
+                       __FUNCTION__, job, job_stat);
 #endif
-            id = mumps->id;
-            
-            if ( job_stat !=1 )
-                printf("### ERROR: %s setup failed!\n", __FUNCTION__);
-            
-            free(id.irn);
-            free(id.jcn);
-            free(id.a);
-            free(id.rhs);
-            id.job = -2;
-            dmumps_c(&id); /* Terminate instance */
-            
+                id = mumps->id;
+
+                if (job_stat != 1)
+                    printf("### ERROR: %s setup failed!\n", __FUNCTION__);
+
+                free(id.irn);
+                free(id.jcn);
+                free(id.a);
+                free(id.rhs);
+                id.job = -2;
+                dmumps_c(&id); /* Terminate instance */
+
 #if DEBUG_MODE
-            printf("### DEBUG: %s, step %d, job_stat = %d... [Finish]\n",
-                   __FUNCTION__, job, job_stat);
+                printf("### DEBUG: %s, step %d, job_stat = %d... [Finish]\n",
+                       __FUNCTION__, job, job_stat);
 #endif
 
-            break;
-        }
-            
+                break;
+            }
+
         default:
-            printf("### ERROR: Parameter job = %d. Should be 1, 2, or 3!\n", job);
+            printf("### ERROR: job = %d. Should be 1, 2, or 3!\n", job);
             return ERROR_SOLVER_EXIT;
-            
     }
-    
+
     return FASP_SUCCESS;
-    
+
 #else
-    
+
     printf("### ERROR: MUMPS is not available!\n");
     return ERROR_SOLVER_EXIT;
-    
+
 #endif
 }
 
@@ -346,84 +358,91 @@ int fasp_solver_mumps_steps (dCSRmat *ptrA,
  * \author Zheng Li
  * \date   10/09/2014
  */
-Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
-                                 dvector *b,
-                                 dvector *u,
-                                 const SHORT prtlvl)
+Mumps_data fasp_mumps_factorize(dCSRmat* ptrA, dvector* b, dvector* u,
+                                const SHORT prtlvl)
 {
-    Mumps_data mumps;
+    Mumps_data     mumps;
     DMUMPS_STRUC_C id;
-    
-    int i,j;
-    const int m =  ptrA->row;
-    const int n =  ptrA->col;
+
+    int       i, j;
+    const int m  = ptrA->row;
+    const int n  = ptrA->col;
     const int nz = ptrA->nnz;
-    int *IA = ptrA->IA;
-    int *JA = ptrA->JA;
-    double *AA =  ptrA->val;
-    
-    int    *irn = id.irn = (int *)malloc( sizeof(int)*nz );
-    int    *jcn = id.jcn = (int *)malloc( sizeof(int)*nz );
-    double *a   = id.a   = (double *)malloc( sizeof(double)*nz );
-    double *rhs = id.rhs = (double *)malloc( sizeof(double)*n );
-    
+    int*      IA = ptrA->IA;
+    int*      JA = ptrA->JA;
+    double*   AA = ptrA->val;
+
+    int*    irn = id.irn = (int*)malloc(sizeof(int) * nz);
+    int*    jcn = id.jcn = (int*)malloc(sizeof(int) * nz);
+    double* a = id.a = (double*)malloc(sizeof(double) * nz);
+    double* rhs = id.rhs = (double*)malloc(sizeof(double) * n);
+
     int begin_row, end_row;
-    
+
 #if DEBUG_MODE
     printf("### DEBUG: %s ... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nz);
 #endif
-    
+
     clock_t start_time = clock();
-    
-    if ( IA[0] == 0 ) { // C-convention
-        for (i=0; i<n; i++) {
-            begin_row = IA[i]; end_row = IA[i+1];
-            for (j=begin_row; j< end_row; j++) {
+
+    if (IA[0] == 0) { // C-convention
+        for (i = 0; i < n; i++) {
+            begin_row = IA[i];
+            end_row   = IA[i + 1];
+            for (j = begin_row; j < end_row; j++) {
                 irn[j] = i + 1;
-                jcn[j] = JA[j]+1;
+                jcn[j] = JA[j] + 1;
                 a[j]   = AA[j];
             }
         }
-    }
-    else { // For-convention
-        for (i=0; i<n; i++) {
-            begin_row = IA[i]-1; end_row = IA[i+1]-1;
-            for (j=begin_row; j< end_row; j++) {
+    } else { // For-convention
+        for (i = 0; i < n; i++) {
+            begin_row = IA[i] - 1;
+            end_row   = IA[i + 1] - 1;
+            for (j = begin_row; j < end_row; j++) {
                 irn[j] = i + 1;
                 jcn[j] = JA[j];
                 a[j]   = AA[j];
             }
         }
     }
-    
+
     /* Initialize a MUMPS instance. */
-    id.job = -1; id.par = 1; id.sym = 0; id.comm_fortran = 0;
+    id.job          = -1;
+    id.par          = 1;
+    id.sym          = 0;
+    id.comm_fortran = 0;
     dmumps_c(&id);
     /* Define the problem on the host */
-    id.n = n; id.nz = nz; id.irn = irn; id.jcn = jcn;
-    id.a = a; id.rhs = rhs;
-    
+    id.n   = n;
+    id.nz  = nz;
+    id.irn = irn;
+    id.jcn = jcn;
+    id.a   = a;
+    id.rhs = rhs;
+
     /* No outputs */
     id.ICNTL(1) = -1;
     id.ICNTL(2) = -1;
     id.ICNTL(3) = -1;
     id.ICNTL(4) = 0;
-    
-    id.job = 4; dmumps_c(&id);
-    
-    if ( prtlvl > PRINT_MIN ) {
+
+    id.job = 4;
+    dmumps_c(&id);
+
+    if (prtlvl > PRINT_MIN) {
         clock_t end_time = clock();
-        double fac_time = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
+        double  fac_time = (double)(end_time - start_time) / (double)(CLOCKS_PER_SEC);
         printf("MUMPS factorize costs %f seconds.\n", fac_time);
     }
-    
+
 #if DEBUG_MODE
     printf("### DEBUG: %s ... [Finish]\n", __FUNCTION__);
 #endif
-    
+
     mumps.id = id;
-    
+
     return mumps;
 }
 #endif
@@ -443,51 +462,49 @@ Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
  * \author Zheng Li
  * \date   10/09/2014
  */
-void fasp_mumps_solve (dCSRmat *ptrA,
-                       dvector *b,
-                       dvector *u,
-                       Mumps_data mumps,
-                       const SHORT prtlvl)
+void fasp_mumps_solve(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data mumps,
+                      const SHORT prtlvl)
 {
-    int i,j;
-    
+    int i, j;
+
     DMUMPS_STRUC_C id = mumps.id;
-    
-    const int m =  ptrA->row;
-    const int n =  ptrA->row;
+
+    const int m  = ptrA->row;
+    const int n  = ptrA->row;
     const int nz = ptrA->nnz;
-    int *IA = ptrA->IA;
-    int *JA = ptrA->JA;
-    double *AA = ptrA->val;
-    
-    int *irn = id.irn;
-    int *jcn = id.jcn;
-    double *a = id.a;
-    double *rhs = id.rhs;
-    
+    int*      IA = ptrA->IA;
+    int*      JA = ptrA->JA;
+    double*   AA = ptrA->val;
+
+    int*    irn = id.irn;
+    int*    jcn = id.jcn;
+    double* a   = id.a;
+    double* rhs = id.rhs;
+
 #if DEBUG_MODE
     printf("### DEBUG: %s ... [Start]\n", __FUNCTION__);
     printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nz);
 #endif
-    
+
     clock_t start_time = clock();
-    
-    double *b1 = b->val;
-    double *x  = u->val;
-    
+
+    double* f = b->val;
+    double* x = u->val;
+
     /* Call the MUMPS package. */
-    for(i=0; i<id.n; i++) rhs[i] = b1[i];
-    
-    id.job=3; dmumps_c(&id);
-    
-    for(i=0; i<id.n; i++) x[i] = id.rhs[i];
-    
-    if ( prtlvl > PRINT_NONE ) {
-        clock_t end_time = clock();
-        double solve_time = (double)(end_time - start_time)/(double)(CLOCKS_PER_SEC);
+    for (i = 0; i < id.n; i++) rhs[i] = f[i];
+
+    id.job = 3;
+    dmumps_c(&id);
+
+    for (i = 0; i < id.n; i++) x[i] = id.rhs[i];
+
+    if (prtlvl > PRINT_NONE) {
+        clock_t end_time   = clock();
+        double  solve_time = (double)(end_time - start_time) / (double)(CLOCKS_PER_SEC);
         printf("MUMPS costs %f seconds.\n", solve_time);
     }
-    
+
 #if DEBUG_MODE
     printf("### DEBUG: %s ... [Finish]\n", __FUNCTION__);
 #endif
@@ -505,10 +522,10 @@ void fasp_mumps_solve (dCSRmat *ptrA,
  * \author Zheng Li
  * \date   10/09/2014
  */
-void fasp_mumps_free (Mumps_data *mumps)
+void fasp_mumps_free(Mumps_data* mumps)
 {
     DMUMPS_STRUC_C id = mumps->id;
-    
+
     free(id.irn);
     free(id.jcn);
     free(id.a);

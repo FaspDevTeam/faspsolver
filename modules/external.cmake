@@ -45,7 +45,8 @@ if(USE_MUMPS)
     # set the path to find specific modules
     set(MUMPS_DIR "${MUMPS_DIR}")
 
-    # try to find MUMPS
+    # try to find MUMPS and METIS (as dependency)
+    find_package(METIS)
     find_package(MUMPS)
 
     if (MUMPS_FOUND)

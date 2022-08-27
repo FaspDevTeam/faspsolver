@@ -221,6 +221,7 @@ foreach(_MKL_DIR ${_MKL_ROOT_SEARCH_DIRS})
     list(APPEND _INTEL_LIBRARY_SEARCH_DIRS "${_MKL_DIR}/..")
     list(APPEND _INTEL_LIBRARY_SEARCH_DIRS "${_MKL_DIR}/../compiler")
     list(APPEND _INTEL_LIBRARY_SEARCH_DIRS "${_MKL_DIR}/../../compiler/latest/linux/compiler")
+    list(APPEND _INTEL_LIBRARY_SEARCH_DIRS "${_MKL_DIR}/../../compiler/latest/mac/compiler")
 endforeach()
 
 if (MKL_FIND_DEBUG)

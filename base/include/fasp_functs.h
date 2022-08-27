@@ -492,119 +492,126 @@ FASP_API void fasp_ilu_dstr_setup1 (dSTRmat  *A,
 
 /*-------- In file: BlaIO.c --------*/
 
-FASP_API void fasp_dcsrvec_read1 (const char  *filename,
-                                  dCSRmat     *A,
-                                  dvector     *b);
+FASP_API void fasp_dcsrvec_read1(const char *filename,
+                                 dCSRmat *A,
+                                 dvector *b);
 
-FASP_API void fasp_dcsrvec_read2 (const char  *filemat,
-                                  const char  *filerhs,
-                                  dCSRmat     *A,
-                                  dvector     *b);
+FASP_API void fasp_dcsrvec_read2(const char *filemat,
+                                 const char *filerhs,
+                                 dCSRmat *A,
+                                 dvector *b);
 
-FASP_API void fasp_dcsr_read (const char  *filename,
-                              dCSRmat     *A);
+FASP_API void fasp_dcsr_read(const char *filename,
+                             dCSRmat *A);
 
-FASP_API void fasp_dcoo_read (const char  *filename,
-                              dCSRmat     *A);
+FASP_API void fasp_dcoo_read(const char *filename,
+                             dCSRmat *A);
 
-FASP_API void fasp_dcoo_read1 (const char  *filename,
-                               dCSRmat     *A);
+FASP_API void fasp_dcoo_read1(const char *filename,
+                              dCSRmat *A);
 
-FASP_API void fasp_dcoo_shift_read (const char  *filename,
-                                    dCSRmat     *A);
+FASP_API void fasp_dcoovec_bin_read(const char *fni,
+                                    const char *fnj, 
+                                    const char *fna,
+                                    const char *fnb, 
+                                    dCSRmat *A, 
+                                    dvector *b);
 
-FASP_API void fasp_dmtx_read (const char  *filename,
-                              dCSRmat     *A);
+FASP_API void fasp_dcoo_shift_read(const char *filename,
+                                   dCSRmat *A);
 
-FASP_API void fasp_dmtxsym_read (const char  *filename,
-                                 dCSRmat     *A);
+FASP_API void fasp_dmtx_read(const char *filename,
+                             dCSRmat *A);
 
-FASP_API void fasp_dstr_read (const char  *filename,
-                              dSTRmat     *A);
+FASP_API void fasp_dmtxsym_read(const char *filename,
+                                dCSRmat *A);
 
-FASP_API void fasp_dbsr_read (const char  *filename,
-                              dBSRmat     *A);
+FASP_API void fasp_dstr_read(const char *filename,
+                             dSTRmat *A);
 
-FASP_API void fasp_dvecind_read (const char  *filename,
-                                 dvector     *b);
+FASP_API void fasp_dbsr_read(const char *filename,
+                             dBSRmat *A);
 
-FASP_API void fasp_dvec_read (const char  *filename,
-                              dvector     *b);
+FASP_API void fasp_dvecind_read(const char *filename,
+                                dvector *b);
 
-FASP_API void fasp_ivecind_read (const char  *filename,
-                                 ivector     *b);
+FASP_API void fasp_dvec_read(const char *filename,
+                             dvector *b);
 
-FASP_API void fasp_ivec_read (const char  *filename,
-                              ivector     *b);
+FASP_API void fasp_ivecind_read(const char *filename,
+                                ivector *b);
 
-FASP_API void fasp_dcsrvec_write1 (const char  *filename,
-                                   dCSRmat     *A,
-                                   dvector     *b);
+FASP_API void fasp_ivec_read(const char *filename,
+                             ivector *b);
 
-FASP_API void fasp_dcsrvec_write2 (const char  *filemat,
-                                   const char  *filerhs,
-                                   dCSRmat     *A,
-                                   dvector     *b);
+FASP_API void fasp_dcsrvec_write1(const char *filename,
+                                  dCSRmat *A,
+                                  dvector *b);
 
-FASP_API void fasp_dcoo_write (const char  *filename,
-                               dCSRmat     *A);
+FASP_API void fasp_dcsrvec_write2(const char *filemat,
+                                  const char *filerhs,
+                                  dCSRmat *A,
+                                  dvector *b);
 
-FASP_API void fasp_dstr_write (const char  *filename,
-                               dSTRmat     *A);
+FASP_API void fasp_dcoo_write(const char *filename,
+                              dCSRmat *A);
 
-FASP_API void fasp_dbsr_print (const char *filename,
-                               dBSRmat *A);
+FASP_API void fasp_dstr_write(const char *filename,
+                              dSTRmat *A);
 
-FASP_API void fasp_dbsr_write (const char *filename,
-                               dBSRmat *A);
+FASP_API void fasp_dbsr_print(const char *filename,
+                              dBSRmat *A);
 
-FASP_API void fasp_dvec_write (const char  *filename,
-                               dvector     *vec);
+FASP_API void fasp_dbsr_write(const char *filename,
+                              dBSRmat *A);
 
-FASP_API void fasp_dvecind_write (const char  *filename,
-                                  dvector     *vec);
+FASP_API void fasp_dvec_write(const char *filename,
+                              dvector *vec);
 
-FASP_API void fasp_ivec_write (const char  *filename,
-                               ivector     *vec);
+FASP_API void fasp_dvecind_write(const char *filename,
+                                 dvector *vec);
 
-FASP_API void fasp_dvec_print (const INT  n,
-                               dvector   *u);
+FASP_API void fasp_ivec_write(const char *filename,
+                              ivector *vec);
 
-FASP_API void fasp_ivec_print (const INT  n,
-                               ivector   *u);
+FASP_API void fasp_dvec_print(const INT n,
+                              dvector *u);
 
-FASP_API void fasp_dcsr_print (const dCSRmat *A);
+FASP_API void fasp_ivec_print(const INT n,
+                              ivector *u);
 
-FASP_API void fasp_dcoo_print (const dCOOmat *A);
+FASP_API void fasp_dcsr_print(const dCSRmat *A);
 
-FASP_API void fasp_dbsr_write_coo (const char    *filename,
-                                   const dBSRmat *A);
+FASP_API void fasp_dcoo_print(const dCOOmat *A);
 
-FASP_API void fasp_dcsr_write_coo (const char    *filename,
-                                   const dCSRmat *A);
+FASP_API void fasp_dbsr_write_coo(const char *filename,
+                                  const dBSRmat *A);
 
-FASP_API void fasp_dstr_print (const dSTRmat *A);
+FASP_API void fasp_dcsr_write_coo(const char *filename,
+                                  const dCSRmat *A);
 
-FASP_API void fasp_matrix_read (const char  *filename,
-                                void        *A);
+FASP_API void fasp_dstr_print(const dSTRmat *A);
 
-FASP_API void fasp_matrix_read_bin (const char *filename,
-                                    void       *A);
+FASP_API void fasp_matrix_read(const char *filename,
+                               void *A);
 
-FASP_API void fasp_matrix_write (const char *filename,
-                                 void       *A,
-                                 const INT   flag);
+FASP_API void fasp_matrix_read_bin(const char *filename,
+                                   void *A);
 
-FASP_API void fasp_vector_read (const char *filerhs,
-                                void       *b);
+FASP_API void fasp_matrix_write(const char *filename,
+                                void *A,
+                                const INT flag);
 
-FASP_API void fasp_vector_write (const char *filerhs,
-                                 void       *b,
-                                 const INT   flag);
+FASP_API void fasp_vector_read(const char *filerhs,
+                               void *b);
 
-FASP_API void fasp_hb_read (const char *input_file,
-                            dCSRmat    *A,
-                            dvector    *b);
+FASP_API void fasp_vector_write(const char *filerhs,
+                                void *b,
+                                const INT flag);
+
+FASP_API void fasp_hb_read(const char *input_file,
+                           dCSRmat *A,
+                           dvector *b);
 
 
 /*-------- In file: BlaOrderingCSR.c --------*/
@@ -1191,14 +1198,14 @@ FASP_API void fasp_blas_dblc_aAxpy (const REAL      alpha,
                                     const REAL     *x,
                                     REAL           *y);
 
-FASP_API void fasp_blas_ldblc_aAxpy (const REAL      alpha,
-                                    const dBLCmat  *A,
-                                    const LONGREAL      *x,
-                                    REAL           *y);
-
 FASP_API void fasp_blas_dblc_mxv (const dBLCmat  *A,
                                   const REAL     *x,
                                   REAL           *y);
+
+FASP_API void fasp_blas_ldblc_aAxpy (const REAL      alpha,
+                                    const dBLCmat    *A,
+                                    const LONGREAL   *x,
+                                    REAL             *y);
 
 
 /*-------- In file: BlaSpmvBSR.c --------*/
@@ -1276,7 +1283,7 @@ FASP_API void fasp_blas_dcsr_aAxpy (const REAL      alpha,
 
 FASP_API void fasp_blas_ldcsr_aAxpy (const REAL      alpha,
                                     const dCSRmat  *A,
-                                    const LONGREAL      *x,
+                                    const LONGREAL     *x,
                                     REAL           *y);
 
 FASP_API void fasp_blas_dcsr_aAxpy_agg (const REAL      alpha,
@@ -2815,71 +2822,71 @@ FASP_API INT fasp_solver_dstr_krylov_blockgs (dSTRmat    *A,
 
 /*-------- In file: SolWrapper.c --------*/
 
-FASP_API void fasp_fwrapper_dcsr_pardiso_(INT  *n,
-         							     INT  *nnz,
-         								 INT  *ia,
-         								 INT  *ja,
-         								 REAL *a,
-         								 REAL *b,
-         								 REAL *u,
-         								 INT  *ptrlvl);
+FASP_API void fasp_fwrapper_dcsr_pardiso_(INT *n,
+                                          INT *nnz,
+                                          INT *ia,
+                                          INT *ja,
+                                          REAL *a,
+                                          REAL *b,
+                                          REAL *u,
+                                          INT *ptrlvl);
 
-FASP_API void fasp_fwrapper_dcsr_amg_ (INT  *n,
-                                       INT  *nnz,
-                                       INT  *ia,
-                                       INT  *ja,
-                                       REAL *a,
-                                       REAL *b,
-                                       REAL *u,
-                                       REAL *tol,
-                                       INT  *maxit,
-                                       INT  *ptrlvl);
+FASP_API void fasp_fwrapper_dcsr_amg_(INT *n,
+                                      INT *nnz,
+                                      INT *ia,
+                                      INT *ja,
+                                      REAL *a,
+                                      REAL *b,
+                                      REAL *u,
+                                      REAL *tol,
+                                      INT *maxit,
+                                      INT *ptrlvl);
 
-FASP_API void fasp_fwrapper_dcsr_krylov_ilu_ (INT  *n,
-                                              INT  *nnz,
-                                              INT  *ia,
-                                              INT  *ja,
-                                              REAL *a,
-                                              REAL *b,
-                                              REAL *u,
-                                              REAL *tol,
-                                              INT  *maxit,
-                                              INT  *ptrlvl);
+FASP_API void fasp_fwrapper_dcsr_krylov_ilu_(INT *n,
+                                             INT *nnz,
+                                             INT *ia,
+                                             INT *ja,
+                                             REAL *a,
+                                             REAL *b,
+                                             REAL *u,
+                                             REAL *tol,
+                                             INT *maxit,
+                                             INT *ptrlvl);
 
-FASP_API void fasp_fwrapper_dcsr_krylov_amg_ (INT  *n,
-                                              INT  *nnz,
-                                              INT  *ia,
-                                              INT  *ja,
-                                              REAL *a,
-                                              REAL *b,
-                                              REAL *u,
-                                              REAL *tol,
-                                              INT  *maxit,
-                                              INT  *ptrlvl);
+FASP_API void fasp_fwrapper_dcsr_krylov_amg_(INT *n,
+                                             INT *nnz,
+                                             INT *ia,
+                                             INT *ja,
+                                             REAL *a,
+                                             REAL *b,
+                                             REAL *u,
+                                             REAL *tol,
+                                             INT *maxit,
+                                             INT *ptrlvl);
 
-FASP_API void fasp_fwrapper_dbsr_krylov_ilu_ (INT  *n,
-                                              INT  *nnz,
-                                              INT  *nb,
-                                              INT  *ia,
-                                              INT  *ja,
-                                              REAL *a,
-                                              REAL *b,
-                                              REAL *u,
-                                              REAL *tol,
-                                              INT  *maxit,
-                                              INT  *ptrlvl);
+FASP_API void fasp_fwrapper_dbsr_krylov_ilu_(INT *n,
+                                             INT *nnz,
+                                             INT *nb,
+                                             INT *ia,
+                                             INT *ja,
+                                             REAL *a,
+                                             REAL *b,
+                                             REAL *u,
+                                             REAL *tol,
+                                             INT *maxit,
+                                             INT *ptrlvl);
 
-FASP_API void fasp_fwrapper_dbsr_krylov_amg_ (INT  *n,
-                                              INT  *nnz,
-                                              INT  *nb,
-                                              INT  *ia,
-                                              INT  *ja,
-                                              REAL *a,
-                                              REAL *b,
-                                              REAL *u,
-                                              REAL *tol,
-                                              INT  *maxit,
-                                              INT  *ptrlvl);
+FASP_API void fasp_fwrapper_dbsr_krylov_amg_(INT *n,
+                                             INT *nnz,
+                                             INT *nb,
+                                             INT *ia,
+                                             INT *ja,
+                                             REAL *a,
+                                             REAL *b,
+                                             REAL *u,
+                                             REAL *tol,
+                                             INT *maxit,
+                                             INT *ptrlvl);
 
 
 /*-------- In file: XtrMumps.c --------*/

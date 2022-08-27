@@ -6,7 +6,12 @@ set(RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/test)
 
 ## requires math library
 if(UNIX OR LINUX)
-	set(ADD_STDLIBS m)
+	set(ADD_MLIBS m)
+endif()
+
+## requires GNU Fortran library
+if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
+	set(ADD_FLIBS gfortran)
 endif()
 
 include_directories(${FASP_TINC_DIR}
@@ -35,10 +40,12 @@ foreach( srcfile ${FASP_TSRC} )
     target_link_libraries(${execfile} fasptest 
                           ${FASP_LIBRARY_NAME}
                           ${UMFPACK_LIBRARIES} 
-                          ${SUPERLU_LIBRARIES} 
+                          ${SUPERLU_LIBRARIES}
+                          ${METIS_LIBRARIES} 
                           ${MUMPS_LIBRARIES}
                           ${MKL_LIBRARIES}
-                          ${ADD_STDLIBS})
+                          ${ADD_MLIBS}
+                          ${ADD_FLIBS})
 #
     install(TARGETS ${execfile} 
             DESTINATION ${PROJECT_SOURCE_DIR}/test)
