@@ -1191,6 +1191,11 @@ FASP_API void fasp_blas_dblc_aAxpy (const REAL      alpha,
                                     const REAL     *x,
                                     REAL           *y);
 
+FASP_API void fasp_blas_ldblc_aAxpy (const REAL      alpha,
+                                    const dBLCmat  *A,
+                                    const LONGREAL      *x,
+                                    REAL           *y);
+
 FASP_API void fasp_blas_dblc_mxv (const dBLCmat  *A,
                                   const REAL     *x,
                                   REAL           *y);
@@ -1267,6 +1272,11 @@ FASP_API void fasp_blas_dcsr_mxv_agg (const dCSRmat  *A,
 FASP_API void fasp_blas_dcsr_aAxpy (const REAL      alpha,
                                     const dCSRmat  *A,
                                     const REAL     *x,
+                                    REAL           *y);
+
+FASP_API void fasp_blas_ldcsr_aAxpy (const REAL      alpha,
+                                    const dCSRmat  *A,
+                                    const LONGREAL      *x,
                                     REAL           *y);
 
 FASP_API void fasp_blas_dcsr_aAxpy_agg (const REAL      alpha,

@@ -60,12 +60,13 @@
 /**
  * \brief FASP integer and floating point numbers
  */
-#define SHORT            short      /**< short integer type */
-#define INT              int        /**< signed integer types: signed, long enough */
-#define LONG             long       /**< long integer type */
-#define LONGLONG         long long  /**< long long integer type */
-#define REAL             double     /**< float type */
-#define STRLEN           256        /**< length of strings */
+#define SHORT            short       /**< short integer type */
+#define INT              int         /**< signed integer types: signed, long enough */
+#define LONG             long        /**< long integer type */
+#define LONGLONG         long long   /**< long long integer type */
+#define REAL             double      /**< float type */
+#define LONGREAL         long double /**< long double type */
+#define STRLEN           256         /**< length of strings */
 
 /**
  * \brief Definition of max, min, abs
@@ -351,6 +352,7 @@ typedef struct dvector{
     REAL *val;
 
 } dvector; /**< Vector of REAL type */
+
 
 /**
  * \struct ivector

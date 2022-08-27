@@ -373,7 +373,7 @@ void fasp_dcoo_read (const char  *filename,
  * \author Xiaozhe Hu, Chensong Zhang
  * \date   03/24/2013
  *
- * Modified by Chensong Zhang on 01/12/2019: Convert COO to CSR
+ * Modified by Chensong Zhang on 01/12/2019: Convert COO to CSR
  */
 void fasp_dcoo_read1 (const char  *filename,
                       dCSRmat     *A)

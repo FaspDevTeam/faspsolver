@@ -164,7 +164,7 @@ INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
     }
     
     // if initial residual is small, no need to iterate!
-    if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
+    if ( relres < tol || absres0 < 1e-12*tol ) goto FINISHED;
     
     // output iteration information if needed
     fasp_itinfo(PrtLvl,StopType,0,relres,absres0,0.0);
@@ -467,7 +467,7 @@ INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
     }
 
     // if initial residual is small, no need to iterate!
-    if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
+    if ( relres < tol || absres0 < 1e-12*tol ) goto FINISHED;
 
     // output iteration information if needed
     fasp_itinfo(PrtLvl,StopType,0,relres,absres0,0.0);
@@ -772,7 +772,7 @@ INT fasp_solver_dblc_pgmres (dBLCmat     *A,
     }
     
     // if initial residual is small, no need to iterate!
-    if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
+    if ( relres < tol || absres0 < 1e-12*tol ) goto FINISHED;
     
     // output iteration information if needed
     fasp_itinfo(PrtLvl,StopType,0,relres,absres0,0.0);
@@ -1076,7 +1076,7 @@ INT fasp_solver_dstr_pgmres (dSTRmat     *A,
     }
     
     // if initial residual is small, no need to iterate!
-    if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
+    if ( relres < tol || absres0 < 1e-312*tol ) goto FINISHED;
     
     // output iteration information if needed
     fasp_itinfo(PrtLvl,StopType,0,relres,absres0,0.0);

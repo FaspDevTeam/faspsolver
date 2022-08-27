@@ -189,7 +189,7 @@ INT fasp_pardiso_factorize (dCSRmat *ptrA,
     PARDISO (pdata->pt, &(pdata->maxfct), &(pdata->mnum), &(pdata->mtype), &phase, &n,
              a, ia, ja, &idum, &nrhs, pdata->iparm, &msglvl, &ddum, &ddum, &error);
     if ( error != 0 ) {
-        printf ("\n### ERROR: Symbolic factorization failed %d!\n", error);
+        printf ("### ERROR: Symbolic factorization failed %d!\n", error);
         exit (1);
     }
     

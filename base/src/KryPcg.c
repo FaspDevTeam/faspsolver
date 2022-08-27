@@ -160,7 +160,7 @@ INT fasp_solver_dcsr_pcg (dCSRmat     *A,
     }
     
     // if initial residual is small, no need to iterate!
-    if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
+    if ( relres < tol  || absres0 < 1e-12*tol  ) goto FINISHED;
     
     // output iteration information if needed
     fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
@@ -452,7 +452,7 @@ INT fasp_solver_dbsr_pcg (dBSRmat     *A,
     }
     
     // if initial residual is small, no need to iterate!
-    if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
+    if ( relres < tol || absres0 < 1e-12*tol ) goto FINISHED;
     
     // output iteration information if needed
     fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
@@ -746,7 +746,7 @@ INT fasp_solver_dblc_pcg (dBLCmat     *A,
     }
     
     // if initial residual is small, no need to iterate!
-    if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
+    if ( relres < tol || absres0 < 1e-12*tol ) goto FINISHED;
     
     // output iteration information if needed
     fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
@@ -1040,7 +1040,7 @@ INT fasp_solver_dstr_pcg (dSTRmat     *A,
     }
     
     // if initial residual is small, no need to iterate!
-    if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
+    if ( relres < tol || absres0 < 1e-12*tol ) goto FINISHED;
     
     // output iteration information if needed
     fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
@@ -1334,7 +1334,7 @@ INT fasp_solver_pcg (mxv_matfree *mf,
     }
     
     // if initial residual is small, no need to iterate!
-    if ( relres < tol || absres0 < 1e-3*tol ) goto FINISHED;
+    if ( relres < tol || absres0 < 1e-12*tol ) goto FINISHED;
     
     fasp_darray_cp(m,z,p);
     temp1=fasp_blas_darray_dotprod(m,z,r);

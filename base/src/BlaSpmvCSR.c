@@ -502,6 +502,122 @@ void fasp_blas_dcsr_aAxpy (const REAL      alpha,
     const REAL *aj = A->val;
     INT i, k, begin_row, end_row;
     register REAL temp;
+    SHORT nthreads = 1, use_openmp = FALSE;
+    
+#ifdef _OPENMP
+    if ( m > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
+        nthreads = fasp_get_num_threads();
+    }
+#endif
+    if ( alpha == 1.0 ) {
+        if (use_openmp) {
+            INT myid, mybegin, myend;
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k)
+#endif
+            for (myid = 0; myid < nthreads; myid++ ) {
+                fasp_get_start_end(myid, nthreads, m, &mybegin, &myend);
+                for (i=mybegin; i<myend; ++i) {
+                    temp=0.0;
+                    begin_row=ia[i]; end_row=ia[i+1];
+                    for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+                    y[i]+=temp;
+                }
+            }
+        }
+        else {
+            for (i=0;i<m;++i) {
+                temp=0.0;
+                begin_row=ia[i]; end_row=ia[i+1];
+                for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+                y[i]+=temp;
+            }
+        }
+    }
+    
+    else if ( alpha == -1.0 ) {
+        if (use_openmp) {     
+            INT myid, mybegin, myend;
+            INT S=0;
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, temp, i, begin_row, end_row, k)
+#endif
+
+            for (myid = 0; myid < nthreads; myid++ ) {
+                fasp_get_start_end(myid, nthreads, m, &mybegin, &myend);
+                for (i=mybegin; i<myend; ++i) {
+                    temp=0.0;
+                    begin_row=ia[i]; end_row=ia[i+1];
+                    for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+                    y[i]-=temp;
+                }
+            } 
+        }
+        else {
+            for (i=0;i<m;++i) {
+                temp=0.0;
+                begin_row=ia[i]; end_row=ia[i+1];
+                for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+                y[i]-=temp;
+            }
+        }
+    }
+    
+    else {
+        if (use_openmp) {
+            INT myid, mybegin, myend;
+#ifdef _OPENMP
+#pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row, k)
+#endif
+            for (myid = 0; myid < nthreads; myid++ ) {
+                fasp_get_start_end(myid, nthreads, m, &mybegin, &myend);
+                for (i=mybegin; i<myend; ++i) {
+                    temp=0.0;
+                    begin_row=ia[i]; end_row=ia[i+1];
+                    for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+                    y[i]+=temp*alpha;
+                }
+            }
+        }
+        else {
+            for (i=0;i<m;++i) {
+                temp=0.0;
+                begin_row=ia[i]; end_row=ia[i+1];
+                for (k=begin_row; k<end_row; ++k) temp+=aj[k]*x[ja[k]];
+                y[i]+=temp*alpha;
+            }
+        }
+    }
+}
+
+
+/**
+ * \fn void fasp_blas_ldcsr_aAxpy (const REAL alpha, const dCSRmat *A,
+ *                                const LONGREAL  *x, REAL  *y)
+ *
+ * \brief Matrix-vector multiplication y = alpha*A*x + y
+ *
+ * \param alpha  REAL factor alpha
+ * \param A      Pointer to dCSRmat matrix A
+ * \param x      Pointer to array x
+ * \param y      Pointer to array y
+ *
+ * \author Chensong Zhang
+ * \date   07/01/2009
+ *
+ * Modified by TingLai on 08/01/2022
+ */
+void fasp_blas_ldcsr_aAxpy (const REAL      alpha,
+                           const dCSRmat  *A,
+                           const LONGREAL     *x,
+                           REAL           *y)
+{
+    const INT  m  = A->row;
+    const INT *ia = A->IA, *ja = A->JA;
+    const REAL *aj = A->val;
+    INT i, k, begin_row, end_row;
+    register LONGREAL temp;
     
     SHORT nthreads = 1, use_openmp = FALSE;
     
@@ -590,6 +706,7 @@ void fasp_blas_dcsr_aAxpy (const REAL      alpha,
         }
     }
 }
+
 
 /**
  * \fn void fasp_blas_dcsr_aAxpy_agg (const REAL alpha, const dCSRmat *A,
