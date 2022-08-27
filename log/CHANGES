@@ -1,6 +1,6 @@
 File Name: CHANGES
 
-08/27/2022 FASP 2.7.6:
+08/28/2022 FASP 2.7.6:
 - Prepare for Huawei's test problems;
 - Merge different versions;
 - Add MKL support for Mac OS X;
@@ -8,7 +8,9 @@ File Name: CHANGES
 - Test linking to MUMPS;
 - Test linking to MKL Pardiso;
 - Add reading subroutine for Huawei's problems;
-- Add support to MUMPS and Pardiso; need to test.
+- Add support to MUMPS and Pardiso; need to test;
+- Add Huawei test problems;
+- Add DLD test problems.
 
 08/14/2022 FASP 2.7.5:
 - Checking return status of UMFPACK;

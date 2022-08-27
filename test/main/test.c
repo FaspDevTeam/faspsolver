@@ -89,7 +89,7 @@ int main(int argc, const char *argv[])
 
     else if (problem_num == 11)
     {
-        // Read A and b -- P1 FE discretization for Poisson, 1M DoF
+        // Read A -- P1 FE discretization for Poisson, 1M DoF
         datafile1 = "Poisson/coomat_1046529.dat"; // This file is NOT in ../data!
         strcat(filename1, datafile1);
         fasp_dcoo_read(filename1, &A);
@@ -106,7 +106,7 @@ int main(int argc, const char *argv[])
 
     else if (problem_num == 12)
     {
-        // Read A and b -- P1 FE discretization for Poisson, 0.25M DoF
+        // Read A -- P1 FE discretization for Poisson, 0.25M DoF
         datafile1 = "Poisson/coomat_261121.dat"; // This file is NOT in ../data!
         strcat(filename1, datafile1);
         fasp_dcoo_read(filename1, &A);
@@ -123,7 +123,7 @@ int main(int argc, const char *argv[])
 
     else if (problem_num == 13)
     {
-        // Read A and b -- P1 FE discretization for Poisson, 65K DoF
+        // Read A -- P1 FE discretization for Poisson, 65K DoF
         datafile1 = "Poisson/coomat_65025.dat"; // This file is NOT in ../data!
         strcat(filename1, datafile1);
         fasp_dcoo_read(filename1, &A);
@@ -140,7 +140,7 @@ int main(int argc, const char *argv[])
 
     else if (problem_num == 14)
     {
-        // Read A and b -- 5pt FD stencil for Poisson, 1M DoF
+        // Read A -- 5pt FD stencil for Poisson, 1M DoF
         datafile1 = "Poisson/fdm_1023X1023.csr"; // This file is NOT in ../data!
         strcat(filename1, datafile1);
         fasp_dcsr_read(filename1, &A);
@@ -209,8 +209,23 @@ int main(int argc, const char *argv[])
         fasp_dcoovec_bin_read(filename1, filename2, filename3, filename4, &A, &b);
     }
 
-    else
-    {
+    else if (problem_num == 31) {
+        // Read A -- FE discretization for DLD
+        datafile1 = "DLD/A11.coo"; // This file is NOT in ../data!
+        strcat(filename1, datafile1);
+        fasp_dcoo_read1(filename1, &A);
+
+        // Generate a random solution
+        dvector sol = fasp_dvec_create(A.row);
+        fasp_dvec_rand(A.row, &sol);
+
+        // Form the right-hand-side b = A*sol
+        b = fasp_dvec_create(A.row);
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+        fasp_dvec_free(&sol);
+    }
+    
+    else {
         printf("### ERROR: Unrecognised problem number %d\n", problem_num);
         return ERROR_INPUT_PAR;
     }
