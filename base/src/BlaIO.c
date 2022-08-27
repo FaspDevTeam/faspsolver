@@ -1572,7 +1572,7 @@ void fasp_dcsr_write_coo (const char    *filename,
     printf("%s: writing to file %s...\n", __FUNCTION__, filename);
     
     // write dimension of the matrix
-    fprintf(fp,"%% dimension of the block matrix and nonzeros %d  %d  %d\n",
+    fprintf(fp,"%% dimension of the matrix and nonzeros %d  %d  %d\n",
             A->row,A->col,A->nnz);
     
     for ( i = 0; i < A->row; i++ ) {
