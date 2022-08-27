@@ -306,7 +306,14 @@ int main (int argc, const char * argv[])
             
     }
 #endif
-    
+
+#if WITH_PARDISO // use PARDISO directly
+    else if (solver_type == SOLVER_PARDISO) {
+        fasp_dcsr_sort(&A);
+        status = fasp_solver_pardiso(&A, &b, &x, print_level);
+    }
+#endif
+
     else {
         printf("### ERROR: Unknown solver type %d!!!\n", solver_type);        
         status = ERROR_SOLVER_TYPE;
