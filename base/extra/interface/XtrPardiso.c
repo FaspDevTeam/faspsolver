@@ -109,7 +109,7 @@ INT fasp_solver_pardiso (dCSRmat * ptrA,
     
     if ( prtlvl > PRINT_MIN ) {
         fasp_gettime(&end_time);
-        fasp_cputime("PARDISO costs", end_time - start_time);
+        fasp_cputime("PARDISO solver", end_time - start_time);
     }
     
     phase = -1; /* Release internal memory */

@@ -179,7 +179,7 @@ void fasp_amgcomplexity_bsr (const AMG_data_bsr  *mgl,
 void fasp_cputime (const char  *message,
                    const REAL   cputime)
 {
-    printf("%s costs %.4f seconds.\n", message, cputime);
+    printf("%s costs %.4f seconds\n", message, cputime);
 }
 
 /**

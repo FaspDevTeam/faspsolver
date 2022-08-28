@@ -70,7 +70,7 @@ void fasp_dcsrvec_read1(const char* filename, dCSRmat* A, dvector* b)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
@@ -171,7 +171,7 @@ void fasp_dcsrvec_read2(const char* filemat, const char* filerhs, dCSRmat* A,
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filemat);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filemat);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filemat);
 
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
@@ -220,7 +220,7 @@ void fasp_dcsrvec_read2(const char* filemat, const char* filerhs, dCSRmat* A,
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filerhs);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filerhs);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filerhs);
 
     if (fscanf(fp, "%d\n", &n) < 0) fasp_chkerr(ERROR_WRONG_FILE, filerhs);
 
@@ -259,7 +259,7 @@ void fasp_dcsr_read(const char* filename, dCSRmat* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
@@ -338,7 +338,7 @@ void fasp_dcoo_read(const char* filename, dCSRmat* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
@@ -390,7 +390,7 @@ void fasp_dcoo_read1(const char* filename, dCSRmat* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
@@ -444,7 +444,7 @@ void fasp_dcoovec_bin_read(const char* fni, const char* fnj, const char* fna,
     if (fp == NULL) {
         fasp_chkerr(ERROR_WRONG_FILE, fnb);
     }
-    printf("%s: reading file %s...\n", __FUNCTION__, fnb);
+    printf("%s: reading file %s ...\n", __FUNCTION__, fnb);
     fread(&n, sizeof(size_t), 1, fp);
     b->row = n;
     b->val = (double*)fasp_mem_calloc(n, sizeof(double));
@@ -455,7 +455,7 @@ void fasp_dcoovec_bin_read(const char* fni, const char* fnj, const char* fna,
     if (fp == NULL) {
         fasp_chkerr(ERROR_WRONG_FILE, fni);
     }
-    printf("%s: reading file %s...\n", __FUNCTION__, fni);
+    printf("%s: reading file %s ...\n", __FUNCTION__, fni);
     fread(&type, sizeof(size_t), 1, fp);
     fread(&nnz, sizeof(size_t), 1, fp);
     dCOOmat Atmp = fasp_dcoo_create(n, n, nnz);
@@ -468,7 +468,7 @@ void fasp_dcoovec_bin_read(const char* fni, const char* fnj, const char* fna,
     if (fp == NULL) {
         fasp_chkerr(ERROR_WRONG_FILE, fnj);
     }
-    printf("%s: reading file %s...\n", __FUNCTION__, fnj);
+    printf("%s: reading file %s ...\n", __FUNCTION__, fnj);
     fread(&type, sizeof(size_t), 1, fp);
     fread(&nnz, sizeof(size_t), 1, fp);
     Atmp.colind = (int*)fasp_mem_calloc(nnz, sizeof(int));
@@ -480,7 +480,7 @@ void fasp_dcoovec_bin_read(const char* fni, const char* fnj, const char* fna,
     if (fp == NULL) {
         fasp_chkerr(ERROR_WRONG_FILE, fna);
     }
-    printf("%s: reading file %s...\n", __FUNCTION__, fna);
+    printf("%s: reading file %s ...\n", __FUNCTION__, fna);
     fread(&type, sizeof(size_t), 1, fp);
     fread(&nnz, sizeof(size_t), 1, fp);
     Atmp.val = (double*)fasp_mem_calloc(nnz, sizeof(double));
@@ -520,7 +520,7 @@ void fasp_dcoo_shift_read(const char* filename, dCSRmat* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
@@ -574,7 +574,7 @@ void fasp_dmtx_read(const char* filename, dCSRmat* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
@@ -631,7 +631,7 @@ void fasp_dmtxsym_read(const char* filename, dCSRmat* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
@@ -706,7 +706,7 @@ void fasp_dstr_read(const char* filename, dSTRmat* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
@@ -816,7 +816,7 @@ void fasp_dbsr_read(const char* filename, dBSRmat* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
@@ -890,7 +890,7 @@ void fasp_dvecind_read(const char* filename, dvector* b)
     REAL   value;
     size_t status;
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     FILE* fp = fopen(filename, "r");
 
@@ -945,7 +945,7 @@ void fasp_dvec_read(const char* filename, dvector* b)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
@@ -995,7 +995,7 @@ void fasp_ivecind_read(const char* filename, ivector* b)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
@@ -1035,7 +1035,7 @@ void fasp_ivec_read(const char* filename, ivector* b)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     skip_comments(fp); // skip the comments in the beginning --zcs 06/30/2020
 
@@ -1086,7 +1086,7 @@ void fasp_dcsrvec_write1(const char* filename, dCSRmat* A, dvector* b)
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
     /* write the matrix to file */
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     fprintf(fp, "%d %d\n", m, n);
     for (i = 0; i < m + 1; ++i) {
@@ -1102,7 +1102,7 @@ void fasp_dcsrvec_write1(const char* filename, dCSRmat* A, dvector* b)
     m = b->row;
 
     /* write the rhs to file */
-    printf("%s: writing to file %s...\n", __FUNCTION__, filename);
+    printf("%s: writing to file %s ...\n", __FUNCTION__, filename);
 
     fprintf(fp, "%d\n", m);
 
@@ -1153,7 +1153,7 @@ void fasp_dcsrvec_write2(const char* filemat, const char* filerhs, dCSRmat* A,
     /* write the matrix to file */
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filemat);
 
-    printf("%s: writing to file %s...\n", __FUNCTION__, filemat);
+    printf("%s: writing to file %s ...\n", __FUNCTION__, filemat);
 
     fprintf(fp, "%d\n", m);
     for (i = 0; i < m + 1; ++i) {
@@ -1175,7 +1175,7 @@ void fasp_dcsrvec_write2(const char* filemat, const char* filerhs, dCSRmat* A,
     /* write the rhs to file */
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filerhs);
 
-    printf("%s: writing to file %s...\n", __FUNCTION__, filerhs);
+    printf("%s: writing to file %s ...\n", __FUNCTION__, filerhs);
 
     fprintf(fp, "%d\n", m);
 
@@ -1213,7 +1213,7 @@ void fasp_dcoo_write(const char* filename, dCSRmat* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: writing to file %s...\n", __FUNCTION__, filename);
+    printf("%s: writing to file %s ...\n", __FUNCTION__, filename);
 
     fprintf(fp, "%d  %d  %d\n", m, n, A->nnz);
     for (i = 0; i < m; ++i) {
@@ -1251,7 +1251,7 @@ void fasp_dstr_write(const char* filename, dSTRmat* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: writing to file %s...\n", __FUNCTION__, filename);
+    printf("%s: writing to file %s ...\n", __FUNCTION__, filename);
 
     fprintf(fp, "%d  %d  %d\n", nx, ny, nz); // write dimension of the problem
 
@@ -1305,7 +1305,7 @@ void fasp_dbsr_print(const char* filename, dBSRmat* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: printing to file %s...\n", __FUNCTION__, filename);
+    printf("%s: printing to file %s ...\n", __FUNCTION__, filename);
 
     for (i = 0; i < ROW; i++) {
         for (k = ia[i]; k < ia[i + 1]; k++) {
@@ -1348,7 +1348,7 @@ void fasp_dbsr_write(const char* filename, dBSRmat* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: writing to file %s...\n", __FUNCTION__, filename);
+    printf("%s: writing to file %s ...\n", __FUNCTION__, filename);
 
     fprintf(fp, "%d  %d  %d\n", ROW, COL, NNZ); // write dimension of the block matrix
 
@@ -1393,7 +1393,7 @@ void fasp_dvec_write(const char* filename, dvector* vec)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: writing to file %s...\n", __FUNCTION__, filename);
+    printf("%s: writing to file %s ...\n", __FUNCTION__, filename);
 
     fprintf(fp, "%d\n", m);
 
@@ -1425,7 +1425,7 @@ void fasp_dvecind_write(const char* filename, dvector* vec)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: writing to file %s...\n", __FUNCTION__, filename);
+    printf("%s: writing to file %s ...\n", __FUNCTION__, filename);
 
     fprintf(fp, "%d\n", m);
 
@@ -1457,7 +1457,7 @@ void fasp_ivec_write(const char* filename, ivector* vec)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: writing to file %s...\n", __FUNCTION__, filename);
+    printf("%s: writing to file %s ...\n", __FUNCTION__, filename);
 
     // write number of nonzeros
     fprintf(fp, "%d\n", m);
@@ -1583,7 +1583,7 @@ void fasp_dbsr_write_coo(const char* filename, const dBSRmat* A)
     printf("### DEBUG: storage_manner = %d\n", A->storage_manner);
 #endif
 
-    printf("%s: writing to file %s...\n", __FUNCTION__, filename);
+    printf("%s: writing to file %s ...\n", __FUNCTION__, filename);
 
     // write dimension of the block matrix
     fprintf(fp, "%% dimension of the block matrix and nonzeros %d  %d  %d\n", A->ROW,
@@ -1633,7 +1633,7 @@ void fasp_dcsr_write_coo(const char* filename, const dCSRmat* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: writing to file %s...\n", __FUNCTION__, filename);
+    printf("%s: writing to file %s ...\n", __FUNCTION__, filename);
 
     // write dimension of the matrix
     fprintf(fp, "%% dimension of the matrix and nonzeros %d  %d  %d\n", A->row, A->col,
@@ -1673,7 +1673,7 @@ void fasp_dcsr_write_mtx(const char* filename, const dCSRmat* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: writing to file %s...\n", __FUNCTION__, filename);
+    printf("%s: writing to file %s ...\n", __FUNCTION__, filename);
 
     // write dimension of the matrix
     fprintf(fp, "%% MatrixMarket matrix coordinate general\n");
@@ -1743,7 +1743,7 @@ void fasp_matrix_read(const char* filename, void* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     status = fread(&index, sizeof(INT), 1, fp);
     fasp_chkerr(status, filename);
@@ -1856,7 +1856,7 @@ void fasp_matrix_read_bin(const char* filename, void* A)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filename);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filename);
 
     status = fread(&index, sizeof(INT), 1, fp);
     fasp_chkerr(status, filename);
@@ -1933,7 +1933,7 @@ void fasp_matrix_write(const char* filename, void* A, const INT flag)
 
         if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-        printf("%s: writing to file %s...\n", __FUNCTION__, filename);
+        printf("%s: writing to file %s ...\n", __FUNCTION__, filename);
 
         fprintf(fp, "%d%d%d%d\n", fileflag, fileflag, fileflag, fileflag);
 
@@ -1961,7 +1961,7 @@ void fasp_matrix_write(const char* filename, void* A, const INT flag)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
 
-    printf("%s: writing to file %s...\n", __FUNCTION__, filename);
+    printf("%s: writing to file %s ...\n", __FUNCTION__, filename);
 
     INT putflag = fileflag * 100 + sizeof(INT) * 10 + sizeof(REAL);
     fwrite(&putflag, sizeof(INT), 1, fp);
@@ -2018,7 +2018,7 @@ void fasp_vector_read(const char* filerhs, void* b)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filerhs);
 
-    printf("%s: reading file %s...\n", __FUNCTION__, filerhs);
+    printf("%s: reading file %s ...\n", __FUNCTION__, filerhs);
 
     status = fread(&index, sizeof(INT), 1, fp);
     fasp_chkerr(status, filerhs);
@@ -2131,7 +2131,7 @@ void fasp_vector_write(const char* filerhs, void* b, const INT flag)
 
         if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filerhs);
 
-        printf("%s: writing to file %s...\n", __FUNCTION__, filerhs);
+        printf("%s: writing to file %s ...\n", __FUNCTION__, filerhs);
 
         fprintf(fp, "%d%d%d%d\n", fileflag, fileflag, fileflag, fileflag);
 
@@ -2163,7 +2163,7 @@ void fasp_vector_write(const char* filerhs, void* b, const INT flag)
 
     if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filerhs);
 
-    printf("%s: writing to file %s...\n", __FUNCTION__, filerhs);
+    printf("%s: writing to file %s ...\n", __FUNCTION__, filerhs);
 
     INT putflag = vectorflag * 100 + sizeof(INT) * 10 + sizeof(REAL);
     fwrite(&putflag, sizeof(INT), 1, fp);

@@ -44,61 +44,59 @@
  *
  * \note  Factorization and solution are combined together!!! Not efficient!!!
  */
-int fasp_solver_superlu (dCSRmat *ptrA,
-                         dvector *b,
-                         dvector *u,
-                         const SHORT prtlvl)
+int fasp_solver_superlu(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl)
 {
-    
+
 #if WITH_SuperLU
-    
+
     SuperMatrix A, L, U, B;
+
+    int* perm_r; /* row permutations from partial pivoting */
+    int* perm_c; /* column permutation vector */
+    int  nrhs = 1, info, m = ptrA->row, n = ptrA->col, nnz = ptrA->nnz;
+
+    if (prtlvl > PRINT_NONE) printf("superlu: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+
+    REAL start_time, end_time;
+    fasp_gettime(&start_time);
     
-    int *perm_r; /* row permutations from partial pivoting */
-    int *perm_c; /* column permutation vector */
-    int  nrhs=1, info, m=ptrA->row, n=ptrA->col, nnz=ptrA->nnz;
-    
-    if ( prtlvl > PRINT_NONE ) 
-		printf("superlu: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
-    
-    clock_t LU_start=clock();
-    
-    dCSRmat tempA=fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(ptrA,&tempA);
-    
-    dvector tempb=fasp_dvec_create(n);       fasp_dvec_cp(b, &tempb);
-    
+    dCSRmat tempA = fasp_dcsr_create(m, n, nnz);
+    fasp_dcsr_cp(ptrA, &tempA);
+
+    dvector tempb = fasp_dvec_create(n);
+    fasp_dvec_cp(b, &tempb);
+
     /* Create matrix A in the format expected by SuperLU. */
-    dCreate_CompCol_Matrix(&A, m, n, nnz, tempA.val, tempA.JA, tempA.IA,
-                           SLU_NR, SLU_D, SLU_GE);
-    
+    dCreate_CompCol_Matrix(&A, m, n, nnz, tempA.val, tempA.JA, tempA.IA, SLU_NR, SLU_D,
+                           SLU_GE);
+
     /* Create right-hand side B. */
     dCreate_Dense_Matrix(&B, m, nrhs, tempb.val, m, SLU_DN, SLU_D, SLU_GE);
-    
-    if ( !(perm_r = intMalloc(m)) ) ABORT("Malloc fails for perm_r[].");
-    if ( !(perm_c = intMalloc(n)) ) ABORT("Malloc fails for perm_c[].");
-    
+
+    if (!(perm_r = intMalloc(m))) ABORT("Malloc fails for perm_r[].");
+    if (!(perm_c = intMalloc(n))) ABORT("Malloc fails for perm_c[].");
+
     /* Set the default input options. */
     superlu_options_t options;
     set_default_options(&options);
-    options.ColPerm = COLAMD; //MMD_AT_PLUS_A; MMD_ATA; NATURAL;
-    
+    options.ColPerm = COLAMD; // MMD_AT_PLUS_A; MMD_ATA; NATURAL;
+
     /* Initialize the statistics variables. */
     SuperLUStat_t stat;
     StatInit(&stat);
 
     /* SuperLU */
     dgssv(&options, &A, perm_c, perm_r, &L, &U, &B, &stat, &info);
-    
-    DNformat *BB = (DNformat *) B.Store;
-    u->val = (double *) BB->nzval;
-    u->row = n;
-    
-    if ( prtlvl > PRINT_MIN ) {
-        clock_t LU_end=clock();
-        double LU_time = (double)(LU_end - LU_start)/(double)(CLOCKS_PER_SEC);
-        printf("SuperLU totally costs %f seconds.\n", LU_time);
+
+    DNformat* BB = (DNformat*)B.Store;
+    u->val       = (double*)BB->nzval;
+    u->row       = n;
+
+    if (prtlvl > PRINT_MIN) {
+        fasp_gettime(&end_time);
+        fasp_cputime("SUPERLU solver", end_time - start_time);
     }
-    
+
     /* De-allocate storage */
     SUPERLU_FREE(perm_r);
     SUPERLU_FREE(perm_c);
@@ -107,16 +105,15 @@ int fasp_solver_superlu (dCSRmat *ptrA,
     Destroy_SuperNode_Matrix(&L);
     Destroy_CompCol_Matrix(&U);
     StatFree(&stat);
-    
+
     return FASP_SUCCESS;
-    
+
 #else
-    
+
     printf("### ERROR: SuperLU is not available!\n");
     return ERROR_SOLVER_EXIT;
-    
+
 #endif
-    
 }
 
 /*---------------------------------*/

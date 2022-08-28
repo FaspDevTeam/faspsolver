@@ -75,8 +75,9 @@ int fasp_solver_mumps(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl)
         return ERROR_SOLVER_EXIT;
     }
 
-    clock_t start_time = clock();
-
+    REAL start_time, end_time;
+    fasp_gettime(&start_time);
+    
     /* Define A and rhs */
     irn = (int*)malloc(sizeof(int) * nz);
     jcn = (int*)malloc(sizeof(int) * nz);
@@ -143,9 +144,8 @@ int fasp_solver_mumps(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl)
     free(rhs);
 
     if (prtlvl > PRINT_MIN) {
-        clock_t end_time   = clock();
-        double  solve_time = (double)(end_time - start_time) / (double)(CLOCKS_PER_SEC);
-        printf("MUMPS costs %f seconds.\n", solve_time);
+        fasp_gettime(&end_time);
+        fasp_cputime("MUMPS solver", end_time - start_time);
     }
 
 #if DEBUG_MODE
