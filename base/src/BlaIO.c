@@ -1617,6 +1617,8 @@ void fasp_dbsr_write_coo(const char* filename, const dBSRmat* A)
  *
  * \author Chunsheng Feng
  * \date   11/14/2013
+ *
+ * \note Output indices start from 1 instead of 0!
  */
 void fasp_dcsr_write_coo(const char* filename, const dCSRmat* A)
 {
@@ -1636,6 +1638,46 @@ void fasp_dcsr_write_coo(const char* filename, const dCSRmat* A)
     // write dimension of the matrix
     fprintf(fp, "%% dimension of the matrix and nonzeros %d  %d  %d\n", A->row, A->col,
             A->nnz);
+
+    for (i = 0; i < A->row; i++) {
+        for (j = A->IA[i]; j < A->IA[i + 1]; j++) {
+            fprintf(fp, "%d %d %+.15E\n", i + 1, A->JA[j] + 1, A->val[j]);
+        }
+    }
+
+    fclose(fp);
+}
+
+/**
+ * \fn void fasp_dcsr_write_mtx (const char *filename, const dCSRmat *A)
+ *
+ * \brief Print out a dCSRmat matrix in coordinate format for MatrixMarket
+ *
+ * \param filename   Name of file to write to
+ * \param A          Pointer to the dCSRmat matrix A
+ *
+ * \author Chensong Zhang
+ * \date   08/28/2022
+ *
+ * \note Output indices start from 1 instead of 0!
+ */
+void fasp_dcsr_write_mtx(const char* filename, const dCSRmat* A)
+{
+    INT i, j;
+
+#if DEBUG_MODE > PRINT_MIN
+    printf("nrow = %d, ncol = %d, nnz = %d\n", A->row, A->col, A->nnz);
+#endif
+
+    FILE* fp = fopen(filename, "w");
+
+    if (fp == NULL) fasp_chkerr(ERROR_OPEN_FILE, filename);
+
+    printf("%s: writing to file %s...\n", __FUNCTION__, filename);
+
+    // write dimension of the matrix
+    fprintf(fp, "%% MatrixMarket matrix coordinate general\n");
+    fprintf(fp, "%d  %d  %d\n", A->row, A->col, A->nnz);
 
     for (i = 0; i < A->row; i++) {
         for (j = A->IA[i]; j < A->IA[i + 1]; j++) {

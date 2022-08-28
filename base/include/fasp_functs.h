@@ -492,126 +492,84 @@ FASP_API void fasp_ilu_dstr_setup1 (dSTRmat  *A,
 
 /*-------- In file: BlaIO.c --------*/
 
-FASP_API void fasp_dcsrvec_read1(const char *filename,
-                                 dCSRmat *A,
-                                 dvector *b);
+FASP_API void fasp_dcsrvec_read1(const char* filename, dCSRmat* A, dvector* b);
 
-FASP_API void fasp_dcsrvec_read2(const char *filemat,
-                                 const char *filerhs,
-                                 dCSRmat *A,
-                                 dvector *b);
+FASP_API void fasp_dcsrvec_read2(const char* filemat, const char* filerhs, dCSRmat* A,
+                                 dvector* b);
 
-FASP_API void fasp_dcsr_read(const char *filename,
-                             dCSRmat *A);
+FASP_API void fasp_dcsr_read(const char* filename, dCSRmat* A);
 
-FASP_API void fasp_dcoo_read(const char *filename,
-                             dCSRmat *A);
+FASP_API void fasp_dcoo_read(const char* filename, dCSRmat* A);
 
-FASP_API void fasp_dcoo_read1(const char *filename,
-                              dCSRmat *A);
+FASP_API void fasp_dcoo_read1(const char* filename, dCSRmat* A);
 
-FASP_API void fasp_dcoovec_bin_read(const char *fni,
-                                    const char *fnj, 
-                                    const char *fna,
-                                    const char *fnb, 
-                                    dCSRmat *A, 
-                                    dvector *b);
+FASP_API void fasp_dcoovec_bin_read(const char* fni, const char* fnj, const char* fna,
+                                    const char* fnb, dCSRmat* A, dvector* b);
 
-FASP_API void fasp_dcoo_shift_read(const char *filename,
-                                   dCSRmat *A);
+FASP_API void fasp_dcoo_shift_read(const char* filename, dCSRmat* A);
 
-FASP_API void fasp_dmtx_read(const char *filename,
-                             dCSRmat *A);
+FASP_API void fasp_dmtx_read(const char* filename, dCSRmat* A);
 
-FASP_API void fasp_dmtxsym_read(const char *filename,
-                                dCSRmat *A);
+FASP_API void fasp_dmtxsym_read(const char* filename, dCSRmat* A);
 
-FASP_API void fasp_dstr_read(const char *filename,
-                             dSTRmat *A);
+FASP_API void fasp_dstr_read(const char* filename, dSTRmat* A);
 
-FASP_API void fasp_dbsr_read(const char *filename,
-                             dBSRmat *A);
+FASP_API void fasp_dbsr_read(const char* filename, dBSRmat* A);
 
-FASP_API void fasp_dvecind_read(const char *filename,
-                                dvector *b);
+FASP_API void fasp_dvecind_read(const char* filename, dvector* b);
 
-FASP_API void fasp_dvec_read(const char *filename,
-                             dvector *b);
+FASP_API void fasp_dvec_read(const char* filename, dvector* b);
 
-FASP_API void fasp_ivecind_read(const char *filename,
-                                ivector *b);
+FASP_API void fasp_ivecind_read(const char* filename, ivector* b);
 
-FASP_API void fasp_ivec_read(const char *filename,
-                             ivector *b);
+FASP_API void fasp_ivec_read(const char* filename, ivector* b);
 
-FASP_API void fasp_dcsrvec_write1(const char *filename,
-                                  dCSRmat *A,
-                                  dvector *b);
+FASP_API void fasp_dcsrvec_write1(const char* filename, dCSRmat* A, dvector* b);
 
-FASP_API void fasp_dcsrvec_write2(const char *filemat,
-                                  const char *filerhs,
-                                  dCSRmat *A,
-                                  dvector *b);
+FASP_API void fasp_dcsrvec_write2(const char* filemat, const char* filerhs, dCSRmat* A,
+                                  dvector* b);
 
-FASP_API void fasp_dcoo_write(const char *filename,
-                              dCSRmat *A);
+FASP_API void fasp_dcoo_write(const char* filename, dCSRmat* A);
 
-FASP_API void fasp_dstr_write(const char *filename,
-                              dSTRmat *A);
+FASP_API void fasp_dstr_write(const char* filename, dSTRmat* A);
 
-FASP_API void fasp_dbsr_print(const char *filename,
-                              dBSRmat *A);
+FASP_API void fasp_dbsr_print(const char* filename, dBSRmat* A);
 
-FASP_API void fasp_dbsr_write(const char *filename,
-                              dBSRmat *A);
+FASP_API void fasp_dbsr_write(const char* filename, dBSRmat* A);
 
-FASP_API void fasp_dvec_write(const char *filename,
-                              dvector *vec);
+FASP_API void fasp_dvec_write(const char* filename, dvector* vec);
 
-FASP_API void fasp_dvecind_write(const char *filename,
-                                 dvector *vec);
+FASP_API void fasp_dvecind_write(const char* filename, dvector* vec);
 
-FASP_API void fasp_ivec_write(const char *filename,
-                              ivector *vec);
+FASP_API void fasp_ivec_write(const char* filename, ivector* vec);
 
-FASP_API void fasp_dvec_print(const INT n,
-                              dvector *u);
+FASP_API void fasp_dvec_print(const INT n, dvector* u);
 
-FASP_API void fasp_ivec_print(const INT n,
-                              ivector *u);
+FASP_API void fasp_ivec_print(const INT n, ivector* u);
 
-FASP_API void fasp_dcsr_print(const dCSRmat *A);
+FASP_API void fasp_dcsr_print(const dCSRmat* A);
 
-FASP_API void fasp_dcoo_print(const dCOOmat *A);
+FASP_API void fasp_dcoo_print(const dCOOmat* A);
 
-FASP_API void fasp_dbsr_write_coo(const char *filename,
-                                  const dBSRmat *A);
+FASP_API void fasp_dbsr_write_coo(const char* filename, const dBSRmat* A);
 
-FASP_API void fasp_dcsr_write_coo(const char *filename,
-                                  const dCSRmat *A);
+FASP_API void fasp_dcsr_write_coo(const char* filename, const dCSRmat* A);
 
-FASP_API void fasp_dstr_print(const dSTRmat *A);
+FASP_API void fasp_dcsr_write_mtx(const char* filename, const dCSRmat* A);
 
-FASP_API void fasp_matrix_read(const char *filename,
-                               void *A);
+FASP_API void fasp_dstr_print(const dSTRmat* A);
 
-FASP_API void fasp_matrix_read_bin(const char *filename,
-                                   void *A);
+FASP_API void fasp_matrix_read(const char* filename, void* A);
 
-FASP_API void fasp_matrix_write(const char *filename,
-                                void *A,
-                                const INT flag);
+FASP_API void fasp_matrix_read_bin(const char* filename, void* A);
 
-FASP_API void fasp_vector_read(const char *filerhs,
-                               void *b);
+FASP_API void fasp_matrix_write(const char* filename, void* A, const INT flag);
 
-FASP_API void fasp_vector_write(const char *filerhs,
-                                void *b,
-                                const INT flag);
+FASP_API void fasp_vector_read(const char* filerhs, void* b);
 
-FASP_API void fasp_hb_read(const char *input_file,
-                           dCSRmat *A,
-                           dvector *b);
+FASP_API void fasp_vector_write(const char* filerhs, void* b, const INT flag);
+
+FASP_API void fasp_hb_read(const char* input_file, dCSRmat* A, dvector* b);
 
 
 /*-------- In file: BlaOrderingCSR.c --------*/
@@ -2891,28 +2849,17 @@ FASP_API void fasp_fwrapper_dbsr_krylov_amg_(INT *n,
 
 /*-------- In file: XtrMumps.c --------*/
 
-FASP_API int fasp_solver_mumps (dCSRmat *ptrA,
-                                dvector *b,
-                                dvector *u,
-                                const SHORT prtlvl);
+FASP_API int fasp_solver_mumps(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl);
 
-FASP_API int fasp_solver_mumps_steps (dCSRmat *ptrA,
-                                      dvector *b,
-                                      dvector *u,
-                                      Mumps_data *mumps);
+FASP_API int fasp_solver_mumps_steps(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data* mumps);
 
-FASP_API Mumps_data fasp_mumps_factorize (dCSRmat *ptrA,
-                                          dvector *b,
-                                          dvector *u,
-                                          const SHORT prtlvl);
+FASP_API Mumps_data fasp_mumps_factorize(dCSRmat* ptrA, dvector* b, dvector* u,
+                                         const SHORT prtlvl);
 
-FASP_API void fasp_mumps_solve (dCSRmat *ptrA,
-                                dvector *b,
-                                dvector *u,
-                                Mumps_data mumps,
-                                const SHORT prtlvl);
+FASP_API void fasp_mumps_solve(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data mumps,
+                               const SHORT prtlvl);
 
-FASP_API void fasp_mumps_free (Mumps_data *mumps);
+FASP_API void fasp_mumps_free(Mumps_data* mumps);
 
 
 /*-------- In file: XtrPardiso.c --------*/
