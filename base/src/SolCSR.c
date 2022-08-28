@@ -512,7 +512,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat    *A,
     AMG_data *mgl=fasp_amg_data_create(max_levels);
     mgl[0].A=fasp_dcsr_create(m,n,nnz); fasp_dcsr_cp(A,&mgl[0].A);
     mgl[0].b=fasp_dvec_create(n); mgl[0].x=fasp_dvec_create(n);
-    
+
     // setup preconditioner
     switch (amgparam->AMG_type) {
             
@@ -532,7 +532,7 @@ INT fasp_solver_dcsr_krylov_amg (dCSRmat    *A,
 #endif
     
     if (status < 0) goto FINISHED;
-    
+
     // setup preconditioner
     precond_data pcdata;
     fasp_param_amg_to_prec(&pcdata,amgparam);

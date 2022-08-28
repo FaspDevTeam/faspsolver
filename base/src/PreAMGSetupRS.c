@@ -47,6 +47,7 @@
  * Modified by Xiaozhe Hu on 01/23/2011: add AMLI cycle.
  * Modified by Xiaozhe Hu on 04/24/2013: aggressive coarsening.
  * Modified by Chensong Zhang on 09/23/2014: check coarse spaces.
+ * Modified by Chensong Zhang on 08/28/2022: min_cdof from SHORT to INT.
  */
 SHORT fasp_amg_setup_rs (AMG_data   *mgl,
                          AMG_param  *param)
@@ -54,7 +55,7 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
     const SHORT prtlvl     = param->print_level;
     const SHORT cycle_type = param->cycle_type;
     const SHORT csolver    = param->coarse_solver;
-    const SHORT min_cdof   = MAX(param->coarse_dof,MIN_CDOF);
+    const INT   min_cdof   = MAX(param->coarse_dof,MIN_CDOF);
     const INT   m          = mgl[0].A.row;
 
     // local variables

@@ -77,7 +77,7 @@ int fasp_solver_mumps(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl)
 
     REAL start_time, end_time;
     fasp_gettime(&start_time);
-    
+
     /* Define A and rhs */
     irn = (int*)malloc(sizeof(int) * nz);
     jcn = (int*)malloc(sizeof(int) * nz);
@@ -94,7 +94,7 @@ int fasp_solver_mumps(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl)
                 a[j]   = AA[j];
             }
         }
-    } else { // For-convention
+    } else { // F-convention
         for (i = 0; i < n; i++) {
             begin_row = IA[i] - 1;
             end_row   = IA[i + 1] - 1;
@@ -108,8 +108,8 @@ int fasp_solver_mumps(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl)
 
     /* Initialize a MUMPS instance. */
     id.job          = -1;
-    id.par          = 1;
-    id.sym          = 0;
+    id.par          = 1; // host involved in factorization/solve
+    id.sym          = 0; // 0: general, 1: spd, 2: sym
     id.comm_fortran = 0;
     dmumps_c(&id);
 
@@ -121,17 +121,23 @@ int fasp_solver_mumps(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl)
     id.a   = a;
     id.rhs = rhs;
 
-    /* No outputs */
-    id.ICNTL(1) = -1;
-    id.ICNTL(2) = -1;
-    id.ICNTL(3) = -1;
-    id.ICNTL(4) = 0;
+    if (prtlvl < PRINT_MOST) { // no debug
+        id.ICNTL(1) = -1;
+        id.ICNTL(2) = -1;
+        id.ICNTL(3) = -1;
+        id.ICNTL(4) = 0;
+    } else {             // debug
+        id.ICNTL(1) = 6; // err output stream
+        id.ICNTL(2) = 6; // warn/info output stream
+        id.ICNTL(3) = 6; // global output stream
+        id.ICNTL(4) = 3; // 0:none, 1: err, 2: warn/stats, 3:diagnostics, 4:parameters
+    }
 
     /* Call the MUMPS package */
     for (i = 0; i < n; i++) rhs[i] = f[i];
 
-    id.job = 6;
-    dmumps_c(&id);
+    id.job = 6; /* Combines phase 1, 2, and 3 */
+    dmumps_c(&id); /* Sometimes segmentation faults in phase 1 */
 
     for (i = 0; i < n; i++) x[i] = id.rhs[i];
 
@@ -232,7 +238,7 @@ int fasp_solver_mumps_steps(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data* m
                             a[j]   = AA[j];
                         }
                     }
-                } else { // For-convention
+                } else { // F-convention
                     for (i = 0; i < n; i++) {
                         begin_row = IA[i] - 1;
                         end_row   = IA[i + 1] - 1;
@@ -250,6 +256,7 @@ int fasp_solver_mumps_steps(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data* m
                 id.sym          = 0;
                 id.comm_fortran = 0;
                 dmumps_c(&id);
+
                 /* Define the problem on the host */
                 id.n   = n;
                 id.nz  = nz;
@@ -396,7 +403,7 @@ Mumps_data fasp_mumps_factorize(dCSRmat* ptrA, dvector* b, dvector* u,
                 a[j]   = AA[j];
             }
         }
-    } else { // For-convention
+    } else { // F-convention
         for (i = 0; i < n; i++) {
             begin_row = IA[i] - 1;
             end_row   = IA[i + 1] - 1;
@@ -414,6 +421,7 @@ Mumps_data fasp_mumps_factorize(dCSRmat* ptrA, dvector* b, dvector* u,
     id.sym          = 0;
     id.comm_fortran = 0;
     dmumps_c(&id);
+
     /* Define the problem on the host */
     id.n   = n;
     id.nz  = nz;
@@ -422,11 +430,17 @@ Mumps_data fasp_mumps_factorize(dCSRmat* ptrA, dvector* b, dvector* u,
     id.a   = a;
     id.rhs = rhs;
 
-    /* No outputs */
-    id.ICNTL(1) = -1;
-    id.ICNTL(2) = -1;
-    id.ICNTL(3) = -1;
-    id.ICNTL(4) = 0;
+    if (prtlvl < PRINT_MOST) { // no debug
+        id.ICNTL(1) = -1;
+        id.ICNTL(2) = -1;
+        id.ICNTL(3) = -1;
+        id.ICNTL(4) = 0;
+    } else {             // debug
+        id.ICNTL(1) = 6; // err output stream
+        id.ICNTL(2) = 6; // warn/info output stream
+        id.ICNTL(3) = 6; // global output stream
+        id.ICNTL(4) = 3; // 0:none, 1: err, 2: warn/stats, 3:diagnostics, 4:parameters
+    }
 
     id.job = 4;
     dmumps_c(&id);
@@ -493,6 +507,18 @@ void fasp_mumps_solve(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data mumps,
 
     /* Call the MUMPS package. */
     for (i = 0; i < id.n; i++) rhs[i] = f[i];
+
+    if (prtlvl < PRINT_MOST) { // no debug
+        id.ICNTL(1) = -1;
+        id.ICNTL(2) = -1;
+        id.ICNTL(3) = -1;
+        id.ICNTL(4) = 0;
+    } else {             // debug
+        id.ICNTL(1) = 6; // err output stream
+        id.ICNTL(2) = 6; // warn/info output stream
+        id.ICNTL(3) = 6; // global output stream
+        id.ICNTL(4) = 3; // 0:none, 1: err, 2: warn/stats, 3:diagnostics, 4:parameters
+    }
 
     id.job = 3;
     dmumps_c(&id);
