@@ -6,7 +6,7 @@
  *         AuxVector.c, BlaArray.c, BlaSpmvCSR.c, and BlaVector.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */

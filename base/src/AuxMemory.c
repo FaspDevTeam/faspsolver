@@ -41,14 +41,14 @@ extern unsigned long total_alloc_count;
 /*--      Global Variables       --*/
 /*---------------------------------*/
 
-const int  Million = 1048576;  //! 1M = 1024*1024
+const int Million = 1048576; /**< 1M = 1024*1024 */
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
 /**
- * \fn void * fasp_mem_calloc (const LONGLONG size, const int type)
+ * \fn void * fasp_mem_calloc (const unsigned int size, const unsigned int type)
  *
  * \brief Allocate, initiate, and check memory
  *

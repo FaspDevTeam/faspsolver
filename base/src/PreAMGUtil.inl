@@ -8,7 +8,7 @@
  *  Adapted from hypre 2.0 by Xuehai Huang, 09/06/2009
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */

@@ -3,7 +3,11 @@ File Name: CHANGES
 08/28/2022 FASP 2.7.7:
 - Add output subroutine for MTX format;
 - Test PARDISO and MUMPS;
-- Modify the main test example: test.c.
+- Modify the main test example: test.c;
+- Fix a coarse level dof size bug: SHORT --> INT;
+- Report MUMPS seg fault bug on OSX;
+- Update documantation and webpage;
+- Fix Doxygen problems.
 
 08/28/2022 FASP 2.7.6:
 - Prepare for Huawei's test problems;

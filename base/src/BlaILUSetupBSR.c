@@ -8,7 +8,7 @@
  *         BlaSpmvCSR.c, and PreDataInit.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2010--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2010--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -163,26 +163,26 @@ FINISHED:
 }
 
 /**
- * \fn SHORT fasp_ilu_dbsr_setup_step (dBSRmat *A, ILU_data *iludata, ILU_param *iluparam)
+ * \fn SHORT fasp_ilu_dbsr_setup_step (dBSRmat *A, ILU_data *iludata,
+ *                                     ILU_param *iluparam, INT step)
  *
  * \brief Get ILU decoposition of a BSR matrix A
  *
  * \param A         Pointer to dBSRmat matrix
  * \param iludata   Pointer to ILU_data
  * \param iluparam  Pointer to ILU_param
+ * \param step      Step in ILU factorization
  *
  * \return          FASP_SUCCESS if successed; otherwise, error information.
  *
- * \author Shiquan Zhang, Xiaozhe Hu
+ * \author Shiquan Zhang, Xiaozhe Hu, Li Zhao
  * \date   11/08/2010
  *
  * \note Works for general nb (Xiaozhe)
  * \note Change the size of work space by Zheng Li 04/26/2015.
  * \note Modified by Chunsheng Feng on 08/11/2017 for iludata->type not inited.
- * \note Modified by Li Zhao on 04/29/2021 for ILU decompositionis divided into two steps,
- * which are only determined by the last input parameter "step".
- * if step == 1: only symbolic factoration;
- * if step == 2: only numerical factoration. 
+ * \note Modified by Li Zhao on 04/29/2021: ILU factorization divided into two steps:
+ *       step == 1: symbolic factoration; if step == 2: numerical factoration.
  */
 SHORT fasp_ilu_dbsr_setup_step (dBSRmat    *A,
 								ILU_data   *iludata,
@@ -574,14 +574,15 @@ FINISHED:
 }
 
 /**
- * \fn SHORT fasp_ilu_dbsr_setup_levsch_step (dBSRmat *A, ILU_data *iludata, 
- *                                           ILU_param *iluparam)
+ * \fn SHORT fasp_ilu_dbsr_setup_levsch_step (dBSRmat *A, ILU_data *iludata,
+ *                                            ILU_param *iluparam, INT step)
  *
  * \brief Get ILU decoposition of a BSR matrix A based on level schedule strategy
  *
  * \param A         Pointer to dBSRmat matrix
  * \param iludata   Pointer to ILU_data
  * \param iluparam  Pointer to ILU_param
+ * \param step      Step in ILU factorization
  *
  * \return          FASP_SUCCESS if successed; otherwise, error information.
  *
@@ -590,10 +591,8 @@ FINISHED:
  *
  * \note Only works for nb = 1, 2, 3 (Zheng)
  * \note Modified by Chunsheng Feng on 09/06/2017 for iludata->type not inited
- * \note Modified by Li Zhao on 04/29/2021 for ILU decompositionis divided into two steps,
- * which are only determined by the last input parameter "step".
- * if step == 1: only symbolic factoration;
- * if step == 2: only numerical factoration. 
+ * \note Modified by Li Zhao on 04/29/2021: ILU factorization divided into two steps:
+ *       step == 1: symbolic factoration; if step == 2: numerical factoration.
  */
 SHORT fasp_ilu_dbsr_setup_levsch_step (dBSRmat    *A,
                                        ILU_data   *iludata,

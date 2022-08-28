@@ -3,7 +3,7 @@
  *  \brief The test function for FASP GMG ssolvers
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2013--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2013--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */

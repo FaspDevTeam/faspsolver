@@ -858,116 +858,70 @@ FASP_API void fasp_dcoo_shift (dCOOmat   *A,
 
 /*-------- In file: BlaSparseCSR.c --------*/
 
-FASP_API dCSRmat fasp_dcsr_create(const INT m,
-                                  const INT n,
-                                  const INT nnz);
+FASP_API dCSRmat fasp_dcsr_create(const INT m, const INT n, const INT nnz);
 
-FASP_API iCSRmat fasp_icsr_create (const INT  m,
-                                   const INT  n,
-                                   const INT  nnz);
+FASP_API iCSRmat fasp_icsr_create(const INT m, const INT n, const INT nnz);
 
-FASP_API void fasp_dcsr_alloc (const INT  m,
-                               const INT  n,
-                               const INT  nnz,
-                               dCSRmat   *A);
+FASP_API void fasp_dcsr_alloc(const INT m, const INT n, const INT nnz, dCSRmat* A);
 
-FASP_API void fasp_dcsr_free (dCSRmat *A);
+FASP_API void fasp_dcsr_free(dCSRmat* A);
 
-FASP_API void fasp_icsr_free (iCSRmat *A);
+FASP_API void fasp_icsr_free(iCSRmat* A);
 
-FASP_API INT fasp_dcsr_bandwidth (const dCSRmat  *A);
+FASP_API INT fasp_dcsr_bandwidth(const dCSRmat* A);
 
-FASP_API dCSRmat fasp_dcsr_perm (dCSRmat *A,
-                                 INT     *P);
+FASP_API dCSRmat fasp_dcsr_perm(dCSRmat* A, INT* P);
 
-FASP_API void fasp_dcsr_sort (dCSRmat *A);
+FASP_API void fasp_dcsr_sort(dCSRmat* A);
 
-FASP_API SHORT fasp_dcsr_getblk (const dCSRmat  *A,
-                                 const INT      *Is,
-                                 const INT      *Js,
-                                 const INT       m,
-                                 const INT       n,
-                                 dCSRmat        *B);
+FASP_API SHORT fasp_dcsr_getblk(const dCSRmat* A, const INT* Is, const INT* Js, const INT m,
+                                const INT n, dCSRmat* B);
 
-FASP_API void fasp_dcsr_getdiag (INT            n,
-                                 const dCSRmat *A,
-                                 dvector       *diag);
+FASP_API void fasp_dcsr_getdiag(INT n, const dCSRmat* A, dvector* diag);
 
-FASP_API void fasp_dcsr_getcol (const INT      n,
-                                const dCSRmat *A,
-                                REAL          *col);
+FASP_API void fasp_dcsr_getcol(const INT n, const dCSRmat* A, REAL* col);
 
-FASP_API void fasp_dcsr_diagpref (dCSRmat *A);
+FASP_API void fasp_dcsr_diagpref(dCSRmat* A);
 
-FASP_API SHORT fasp_dcsr_regdiag (dCSRmat    *A,
-                                  const REAL  value);
+FASP_API SHORT fasp_dcsr_regdiag(dCSRmat* A, const REAL value);
 
-FASP_API void fasp_icsr_cp (const iCSRmat *A,
-                            iCSRmat       *B);
+FASP_API void fasp_icsr_cp(const iCSRmat* A, iCSRmat* B);
 
-FASP_API void fasp_dcsr_cp (const dCSRmat *A,
-                            dCSRmat       *B);
+FASP_API void fasp_dcsr_cp(const dCSRmat* A, dCSRmat* B);
 
-FASP_API void fasp_icsr_trans (const iCSRmat *A,
-                               iCSRmat       *AT);
+FASP_API void fasp_icsr_trans(const iCSRmat* A, iCSRmat* AT);
 
-FASP_API INT fasp_dcsr_trans (const dCSRmat *A,
-                              dCSRmat       *AT);
+FASP_API INT fasp_dcsr_trans(const dCSRmat* A, dCSRmat* AT);
 
-FASP_API void fasp_dcsr_transpose (INT   *row[2],
-                                   INT   *col[2],
-                                   REAL  *val[2],
-                                   INT   *nn,
-                                   INT   *tniz);
+FASP_API void fasp_dcsr_transpose(INT* row[2], INT* col[2], REAL* val[2], INT* nn, INT* tniz);
 
-FASP_API void fasp_dcsr_compress (const dCSRmat *A,
-                                  dCSRmat       *B,
-                                  const REAL     dtol);
+FASP_API void fasp_dcsr_compress(const dCSRmat* A, dCSRmat* B, const REAL dtol);
 
-FASP_API SHORT fasp_dcsr_compress_inplace (dCSRmat    *A,
-                                           const REAL  dtol);
+FASP_API SHORT fasp_dcsr_compress_inplace(dCSRmat* A, const REAL dtol);
 
-FASP_API void fasp_dcsr_shift (dCSRmat   *A,
-                               const INT  offset);
+FASP_API void fasp_dcsr_shift(dCSRmat* A, const INT offset);
 
-FASP_API void fasp_dcsr_symdiagscale (dCSRmat       *A,
-                                      const dvector *diag);
+FASP_API void fasp_dcsr_symdiagscale(dCSRmat* A, const dvector* diag);
 
-FASP_API dCSRmat fasp_dcsr_sympart (dCSRmat *A);
+FASP_API dCSRmat fasp_dcsr_sympart(dCSRmat* A);
 
-FASP_API void fasp_dcsr_transz (dCSRmat *A,
-                                INT     *p,
-                                dCSRmat *AT);
+FASP_API void fasp_dcsr_transz(dCSRmat* A, INT* p, dCSRmat* AT);
 
-FASP_API dCSRmat fasp_dcsr_permz (dCSRmat *A,
-                                  INT     *p);
+FASP_API dCSRmat fasp_dcsr_permz(dCSRmat* A, INT* p);
 
-FASP_API void fasp_dcsr_sortz (dCSRmat      *A,
-                               const SHORT   isym);
+FASP_API void fasp_dcsr_sortz(dCSRmat* A, const SHORT isym);
 
-FASP_API void fasp_dcsr_multicoloring (dCSRmat *A,
-                                       INT     *flags,
-                                       INT     *groups);
+FASP_API void fasp_dcsr_multicoloring(dCSRmat* A, INT* flags, INT* groups);
 
-FASP_API void dCSRmat_Multicoloring(dCSRmat *A,
-                                    INT *rowmax,
-                                    INT *groups);
+FASP_API void dCSRmat_Multicoloring(dCSRmat* A, INT* rowmax, INT* groups);
 
-FASP_API void dCSRmat_Multicoloring_Strong_Coupled(dCSRmat *A,
-                                                   iCSRmat *S,
-                                                   INT *flags,
-                                                   INT *groups);
+FASP_API void dCSRmat_Multicoloring_Strong_Coupled(dCSRmat* A, iCSRmat* S, INT* flags,
+                                                   INT* groups);
 
-FASP_API void dCSRmat_Multicoloring_Theta(dCSRmat *A,
-         				                 REAL theta,
-                                          INT *rowmax,
-                                          INT *groups);
+FASP_API void dCSRmat_Multicoloring_Theta(dCSRmat* A, REAL theta, INT* rowmax, INT* groups);
 
-FASP_API void fasp_smoother_dcsr_gs_multicolor (dvector *u,
-                                                dCSRmat *A,
-                                                dvector *b,
-                                                INT L,
-                                                const INT order);
+FASP_API void fasp_smoother_dcsr_gs_multicolor(dvector* u, dCSRmat* A, dvector* b, INT L,
+                                               const INT order);
 
 
 /*-------- In file: BlaSparseCSRL.c --------*/
@@ -1217,86 +1171,44 @@ FASP_API void fasp_blas_dbsr_rap_agg (const dBSRmat  *R,
 
 /*-------- In file: BlaSpmvCSR.c --------*/
 
-FASP_API SHORT fasp_blas_dcsr_add (const dCSRmat  *A,
-                                   const REAL      alpha,
-                                   const dCSRmat  *B,
-                                   const REAL      beta,
-                                   dCSRmat        *C);
+FASP_API SHORT fasp_blas_dcsr_add(const dCSRmat* A, const REAL alpha, const dCSRmat* B,
+                                  const REAL beta, dCSRmat* C);
 
-FASP_API void fasp_blas_dcsr_axm (dCSRmat     *A,
-                                  const REAL   alpha);
+FASP_API void fasp_blas_dcsr_axm(dCSRmat* A, const REAL alpha);
 
-FASP_API void fasp_blas_dcsr_mxv (const dCSRmat  *A,
-                                  const REAL     *x,
-                                  REAL           *y);
+FASP_API void fasp_blas_dcsr_mxv(const dCSRmat* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_dcsr_mxv_agg (const dCSRmat  *A,
-                                      const REAL     *x,
-                                      REAL           *y);
+FASP_API void fasp_blas_dcsr_mxv_agg(const dCSRmat* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_dcsr_aAxpy (const REAL      alpha,
-                                    const dCSRmat  *A,
-                                    const REAL     *x,
-                                    REAL           *y);
+FASP_API void fasp_blas_dcsr_aAxpy(const REAL alpha, const dCSRmat* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_ldcsr_aAxpy (const REAL      alpha,
-                                    const dCSRmat  *A,
-                                    const LONGREAL     *x,
-                                    REAL           *y);
+FASP_API void fasp_blas_ldcsr_aAxpy(const REAL alpha, const dCSRmat* A, const LONGREAL* x,
+                                    REAL* y);
 
-FASP_API void fasp_blas_dcsr_aAxpy_agg (const REAL      alpha,
-                                        const dCSRmat  *A,
-                                        const REAL     *x,
-                                        REAL           *y);
+FASP_API void fasp_blas_dcsr_aAxpy_agg(const REAL alpha, const dCSRmat* A, const REAL* x,
+                                       REAL* y);
 
-FASP_API REAL fasp_blas_dcsr_vmv (const dCSRmat  *A,
-                                  const REAL     *x,
-                                  const REAL     *y);
+FASP_API REAL fasp_blas_dcsr_vmv(const dCSRmat* A, const REAL* x, const REAL* y);
 
-FASP_API void fasp_blas_dcsr_mxm (const dCSRmat  *A,
-                                  const dCSRmat  *B,
-                                  dCSRmat        *C);
+FASP_API void fasp_blas_dcsr_mxm(const dCSRmat* A, const dCSRmat* B, dCSRmat* C);
 
-FASP_API void fasp_blas_dcsr_rap (const dCSRmat  *R,
-                                  const dCSRmat  *A,
-                                  const dCSRmat  *P,
-                                  dCSRmat        *RAP);
+FASP_API void fasp_blas_dcsr_rap(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P,
+                                 dCSRmat* RAP);
 
-FASP_API void fasp_blas_dcsr_rap_agg (const dCSRmat  *R,
-                                      const dCSRmat  *A,
-                                      const dCSRmat  *P,
-                                      dCSRmat        *RAP);
+FASP_API void fasp_blas_dcsr_rap_agg(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P,
+                                     dCSRmat* RAP);
 
-FASP_API void fasp_blas_dcsr_rap_agg1 (const dCSRmat  *R,
-                                       const dCSRmat  *A,
-                                       const dCSRmat  *P,
-                                       dCSRmat        *B);
+FASP_API void fasp_blas_dcsr_rap_agg1(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P,
+                                      dCSRmat* B);
 
-FASP_API void fasp_blas_dcsr_ptap (const dCSRmat  *Pt,
-                                   const dCSRmat  *A,
-                                   const dCSRmat  *P,
-                                   dCSRmat        *Ac);
+FASP_API void fasp_blas_dcsr_ptap(const dCSRmat* Pt, const dCSRmat* A, const dCSRmat* P,
+                                  dCSRmat* Ac);
 
-FASP_API dCSRmat fasp_blas_dcsr_rap2 (INT    *ir,
-                                      INT    *jr,
-                                      REAL   *r,
-                                      INT    *ia,
-                                      INT    *ja,
-                                      REAL   *a,
-                                      INT    *ipt,
-                                      INT    *jpt,
-                                      REAL   *pt,
-                                      INT     n,
-                                      INT     nc,
-                                      INT    *maxrpout,
-                                      INT    *ipin,
-                                      INT    *jpin);
+FASP_API dCSRmat fasp_blas_dcsr_rap2(INT* ir, INT* jr, REAL* r, INT* ia, INT* ja, REAL* a,
+                                     INT* ipt, INT* jpt, REAL* pt, INT n, INT nc, INT* maxrpout,
+                                     INT* ipin, INT* jpin);
 
-FASP_API void fasp_blas_dcsr_rap4 (dCSRmat   *R,
-                                   dCSRmat   *A,
-                                   dCSRmat   *P,
-                                   dCSRmat   *B,
-                                   INT       *icor_ysk);
+FASP_API void fasp_blas_dcsr_rap4(dCSRmat* R, dCSRmat* A, dCSRmat* P, dCSRmat* B, INT* icor_ysk);
 
 
 /*-------- In file: BlaSpmvCSRL.c --------*/
@@ -2490,10 +2402,7 @@ FASP_API void fasp_precond_dstr_blockgs (REAL *r,
 
 /*-------- In file: SolAMG.c --------*/
 
-FASP_API INT fasp_solver_amg (dCSRmat  *A,
-                              dvector  *b,
-                              dvector        *x,
-                              AMG_param      *param);
+FASP_API INT fasp_solver_amg(dCSRmat* A, dvector* b, dvector* x, AMG_param* param);
 
 
 /*-------- In file: SolBLC.c --------*/
@@ -2780,71 +2689,27 @@ FASP_API INT fasp_solver_dstr_krylov_blockgs (dSTRmat    *A,
 
 /*-------- In file: SolWrapper.c --------*/
 
-FASP_API void fasp_fwrapper_dcsr_pardiso_(INT *n,
-                                          INT *nnz,
-                                          INT *ia,
-                                          INT *ja,
-                                          REAL *a,
-                                          REAL *b,
-                                          REAL *u,
-                                          INT *ptrlvl);
+FASP_API void fasp_fwrapper_dcsr_pardiso_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, REAL* b,
+                                          REAL* u, INT* ptrlvl);
 
-FASP_API void fasp_fwrapper_dcsr_amg_(INT *n,
-                                      INT *nnz,
-                                      INT *ia,
-                                      INT *ja,
-                                      REAL *a,
-                                      REAL *b,
-                                      REAL *u,
-                                      REAL *tol,
-                                      INT *maxit,
-                                      INT *ptrlvl);
+FASP_API void fasp_fwrapper_dcsr_amg_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, REAL* b,
+                                      REAL* u, REAL* tol, INT* maxit, INT* ptrlvl);
 
-FASP_API void fasp_fwrapper_dcsr_krylov_ilu_(INT *n,
-                                             INT *nnz,
-                                             INT *ia,
-                                             INT *ja,
-                                             REAL *a,
-                                             REAL *b,
-                                             REAL *u,
-                                             REAL *tol,
-                                             INT *maxit,
-                                             INT *ptrlvl);
+FASP_API void fasp_fwrapper_dcsr_krylov_ilu_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a,
+                                             REAL* b, REAL* u, REAL* tol, INT* maxit,
+                                             INT* ptrlvl);
 
-FASP_API void fasp_fwrapper_dcsr_krylov_amg_(INT *n,
-                                             INT *nnz,
-                                             INT *ia,
-                                             INT *ja,
-                                             REAL *a,
-                                             REAL *b,
-                                             REAL *u,
-                                             REAL *tol,
-                                             INT *maxit,
-                                             INT *ptrlvl);
+FASP_API void fasp_fwrapper_dcsr_krylov_amg_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a,
+                                             REAL* b, REAL* u, REAL* tol, INT* maxit,
+                                             INT* ptrlvl);
 
-FASP_API void fasp_fwrapper_dbsr_krylov_ilu_(INT *n,
-                                             INT *nnz,
-                                             INT *nb,
-                                             INT *ia,
-                                             INT *ja,
-                                             REAL *a,
-                                             REAL *b,
-                                             REAL *u,
-                                             REAL *tol,
-                                             INT *maxit,
-                                             INT *ptrlvl);
+FASP_API void fasp_fwrapper_dbsr_krylov_ilu_(INT* n, INT* nnz, INT* nb, INT* ia, INT* ja,
+                                             REAL* a, REAL* b, REAL* u, REAL* tol, INT* maxit,
+                                             INT* ptrlvl);
 
-FASP_API void fasp_fwrapper_dbsr_krylov_amg_(INT *n,
-                                             INT *nnz,
-                                             INT *nb,
-                                             INT *ia,
-                                             INT *ja,
-                                             REAL *a,
-                                             REAL *b,
-                                             REAL *u,
-                                             REAL *tol,
-                                             INT *maxit,
-                                             INT *ptrlvl);
+FASP_API void fasp_fwrapper_dbsr_krylov_amg_(INT* n, INT* nnz, INT* nb, INT* ia, INT* ja,
+                                             REAL* a, REAL* b, REAL* u, REAL* tol, INT* maxit,
+                                             INT* ptrlvl);
 
 
 /*-------- In file: XtrMumps.c --------*/
@@ -2894,10 +2759,7 @@ FASP_API INT dCSRmat2SAMGInput (dCSRmat *A,
 
 /*-------- In file: XtrSuperlu.c --------*/
 
-FASP_API int fasp_solver_superlu (dCSRmat *ptrA,
-                                  dvector *b,
-                                  dvector *u,
-                                  const SHORT prtlvl);
+FASP_API int fasp_solver_superlu(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl);
 
 
 /*-------- In file: XtrUmfpack.c --------*/

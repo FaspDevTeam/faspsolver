@@ -7,7 +7,7 @@
 !> \note  Solving the Poisson equation (P1 FEM) with AMG: F90 version
 !>
 !>---------------------------------------------------------------------------------
-!>  Copyright (C) 2011--2020 by the FASP team. All rights reserved.
+!>  Copyright (C) 2011--Present by the FASP team. All rights reserved.
 !>  Released under the terms of the GNU Lesser General Public License 3.0 or later.
 !>---------------------------------------------------------------------------------
 

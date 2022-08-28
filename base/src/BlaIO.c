@@ -10,7 +10,7 @@
  *         and BlaSpmvCSR.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -868,7 +868,7 @@ void fasp_dbsr_read(const char* filename, dBSRmat* A)
 }
 
 /**
- * \fn void fasp_dvecind_read (const char *filename, dBSRmat *b)
+ * \fn void fasp_dvecind_read (const char *filename, dvector *b)
  *
  * \brief Read b from matrix disk file
  *

@@ -6,7 +6,7 @@
  *         BlaSpmvCSR.c
  *
  *---------------------------------------------------------------------------------
- *  Copyright (C) 2009--2020 by the FASP team. All rights reserved.
+ *  Copyright (C) 2009--Present by the FASP team. All rights reserved.
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  */
@@ -279,10 +279,8 @@ void fasp_blas_dblc_mxv (const dBLCmat  *A,
     
 }
 
-
-
 /**
- * \fn void fasp_lblas__dblc_aAxpy (const REAL alpha, const dBLCmat *A,
+ * \fn void fasp_blas_ldblc_aAxpy (const REAL alpha, const dBLCmat *A,
  *                                const LONGREAL  *x,  REAL *y)
  *
  * \brief Matrix-vector multiplication y = alpha*A*x + y
@@ -292,7 +290,7 @@ void fasp_blas_dblc_mxv (const dBLCmat  *A,
  * \param x      Pointer to array x
  * \param y      Pointer to array y
  *
- * \author laiting
+ * \author Lai Ting
  * \date   08/01/2022
  */
 void fasp_blas_ldblc_aAxpy (const REAL      alpha,
