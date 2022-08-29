@@ -49,13 +49,14 @@ int fasp_solver_mumps(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl)
 
     DMUMPS_STRUC_C id;
 
-    const int n  = ptrA->row;
-    const int nz = ptrA->nnz;
-    int*      IA = ptrA->IA;
-    int*      JA = ptrA->JA;
-    double*   AA = ptrA->val;
-    double*   f  = b->val;
-    double*   x  = u->val;
+    int       status = FASP_SUCCESS;
+    const int n      = ptrA->row;
+    const int nz     = ptrA->nnz;
+    int*      IA     = ptrA->IA;
+    int*      JA     = ptrA->JA;
+    double*   AA     = ptrA->val;
+    double*   f      = b->val;
+    double*   x      = u->val;
 
     int*    irn;
     int*    jcn;
@@ -136,8 +137,14 @@ int fasp_solver_mumps(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl)
     /* Call the MUMPS package */
     for (i = 0; i < n; i++) rhs[i] = f[i];
 
-    id.job = 6; /* Combines phase 1, 2, and 3 */
-    dmumps_c(&id); /* Sometimes segmentation faults in phase 1 */
+    id.job = 6;    /* Combines phase 1, 2, and 3 */
+    dmumps_c(&id); /* Sometimes segmentation faults in MUMPS-5.0.0 */
+    status = id.info[0];
+    if (status < 0) {
+        printf("### ERROR: %d, %s %d\n", status, __FUNCTION__, __LINE__);
+        printf("### ERROR: MUMPS solve failed!\n");
+        exit(ERROR_SOLVER_MISC);
+    }
 
     for (i = 0; i < n; i++) x[i] = id.rhs[i];
 
@@ -157,7 +164,7 @@ int fasp_solver_mumps(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl)
 #if DEBUG_MODE
     printf("### DEBUG: fasp_solver_mumps ... [Finish]\n");
 #endif
-    return FASP_SUCCESS;
+    return status;
 
 #else
 
@@ -191,15 +198,14 @@ int fasp_solver_mumps_steps(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data* m
 
     DMUMPS_STRUC_C id;
 
-    int job = mumps->job;
-
+    int        status   = FASP_SUCCESS;
+    int        job      = mumps->job;
     static int job_stat = 0;
     int        i, j;
-
-    int*    irn;
-    int*    jcn;
-    double* a;
-    double* rhs;
+    int*       irn;
+    int*       jcn;
+    double*    a;
+    double*    rhs;
 
     switch (job) {
 
@@ -273,6 +279,12 @@ int fasp_solver_mumps_steps(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data* m
 
                 id.job = 4;
                 dmumps_c(&id);
+                status = id.info[0];
+                if (status < 0) {
+                    printf("### ERROR: %d, %s %d\n", status, __FUNCTION__, __LINE__);
+                    printf("### ERROR: MUMPS factorization failed!\n");
+                    exit(ERROR_SOLVER_MISC);
+                }
                 job_stat = 1;
 
                 mumps->id = id;
@@ -300,6 +312,12 @@ int fasp_solver_mumps_steps(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data* m
 
                 id.job = 3;
                 dmumps_c(&id);
+                status = id.info[0];
+                if (status < 0) {
+                    printf("### ERROR: %d, %s %d\n", status, __FUNCTION__, __LINE__);
+                    printf("### ERROR: MUMPS solve failed!\n");
+                    exit(ERROR_SOLVER_MISC);
+                }
 
                 for (i = 0; i < id.n; i++) u->val[i] = id.rhs[i];
 
@@ -341,7 +359,7 @@ int fasp_solver_mumps_steps(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data* m
             return ERROR_SOLVER_EXIT;
     }
 
-    return FASP_SUCCESS;
+    return status;
 
 #else
 
@@ -371,13 +389,14 @@ Mumps_data fasp_mumps_factorize(dCSRmat* ptrA, dvector* b, dvector* u,
     Mumps_data     mumps;
     DMUMPS_STRUC_C id;
 
+    int       status = FASP_SUCCESS;
+    const int m      = ptrA->row;
+    const int n      = ptrA->col;
+    const int nz     = ptrA->nnz;
+    int*      IA     = ptrA->IA;
+    int*      JA     = ptrA->JA;
+    double*   AA     = ptrA->val;
     int       i, j;
-    const int m  = ptrA->row;
-    const int n  = ptrA->col;
-    const int nz = ptrA->nnz;
-    int*      IA = ptrA->IA;
-    int*      JA = ptrA->JA;
-    double*   AA = ptrA->val;
 
     int*    irn = id.irn = (int*)malloc(sizeof(int) * nz);
     int*    jcn = id.jcn = (int*)malloc(sizeof(int) * nz);
@@ -444,6 +463,12 @@ Mumps_data fasp_mumps_factorize(dCSRmat* ptrA, dvector* b, dvector* u,
 
     id.job = 4;
     dmumps_c(&id);
+    status = id.info[0];
+    if (status < 0) {
+        printf("### ERROR: %d, %s %d\n", status, __FUNCTION__, __LINE__);
+        printf("### ERROR: MUMPS factorization failed!\n");
+        exit(ERROR_SOLVER_MISC);
+    }
 
     if (prtlvl > PRINT_MIN) {
         clock_t end_time = clock();
@@ -483,12 +508,13 @@ void fasp_mumps_solve(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data mumps,
 
     DMUMPS_STRUC_C id = mumps.id;
 
-    const int m  = ptrA->row;
-    const int n  = ptrA->row;
-    const int nz = ptrA->nnz;
-    int*      IA = ptrA->IA;
-    int*      JA = ptrA->JA;
-    double*   AA = ptrA->val;
+    int       status = FASP_SUCCESS;
+    const int m      = ptrA->row;
+    const int n      = ptrA->row;
+    const int nz     = ptrA->nnz;
+    int*      IA     = ptrA->IA;
+    int*      JA     = ptrA->JA;
+    double*   AA     = ptrA->val;
 
     int*    irn = id.irn;
     int*    jcn = id.jcn;
@@ -522,6 +548,12 @@ void fasp_mumps_solve(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data mumps,
 
     id.job = 3;
     dmumps_c(&id);
+    status = id.info[0];
+    if (status < 0) {
+        printf("### ERROR: %d, %s %d\n", status, __FUNCTION__, __LINE__);
+        printf("### ERROR: MUMPS solve failed!\n");
+        exit(ERROR_SOLVER_MISC);
+    }
 
     for (i = 0; i < id.n; i++) x[i] = id.rhs[i];
 

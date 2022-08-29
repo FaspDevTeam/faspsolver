@@ -4,6 +4,9 @@ File Name: CHANGES
 - Output stat information from MUMPS;
 - Output stat information from UMFPACK;
 - Output stat information from PARDISO;
+- Test MUMPS, UMFPACK, and PARDISO with problems from DLD and Huawei;
+- MUMPS-5.5.1 built with gfortran (does not work with ifort);
+- SuiteSparse-5.12.0 built with clang (work with icc/gcc).
 
 08/28/2022 FASP 2.7.7:
 - Add output subroutine for MTX format;

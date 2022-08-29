@@ -88,15 +88,17 @@ INT fasp_solver_pardiso(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlv
     PARDISO(pt, &maxfct, &mnum, &mtype, &phase, &n, a, ia, ja, &idum, &nrhs, iparm,
             &msglvl, &ddum, &ddum, &error);
     if (error != 0) {
-        printf("### ERROR: Symbolic factorization failed %d!\n", error);
+        printf("### ERROR: %d, %s %d\n", error, __FUNCTION__, __LINE__);
+        printf("### ERROR: PARDISO symbolic factorization failed!\n");
         exit(ERROR_SOLVER_MISC);
     }
 
-    phase = 22; /* Numerical factorization */
+    phase = 22; /* Numeric factorization */
     PARDISO(pt, &maxfct, &mnum, &mtype, &phase, &n, a, ia, ja, &idum, &nrhs, iparm,
             &msglvl, &ddum, &ddum, &error);
     if (error != 0) {
-        printf("\n### ERROR: Numeric factorization failed %d!\n", error);
+        printf("### ERROR: %d, %s %d\n", error, __FUNCTION__, __LINE__);
+        printf("### ERROR: PARDISO numeric factorization failed!\n");
         exit(ERROR_SOLVER_MISC);
     }
 
@@ -105,7 +107,8 @@ INT fasp_solver_pardiso(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlv
             &msglvl, f, x, &error);
 
     if (error != 0) {
-        printf("\n### ERROR: Solution failed %d!\n", error);
+        printf("### ERROR: %d, %s %d\n", error, __FUNCTION__, __LINE__);
+        printf("### ERROR: Solution failed!\n");
         exit(ERROR_SOLVER_MISC);
     }
 
@@ -192,7 +195,8 @@ INT fasp_pardiso_factorize(dCSRmat* ptrA, Pardiso_data* pdata, const SHORT prtlv
     PARDISO(pdata->pt, &(pdata->maxfct), &(pdata->mnum), &(pdata->mtype), &phase, &n, a,
             ia, ja, &idum, &nrhs, pdata->iparm, &msglvl, &ddum, &ddum, &error);
     if (error != 0) {
-        printf("### ERROR: Symbolic factorization failed %d!\n", error);
+        printf("### ERROR: %d, %s %d\n", error, __FUNCTION__, __LINE__);
+        printf("### ERROR: PARDISO symbolic factorization failed!\n");
         exit(ERROR_SOLVER_MISC);
     }
 
@@ -201,7 +205,8 @@ INT fasp_pardiso_factorize(dCSRmat* ptrA, Pardiso_data* pdata, const SHORT prtlv
             ia, ja, &idum, &nrhs, pdata->iparm, &msglvl, &ddum, &ddum, &error);
 
     if (error != 0) {
-        printf("\n### ERROR: Numeric factorization failed %d!\n", error);
+        printf("### ERROR: %d, %s %d\n", error, __FUNCTION__, __LINE__);
+        printf("### ERROR: PARDISO numeric factorization failed!\n");
         exit(ERROR_SOLVER_MISC);
     }
 
@@ -262,7 +267,8 @@ INT fasp_pardiso_solve(dCSRmat* ptrA, dvector* b, dvector* u, Pardiso_data* pdat
             ia, ja, &idum, &nrhs, pdata->iparm, &msglvl, f, x, &error);
 
     if (error != 0) {
-        printf("### ERROR: Solution failed %d!\n", error);
+        printf("### ERROR: %d, %s %d\n", error, __FUNCTION__, __LINE__);
+        printf("### ERROR: PARDISO solve failed!\n");
         exit(ERROR_SOLVER_MISC);
     }
 
