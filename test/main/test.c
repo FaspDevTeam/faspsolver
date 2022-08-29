@@ -292,34 +292,32 @@ int main(int argc, const char* argv[])
         fasp_solver_famg(&A, &b, &x, &amgpar);
     }
 
-#if WITH_SuperLU // use SuperLU directly
+#if WITH_SuperLU // Call SuperLU if linked with -DUSE_SUPERLU=ON
     else if (solver_type == SOLVER_SUPERLU) {
         status = fasp_solver_superlu(&A, &b, &x, print_level);
     }
 #endif
 
-#if WITH_UMFPACK // use UMFPACK directly
+#if WITH_UMFPACK // Call UMFPACK if linked with -DUSE_UMFPACK=ON
     else if (solver_type == SOLVER_UMFPACK) {
         dCSRmat A_tran;
         fasp_dcsr_trans(&A, &A_tran);
         fasp_dcsr_sort(&A_tran);
-        fasp_dcsr_cp(&A_tran, &A);
-        fasp_dcsr_free(&A_tran);
+        void* Numeric = fasp_umfpack_factorize(&A_tran, print_level);
 
-        void* Numeric;
-        Numeric = fasp_umfpack_factorize(&A, print_level);
-        status  = fasp_umfpack_solve(&A, &b, &x, Numeric, print_level);
+        status = fasp_umfpack_solve(&A_tran, &b, &x, Numeric, print_level);
         fasp_umfpack_free_numeric(Numeric);
+        fasp_dcsr_free(&A_tran);
     }
 #endif
 
-#if WITH_MUMPS // use MUMPS directly
+#if WITH_MUMPS // Call MUMPS if linked with -DUSE_MUMPS=ON
     else if (solver_type == SOLVER_MUMPS) {
         status = fasp_solver_mumps(&A, &b, &x, print_level);
     }
 #endif
 
-#if WITH_PARDISO // use PARDISO directly
+#if WITH_PARDISO // Call PARDISO if linked with -DUSE_PARDISO=ON
     else if (solver_type == SOLVER_PARDISO) {
         fasp_dcsr_sort(&A);
         status = fasp_solver_pardiso(&A, &b, &x, print_level);
