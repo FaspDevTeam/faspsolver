@@ -1,8 +1,9 @@
 File Name: CHANGES
 
-08/29/2022 FASP 2.7.8:
-- Output debug information from MUMPS;
-- Output debug information from UMFPACK;
+08/30/2022 FASP 2.7.8:
+- Output stat information from MUMPS;
+- Output stat information from UMFPACK;
+- Output stat information from PARDISO;
 
 08/28/2022 FASP 2.7.7:
 - Add output subroutine for MTX format;

@@ -70,9 +70,9 @@ INT fasp_solver_umfpack(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlv
     /* Symbolic factorization */
     status = umfpack_di_symbolic(n, n, Ap, Ai, Ax, &Symbolic, Control, Info);
     if (status != 0) {
-        if (prtlvl > PRINT_MIN) umfpack_di_report_status(Control, status);
-        if (prtlvl > PRINT_SOME) umfpack_di_report_control(Control);
-        if (prtlvl > PRINT_MIN) umfpack_di_report_info(Control, Info);
+        if (prtlvl > PRINT_SOME) umfpack_di_report_status(Control, status);
+        if (prtlvl > PRINT_MORE) umfpack_di_report_control(Control);
+        if (prtlvl > PRINT_SOME) umfpack_di_report_info(Control, Info);
         if (status < 0) {
             printf("### ERROR: %d, %s %d\n", status, __FUNCTION__, __LINE__);
             printf("### ERROR: Symbolic factorization failed!\n");
@@ -83,9 +83,9 @@ INT fasp_solver_umfpack(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlv
     /* Numeric factorization */
     status = umfpack_di_numeric(Ap, Ai, Ax, Symbolic, &Numeric, Control, Info);
     if (status != 0) {
-        if (prtlvl > PRINT_MIN) umfpack_di_report_status(Control, status);
-        if (prtlvl > PRINT_SOME) umfpack_di_report_control(Control);
-        if (prtlvl > PRINT_MIN) umfpack_di_report_info(Control, Info);
+        if (prtlvl > PRINT_SOME) umfpack_di_report_status(Control, status);
+        if (prtlvl > PRINT_MORE) umfpack_di_report_control(Control);
+        if (prtlvl > PRINT_SOME) umfpack_di_report_info(Control, Info);
         if (status < 0) {
             printf("### ERROR: %d, %s %d\n", status, __FUNCTION__, __LINE__);
             printf("### ERROR: Symbolic factorization failed!\n");
@@ -169,9 +169,9 @@ void* fasp_umfpack_factorize(dCSRmat* ptrA, const SHORT prtlvl)
     /* Symbolic factorization */
     status = umfpack_di_symbolic(n, n, Ap, Ai, Ax, &Symbolic, Control, Info);
     if (status != 0) {
-        if (prtlvl > PRINT_MIN) umfpack_di_report_status(Control, status);
-        if (prtlvl > PRINT_SOME) umfpack_di_report_control(Control);
-        if (prtlvl > PRINT_MIN) umfpack_di_report_info(Control, Info);
+        if (prtlvl > PRINT_SOME) umfpack_di_report_status(Control, status);
+        if (prtlvl > PRINT_MORE) umfpack_di_report_control(Control);
+        if (prtlvl > PRINT_SOME) umfpack_di_report_info(Control, Info);
         if (status < 0) {
             printf("### ERROR: %d, %s %d\n", status, __FUNCTION__, __LINE__);
             printf("### ERROR: Symbolic factorization failed!\n");
@@ -246,9 +246,9 @@ INT fasp_umfpack_solve(dCSRmat* ptrA, dvector* b, dvector* u, void* Numeric,
     status =
         umfpack_di_solve(UMFPACK_A, Ap, Ai, Ax, u->val, b->val, Numeric, Control, Info);
     if (status != 0) {
-        if (prtlvl > PRINT_MIN) umfpack_di_report_status(Control, status);
-        if (prtlvl > PRINT_SOME) umfpack_di_report_control(Control);
-        if (prtlvl > PRINT_MIN) umfpack_di_report_info(Control, Info);
+        if (prtlvl > PRINT_SOME) umfpack_di_report_status(Control, status);
+        if (prtlvl > PRINT_MORE) umfpack_di_report_control(Control);
+        if (prtlvl > PRINT_SOME) umfpack_di_report_info(Control, Info);
         if (status < 0) {
             printf("### ERROR: %d, %s %d\n", status, __FUNCTION__, __LINE__);
             printf("### ERROR: Numeric factorization failed!\n");
