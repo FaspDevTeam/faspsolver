@@ -122,16 +122,17 @@ int fasp_solver_mumps(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl)
     id.a   = a;
     id.rhs = rhs;
 
-    if (prtlvl < PRINT_MOST) { // no debug
+    if (prtlvl > PRINT_MORE) { // enable debug output
+        id.ICNTL(1) = 6;       // err output stream
+        id.ICNTL(2) = 6;       // warn/info output stream
+        id.ICNTL(3) = 6;       // global output stream
+        id.ICNTL(4) = 3;       // 0:none, 1:err, 2:warn/stats, 3:diagnos, 4:parameters
+        if (prtlvl > PRINT_MOST) id.ICNTL(11) = 1; // 0:none, 1:all, 2:main
+    } else {
         id.ICNTL(1) = -1;
         id.ICNTL(2) = -1;
         id.ICNTL(3) = -1;
         id.ICNTL(4) = 0;
-    } else {             // debug
-        id.ICNTL(1) = 6; // err output stream
-        id.ICNTL(2) = 6; // warn/info output stream
-        id.ICNTL(3) = 6; // global output stream
-        id.ICNTL(4) = 3; // 0:none, 1: err, 2: warn/stats, 3:diagnostics, 4:parameters
     }
 
     /* Call the MUMPS package */
@@ -390,7 +391,6 @@ Mumps_data fasp_mumps_factorize(dCSRmat* ptrA, dvector* b, dvector* u,
     DMUMPS_STRUC_C id;
 
     int       status = FASP_SUCCESS;
-    const int m      = ptrA->row;
     const int n      = ptrA->col;
     const int nz     = ptrA->nnz;
     int*      IA     = ptrA->IA;
@@ -407,7 +407,7 @@ Mumps_data fasp_mumps_factorize(dCSRmat* ptrA, dvector* b, dvector* u,
 
 #if DEBUG_MODE
     printf("### DEBUG: %s ... [Start]\n", __FUNCTION__);
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nz);
+    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", n, n, nz);
 #endif
 
     clock_t start_time = clock();
@@ -449,16 +449,17 @@ Mumps_data fasp_mumps_factorize(dCSRmat* ptrA, dvector* b, dvector* u,
     id.a   = a;
     id.rhs = rhs;
 
-    if (prtlvl < PRINT_MOST) { // no debug
+    if (prtlvl > PRINT_MORE) { // enable debug output
+        id.ICNTL(1) = 6;       // err output stream
+        id.ICNTL(2) = 6;       // warn/info output stream
+        id.ICNTL(3) = 6;       // global output stream
+        id.ICNTL(4) = 3;       // 0:none, 1:err, 2:warn/stats, 3:diagnos, 4:parameters
+        if (prtlvl > PRINT_MOST) id.ICNTL(11) = 1; // 0:none, 1:all, 2:main
+    } else {
         id.ICNTL(1) = -1;
         id.ICNTL(2) = -1;
         id.ICNTL(3) = -1;
         id.ICNTL(4) = 0;
-    } else {             // debug
-        id.ICNTL(1) = 6; // err output stream
-        id.ICNTL(2) = 6; // warn/info output stream
-        id.ICNTL(3) = 6; // global output stream
-        id.ICNTL(4) = 3; // 0:none, 1: err, 2: warn/stats, 3:diagnostics, 4:parameters
     }
 
     id.job = 4;
@@ -504,22 +505,10 @@ Mumps_data fasp_mumps_factorize(dCSRmat* ptrA, dvector* b, dvector* u,
 void fasp_mumps_solve(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data mumps,
                       const SHORT prtlvl)
 {
-    int i, j;
-
-    DMUMPS_STRUC_C id = mumps.id;
-
-    int       status = FASP_SUCCESS;
-    const int m      = ptrA->row;
-    const int n      = ptrA->row;
-    const int nz     = ptrA->nnz;
-    int*      IA     = ptrA->IA;
-    int*      JA     = ptrA->JA;
-    double*   AA     = ptrA->val;
-
-    int*    irn = id.irn;
-    int*    jcn = id.jcn;
-    double* a   = id.a;
-    double* rhs = id.rhs;
+    int            i;
+    DMUMPS_STRUC_C id     = mumps.id;
+    int            status = FASP_SUCCESS;
+    double*        rhs    = id.rhs;
 
 #if DEBUG_MODE
     printf("### DEBUG: %s ... [Start]\n", __FUNCTION__);
@@ -534,16 +523,17 @@ void fasp_mumps_solve(dCSRmat* ptrA, dvector* b, dvector* u, Mumps_data mumps,
     /* Call the MUMPS package. */
     for (i = 0; i < id.n; i++) rhs[i] = f[i];
 
-    if (prtlvl < PRINT_MOST) { // no debug
+    if (prtlvl > PRINT_MORE) { // enable debug output
+        id.ICNTL(1) = 6;       // err output stream
+        id.ICNTL(2) = 6;       // warn/info output stream
+        id.ICNTL(3) = 6;       // global output stream
+        id.ICNTL(4) = 3;       // 0:none, 1:err, 2:warn/stats, 3:diagnos, 4:parameters
+        if (prtlvl > PRINT_MOST) id.ICNTL(11) = 1; // 0:none, 1:all, 2:main
+    } else {
         id.ICNTL(1) = -1;
         id.ICNTL(2) = -1;
         id.ICNTL(3) = -1;
         id.ICNTL(4) = 0;
-    } else {             // debug
-        id.ICNTL(1) = 6; // err output stream
-        id.ICNTL(2) = 6; // warn/info output stream
-        id.ICNTL(3) = 6; // global output stream
-        id.ICNTL(4) = 3; // 0:none, 1: err, 2: warn/stats, 3:diagnostics, 4:parameters
     }
 
     id.job = 3;
