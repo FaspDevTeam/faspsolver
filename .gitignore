@@ -8,3 +8,9 @@ FASP.mk*
 ./BUILD_FASP/
 ./lib/
 ./include/
+*.aux
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.toc

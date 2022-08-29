@@ -71,7 +71,7 @@
 
 \author{FASP Developers}
 
-\date{\vfill Version 2.2.0} % Activate to display a given date or no date
+\date{\vfill Version 2.7.7} % Activate to display a given date or no date
 
 \begin{document}
 
@@ -253,7 +253,7 @@ have been changed before this document is updated.
 
 There are several ways to download the FASP source files. We recommend users download the most updated version from the FASP page on SourceForge. 
 
-\subsection{Downloading from SourceForge}
+\subsection{Downloading from Multigrid.org}
 
 The most updated version of FASP can be downloaded directly from
 %
@@ -262,41 +262,27 @@ The most updated version of FASP can be downloaded directly from
 \end{center}
 %
 
-\subsection{Downloading from BitBucket}
+\subsection{Downloading from GitHub}
 
-FASP is also hosted on
+FASP was hosted on
 \emph{BitBucket.org}\footnote{Official website:
   \url{https://bitbucket.org/}} using Mercurial (Hg)\footnote{Official
-  website: \url{http://mercurial.selenic.com/}}. A Hg client for GNU
-Linux, Mac OS X, or Windows can be downloaded from
+  website: \url{http://mercurial.selenic.com/}}. But now the most updated version is hosted on \emph{GitHub}\footnote{Official website:
+  \url{https://github.com/}}
 % section section name (end)
 \begin{center}
-  \url{http://mercurial.selenic.com/downloads/}
+  \url{https://github.com/FaspDevTeam/faspsolver}
 \end{center}
 %
-There are also many other third-party clients which provides Hg services, for example: EasyMercurial\footnote{Official website: \url{http://easyhg.org}} (cross platform) and SourceTree\footnote{Official website: \url{http://www.sourcetreeapp.com}} (for Mac OS X only).
 
-As a DVCS (Distributed Version Control System) source-control
-software, Hg is relatively new. But compared with other tools like
-Git, Hg is considered \emph{friendlier} with a lower learning
-curve. This is despite the fact that Hg uses two distinct sets of
-commands and two distinct vocabularies for operations depending upon
-whether the repository is local or remote.  Documentation for Hg is
-substantially better, including a book\footnote{The hgbook,
-  \url{http://hgbook.red-bean.com/}}. They've also had the advantage
-of trying the documentation on a fairly savvy group of developers
-(Mozilla) who gave them lots of feedback that helped polish the rough
-edges.
-
-\subsection{Linux or Mac OS X}
 First, you need to obtain a free copy of FASP kernel functions from
-our public Hg repository. If you are downloading FASP for the first
+our public Git repository. If you are downloading FASP for the first
 time, you can clone the repository to your local machine:
 %
 \begin{lstlisting}[numbers=none]
 "Download FASP kernel subroutines via HTTPS"
 
-$ hg clone https://faspusers@bitbucket.org/fasp/faspsolver
+$ git clone git@github.com:FaspDevTeam/faspsolver.git
 \end{lstlisting}
 %
 \begin{snugshade}\noindent
@@ -304,44 +290,25 @@ If you have any problems when clone this repository, please send us an email to 
 \end{snugshade}
 
 After a long pause\footnote{In fact, a very long pause. This is
-  because the initial clone with copy all the history data which is
-  about 400MB in total. Depending on the speed of your network, it
-  could take 15 minutes to one hour.}, you should have obtained
+  because the initial clone with copy all the history data. Depending on the speed of your network, it
+  could take a few minutes.}, you should have obtained
 ``\emph{faspsolver}'' in your current directory successfully. If you
 have already cloned the repository before, you can just pull a new
 version and update your local version with it: Go to your local
 ``\emph{faspsolver}'' directory and then
 %
 \begin{lstlisting}[numbers=none]
-"Pull a new version from BitBucket"
-$ hg pull
-
-"Update you local version to the new version"
-$ hg update
+"Pull a new version from GitHub"
+$ git pull
 \end{lstlisting}
 %
-
-\subsection{Windows OS}
-If you are using Windows, you may want to install
-TortoiseHg\footnote{Official website:
-  \url{http://tortoisehg.bitbucket.org/}}. After installing it, the
-TortoiseHg menu has been merged into the right-click menu of Windows
-Explore. You could download FASP copy from BitBucket.org. Choose
-``TortoiseHg''\verb| --> |``Clone'' in the pop-up menu, the source
-address is
-\begin{center}
-\url{https://faspusers@bitbucket.org/fasp/faspsovler}
-\end{center}
-Then press ``Clone'' and you will obtain ``faspsolver'' in the directory you set.
-
 
 \section{Building and installing the FASP library and examples}\label{sec:build}
 
 FASP has been tested using the compilers and built-in libraries of
 several Linux distributions (\verb|Cent OS|, \verb|Debian|,
 \verb|Fedora|, \verb|RedHat|, \verb|Ubuntu|) Mac OS X 10.6 and later
-(Leopard, Snow Leopard, Lion, Mavericks, Yosemite, El Capitan), and
-Windows (XP, Win 7) with several compliers, including \verb|gcc|,
+(Leopard, Snow Leopard, Lion, Mavericks, Yosemite, El Capitan, Sierra, High Sierra, Mojave, Catalina, Big Sur, Monterey), and Windows (XP, Win 7, Win 10) with several compliers, including \verb|gcc|,
 \verb|g++|, \verb|clang|, \verb|icc|, \verb|VC++|. FASP also easily
 links to applications written in Fortran and this has been tested with
 \verb|gfortran|, \verb|g95|, \verb|ifort| Fortran compilers.
@@ -350,23 +317,19 @@ links to applications written in Fortran and this has been tested with
 To build the FASP library for these operating systems. Open a terminal
 window, where you can issue commands from the command line and do the following: 
 (1) go to the main FASP directory (we will refer to it as
-\verb|$(faspsolver)| from now on); (2) modify the ``\emph{FASP.mk.example}''
-file to match your system and save it as ``{\color{red}FASP.mk}''; (3) then execute:
+\verb|$(faspsolver)| from now on); (2) create a new directory for Build; (3) enter the Build directory and then execute:
 %
 \begin{lstlisting}[numbers=none]
-$ make config 
+$ cmake .. 
 $ make install
 \end{lstlisting}
 %
-These two commands build the FASP library/header files. It installs
+These two commands build and install the FASP library/header files. It installs
 the library in \verb|$(faspsolver)/lib|
 and the header files in \verb|$(faspsolver)/include|. It also creates a
 file \verb|$(faspsolver)/Config.mk| which contains few of the configuration
 variables and can be loaded by external project Makefiles (see
 \S\ref{sec:buildown} for details on \verb|$(faspsolver)Config.mk|).
-
-If you do not have ``FASP.mk'' present in the current directory,
-default settings will be used for building and installation FASP. 
 
 \begin{snugshade}
   \noindent
@@ -387,43 +350,45 @@ If everything went all right, you can go to the
 $ ./test.ex
 \end{lstlisting}
 %
-If you need help with the available options, type 
-%
-\begin{lstlisting}[numbers=none]
-$ make help
-\end{lstlisting}
-%
-and you will get the following screen
-\lstinputlisting[numbers=none,language=sh]{../INSTALL}
-
-Many options can be changed in "FASP.mk", as well as from the command
-line. For example,
-\begin{lstlisting}[numbers=none]
-$ make config CC=gcc49 prefix=/usr/local
-$ sudo make install
-\end{lstlisting}
-will install in the FASP library in \verb|/usr/local/lib| and the
-include files in \verb|/usr/local/include| so that they may be
-accessed by multiple users.
-
-\begin{snugshade}\noindent
-  The example given above in most cases will require administrative
-  privileges from the user, i.e. using \verb|sudo| or other equivalent
-  mechanism, to install in a system directory (such as
-  \verb|/usr/local| in our example). We do not recommend such way of
-  installing FASP, although it will work in most cases if the user has
-  administrative privileges.  We recommend installation of FASP
-  library/headers locally and then, if needed, copying them to a
-  different location.
-\end{snugshade}
 
 To easily uninstall FASP and clean up the working directory, FASP comes with an automatic uninstallation script; you can run
 %
 \begin{lstlisting}[numbers=none]
 $ make uninstall
-$ make distclean
+$ make clean
 \end{lstlisting}
 %
+You can also remove the Build directory after installation. 
+
+Many other standard cmake options can be used during the configuration phase. The most frequently used ones include but not limited to the following:
+
+\begin{lstlisting}[numbers=none]
+$ cmake -DCMAKE_VERBOSE_MAKEFILE=ON .. // build with verbose on
+\end{lstlisting}
+
+\begin{lstlisting}[numbers=none]
+$ cmake -DCMAKE_BUILD_TYPE=Debug ..    // build in Debug configuration
+\end{lstlisting}
+
+\begin{lstlisting}[numbers=none]
+$ cmake CC=clang ..                    // build with specified C compiler
+\end{lstlisting}
+
+\begin{lstlisting}[numbers=none]
+$ cmake -DUSE_OPENMP=ON ..             // build with OpenMP support
+\end{lstlisting}
+
+\begin{lstlisting}[numbers=none]
+$ cmake -DUSE_UMFPACK=ON ..            // build with UMFPACK package support
+\end{lstlisting}
+
+\begin{lstlisting}[numbers=none]
+$ cmake -DUSE_MUMPS=ON ..              // build with MUMPS package support
+\end{lstlisting}
+
+\begin{lstlisting}[numbers=none]
+$ cmake -DUSE_PARDISO=ON ..            // build with PARDISO package support
+\end{lstlisting}
 
 \subsection{Windows 7}
 
@@ -489,6 +454,7 @@ C:\FASP> lib /ltcg /out:FASP.lib faspbase-c-vs08.lib faspbase-f-vs08.lib
 \end{lstlisting}
 %
 
+\begin{comment}
 \subsection{Using a TCL based GUI for installation}
 For users who like more a GUI based installation, we provide a simple
 TCL Graphical User
@@ -512,7 +478,6 @@ in Figure~\ref{fig:gui}. The rest of the building process is more or
 less straightforward: After choosing appropriate parameters, click
 ``Config'' first, followed by clicking ``Install''.
 
-\begin{comment}
 \subsection{Using Scons}
 Another possibility for building FASP is to use the \verb|python|
 based Scons interface for Linux, Mac OS X, or Windows, 
