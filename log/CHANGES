@@ -7,6 +7,7 @@ File Name: CHANGES
 - Test MUMPS, UMFPACK, and PARDISO with problems from DLD and Huawei;
 - MUMPS-5.5.1 built with gfortran (does not work with ifort);
 - SuiteSparse-5.12.0 built with clang (work with icc/gcc);
+- Remove the GUI installation tcl/tk script;
 - Update the outdated User Guide!!!
 
 08/28/2022 FASP 2.7.7:
