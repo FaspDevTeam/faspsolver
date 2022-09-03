@@ -1312,7 +1312,7 @@ void fasp_dbsr_print(const char* filename, dBSRmat* A)
             j = ja[k];
             fprintf(fp, "A[%d,%d]=\n", i, j);
             for (ind = 0; ind < nb2; ind++) {
-                fprintf(fp, "%+.10E  ", val[k * nb2 + ind]);
+                fprintf(fp, "%+.15E  ", val[k * nb2 + ind]);
             }
             fprintf(fp, "\n");
         }
@@ -1528,7 +1528,7 @@ void fasp_dcsr_print(const dCSRmat* A)
     printf("nrow = %d, ncol = %d, nnz = %d\n", m, n, A->nnz);
     for (i = 0; i < m; ++i) {
         for (j = A->IA[i]; j < A->IA[i + 1]; j++)
-            printf("A_(%d,%d) = %+.10E\n", i, A->JA[j], A->val[j]);
+            printf("A_(%d,%d) = %+.15E\n", i, A->JA[j], A->val[j]);
     }
 }
 
@@ -1548,7 +1548,7 @@ void fasp_dcoo_print(const dCOOmat* A)
 
     printf("nrow = %d, ncol = %d, nnz = %d\n", A->row, A->col, A->nnz);
     for (k = 0; k < A->nnz; k++) {
-        printf("A_(%d,%d) = %+.10E\n", A->rowind[k], A->colind[k], A->val[k]);
+        printf("A_(%d,%d) = %+.15E\n", A->rowind[k], A->colind[k], A->val[k]);
     }
 }
 
@@ -1597,7 +1597,7 @@ void fasp_dbsr_write_coo(const char* filename, const dBSRmat* A)
         for (j = A->IA[i]; j < A->IA[i + 1]; j++) {
             for (k = 0; k < A->nb; k++) {
                 for (l = 0; l < A->nb; l++) {
-                    fprintf(fp, "%d %d %+.10E\n", i * nb + k + 1, A->JA[j] * nb + l + 1,
+                    fprintf(fp, "%d %d %+.15E\n", i * nb + k + 1, A->JA[j] * nb + l + 1,
                             A->val[j * nb2 + k * nb + l]);
                 }
             }

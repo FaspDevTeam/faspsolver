@@ -1,5 +1,8 @@
 File Name: CHANGES
 
+09/03/2022 FASP 2.7.9:
+- Unify number of digits for output;
+
 08/30/2022 FASP 2.7.8:
 - Output stat information from MUMPS;
 - Output stat information from UMFPACK;
