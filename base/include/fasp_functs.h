@@ -34,6 +34,10 @@ FASP_API void fasp_darray_set (const INT   n,
 FASP_API void fasp_iarray_set (const INT   n,
                                INT        *x,
                                const INT   val);
+                  
+FASP_API void fasp_ldarray_set (const INT   n,
+                                LONGREAL        *x,
+                                const LONGREAL   val);
 
 FASP_API void fasp_darray_cp (const INT    n,
                               const REAL  *x,
@@ -279,6 +283,11 @@ FASP_API void fasp_blas_darray_axpy (const INT    n,
                                      const REAL   a,
                                      const REAL  *x,
                                      REAL        *y);
+
+FASP_API void fasp_blas_ldarray_axpy (const INT    n,
+                                      const REAL   a,
+                                      const REAL  *x,
+                                      LONGREAL        *y);
 
 FASP_API void fasp_blas_darray_axpy_nc2 (const REAL   a,
                                          const REAL  *x,
