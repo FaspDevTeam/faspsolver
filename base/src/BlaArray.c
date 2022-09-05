@@ -166,10 +166,9 @@ void fasp_blas_darray_axpy (const INT    n,
  * \param x    Pointer to x
  * \param y    Pointer to y, reused to store the resulting array
  *
- * \author Chensong Zhang
- * \date   07/01/2009
+ * \author Ting Lai
+ * \date   05/09/2022
  *
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
 void fasp_blas_ldarray_axpy (const INT    n,
                             const REAL   a,
