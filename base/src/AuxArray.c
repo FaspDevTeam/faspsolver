@@ -158,10 +158,9 @@ void fasp_iarray_set (const INT   n,
  * \param x    Pointer to the vector
  * \param val  Initial value for the LONGREAL array
  *
- * \author Chensong Zhang 
- * \date   04/03/2010  
+ * \author Ting Lai 
+ * \date   09/05/2022  
  * 
- * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/25/2012
  */
 void fasp_ldarray_set (const INT   n,
                        LONGREAL        *x,
