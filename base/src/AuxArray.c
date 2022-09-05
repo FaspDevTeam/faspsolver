@@ -150,6 +150,69 @@ void fasp_iarray_set (const INT   n,
 }
 
 /**
+ * \fn void fasp_ldarray_set (const INT n, LONGREAL *x, const LONGREAL val)
+ *
+ * \brief Set initial value for an array to be x=val
+ *
+ * \param n    Number of variables
+ * \param x    Pointer to the vector
+ * \param val  Initial value for the LONGREAL array
+ *
+ * \author Chensong Zhang 
+ * \date   04/03/2010  
+ * 
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/25/2012
+ */
+void fasp_ldarray_set (const INT   n,
+                       LONGREAL        *x,
+                       const LONGREAL   val)
+{
+    SHORT use_openmp = FALSE;
+    
+#ifdef _OPENMP 
+    INT nthreads = 1;
+
+    if ( n > OPENMP_HOLDS ) {
+		use_openmp = TRUE;
+        nthreads = fasp_get_num_threads();
+	}
+#endif
+    
+    if (val == 0) {
+        if (use_openmp) {
+#ifdef _OPENMP
+            INT mybegin,myend,myid;
+#pragma omp parallel for private(myid, mybegin, myend)
+            for (myid = 0; myid < nthreads; myid ++) {
+                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
+                memset(&x[mybegin], 0, sizeof(LONGREAL)*(myend-mybegin));
+            }
+#endif
+        }
+        else {
+            memset(x, 0, sizeof(LONGREAL)*n);
+        }
+    }
+    else {
+        INT i;
+
+        if (use_openmp) {
+#ifdef _OPENMP
+            INT mybegin,myend,myid;
+#pragma omp parallel for private(myid, mybegin, myend,i)
+            for (myid = 0; myid < nthreads; myid ++) {
+                fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
+                for (i=mybegin; i<myend; ++i) x[i]=val;
+            }
+#endif
+        }
+        else {
+            for (i=0; i<n; ++i) x[i]=val;
+        }
+    }
+}
+
+/**
  * \fn void fasp_darray_cp (const INT n, const REAL *x, REAL *y)
  *
  * \brief Copy an array to the other y=x

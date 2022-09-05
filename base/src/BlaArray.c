@@ -156,6 +156,88 @@ void fasp_blas_darray_axpy (const INT    n,
 }
 
 /**
+ * \fn void fasp_blas_ldarray_axpy (const INT n, const REAL a,
+ *                                 const REAL *x, LONGREAL *y)
+ *
+ * \brief y = a*x + y
+ *
+ * \param n    Number of variables
+ * \param a    Factor a
+ * \param x    Pointer to x
+ * \param y    Pointer to y, reused to store the resulting array
+ *
+ * \author Chensong Zhang
+ * \date   07/01/2009
+ *
+ * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
+ */
+void fasp_blas_ldarray_axpy (const INT    n,
+                            const REAL   a,
+                            const REAL  *x,
+                            LONGREAL        *y)
+{
+    SHORT use_openmp = FALSE;
+    INT   i;
+    
+#ifdef _OPENMP
+    INT myid, mybegin, myend, nthreads;
+    if ( n > OPENMP_HOLDS ) {
+        use_openmp = TRUE;
+        nthreads = fasp_get_num_threads();
+    }
+#endif
+    
+    if ( a == 1.0 ) {
+        if ( use_openmp ) {
+#ifdef _OPENMP
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+            {
+                myid = omp_get_thread_num();
+                fasp_get_start_end (myid, nthreads, n, &mybegin, &myend);
+                for ( i = mybegin; i < myend; ++i ) y[i] += x[i];
+            }
+#endif
+        }
+        else {
+            for ( i = 0; i < n; ++i ) y[i] += x[i];
+        }
+    }
+    
+    else if ( a == -1.0 ) {
+        if ( use_openmp ) {
+#ifdef _OPENMP
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+            {
+                myid = omp_get_thread_num();
+                fasp_get_start_end (myid, nthreads, n, &mybegin, &myend);
+                for ( i = mybegin; i < myend; ++i ) y[i] -= x[i];
+            }
+#endif
+        }
+        else {
+            for ( i = 0; i < n; ++i ) y[i] -= x[i];
+        }
+    }
+    
+    else {
+        if ( use_openmp ) {
+#ifdef _OPENMP
+#pragma omp parallel private(myid, mybegin, myend, i) num_threads(nthreads)
+            {
+                myid = omp_get_thread_num();
+                fasp_get_start_end (myid, nthreads, n, &mybegin, &myend);
+                for ( i = mybegin; i < myend; ++i ) y[i] += a*x[i];
+            }
+#endif
+        }
+        else {
+            for ( i = 0; i < n; ++i ) y[i] += a*x[i];
+        }
+    }
+}
+
+
+/**
  * \fn void fasp_blas_darray_axpy_nc2 (const REAL a, const REAL *x, REAL *y)
  *
  * \brief y = a*x + y, length of x and y should be 2
