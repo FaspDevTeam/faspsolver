@@ -609,10 +609,10 @@ void fasp_solver_namli_bsr (AMG_data_bsr  *mgl,
                 fasp_darray_cp (m1, e1->val, uH.val);
                 
                 const INT maxit = param->amli_degree+1;
-                
-                fasp_solver_dbsr_pvfgmres(A1,&bH,&uH,&pc,param->tol,
-                                          maxit,MIN(maxit,30),1,PRINT_NONE);
-                
+
+                fasp_solver_dbsr_pvfgmres(A1, &bH, &uH, &pc, param->tol, param->tol*1e-8,
+                                          maxit, MIN(maxit, 30), 1, PRINT_NONE);
+
                 fasp_darray_cp (m1, bH.val, b1->val);
                 fasp_darray_cp (m1, uH.val, e1->val);
             }

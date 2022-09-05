@@ -19,12 +19,11 @@
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
- *  TODO: Use one single function for all! --Chensong
+ * TODO: abstol not used yet! --Chensong
  */
 
 #include <math.h>
 #include <float.h>
-
 #include "fasp.h"
 #include "fasp_functs.h"
 
@@ -40,7 +39,7 @@
 
 /**
  * \fn INT fasp_solver_dcsr_pbcgs (dCSRmat *A, dvector *b, dvector *u, precond *pc,
- *                                 const REAL tol, const INT MaxIt,
+ *                                 const REAL tol, const REAL abstol, const INT MaxIt,
  *                                 const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Preconditioned BiCGstab method for solving Au=b for CSR matrix
@@ -49,7 +48,8 @@
  * \param b            Pointer to dvector of right hand side
  * \param u            Pointer to dvector of DOFs
  * \param pc           Pointer to precond: structure of precondition
- * \param tol          Tolerance for stopping
+ * \param tol          Tolerance for relative residual
+ * \param abstol       Tolerance for absolute residual
  * \param MaxIt        Maximal number of iterations
  * \param StopType     Stopping criteria type
  * \param PrtLvl       How much information to print out
@@ -59,14 +59,9 @@
  * \author Chunsheng Feng
  * \date   03/04/2016
  */
-INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
-                            dvector     *b,
-                            dvector     *u,
-                            precond     *pc,
-                            const REAL   tol,
-                            const INT    MaxIt,
-                            const SHORT  StopType,
-                            const SHORT  PrtLvl)
+INT fasp_solver_dcsr_pbcgs(dCSRmat* A, dvector* b, dvector* u, precond* pc,
+                           const REAL tol, const REAL abstol, const INT MaxIt,
+                           const SHORT StopType, const SHORT PrtLvl)
 {
     const INT    m = b->row;
     
@@ -365,7 +360,7 @@ FINISHED:  // finish iterative method
 
 /**
  * \fn INT fasp_solver_dbsr_pbcgs (dBSRmat *A, dvector *b, dvector *u, precond *pc,
- *                                 const REAL tol, const INT MaxIt,
+ *                                 const REAL tol, const REAL abstol, const INT MaxIt,
  *                                 const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Preconditioned BiCGstab method for solving Au=b for BSR matrix
@@ -374,7 +369,8 @@ FINISHED:  // finish iterative method
  * \param b            Pointer to dvector of right hand side
  * \param u            Pointer to dvector of DOFs
  * \param pc           Pointer to precond: structure of precondition
- * \param tol          Tolerance for stopping
+ * \param tol          Tolerance for relative residual
+ * \param abstol       Tolerance for absolute residual
  * \param MaxIt        Maximal number of iterations
  * \param StopType     Stopping criteria type
  * \param PrtLvl       How much information to print out
@@ -384,14 +380,9 @@ FINISHED:  // finish iterative method
  * \author Chunsheng Feng
  * \date   03/04/2016
  */
-INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
-                            dvector     *b,
-                            dvector     *u,
-                            precond     *pc,
-                            const REAL   tol,
-                            const INT    MaxIt,
-                            const SHORT  StopType,
-                            const SHORT  PrtLvl)
+INT fasp_solver_dbsr_pbcgs(dBSRmat* A, dvector* b, dvector* u, precond* pc,
+                           const REAL tol, const REAL abstol, const INT MaxIt,
+                           const SHORT StopType, const SHORT PrtLvl)
 {
     const INT    m = b->row;
     
@@ -691,7 +682,7 @@ FINISHED:  // finish iterative method
 
 /**
  * \fn INT fasp_solver_dblc_pbcgs (dBLCmat *A, dvector *b, dvector *u, precond *pc,
- *                                 const REAL tol, const INT MaxIt,
+ *                                 const REAL tol, const REAL abstol, const INT MaxIt,
  *                                 const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Preconditioned BiCGstab method for solving Au=b for BLC matrix
@@ -700,7 +691,8 @@ FINISHED:  // finish iterative method
  * \param b            Pointer to dvector of right hand side
  * \param u            Pointer to dvector of DOFs
  * \param pc           Pointer to precond: structure of precondition
- * \param tol          Tolerance for stopping
+ * \param tol          Tolerance for relative residual
+ * \param abstol       Tolerance for absolute residual
  * \param MaxIt        Maximal number of iterations
  * \param StopType     Stopping criteria type
  * \param PrtLvl       How much information to print out
@@ -710,14 +702,9 @@ FINISHED:  // finish iterative method
  * \author Chunsheng Feng
  * \date   03/04/2016
  */
-INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
-                            dvector     *b,
-                            dvector     *u,
-                            precond     *pc,
-                            const REAL   tol,
-                            const INT    MaxIt,
-                            const SHORT  StopType,
-                            const SHORT  PrtLvl)
+INT fasp_solver_dblc_pbcgs(dBLCmat* A, dvector* b, dvector* u, precond* pc,
+                           const REAL tol, const REAL abstol, const INT MaxIt,
+                           const SHORT StopType, const SHORT PrtLvl)
 {
     const INT    m = b->row;
     
@@ -1017,7 +1004,7 @@ FINISHED:  // finish iterative method
 
 /**
  * \fn INT fasp_solver_dstr_pbcgs (dSTRmat *A, dvector *b, dvector *u, precond *pc,
- *                                 const REAL tol, const INT MaxIt,
+ *                                 const REAL tol, const REAL abstol, const INT MaxIt,
  *                                 const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Preconditioned BiCGstab method for solving Au=b for STR matrix
@@ -1026,7 +1013,8 @@ FINISHED:  // finish iterative method
  * \param b            Pointer to dvector of right hand side
  * \param u            Pointer to dvector of DOFs
  * \param pc           Pointer to precond: structure of precondition
- * \param tol          Tolerance for stopping
+ * \param tol          Tolerance for relative residual
+ * \param abstol       Tolerance for absolute residual
  * \param MaxIt        Maximal number of iterations
  * \param StopType     Stopping criteria type
  * \param PrtLvl       How much information to print out
@@ -1036,14 +1024,9 @@ FINISHED:  // finish iterative method
  * \author Chunsheng Feng
  * \date   03/04/2016
  */
-INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
-                            dvector     *b,
-                            dvector     *u,
-                            precond     *pc,
-                            const REAL   tol,
-                            const INT    MaxIt,
-                            const SHORT  StopType,
-                            const SHORT  PrtLvl)
+INT fasp_solver_dstr_pbcgs(dSTRmat* A, dvector* b, dvector* u, precond* pc,
+                           const REAL tol, const REAL abstol, const INT MaxIt,
+                           const SHORT StopType, const SHORT PrtLvl)
 {
     const INT    m = b->row;
     
@@ -1343,7 +1326,7 @@ FINISHED:  // finish iterative method
 
 /**
  * \fn INT fasp_solver_pbcgs (mxv_matfree *mf, dvector *b, dvector *u, precond *pc,
- *                            const REAL tol, const INT MaxIt,
+ *                            const REAL tol, const REAL abstol, const INT MaxIt,
  *                            const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Preconditioned BiCGstab method for solving Au=b
@@ -1352,7 +1335,8 @@ FINISHED:  // finish iterative method
  * \param b            Pointer to dvector of right hand side
  * \param u            Pointer to dvector of DOFs
  * \param pc           Pointer to precond: structure of precondition
- * \param tol          Tolerance for stopping
+ * \param tol          Tolerance for relative residual
+ * \param abstol       Tolerance for absolute residual
  * \param MaxIt        Maximal number of iterations
  * \param StopType     Stopping criteria type
  * \param PrtLvl       How much information to print out
@@ -1362,14 +1346,9 @@ FINISHED:  // finish iterative method
  * \author Chunsheng Feng
  * \date   03/04/2016
  */
-INT fasp_solver_pbcgs (mxv_matfree *mf,
-                       dvector     *b,
-                       dvector     *u,
-                       precond     *pc,
-                       const REAL   tol,
-                       const INT    MaxIt,
-                       const SHORT  StopType,
-                       const SHORT  PrtLvl)
+INT fasp_solver_pbcgs(mxv_matfree* mf, dvector* b, dvector* u, precond* pc,
+                      const REAL tol, const REAL abstol, const INT MaxIt,
+                      const SHORT StopType, const SHORT PrtLvl)
 {
     const INT    m = b->row;
     

@@ -19,11 +19,9 @@
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
- *  TODO: Use one single function for all! --Chensong
  */
 
 #include <math.h>
-
 #include "fasp.h"
 #include "fasp_functs.h"
 
@@ -39,7 +37,8 @@
 
 /*!
  * \fn INT fasp_solver_dcsr_pvfgmres (dCSRmat *A, dvector *b, dvector *x, precond *pc,
- *                                    const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                    const REAL tol, const REAL abstol,
+ *                                    const INT MaxIt, const SHORT restart,
  *                                    const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which
@@ -50,7 +49,8 @@
  * \param b            Pointer to dvector: right hand side
  * \param x            Pointer to dvector: unknowns
  * \param pc           Pointer to precond: structure of precondition
- * \param tol          Tolerance for stopping
+ * \param tol          Tolerance for relative residual
+ * \param abstol       Tolerance for absolute residual
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
  * \param StopType     Stopping criteria type -- DO not support this parameter
@@ -64,15 +64,10 @@
  * Modified by Chunsheng Feng on 07/22/2013: Add adaptive memory allocate
  * Modified by Chensong Zhang on 05/09/2015: Clean up for stopping types
  */
-INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
-                               dvector      *b,
-                               dvector      *x,
-                               precond      *pc,
-                               const REAL    tol,
-                               const INT     MaxIt,
-                               const SHORT   restart,
-                               const SHORT   StopType,
-                               const SHORT   PrtLvl)
+INT fasp_solver_dcsr_pvfgmres(dCSRmat* A, dvector* b, dvector* x, precond* pc,
+                              const REAL tol, const REAL abstol, const INT MaxIt,
+                              const SHORT restart, const SHORT StopType,
+                              const SHORT PrtLvl)
 {
     const INT n                 = b->row;
     const INT min_iter          = 0;
@@ -163,7 +158,7 @@ INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
     epsilon = tol*den_norm;
 
     // if initial residual is small, no need to iterate!
-    if ( r_norm < epsilon || r_norm < 1e-12*tol ) goto FINISHED;
+    if ( r_norm < epsilon || r_norm < abstol ) goto FINISHED;
 
     if ( b_norm > 0.0 ) {
         fasp_itinfo(PrtLvl, StopType, iter, norms[iter]/b_norm, norms[iter], 0);
@@ -361,7 +356,8 @@ FINISHED:
 
 /*!
  * \fn INT fasp_solver_dbsr_pvfgmres (dBSRmat *A, dvector *b, dvector *x, precond *pc,
- *                                    const REAL tol, const INT MaxIt, const SHORT restart,
+ *                                    const REAL tol, const REAL abstol,
+ *                                    const INT MaxIt, const SHORT restart,
  *                                    const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which
@@ -372,7 +368,8 @@ FINISHED:
  * \param b            Pointer to dvector: right hand side
  * \param x            Pointer to dvector: unknowns
  * \param pc           Pointer to precond: structure of precondition
- * \param tol          Tolerance for stopping
+ * \param tol          Tolerance for relative residual
+ * \param abstol       Tolerance for absolute residual
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
  * \param StopType     Stopping criteria type -- DO not support this parameter
@@ -386,15 +383,10 @@ FINISHED:
  * Modified by Chunsheng Feng on 07/22/2013: Add adaptive memory allocate
  * Modified by Chensong Zhang on 05/09/2015: Clean up for stopping types
  */
-INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
-                               dvector      *b,
-                               dvector      *x,
-                               precond      *pc,
-                               const REAL    tol,
-                               const INT     MaxIt,
-                               const SHORT   restart,
-                               const SHORT   StopType,
-                               const SHORT   PrtLvl)
+INT fasp_solver_dbsr_pvfgmres(dBSRmat* A, dvector* b, dvector* x, precond* pc,
+                              const REAL tol, const REAL abstol, const INT MaxIt,
+                              const SHORT restart, const SHORT StopType,
+                              const SHORT PrtLvl)
 {
     const INT n                 = b->row;
     const INT min_iter          = 0;
@@ -485,7 +477,7 @@ INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
     epsilon = tol*den_norm;
 
     // if initial residual is small, no need to iterate!
-    if ( r_norm < epsilon || r_norm < 1e-12*tol ) goto FINISHED;
+    if (r_norm < epsilon || r_norm < abstol) goto FINISHED;
 
     if ( b_norm > 0.0 ) {
         fasp_itinfo(PrtLvl, StopType, iter, norms[iter]/b_norm, norms[iter], 0);
@@ -682,10 +674,10 @@ FINISHED:
 }
 
 /*!
- * \fn INT fasp_solver_dblc_pvfgmres (dBLCmat *A, dvector *b, dvector *x,
- *                                    precond *pc, const REAL tol, const INT MaxIt,
- *                                    const SHORT restart, const SHORT StopType,
- *                                    const SHORT PrtLvl)
+ * \fn INT fasp_solver_dblc_pvfgmres (dBLCmat *A, dvector *b, dvector *x, precond *pc,
+ *                                    const REAL tol, const REAL abstol,
+ *                                    const INT MaxIt, const SHORT restart,
+ *                                    const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Solve "Ax=b" using PFGMRES (right preconditioned) iterative method in which
  *        the restart parameter can be adaptively modified during iteration and
@@ -695,7 +687,8 @@ FINISHED:
  * \param b            Pointer to right hand side vector
  * \param x            Pointer to solution vector
  * \param MaxIt        Maximal iteration number allowed
- * \param tol          Tolerance
+ * \param tol          Tolerance for relative residual
+ * \param abstol       Tolerance for absolute residual
  * \param pc           Pointer to preconditioner data
  * \param PrtLvl       How much information to print out
  * \param StopType     Stopping criterion, i.e.||r_k||/||r_0||<tol
@@ -711,15 +704,10 @@ FINISHED:
  * Modified by Chunsheng Feng on 07/22/2013: Add adaptive memory allocate
  * Modified by Chensong Zhang on 05/09/2015: Clean up for stopping types
  */
-INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
-                               dvector     *b,
-                               dvector     *x,
-                               precond     *pc,
-                               const REAL   tol,
-                               const INT    MaxIt,
-                               const SHORT  restart,
-                               const SHORT  StopType,
-                               const SHORT  PrtLvl)
+INT fasp_solver_dblc_pvfgmres(dBLCmat* A, dvector* b, dvector* x, precond* pc,
+                              const REAL tol, const REAL abstol, const INT MaxIt,
+                              const SHORT restart, const SHORT StopType,
+                              const SHORT PrtLvl)
 {
     const INT n                 = b->row;
     const INT min_iter          = 0;
@@ -810,8 +798,8 @@ INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
     epsilon = tol*den_norm;
 
     // if initial residual is small, no need to iterate!
-    if ( r_norm < epsilon || r_norm < 1e-12 * tol ) goto FINISHED;
-    
+    if (r_norm < epsilon || r_norm < abstol) goto FINISHED;
+
     if ( b_norm > 0.0 ) {
         fasp_itinfo(PrtLvl, StopType, iter, norms[iter]/b_norm, norms[iter], 0);
     }
@@ -1008,7 +996,8 @@ FINISHED:
 
 /*!
  * \fn INT fasp_solver_pvfgmres (mxv_matfree *mf, dvector *b, dvector *x, precond *pc,
- *                               const REAL tol, const INT MaxIt, const SHORT restart,
+ *                               const REAL tol, const REAL abstol,
+ *                               const INT MaxIt, const SHORT restart,
  *                               const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief Solve "Ax=b" using PFGMRES(right preconditioned) iterative method in which
@@ -1019,7 +1008,8 @@ FINISHED:
  * \param b            Pointer to dvector: right hand side
  * \param x            Pointer to dvector: unknowns
  * \param pc           Pointer to precond: structure of precondition
- * \param tol          Tolerance for stopping
+ * \param tol          Tolerance for relative residual
+ * \param abstol       Tolerance for absolute residual
  * \param MaxIt        Maximal number of iterations
  * \param restart      Restarting steps
  * \param StopType     Stopping criteria type -- DO not support this parameter
@@ -1033,15 +1023,9 @@ FINISHED:
  * Modified by Feiteng Huang on 09/26/2012: matrix free
  * Modified by Chunsheng Feng on 07/22/2013: Add adapt memory allocate
  */
-INT fasp_solver_pvfgmres (mxv_matfree  *mf,
-                          dvector      *b,
-                          dvector      *x,
-                          precond      *pc,
-                          const REAL    tol,
-                          const INT     MaxIt,
-                          const SHORT   restart,
-                          const SHORT   StopType,
-                          const SHORT   PrtLvl)
+INT fasp_solver_pvfgmres(mxv_matfree* mf, dvector* b, dvector* x, precond* pc,
+                         const REAL tol, const REAL abstol, const INT MaxIt,
+                         const SHORT restart, const SHORT StopType, const SHORT PrtLvl)
 {
     const INT n                 = b->row;
     const INT min_iter          = 0;

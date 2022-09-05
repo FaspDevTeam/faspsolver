@@ -652,7 +652,7 @@ static SHORT genintval (dCSRmat  *A,
     pc.data = &diag;
     pc.fct  = fasp_precond_diag;
     
-    status = fasp_solver_dcsr_pcg(&T,&rhs,&sol,&pc,1e-3,100,STOP_REL_RES,PRINT_NONE);
+    status = fasp_solver_dcsr_pcg(&T,&rhs,&sol,&pc,1e-3,1e-15,100,STOP_REL_RES,PRINT_NONE);
 
     for (i=0;i<nc;++i) {
         mm=iz[i];

@@ -1,7 +1,12 @@
 File Name: CHANGES
 
+09/05/2022 FASP 2.8.0:
+- Major Change: Need to update all FASP projects;
+- Add abstol to KSM functions;
+- Prepare for Iterative Refinement;
+
 09/03/2022 FASP 2.7.9:
-- Unify number of digits for output;
+- Unify number of digits for output.
 
 08/30/2022 FASP 2.7.8:
 - Output stat information from MUMPS;

@@ -83,10 +83,9 @@ FASP_API void fasp_grid2d_plot (pgrid2d  pg,
 
 /*-------- In file: AuxInput.c --------*/
 
-FASP_API SHORT fasp_param_check (input_param  *inparam);
+FASP_API SHORT fasp_param_check(input_param* inparam);
 
-FASP_API void fasp_param_input (const char   *fname,
-                                input_param  *inparam);
+FASP_API void fasp_param_input(const char* fname, input_param* inparam);
 
 
 /*-------- In file: AuxMemory.c --------*/
@@ -131,57 +130,44 @@ FASP_API void fasp_chkerr (const SHORT  status,
 
 /*-------- In file: AuxParam.c --------*/
 
-FASP_API void fasp_param_set (const int     argc,
-                              const char   *argv[],
-                              input_param  *iniparam);
+FASP_API void fasp_param_set(const int argc, const char* argv[], input_param* iniparam);
 
-FASP_API void fasp_param_init (const input_param  *iniparam,
-                               ITS_param          *itsparam,
-                               AMG_param          *amgparam,
-                               ILU_param          *iluparam,
-                               SWZ_param          *swzparam);
+FASP_API void fasp_param_init(const input_param* iniparam, ITS_param* itsparam,
+                              AMG_param* amgparam, ILU_param* iluparam, SWZ_param* swzparam);
 
-FASP_API void fasp_param_input_init (input_param *iniparam);
+FASP_API void fasp_param_input_init(input_param* iniparam);
 
-FASP_API void fasp_param_amg_init (AMG_param *amgparam);
+FASP_API void fasp_param_amg_init(AMG_param* amgparam);
 
-FASP_API void fasp_param_solver_init (ITS_param *itsparam);
+FASP_API void fasp_param_solver_init(ITS_param* itsparam);
 
-FASP_API void fasp_param_ilu_init (ILU_param *iluparam);
+FASP_API void fasp_param_ilu_init(ILU_param* iluparam);
 
-FASP_API void fasp_param_swz_init (SWZ_param *swzparam);
+FASP_API void fasp_param_swz_init(SWZ_param* swzparam);
 
-FASP_API void fasp_param_amg_set (AMG_param          *param,
-                                  const input_param  *iniparam);
+FASP_API void fasp_param_amg_set(AMG_param* param, const input_param* iniparam);
 
-FASP_API void fasp_param_ilu_set (ILU_param          *iluparam,
-                                  const input_param  *iniparam);
+FASP_API void fasp_param_ilu_set(ILU_param* iluparam, const input_param* iniparam);
 
-FASP_API void fasp_param_swz_set (SWZ_param          *swzparam,
-                                  const input_param  *iniparam);
+FASP_API void fasp_param_swz_set(SWZ_param* swzparam, const input_param* iniparam);
 
-FASP_API void fasp_param_solver_set (ITS_param          *itsparam,
-                                     const input_param  *iniparam);
+FASP_API void fasp_param_solver_set(ITS_param* itsparam, const input_param* iniparam);
 
-FASP_API void fasp_param_amg_to_prec (precond_data     *pcdata,
-                                      const AMG_param  *amgparam);
+FASP_API void fasp_param_amg_to_prec(precond_data* pcdata, const AMG_param* amgparam);
 
-FASP_API void fasp_param_prec_to_amg (AMG_param           *amgparam,
-                                      const precond_data  *pcdata);
+FASP_API void fasp_param_prec_to_amg(AMG_param* amgparam, const precond_data* pcdata);
 
-FASP_API void fasp_param_amg_to_precbsr (precond_data_bsr  *pcdata,
-                                         const AMG_param   *amgparam);
+FASP_API void fasp_param_amg_to_precbsr(precond_data_bsr* pcdata, const AMG_param* amgparam);
 
-FASP_API void fasp_param_precbsr_to_amg (AMG_param               *amgparam,
-                                         const precond_data_bsr  *pcdata);
+FASP_API void fasp_param_precbsr_to_amg(AMG_param* amgparam, const precond_data_bsr* pcdata);
 
-FASP_API void fasp_param_amg_print (const AMG_param *param);
+FASP_API void fasp_param_amg_print(const AMG_param* param);
 
-FASP_API void fasp_param_ilu_print (const ILU_param *param);
+FASP_API void fasp_param_ilu_print(const ILU_param* param);
 
-FASP_API void fasp_param_swz_print (const SWZ_param *param);
+FASP_API void fasp_param_swz_print(const SWZ_param* param);
 
-FASP_API void fasp_param_solver_print (const ITS_param *param);
+FASP_API void fasp_param_solver_print(const ITS_param* param);
 
 
 /*-------- In file: AuxSort.c --------*/
@@ -586,18 +572,13 @@ FASP_API void fasp_dcsr_RCMK_order (const dCSRmat *A,
 
 /*-------- In file: BlaSchwarzSetup.c --------*/
 
-FASP_API INT fasp_swz_dcsr_setup (SWZ_data   *swzdata,
-                                  SWZ_param  *swzparam);
+FASP_API INT fasp_swz_dcsr_setup(SWZ_data* swzdata, SWZ_param* swzparam);
 
-FASP_API void fasp_dcsr_swz_forward (SWZ_data   *swzdata,
-                                     SWZ_param  *swzparam,
-                                     dvector    *x,
-                                     dvector    *b);
+FASP_API void fasp_dcsr_swz_forward(SWZ_data* swzdata, SWZ_param* swzparam, dvector* x,
+                                    dvector* b);
 
-FASP_API void fasp_dcsr_swz_backward (SWZ_data   *swzdata,
-                                      SWZ_param  *swzparam,
-                                      dvector    *x,
-                                      dvector    *b);
+FASP_API void fasp_dcsr_swz_backward(SWZ_data* swzdata, SWZ_param* swzparam, dvector* x,
+                                     dvector* b);
 
 
 /*-------- In file: BlaSmallMat.c --------*/
@@ -1560,330 +1541,165 @@ FASP_API void fasp_smoother_dstr_swz (dSTRmat *A,
 
 /*-------- In file: KryPbcgs.c --------*/
 
-FASP_API INT fasp_solver_dcsr_pbcgs (dCSRmat     *A,
-                                     dvector     *b,
-                                     dvector     *u,
-                                     precond     *pc,
-                                     const REAL   tol,
-                                     const INT    MaxIt,
-                                     const SHORT  StopType,
-                                     const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dcsr_pbcgs(dCSRmat* A, dvector* b, dvector* u, precond* pc,
+                                    const REAL tol, const REAL abstol, const INT MaxIt,
+                                    const SHORT StopType, const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dbsr_pbcgs (dBSRmat     *A,
-                                     dvector     *b,
-                                     dvector     *u,
-                                     precond     *pc,
-                                     const REAL   tol,
-                                     const INT    MaxIt,
-                                     const SHORT  StopType,
-                                     const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dbsr_pbcgs(dBSRmat* A, dvector* b, dvector* u, precond* pc,
+                                    const REAL tol, const REAL abstol, const INT MaxIt,
+                                    const SHORT StopType, const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dblc_pbcgs (dBLCmat     *A,
-                                     dvector     *b,
-                                     dvector     *u,
-                                     precond     *pc,
-                                     const REAL   tol,
-                                     const INT    MaxIt,
-                                     const SHORT  StopType,
-                                     const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dblc_pbcgs(dBLCmat* A, dvector* b, dvector* u, precond* pc,
+                                    const REAL tol, const REAL abstol, const INT MaxIt,
+                                    const SHORT StopType, const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dstr_pbcgs (dSTRmat     *A,
-                                     dvector     *b,
-                                     dvector     *u,
-                                     precond     *pc,
-                                     const REAL   tol,
-                                     const INT    MaxIt,
-                                     const SHORT  StopType,
-                                     const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dstr_pbcgs(dSTRmat* A, dvector* b, dvector* u, precond* pc,
+                                    const REAL tol, const REAL abstol, const INT MaxIt,
+                                    const SHORT StopType, const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_pbcgs (mxv_matfree *mf,
-                                dvector     *b,
-                                dvector     *u,
-                                precond     *pc,
-                                const REAL   tol,
-                                const INT    MaxIt,
-                                const SHORT  StopType,
-                                const SHORT  PrtLvl);
+FASP_API INT fasp_solver_pbcgs(mxv_matfree* mf, dvector* b, dvector* u, precond* pc,
+                               const REAL tol, const REAL abstol, const INT MaxIt,
+                               const SHORT StopType, const SHORT PrtLvl);
 
 
 /*-------- In file: KryPcg.c --------*/
 
-FASP_API INT fasp_solver_dcsr_pcg (dCSRmat     *A,
-                                   dvector     *b,
-                                   dvector     *u,
-                                   precond     *pc,
-                                   const REAL   tol,
-                                   const INT    MaxIt,
-                                   const SHORT  StopType,
-                                   const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dcsr_pcg(dCSRmat* A, dvector* b, dvector* u, precond* pc,
+                                  const REAL tol, const REAL abstol, const INT MaxIt,
+                                  const SHORT StopType, const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dbsr_pcg (dBSRmat     *A,
-                                   dvector     *b,
-                                   dvector     *u,
-                                   precond     *pc,
-                                   const REAL   tol,
-                                   const INT    MaxIt,
-                                   const SHORT  StopType,
-                                   const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dbsr_pcg(dBSRmat* A, dvector* b, dvector* u, precond* pc,
+                                  const REAL tol, const REAL abstol, const INT MaxIt,
+                                  const SHORT StopType, const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dblc_pcg (dBLCmat     *A,
-                                   dvector     *b,
-                                   dvector     *u,
-                                   precond     *pc,
-                                   const REAL   tol,
-                                   const INT    MaxIt,
-                                   const SHORT  StopType,
-                                   const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dblc_pcg(dBLCmat* A, dvector* b, dvector* u, precond* pc,
+                                  const REAL tol, const REAL abstol, const INT MaxIt,
+                                  const SHORT StopType, const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dstr_pcg (dSTRmat     *A,
-                                   dvector     *b,
-                                   dvector     *u,
-                                   precond     *pc,
-                                   const REAL   tol,
-                                   const INT    MaxIt,
-                                   const SHORT  StopType,
-                                   const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dstr_pcg(dSTRmat* A, dvector* b, dvector* u, precond* pc,
+                                  const REAL tol, const REAL abstol, const INT MaxIt,
+                                  const SHORT StopType, const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_pcg (mxv_matfree *mf,
-                              dvector     *b,
-                              dvector     *u,
-                              precond     *pc,
-                              const REAL   tol,
-                              const INT    MaxIt,
-                              const SHORT  StopType,
-                              const SHORT  PrtLvl);
+FASP_API INT fasp_solver_pcg(mxv_matfree* mf, dvector* b, dvector* u, precond* pc,
+                             const REAL tol, const REAL abstol, const INT MaxIt,
+                             const SHORT StopType, const SHORT PrtLvl);
 
 
 /*-------- In file: KryPgcg.c --------*/
 
-FASP_API INT fasp_solver_dcsr_pgcg (dCSRmat     *A,
-                                    dvector     *b,
-                                    dvector     *u,
-                                    precond     *pc,
-                                    const REAL   tol,
-                                    const INT    MaxIt,
-                                    const SHORT  StopType,
-                                    const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dcsr_pgcg(dCSRmat* A, dvector* b, dvector* u, precond* pc,
+                                   const REAL tol, const REAL abstol, const INT MaxIt,
+                                   const SHORT StopType, const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_pgcg (mxv_matfree *mf,
-                               dvector     *b,
-                               dvector     *u,
-                               precond     *pc,
-                               const REAL   tol,
-                               const INT    MaxIt,
-                               const SHORT  StopType,
-                               const SHORT  PrtLvl);
+FASP_API INT fasp_solver_pgcg(mxv_matfree* mf, dvector* b, dvector* u, precond* pc,
+                              const REAL tol, const REAL abstol, const INT MaxIt,
+                              const SHORT StopType, const SHORT PrtLvl);
 
 
 /*-------- In file: KryPgcr.c --------*/
 
-FASP_API INT fasp_solver_dcsr_pgcr (dCSRmat     *A,
-                                    dvector     *b,
-                                    dvector     *x,
-                                    precond     *pc,
-                                    const REAL   tol,
-                                    const INT    MaxIt,
-                                    const SHORT  restart,
-                                    const SHORT  StopType,
-                                    const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dcsr_pgcr(dCSRmat* A, dvector* b, dvector* x, precond* pc,
+                                   const REAL tol, const REAL abstol, const INT MaxIt,
+                                   const SHORT restart, const SHORT StopType, const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dblc_pgcr (dBLCmat     *A,
-                                    dvector     *b,
-                                    dvector     *x,
-                                    precond     *pc,
-                                    const REAL   tol,
-                                    const INT    MaxIt,
-                                    const SHORT  restart,
-                                    const SHORT  StopType,
-                                    const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dblc_pgcr(dBLCmat* A, dvector* b, dvector* x, precond* pc,
+                                   const REAL tol, const REAL abstol, const INT MaxIt,
+                                   const SHORT restart, const SHORT StopType, const SHORT PrtLvl);
 
 
 /*-------- In file: KryPgmres.c --------*/
 
-FASP_API INT fasp_solver_dcsr_pgmres (dCSRmat     *A,
-                                      dvector     *b,
-                                      dvector     *x,
-                                      precond     *pc,
-                                      const REAL   tol,
-                                      const INT    MaxIt,
-                                      const SHORT  restart,
-                                      const SHORT  StopType,
-                                      const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dcsr_pgmres(dCSRmat* A, dvector* b, dvector* x, precond* pc,
+                                     const REAL tol, const REAL abstol, const INT MaxIt,
+                                     const SHORT restart, const SHORT StopType,
+                                     const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dbsr_pgmres (dBSRmat     *A,
-                                      dvector     *b,
-                                      dvector     *x,
-                                      precond     *pc,
-                                      const REAL   tol,
-                                      const INT    MaxIt,
-                                      const SHORT  restart,
-                                      const SHORT  StopType,
-                                      const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dbsr_pgmres(dBSRmat* A, dvector* b, dvector* x, precond* pc,
+                                     const REAL tol, const REAL abstol, const INT MaxIt,
+                                     const SHORT restart, const SHORT StopType,
+                                     const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dblc_pgmres (dBLCmat     *A,
-                                      dvector     *b,
-                                      dvector     *x,
-                                      precond     *pc,
-                                      const REAL   tol,
-                                      const INT    MaxIt,
-                                      const SHORT  restart,
-                                      const SHORT  StopType,
-                                      const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dblc_pgmres(dBLCmat* A, dvector* b, dvector* x, precond* pc,
+                                     const REAL tol, const REAL abstol, const INT MaxIt,
+                                     const SHORT restart, const SHORT StopType,
+                                     const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dstr_pgmres (dSTRmat     *A,
-                                      dvector     *b,
-                                      dvector     *x,
-                                      precond     *pc,
-                                      const REAL   tol,
-                                      const INT    MaxIt,
-                                      const SHORT  restart,
-                                      const SHORT  StopType,
-                                      const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dstr_pgmres(dSTRmat* A, dvector* b, dvector* x, precond* pc,
+                                     const REAL tol, const REAL abstol, const INT MaxIt,
+                                     const SHORT restart, const SHORT StopType,
+                                     const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_pgmres (mxv_matfree  *mf,
-                                 dvector      *b,
-                                 dvector      *x,
-                                 precond      *pc,
-                                 const REAL    tol,
-                                 const INT     MaxIt,
-                                 const SHORT   restart,
-                                 const SHORT   StopType,
-                                 const SHORT   PrtLvl);
+FASP_API INT fasp_solver_pgmres(mxv_matfree* mf, dvector* b, dvector* x, precond* pc,
+                                const REAL tol, const REAL abstol, const INT MaxIt,
+                                const SHORT restart, const SHORT StopType, const SHORT PrtLvl);
 
 
 /*-------- In file: KryPminres.c --------*/
 
-FASP_API INT fasp_solver_dcsr_pminres (dCSRmat      *A,
-                                       dvector      *b,
-                                       dvector      *u,
-                                       precond      *pc,
-                                       const REAL    tol,
-                                       const INT     MaxIt,
-                                       const SHORT   StopType,
-                                       const SHORT   PrtLvl);
+FASP_API INT fasp_solver_dcsr_pminres(dCSRmat* A, dvector* b, dvector* u, precond* pc,
+                                      const REAL tol, const REAL abstol, const INT MaxIt,
+                                      const SHORT StopType, const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dblc_pminres (dBLCmat     *A,
-                                       dvector     *b,
-                                       dvector     *u,
-                                       precond     *pc,
-                                       const REAL   tol,
-                                       const INT    MaxIt,
-                                       const SHORT  StopType,
-                                       const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dblc_pminres(dBLCmat* A, dvector* b, dvector* u, precond* pc,
+                                      const REAL tol, const REAL abstol, const INT MaxIt,
+                                      const SHORT StopType, const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dstr_pminres (dSTRmat      *A,
-                                       dvector      *b,
-                                       dvector      *u,
-                                       precond      *pc,
-                                       const REAL    tol,
-                                       const INT     MaxIt,
-                                       const SHORT   StopType,
-                                       const SHORT   PrtLvl);
+FASP_API INT fasp_solver_dstr_pminres(dSTRmat* A, dvector* b, dvector* u, precond* pc,
+                                      const REAL tol, const REAL abstol, const INT MaxIt,
+                                      const SHORT StopType, const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_pminres (mxv_matfree  *mf,
-                                  dvector      *b,
-                                  dvector      *u,
-                                  precond      *pc,
-                                  const REAL    tol,
-                                  const INT     MaxIt,
-                                  const SHORT   StopType,
-                                  const SHORT   PrtLvl);
+FASP_API INT fasp_solver_pminres(mxv_matfree* mf, dvector* b, dvector* u, precond* pc,
+                                 const REAL tol, const REAL abstol, const INT MaxIt,
+                                 const SHORT StopType, const SHORT PrtLvl);
 
 
 /*-------- In file: KryPvfgmres.c --------*/
 
-FASP_API INT fasp_solver_dcsr_pvfgmres (dCSRmat      *A,
-                                        dvector      *b,
-                                        dvector      *x,
-                                        precond      *pc,
-                                        const REAL    tol,
-                                        const INT     MaxIt,
-                                        const SHORT   restart,
-                                        const SHORT   StopType,
-                                        const SHORT   PrtLvl);
+FASP_API INT fasp_solver_dcsr_pvfgmres(dCSRmat* A, dvector* b, dvector* x, precond* pc,
+                                       const REAL tol, const REAL abstol, const INT MaxIt,
+                                       const SHORT restart, const SHORT StopType,
+                                       const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dbsr_pvfgmres (dBSRmat      *A,
-                                        dvector      *b,
-                                        dvector      *x,
-                                        precond      *pc,
-                                        const REAL    tol,
-                                        const INT     MaxIt,
-                                        const SHORT   restart,
-                                        const SHORT   StopType,
-                                        const SHORT   PrtLvl);
+FASP_API INT fasp_solver_dbsr_pvfgmres(dBSRmat* A, dvector* b, dvector* x, precond* pc,
+                                       const REAL tol, const REAL abstol, const INT MaxIt,
+                                       const SHORT restart, const SHORT StopType,
+                                       const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dblc_pvfgmres (dBLCmat     *A,
-                                        dvector     *b,
-                                        dvector     *x,
-                                        precond     *pc,
-                                        const REAL   tol,
-                                        const INT    MaxIt,
-                                        const SHORT  restart,
-                                        const SHORT  StopType,
-                                        const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dblc_pvfgmres(dBLCmat* A, dvector* b, dvector* x, precond* pc,
+                                       const REAL tol, const REAL abstol, const INT MaxIt,
+                                       const SHORT restart, const SHORT StopType,
+                                       const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_pvfgmres (mxv_matfree  *mf,
-                                   dvector      *b,
-                                   dvector      *x,
-                                   precond      *pc,
-                                   const REAL    tol,
-                                   const INT     MaxIt,
-                                   const SHORT   restart,
-                                   const SHORT   StopType,
-                                   const SHORT   PrtLvl);
+FASP_API INT fasp_solver_pvfgmres(mxv_matfree* mf, dvector* b, dvector* x, precond* pc,
+                                  const REAL tol, const REAL abstol, const INT MaxIt,
+                                  const SHORT restart, const SHORT StopType, const SHORT PrtLvl);
 
 
 /*-------- In file: KryPvgmres.c --------*/
 
-FASP_API INT fasp_solver_dcsr_pvgmres (dCSRmat      *A,
-                                       dvector      *b,
-                                       dvector      *x,
-                                       precond      *pc,
-                                       const REAL    tol,
-                                       const INT     MaxIt,
-                                       const SHORT   restart,
-                                       const SHORT   StopType,
-                                       const SHORT   PrtLvl);
+FASP_API INT fasp_solver_dcsr_pvgmres(dCSRmat* A, dvector* b, dvector* x, precond* pc,
+                                      const REAL tol, const REAL abstol, const INT MaxIt,
+                                      const SHORT restart, const SHORT StopType,
+                                      const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dbsr_pvgmres (dBSRmat      *A,
-                                       dvector      *b,
-                                       dvector      *x,
-                                       precond      *pc,
-                                       const REAL    tol,
-                                       const INT     MaxIt,
-                                       const SHORT   restart,
-                                       const SHORT   StopType,
-                                       const SHORT   PrtLvl);
+FASP_API INT fasp_solver_dbsr_pvgmres(dBSRmat* A, dvector* b, dvector* x, precond* pc,
+                                      const REAL tol, const REAL abstol, const INT MaxIt,
+                                      const SHORT restart, const SHORT StopType,
+                                      const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dblc_pvgmres (dBLCmat     *A,
-                                       dvector     *b,
-                                       dvector     *x,
-                                       precond     *pc,
-                                       const REAL   tol,
-                                       const INT    MaxIt,
-                                       const SHORT  restart,
-                                       const SHORT  StopType,
-                                       const SHORT  PrtLvl);
+FASP_API INT fasp_solver_dblc_pvgmres(dBLCmat* A, dvector* b, dvector* x, precond* pc,
+                                      const REAL tol, const REAL abstol, const INT MaxIt,
+                                      const SHORT restart, const SHORT StopType,
+                                      const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_dstr_pvgmres (dSTRmat      *A,
-                                       dvector      *b,
-                                       dvector      *x,
-                                       precond      *pc,
-                                       const REAL    tol,
-                                       const INT     MaxIt,
-                                       const SHORT   restart,
-                                       const SHORT   StopType,
-                                       const SHORT   PrtLvl);
+FASP_API INT fasp_solver_dstr_pvgmres(dSTRmat* A, dvector* b, dvector* x, precond* pc,
+                                      const REAL tol, const REAL abstol, const INT MaxIt,
+                                      const SHORT restart, const SHORT StopType,
+                                      const SHORT PrtLvl);
 
-FASP_API INT fasp_solver_pvgmres (mxv_matfree  *mf,
-                                  dvector      *b,
-                                  dvector      *x,
-                                  precond      *pc,
-                                  const REAL    tol,
-                                  const INT     MaxIt,
-                                  SHORT         restart,
-                                  const SHORT   StopType,
-                                  const SHORT   PrtLvl);
+FASP_API INT fasp_solver_pvgmres(mxv_matfree* mf, dvector* b, dvector* x, precond* pc,
+                                 const REAL tol, const REAL abstol, const INT MaxIt,
+                                 SHORT restart, const SHORT StopType, const SHORT PrtLvl);
 
 
 /*-------- In file: KrySPbcgs.c --------*/
@@ -2308,11 +2124,9 @@ FASP_API void fasp_swz_data_free (SWZ_data *swzdata);
 
 /*-------- In file: PreMGCycle.c --------*/
 
-FASP_API void fasp_solver_mgcycle (AMG_data   *mgl,
-                                   AMG_param  *param);
+FASP_API void fasp_solver_mgcycle(AMG_data* mgl, AMG_param* param);
 
-FASP_API void fasp_solver_mgcycle_bsr (AMG_data_bsr  *mgl,
-                                       AMG_param     *param);
+FASP_API void fasp_solver_mgcycle_bsr(AMG_data_bsr* mgl, AMG_param* param);
 
 
 /*-------- In file: PreMGCycleFull.c --------*/
@@ -2407,151 +2221,77 @@ FASP_API INT fasp_solver_amg(dCSRmat* A, dvector* b, dvector* x, AMG_param* para
 
 /*-------- In file: SolBLC.c --------*/
 
-FASP_API INT fasp_solver_dblc_itsolver (dBLCmat    *A,
-                                        dvector    *b,
-                                        dvector    *x,
-                                        precond    *pc,
-                                        ITS_param  *itparam);
+FASP_API INT fasp_solver_dblc_itsolver(dBLCmat* A, dvector* b, dvector* x, precond* pc,
+                                       ITS_param* itparam);
 
-FASP_API INT fasp_solver_dblc_krylov (dBLCmat    *A,
-                                      dvector    *b,
-                                      dvector    *x,
-                                      ITS_param  *itparam);
+FASP_API INT fasp_solver_dblc_krylov(dBLCmat* A, dvector* b, dvector* x, ITS_param* itparam);
 
-FASP_API INT fasp_solver_dblc_krylov_block3 (dBLCmat    *A,
-                                             dvector    *b,
-                                             dvector    *x,
-                                             ITS_param  *itparam,
-                                             AMG_param  *amgparam,
-                                             dCSRmat    *A_diag);
+FASP_API INT fasp_solver_dblc_krylov_block3(dBLCmat* A, dvector* b, dvector* x,
+                                            ITS_param* itparam, AMG_param* amgparam,
+                                            dCSRmat* A_diag);
 
-FASP_API INT fasp_solver_dblc_krylov_block4 (dBLCmat    *A,
-                                             dvector    *b,
-                                             dvector    *x,
-                                             ITS_param  *itparam,
-                                             AMG_param  *amgparam,
-                                             dCSRmat    *A_diag);
+FASP_API INT fasp_solver_dblc_krylov_block4(dBLCmat* A, dvector* b, dvector* x,
+                                            ITS_param* itparam, AMG_param* amgparam,
+                                            dCSRmat* A_diag);
 
-FASP_API INT fasp_solver_dblc_krylov_sweeping (dBLCmat    *A,
-                                               dvector    *b,
-                                               dvector    *x,
-                                               ITS_param  *itparam,
-                                               INT         NumLayers,
-                                               dBLCmat    *Ai,
-                                               dCSRmat    *local_A,
-                                               ivector    *local_index);
+FASP_API INT fasp_solver_dblc_krylov_sweeping(dBLCmat* A, dvector* b, dvector* x,
+                                              ITS_param* itparam, INT NumLayers, dBLCmat* Ai,
+                                              dCSRmat* local_A, ivector* local_index);
 
 
 /*-------- In file: SolBSR.c --------*/
 
-FASP_API INT fasp_solver_dbsr_itsolver (dBSRmat    *A,
-                                        dvector    *b,
-                                        dvector    *x,
-                                        precond    *pc,
-                                        ITS_param  *itparam);
+FASP_API INT fasp_solver_dbsr_itsolver(dBSRmat* A, dvector* b, dvector* x, precond* pc,
+                                       ITS_param* itparam);
 
-FASP_API INT fasp_solver_dbsr_krylov (dBSRmat    *A,
-                                      dvector    *b,
-                                      dvector    *x,
-                                      ITS_param  *itparam);
+FASP_API INT fasp_solver_dbsr_krylov(dBSRmat* A, dvector* b, dvector* x, ITS_param* itparam);
 
-FASP_API INT fasp_solver_dbsr_krylov_diag (dBSRmat    *A,
-                                           dvector    *b,
-                                           dvector    *x,
-                                           ITS_param  *itparam);
+FASP_API INT fasp_solver_dbsr_krylov_diag(dBSRmat* A, dvector* b, dvector* x, ITS_param* itparam);
 
-FASP_API INT fasp_solver_dbsr_krylov_ilu (dBSRmat    *A,
-                                          dvector    *b,
-                                          dvector    *x,
-                                          ITS_param  *itparam,
-                                          ILU_param  *iluparam);
+FASP_API INT fasp_solver_dbsr_krylov_ilu(dBSRmat* A, dvector* b, dvector* x, ITS_param* itparam,
+                                         ILU_param* iluparam);
 
-FASP_API INT fasp_solver_dbsr_krylov_amg (dBSRmat    *A,
-                                          dvector    *b,
-                                          dvector    *x,
-                                          ITS_param  *itparam,
-                                          AMG_param  *amgparam);
+FASP_API INT fasp_solver_dbsr_krylov_amg(dBSRmat* A, dvector* b, dvector* x, ITS_param* itparam,
+                                         AMG_param* amgparam);
 
-FASP_API INT fasp_solver_dbsr_krylov_amg_nk (dBSRmat    *A,
-                                             dvector    *b,
-                                             dvector    *x,
-                                             ITS_param  *itparam,
-                                             AMG_param  *amgparam,
-                                             dCSRmat    *A_nk,
-                                             dCSRmat    *P_nk,
-                                             dCSRmat    *R_nk);
+FASP_API INT fasp_solver_dbsr_krylov_amg_nk(dBSRmat* A, dvector* b, dvector* x,
+                                            ITS_param* itparam, AMG_param* amgparam,
+                                            dCSRmat* A_nk, dCSRmat* P_nk, dCSRmat* R_nk);
 
-FASP_API INT fasp_solver_dbsr_krylov_nk_amg (dBSRmat    *A,
-                                             dvector    *b,
-                                             dvector    *x,
-                                             ITS_param  *itparam,
-                                             AMG_param  *amgparam,
-                                             const INT   nk_dim,
-                                             dvector    *nk);
+FASP_API INT fasp_solver_dbsr_krylov_nk_amg(dBSRmat* A, dvector* b, dvector* x,
+                                            ITS_param* itparam, AMG_param* amgparam,
+                                            const INT nk_dim, dvector* nk);
 
 
 /*-------- In file: SolCSR.c --------*/
 
-FASP_API INT fasp_solver_dcsr_itsolver (dCSRmat    *A,
-                                        dvector    *b,
-                                        dvector    *x,
-                                        precond    *pc,
-                                        ITS_param  *itparam);
+FASP_API INT fasp_solver_dcsr_itsolver(dCSRmat* A, dvector* b, dvector* x, precond* pc,
+                                       ITS_param* itparam);
 
-FASP_API INT fasp_solver_dcsr_itsolver_s (dCSRmat    *A,
-                                          dvector    *b,
-                                          dvector    *x,
-                                          precond    *pc,
-                                          ITS_param  *itparam);
+FASP_API INT fasp_solver_dcsr_itsolver_s(dCSRmat* A, dvector* b, dvector* x, precond* pc,
+                                         ITS_param* itparam);
 
-FASP_API INT fasp_solver_dcsr_krylov (dCSRmat    *A,
-                                      dvector    *b,
-                                      dvector    *x,
-                                      ITS_param  *itparam);
+FASP_API INT fasp_solver_dcsr_krylov(dCSRmat* A, dvector* b, dvector* x, ITS_param* itparam);
 
-FASP_API INT fasp_solver_dcsr_krylov_s (dCSRmat    *A,
-                                        dvector    *b,
-                                        dvector    *x,
-                                        ITS_param  *itparam);
+FASP_API INT fasp_solver_dcsr_krylov_s(dCSRmat* A, dvector* b, dvector* x, ITS_param* itparam);
 
-FASP_API INT fasp_solver_dcsr_krylov_diag (dCSRmat    *A,
-                                           dvector    *b,
-                                           dvector    *x,
-                                           ITS_param  *itparam);
+FASP_API INT fasp_solver_dcsr_krylov_diag(dCSRmat* A, dvector* b, dvector* x, ITS_param* itparam);
 
-FASP_API INT fasp_solver_dcsr_krylov_swz (dCSRmat    *A,
-                                          dvector    *b,
-                                          dvector    *x,
-                                          ITS_param  *itparam,
-                                          SWZ_param  *schparam);
+FASP_API INT fasp_solver_dcsr_krylov_swz(dCSRmat* A, dvector* b, dvector* x, ITS_param* itparam,
+                                         SWZ_param* schparam);
 
-FASP_API INT fasp_solver_dcsr_krylov_amg (dCSRmat    *A,
-                                          dvector    *b,
-                                          dvector    *x,
-                                          ITS_param  *itparam,
-                                          AMG_param  *amgparam);
+FASP_API INT fasp_solver_dcsr_krylov_amg(dCSRmat* A, dvector* b, dvector* x, ITS_param* itparam,
+                                         AMG_param* amgparam);
 
-FASP_API INT fasp_solver_dcsr_krylov_ilu (dCSRmat    *A,
-                                          dvector    *b,
-                                          dvector    *x,
-                                          ITS_param  *itparam,
-                                          ILU_param  *iluparam);
+FASP_API INT fasp_solver_dcsr_krylov_ilu(dCSRmat* A, dvector* b, dvector* x, ITS_param* itparam,
+                                         ILU_param* iluparam);
 
-FASP_API INT fasp_solver_dcsr_krylov_ilu_M (dCSRmat    *A,
-                                            dvector    *b,
-                                            dvector    *x,
-                                            ITS_param  *itparam,
-                                            ILU_param  *iluparam,
-                                            dCSRmat    *M);
+FASP_API INT fasp_solver_dcsr_krylov_ilu_M(dCSRmat* A, dvector* b, dvector* x,
+                                           ITS_param* itparam, ILU_param* iluparam, dCSRmat* M);
 
-FASP_API INT fasp_solver_dcsr_krylov_amg_nk (dCSRmat    *A,
-                                             dvector    *b,
-                                             dvector    *x,
-                                             ITS_param  *itparam,
-                                             AMG_param  *amgparam,
-                                             dCSRmat    *A_nk,
-                                             dCSRmat    *P_nk,
-                                             dCSRmat    *R_nk);
+FASP_API INT fasp_solver_dcsr_krylov_amg_nk(dCSRmat* A, dvector* b, dvector* x,
+                                            ITS_param* itparam, AMG_param* amgparam,
+                                            dCSRmat* A_nk, dCSRmat* P_nk, dCSRmat* R_nk);
 
 
 /*-------- In file: SolFAMG.c --------*/
@@ -2639,52 +2379,28 @@ FASP_API INT fasp_poisson_gmgcg3d (REAL         *u,
 
 /*-------- In file: SolMatFree.c --------*/
 
-FASP_API INT fasp_solver_itsolver (mxv_matfree  *mf,
-                                   dvector      *b,
-                                   dvector      *x,
-                                   precond      *pc,
-                                   ITS_param    *itparam);
+FASP_API INT fasp_solver_itsolver(mxv_matfree* mf, dvector* b, dvector* x, precond* pc,
+                                  ITS_param* itparam);
 
-FASP_API INT fasp_solver_krylov (mxv_matfree  *mf,
-                                 dvector      *b,
-                                 dvector      *x,
-                                 ITS_param    *itparam);
+FASP_API INT fasp_solver_krylov(mxv_matfree* mf, dvector* b, dvector* x, ITS_param* itparam);
 
-FASP_API void fasp_solver_matfree_init (INT           matrix_format,
-                                        mxv_matfree  *mf,
-                                        void         *A);
+FASP_API void fasp_solver_matfree_init(INT matrix_format, mxv_matfree* mf, void* A);
 
 
 /*-------- In file: SolSTR.c --------*/
 
-FASP_API INT fasp_solver_dstr_itsolver (dSTRmat    *A,
-                                        dvector    *b,
-                                        dvector    *x,
-                                        precond    *pc,
-                                        ITS_param  *itparam);
+FASP_API INT fasp_solver_dstr_itsolver(dSTRmat* A, dvector* b, dvector* x, precond* pc,
+                                       ITS_param* itparam);
 
-FASP_API INT fasp_solver_dstr_krylov (dSTRmat    *A,
-                                      dvector    *b,
-                                      dvector    *x,
-                                      ITS_param  *itparam);
+FASP_API INT fasp_solver_dstr_krylov(dSTRmat* A, dvector* b, dvector* x, ITS_param* itparam);
 
-FASP_API INT fasp_solver_dstr_krylov_diag (dSTRmat    *A,
-                                           dvector    *b,
-                                           dvector    *x,
-                                           ITS_param  *itparam);
+FASP_API INT fasp_solver_dstr_krylov_diag(dSTRmat* A, dvector* b, dvector* x, ITS_param* itparam);
 
-FASP_API INT fasp_solver_dstr_krylov_ilu (dSTRmat    *A,
-                                          dvector    *b,
-                                          dvector    *x,
-                                          ITS_param  *itparam,
-                                          ILU_param  *iluparam);
+FASP_API INT fasp_solver_dstr_krylov_ilu(dSTRmat* A, dvector* b, dvector* x, ITS_param* itparam,
+                                         ILU_param* iluparam);
 
-FASP_API INT fasp_solver_dstr_krylov_blockgs (dSTRmat    *A,
-                                              dvector    *b,
-                                              dvector    *x,
-                                              ITS_param  *itparam,
-                                              ivector    *neigh,
-                                              ivector    *order);
+FASP_API INT fasp_solver_dstr_krylov_blockgs(dSTRmat* A, dvector* b, dvector* x,
+                                             ITS_param* itparam, ivector* neigh, ivector* order);
 
 
 /*-------- In file: SolWrapper.c --------*/
@@ -2729,22 +2445,14 @@ FASP_API void fasp_mumps_free(Mumps_data* mumps);
 
 /*-------- In file: XtrPardiso.c --------*/
 
-FASP_API INT fasp_solver_pardiso (dCSRmat * ptrA,
-                                  dvector *b,
-                                  dvector *u,
-                                  const SHORT prtlvl);
+FASP_API INT fasp_solver_pardiso(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl);
 
-FASP_API INT fasp_pardiso_factorize (dCSRmat *ptrA,
-                                     Pardiso_data *pdata,
-                                     const SHORT prtlvl);
+FASP_API INT fasp_pardiso_factorize(dCSRmat* ptrA, Pardiso_data* pdata, const SHORT prtlvl);
 
-FASP_API INT fasp_pardiso_solve (dCSRmat *ptrA,
-                                 dvector *b,
-                                 dvector *u,
-                                 Pardiso_data *pdata,
-                                 const SHORT prtlvl);
+FASP_API INT fasp_pardiso_solve(dCSRmat* ptrA, dvector* b, dvector* u, Pardiso_data* pdata,
+                                const SHORT prtlvl);
 
-FASP_API INT fasp_pardiso_free_internal_mem (Pardiso_data *pdata);
+FASP_API INT fasp_pardiso_free_internal_mem(Pardiso_data* pdata);
 
 
 /*-------- In file: XtrSamg.c --------*/
@@ -2764,21 +2472,14 @@ FASP_API int fasp_solver_superlu(dCSRmat* ptrA, dvector* b, dvector* u, const SH
 
 /*-------- In file: XtrUmfpack.c --------*/
 
-FASP_API INT fasp_solver_umfpack (dCSRmat *ptrA,
-                                  dvector *b,
-                                  dvector *u,
-                                  const SHORT prtlvl);
+FASP_API INT fasp_solver_umfpack(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl);
 
-FASP_API void* fasp_umfpack_factorize (dCSRmat *ptrA,
-                                       const SHORT prtlvl);
+FASP_API void* fasp_umfpack_factorize(dCSRmat* ptrA, const SHORT prtlvl);
 
-FASP_API INT fasp_umfpack_solve (dCSRmat *ptrA,
-                                 dvector *b,
-                                 dvector *u,
-                                 void *Numeric,
-                                 const SHORT prtlvl);
+FASP_API INT fasp_umfpack_solve(dCSRmat* ptrA, dvector* b, dvector* u, void* Numeric,
+                                const SHORT prtlvl);
 
-FASP_API INT fasp_umfpack_free_numeric (void *Numeric);
+FASP_API INT fasp_umfpack_free_numeric(void* Numeric);
 
  
 /* End of fasp_functs.h */

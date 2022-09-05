@@ -17,11 +17,9 @@
  *  Released under the terms of the GNU Lesser General Public License 3.0 or later.
  *---------------------------------------------------------------------------------
  *
- *  TODO: Use one single function for all! --Chensong
  */
 
 #include <math.h>
-
 #include "fasp.h"
 #include "fasp_functs.h"
 
@@ -36,8 +34,8 @@
 /*---------------------------------*/
 
 /**
- * \fn INT fasp_solver_dcsr_pminres (dCSRmat *A, dvector *b, dvector *u,
- *                                   precond *pc, const REAL tol, const INT MaxIt,
+ * \fn INT fasp_solver_dcsr_pminres (dCSRmat *A, dvector *b, dvector *u, precond *pc,
+ *                                   const REAL tol, const REAL abstol, const INT MaxIt,
  *                                   const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
@@ -46,7 +44,8 @@
  * \param b            Pointer to dvector: right hand side
  * \param u            Pointer to dvector: unknowns
  * \param pc           Pointer to precond: structure of precondition
- * \param tol          Tolerance for stopping
+ * \param tol          Tolerance for relative residual
+ * \param abstol       Tolerance for absolute residual
  * \param MaxIt        Maximal number of iterations
  * \param StopType     Stopping criteria type
  * \param PrtLvl       How much information to print out
@@ -59,14 +58,9 @@
  * Rewritten based on the original version by Shiquan Zhang 05/10/2010
  * Modified by Chensong Zhang on 04/09/2013
  */
-INT fasp_solver_dcsr_pminres (dCSRmat      *A,
-                              dvector      *b,
-                              dvector      *u,
-                              precond      *pc,
-                              const REAL    tol,
-                              const INT     MaxIt,
-                              const SHORT   StopType,
-                              const SHORT   PrtLvl)
+INT fasp_solver_dcsr_pminres(dCSRmat* A, dvector* b, dvector* u, precond* pc,
+                             const REAL tol, const REAL abstol, const INT MaxIt,
+                             const SHORT StopType, const SHORT PrtLvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -129,7 +123,7 @@ INT fasp_solver_dcsr_pminres (dCSRmat      *A,
     }
     
     // if initial residual is small, no need to iterate!
-    if ( relres < tol || absres0 < 1e-12*tol ) goto FINISHED;
+    if ( relres < tol || absres0 < abstol ) goto FINISHED;
     
     // output iteration information if needed
     fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
@@ -449,8 +443,8 @@ FINISHED:  // finish iterative method
 }
 
 /**
- * \fn INT fasp_solver_dblc_pminres (dBLCmat *A, dvector *b, dvector *u,
- *                                   precond *pc, const REAL tol, const INT MaxIt,
+ * \fn INT fasp_solver_dblc_pminres (dBLCmat *A, dvector *b, dvector *u, precond *pc,
+ *                                   const REAL tol, const REAL abstol, const INT MaxIt,
  *                                   const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
@@ -459,7 +453,8 @@ FINISHED:  // finish iterative method
  * \param b            Pointer to dvector: right hand side
  * \param u            Pointer to dvector: unknowns
  * \param pc           Pointer to precond: structure of precondition
- * \param tol          Tolerance for stopping
+ * \param tol          Tolerance for relative residual
+ * \param abstol       Tolerance for absolute residual
  * \param MaxIt        Maximal number of iterations
  * \param StopType     Stopping criteria type
  * \param PrtLvl       How much information to print out
@@ -472,14 +467,9 @@ FINISHED:  // finish iterative method
  * Rewritten based on the original version by Xiaozhe Hu 05/24/2010
  * Modified by Chensong Zhang on 04/09/2013
  */
-INT fasp_solver_dblc_pminres (dBLCmat     *A,
-                              dvector     *b,
-                              dvector     *u,
-                              precond     *pc,
-                              const REAL   tol,
-                              const INT    MaxIt,
-                              const SHORT  StopType,
-                              const SHORT  PrtLvl)
+INT fasp_solver_dblc_pminres(dBLCmat* A, dvector* b, dvector* u, precond* pc,
+                             const REAL tol, const REAL abstol, const INT MaxIt,
+                             const SHORT StopType, const SHORT PrtLvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -542,7 +532,7 @@ INT fasp_solver_dblc_pminres (dBLCmat     *A,
     }
     
     // if initial residual is small, no need to iterate!
-    if ( relres < tol || absres0 < 1e-12*tol ) goto FINISHED;
+    if ( relres < tol || absres0 < abstol ) goto FINISHED;
     
     // output iteration information if needed
     fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
@@ -862,8 +852,8 @@ FINISHED:  // finish iterative method
 }
 
 /**
- * \fn INT fasp_solver_dstr_pminres (dSTRmat *A, dvector *b, dvector *u,
- *                                   precond *pc, const REAL tol, const INT MaxIt,
+ * \fn INT fasp_solver_dstr_pminres (dSTRmat *A, dvector *b, dvector *u, precond *pc,
+ *                                   const REAL tol, const REAL abstol, const INT MaxIt,
  *                                   const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
@@ -872,7 +862,8 @@ FINISHED:  // finish iterative method
  * \param b            Pointer to dvector: right hand side
  * \param u            Pointer to dvector: unknowns
  * \param pc           Pointer to precond: structure of precondition
- * \param tol          Tolerance for stopping
+ * \param tol          Tolerance for relative residual
+ * \param abstol       Tolerance for absolute residual
  * \param MaxIt        Maximal number of iterations
  * \param StopType     Stopping criteria type
  * \param PrtLvl       How much information to print out
@@ -882,14 +873,9 @@ FINISHED:  // finish iterative method
  * \author Chensong Zhang
  * \date   04/09/2013
  */
-INT fasp_solver_dstr_pminres (dSTRmat      *A,
-                              dvector      *b,
-                              dvector      *u,
-                              precond      *pc,
-                              const REAL    tol,
-                              const INT     MaxIt,
-                              const SHORT   StopType,
-                              const SHORT   PrtLvl)
+INT fasp_solver_dstr_pminres(dSTRmat* A, dvector* b, dvector* u, precond* pc,
+                             const REAL tol, const REAL abstol, const INT MaxIt,
+                             const SHORT StopType, const SHORT PrtLvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m = b->row;
@@ -952,7 +938,7 @@ INT fasp_solver_dstr_pminres (dSTRmat      *A,
     }
     
     // if initial residual is small, no need to iterate!
-    if ( relres < tol || absres0 < 1e-12*tol ) goto FINISHED;
+    if ( relres < tol || absres0 < abstol ) goto FINISHED;
     
     // output iteration information if needed
     fasp_itinfo(PrtLvl,StopType,iter,relres,absres0,0.0);
@@ -1271,9 +1257,9 @@ FINISHED:  // finish iterative method
 }
 
 /**
- * \fn INT fasp_solver_pminres (mxv_matfree *mf, dvector *b, dvector *u,
- *                              precond *pc, const REAL tol, const INT MaxIt,
- *                              const SHORT StopType, const SHORT PrtLvl)
+ * \fn INT fasp_solver_pminres (mxv_matfree *mf, dvector *b, dvector *u, precond *pc,
+ *                                   const REAL tol, const REAL abstol, const INT MaxIt,
+ *                                   const SHORT StopType, const SHORT PrtLvl)
  *
  * \brief A preconditioned minimal residual (Minres) method for solving Au=b
  *
@@ -1281,7 +1267,8 @@ FINISHED:  // finish iterative method
  * \param b            Pointer to dvector: right hand side
  * \param u            Pointer to dvector: unknowns
  * \param pc           Pointer to precond: structure of precondition
- * \param tol          Tolerance for stopping
+ * \param tol          Tolerance for relative residual
+ * \param abstol       Tolerance for absolute residual
  * \param MaxIt        Maximal number of iterations
  * \param StopType     Stopping criteria type
  * \param PrtLvl       How much information to print out
@@ -1293,14 +1280,9 @@ FINISHED:  // finish iterative method
  *
  * Rewritten by Chensong Zhang on 05/01/2012
  */
-INT fasp_solver_pminres (mxv_matfree  *mf,
-                         dvector      *b,
-                         dvector      *u,
-                         precond      *pc,
-                         const REAL    tol,
-                         const INT     MaxIt,
-                         const SHORT   StopType,
-                         const SHORT   PrtLvl)
+INT fasp_solver_pminres(mxv_matfree* mf, dvector* b, dvector* u, precond* pc,
+                        const REAL tol, const REAL abstol, const INT MaxIt,
+                        const SHORT StopType, const SHORT PrtLvl)
 {
     const SHORT  MaxStag = MAX_STAG, MaxRestartStep = MAX_RESTART;
     const INT    m=b->row;
@@ -1363,7 +1345,7 @@ INT fasp_solver_pminres (mxv_matfree  *mf,
     }
     
     // if initial residual is small, no need to iterate!
-    if ( relres < tol || absres0 < 1e-12*tol ) goto FINISHED;
+    if ( relres < tol || absres0 < abstol ) goto FINISHED;
     
     // tp=A*p1
     mf->fct(mf->data, p1, tp);

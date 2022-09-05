@@ -38,194 +38,219 @@ unsigned long total_alloc_count; /**< total allocation times */
  * \author Chensong Zhang
  * \date   12/29/2013
  */
-void fasp_param_set (const int     argc,
-                     const char   *argv[],
-                     input_param  *iniparam)
+void fasp_param_set(const int argc, const char* argv[], input_param* iniparam)
 {
-    int      arg_index   = 1;
-    int      print_usage = FALSE;
-    SHORT    status      = FASP_SUCCESS;
+    int   arg_index   = 1;
+    int   print_usage = FALSE;
+    SHORT status      = FASP_SUCCESS;
 
     // Option 1. set default input parameters
     fasp_param_input_init(iniparam);
 
-    while ( arg_index < argc ) {
+    while (arg_index < argc) {
 
-        if ( strcmp(argv[arg_index], "-help") == 0 ) {
-            print_usage = TRUE; break;
+        if (strcmp(argv[arg_index], "-help") == 0) {
+            print_usage = TRUE;
+            break;
         }
 
         // Option 2. Get parameters from an ini file
-        else if ( strcmp(argv[arg_index], "-ini") == 0 ) {
+        else if (strcmp(argv[arg_index], "-ini") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Missing ini filename! [%s]\n", __FUNCTION__);
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             strcpy(iniparam->inifile, argv[arg_index]);
-            fasp_param_input(iniparam->inifile,iniparam);
-            if ( ++arg_index >= argc ) break;
+            fasp_param_input(iniparam->inifile, iniparam);
+            if (++arg_index >= argc) break;
         }
 
         // Option 3. Get parameters from command line input
-        else if ( strcmp(argv[arg_index], "-print") == 0 ) {
+        else if (strcmp(argv[arg_index], "-print") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting print level (from 0 to 10).\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->print_level = atoi(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
-        else if ( strcmp(argv[arg_index], "-output") == 0 ) {
+        else if (strcmp(argv[arg_index], "-output") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting output type (0 or 1).\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->output_type = atoi(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
-        else if ( strcmp(argv[arg_index], "-solver") == 0 ) {
+        else if (strcmp(argv[arg_index], "-solver") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting solver type.\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->solver_type = atoi(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
-        else if ( strcmp(argv[arg_index], "-precond") == 0 ) {
+        else if (strcmp(argv[arg_index], "-precond") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting preconditioner type.\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->precond_type = atoi(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
-        else if ( strcmp(argv[arg_index], "-maxit") == 0 ) {
+        else if (strcmp(argv[arg_index], "-maxit") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting max number of iterations.\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->itsolver_maxit = atoi(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
-        else if ( strcmp(argv[arg_index], "-tol") == 0 ) {
+        else if (strcmp(argv[arg_index], "-tol") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting tolerance for itsolver.\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->itsolver_tol = atof(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
-        else if ( strcmp(argv[arg_index], "-amgmaxit") == 0 ) {
+        else if (strcmp(argv[arg_index], "-abstol") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
+                printf("### ERROR: Expecting absolute tolerance for itsolver.\n");
+                print_usage = TRUE;
+                break;
+            }
+            iniparam->itsolver_abstol = atof(argv[arg_index]);
+            if (++arg_index >= argc) break;
+        }
+
+        else if (strcmp(argv[arg_index], "-amgmaxit") == 0) {
+            arg_index++;
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting max num of iterations for AMG.\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->AMG_maxit = atoi(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
-        else if ( strcmp(argv[arg_index], "-amgtol") == 0 ) {
+        else if (strcmp(argv[arg_index], "-amgtol") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting tolerance for AMG.\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->AMG_tol = atof(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
-        else if ( strcmp(argv[arg_index], "-amgtype") == 0 ) {
+        else if (strcmp(argv[arg_index], "-amgtype") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting AMG type (1, 2, 3).\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->AMG_type = atoi(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
-        else if ( strcmp(argv[arg_index], "-amgcycle") == 0 ) {
+        else if (strcmp(argv[arg_index], "-amgcycle") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting AMG cycle type (1, 2, 3, 12, 21).\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->AMG_cycle_type = atoi(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
-        else if ( strcmp(argv[arg_index], "-amgcoarsening") == 0 ) {
+        else if (strcmp(argv[arg_index], "-amgcoarsening") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting AMG coarsening type.\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->AMG_coarsening_type = atoi(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
-        else if ( strcmp(argv[arg_index], "-amginterplation") == 0 ) {
+        else if (strcmp(argv[arg_index], "-amginterplation") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting AMG interpolation type.\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->AMG_interpolation_type = atoi(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
-        else if ( strcmp(argv[arg_index], "-amgsmoother") == 0 ) {
+        else if (strcmp(argv[arg_index], "-amgsmoother") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting AMG smoother type.\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->AMG_smoother = atoi(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
-        else if ( strcmp(argv[arg_index], "-amgsthreshold") == 0 ) {
+        else if (strcmp(argv[arg_index], "-amgsthreshold") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting AMG strong threshold.\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->AMG_strong_threshold = atof(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
-        else if ( strcmp(argv[arg_index], "-amgscouple") == 0 ) {
+        else if (strcmp(argv[arg_index], "-amgscouple") == 0) {
             arg_index++;
-            if ( arg_index >= argc ) {
+            if (arg_index >= argc) {
                 printf("### ERROR: Expecting AMG strong coupled threshold.\n");
-                print_usage = TRUE; break;
+                print_usage = TRUE;
+                break;
             }
             iniparam->AMG_strong_coupled = atof(argv[arg_index]);
-            if ( ++arg_index >= argc ) break;
+            if (++arg_index >= argc) break;
         }
 
         else {
             print_usage = TRUE;
             break;
         }
-
     }
 
-    if ( print_usage ) {
+    if (print_usage) {
 
         printf("FASP command line options:\n");
 
@@ -249,7 +274,6 @@ void fasp_param_set (const int     argc,
         printf("  -help                         : Brief help messages\n");
 
         exit(ERROR_INPUT_PAR);
-
     }
 
     // sanity checks
@@ -257,7 +281,6 @@ void fasp_param_set (const int     argc,
 
     // if meet unexpected input, stop the program
     fasp_chkerr(status, __FUNCTION__);
-
 }
 
 /**
@@ -280,11 +303,8 @@ void fasp_param_set (const int     argc,
  *
  * Modified by Chensong Zhang (12/29/2013): rewritten
  */
-void fasp_param_init (const input_param  *iniparam,
-                      ITS_param          *itsparam,
-                      AMG_param          *amgparam,
-                      ILU_param          *iluparam,
-                      SWZ_param          *swzparam)
+void fasp_param_init(const input_param* iniparam, ITS_param* itsparam,
+                     AMG_param* amgparam, ILU_param* iluparam, SWZ_param* swzparam)
 {
 #if DEBUG_MODE > 1
     total_alloc_mem   = 0; // initialize total memeory amount
@@ -297,17 +317,16 @@ void fasp_param_init (const input_param  *iniparam,
     if (swzparam) fasp_param_swz_init(swzparam);
 
     if (iniparam) {
-        if (itsparam) fasp_param_solver_set(itsparam,iniparam);
-        if (amgparam) fasp_param_amg_set(amgparam,iniparam);
-        if (iluparam) fasp_param_ilu_set(iluparam,iniparam);
-        if (swzparam) fasp_param_swz_set(swzparam,iniparam);
-    }
-    else {
+        if (itsparam) fasp_param_solver_set(itsparam, iniparam);
+        if (amgparam) fasp_param_amg_set(amgparam, iniparam);
+        if (iluparam) fasp_param_ilu_set(iluparam, iniparam);
+        if (swzparam) fasp_param_swz_set(swzparam, iniparam);
+    } else {
         printf("### WARNING: No input given! Use default values instead.\n");
     }
-    
+
     // if using AMG as a solver, set min num of iterations = 50
-    if ( (itsparam == NULL) && (amgparam != NULL) ) {
+    if ((itsparam == NULL) && (amgparam != NULL)) {
         amgparam->maxit = MAX(amgparam->maxit, 50);
     }
 }
@@ -322,57 +341,58 @@ void fasp_param_init (const input_param  *iniparam,
  * \author Chensong Zhang
  * \date   2010/03/20
  */
-void fasp_param_input_init (input_param *iniparam)
+void fasp_param_input_init(input_param* iniparam)
 {
-    strcpy(iniparam->workdir,"../data/");
+    strcpy(iniparam->workdir, "../data/");
 
     // Input/output
-    iniparam->print_level              = PRINT_SOME;
-    iniparam->output_type              = 0;
+    iniparam->print_level = PRINT_SOME;
+    iniparam->output_type = 0;
 
     // Problem information
-    iniparam->problem_num              = 10;
-    iniparam->solver_type              = SOLVER_CG;
-    iniparam->decoup_type              = 1;
-    iniparam->precond_type             = PREC_AMG;
-    iniparam->stop_type                = STOP_REL_RES;
+    iniparam->problem_num  = 10;
+    iniparam->solver_type  = SOLVER_CG;
+    iniparam->decoup_type  = 1;
+    iniparam->precond_type = PREC_AMG;
+    iniparam->stop_type    = STOP_REL_RES;
 
     // Solver parameters
-    iniparam->itsolver_tol             = 1e-6;
-    iniparam->itsolver_maxit           = 500;
-    iniparam->restart                  = 25;
+    iniparam->itsolver_tol    = 1e-6;
+    iniparam->itsolver_abstol = 1e-18;
+    iniparam->itsolver_maxit  = 500;
+    iniparam->restart         = 25;
 
     // ILU method parameters
-    iniparam->ILU_type                 = ILUk;
-    iniparam->ILU_lfil                 = 0;
-    iniparam->ILU_droptol              = 0.001;
-    iniparam->ILU_relax                = 0;
-    iniparam->ILU_permtol              = 0.0;
+    iniparam->ILU_type    = ILUk;
+    iniparam->ILU_lfil    = 0;
+    iniparam->ILU_droptol = 0.001;
+    iniparam->ILU_relax   = 0;
+    iniparam->ILU_permtol = 0.0;
 
     // Schwarz method parameters
-    iniparam->SWZ_mmsize               = 200;
-    iniparam->SWZ_maxlvl               = 2;
-    iniparam->SWZ_type                 = 1;
-    iniparam->SWZ_blksolver            = SOLVER_DEFAULT;
+    iniparam->SWZ_mmsize    = 200;
+    iniparam->SWZ_maxlvl    = 2;
+    iniparam->SWZ_type      = 1;
+    iniparam->SWZ_blksolver = SOLVER_DEFAULT;
 
     // AMG method parameters
-    iniparam->AMG_type                 = CLASSIC_AMG;
-    iniparam->AMG_levels               = 20;
-    iniparam->AMG_cycle_type           = V_CYCLE;
-    iniparam->AMG_smoother             = SMOOTHER_GS;
-    iniparam->AMG_smooth_order         = CF_ORDER;
-    iniparam->AMG_presmooth_iter       = 1;
-    iniparam->AMG_postsmooth_iter      = 1;
-    iniparam->AMG_relaxation           = 1.0;
-    iniparam->AMG_coarse_dof           = 500;
-    iniparam->AMG_coarse_solver        = 0;
-    iniparam->AMG_tol                  = 1e-6;
-    iniparam->AMG_maxit                = 1;
-    iniparam->AMG_ILU_levels           = 0;
-    iniparam->AMG_SWZ_levels           = 0;
-    iniparam->AMG_coarse_scaling       = OFF; // Require investigation --Chensong
-    iniparam->AMG_amli_degree          = 1;
-    iniparam->AMG_nl_amli_krylov_type  = 2;
+    iniparam->AMG_type                = CLASSIC_AMG;
+    iniparam->AMG_levels              = 20;
+    iniparam->AMG_cycle_type          = V_CYCLE;
+    iniparam->AMG_smoother            = SMOOTHER_GS;
+    iniparam->AMG_smooth_order        = CF_ORDER;
+    iniparam->AMG_presmooth_iter      = 1;
+    iniparam->AMG_postsmooth_iter     = 1;
+    iniparam->AMG_relaxation          = 1.0;
+    iniparam->AMG_coarse_dof          = 500;
+    iniparam->AMG_coarse_solver       = 0;
+    iniparam->AMG_tol                 = 1e-6;
+    iniparam->AMG_maxit               = 1;
+    iniparam->AMG_ILU_levels          = 0;
+    iniparam->AMG_SWZ_levels          = 0;
+    iniparam->AMG_coarse_scaling      = OFF; // Require investigation --Chensong
+    iniparam->AMG_amli_degree         = 1;
+    iniparam->AMG_nl_amli_krylov_type = 2;
 
     // Classical AMG specific
     iniparam->AMG_coarsening_type      = 1;
@@ -384,14 +404,14 @@ void fasp_param_input_init (input_param *iniparam)
     iniparam->AMG_aggressive_path      = 1;
 
     // Aggregation AMG specific
-    iniparam->AMG_aggregation_type     = PAIRWISE;
-    iniparam->AMG_quality_bound        = 8.0;
-    iniparam->AMG_pair_number          = 2;
-    iniparam->AMG_strong_coupled       = 0.25;
-    iniparam->AMG_max_aggregation      = 9;
-    iniparam->AMG_tentative_smooth     = 0.67;
-    iniparam->AMG_smooth_filter        = ON;
-    iniparam->AMG_smooth_restriction   = ON;
+    iniparam->AMG_aggregation_type   = PAIRWISE;
+    iniparam->AMG_quality_bound      = 8.0;
+    iniparam->AMG_pair_number        = 2;
+    iniparam->AMG_strong_coupled     = 0.25;
+    iniparam->AMG_max_aggregation    = 9;
+    iniparam->AMG_tentative_smooth   = 0.67;
+    iniparam->AMG_smooth_filter      = ON;
+    iniparam->AMG_smooth_restriction = ON;
 }
 
 /**
@@ -404,27 +424,27 @@ void fasp_param_input_init (input_param *iniparam)
  * \author Chensong Zhang
  * \date   2010/04/03
  */
-void fasp_param_amg_init (AMG_param *amgparam)
+void fasp_param_amg_init(AMG_param* amgparam)
 {
     // General AMG parameters
-    amgparam->AMG_type             = CLASSIC_AMG;
-    amgparam->print_level          = PRINT_NONE;
-    amgparam->maxit                = 1;
-    amgparam->tol                  = 1e-6;
-    amgparam->max_levels           = 20;
-    amgparam->coarse_dof           = 500;
-    amgparam->cycle_type           = V_CYCLE;
-    amgparam->smoother             = SMOOTHER_GS;
-    amgparam->smooth_order         = CF_ORDER;
-    amgparam->presmooth_iter       = 1;
-    amgparam->postsmooth_iter      = 1;
-    amgparam->coarse_solver        = SOLVER_DEFAULT;
-    amgparam->relaxation           = 1.0;
-    amgparam->polynomial_degree    = 3;
-    amgparam->coarse_scaling       = OFF;
-    amgparam->amli_degree          = 2;
-    amgparam->amli_coef            = NULL;
-    amgparam->nl_amli_krylov_type  = SOLVER_GCG;
+    amgparam->AMG_type            = CLASSIC_AMG;
+    amgparam->print_level         = PRINT_NONE;
+    amgparam->maxit               = 1;
+    amgparam->tol                 = 1e-6;
+    amgparam->max_levels          = 20;
+    amgparam->coarse_dof          = 500;
+    amgparam->cycle_type          = V_CYCLE;
+    amgparam->smoother            = SMOOTHER_GS;
+    amgparam->smooth_order        = CF_ORDER;
+    amgparam->presmooth_iter      = 1;
+    amgparam->postsmooth_iter     = 1;
+    amgparam->coarse_solver       = SOLVER_DEFAULT;
+    amgparam->relaxation          = 1.0;
+    amgparam->polynomial_degree   = 3;
+    amgparam->coarse_scaling      = OFF;
+    amgparam->amli_degree         = 2;
+    amgparam->amli_coef           = NULL;
+    amgparam->nl_amli_krylov_type = SOLVER_GCG;
 
     // Classical AMG specific
     amgparam->coarsening_type      = COARSE_RS;
@@ -436,28 +456,28 @@ void fasp_param_amg_init (AMG_param *amgparam)
     amgparam->aggressive_path      = 1;
 
     // Aggregation AMG specific
-    amgparam->aggregation_type     = PAIRWISE;
-    amgparam->quality_bound        = 10.0;
-    amgparam->pair_number          = 2;
-    amgparam->strong_coupled       = 0.08;
-    amgparam->max_aggregation      = 20;
-    amgparam->tentative_smooth     = 0.67;
-    amgparam->smooth_filter        = ON;
-    amgparam->smooth_restriction   = ON;
+    amgparam->aggregation_type   = PAIRWISE;
+    amgparam->quality_bound      = 10.0;
+    amgparam->pair_number        = 2;
+    amgparam->strong_coupled     = 0.08;
+    amgparam->max_aggregation    = 20;
+    amgparam->tentative_smooth   = 0.67;
+    amgparam->smooth_filter      = ON;
+    amgparam->smooth_restriction = ON;
 
     // ILU smoother parameters
-    amgparam->ILU_type             = ILUk;
-    amgparam->ILU_levels           = 0;
-    amgparam->ILU_lfil             = 0;
-    amgparam->ILU_droptol          = 0.001;
-    amgparam->ILU_relax            = 0;
+    amgparam->ILU_type    = ILUk;
+    amgparam->ILU_levels  = 0;
+    amgparam->ILU_lfil    = 0;
+    amgparam->ILU_droptol = 0.001;
+    amgparam->ILU_relax   = 0;
 
     // Schwarz smoother parameters
-    amgparam->SWZ_levels           = 0; // levels will use Schwarz smoother
-    amgparam->SWZ_mmsize           = 200;
-    amgparam->SWZ_maxlvl           = 3; // vertices with smaller distance
-    amgparam->SWZ_type             = 1;
-    amgparam->SWZ_blksolver        = SOLVER_DEFAULT;
+    amgparam->SWZ_levels    = 0; // levels will use Schwarz smoother
+    amgparam->SWZ_mmsize    = 200;
+    amgparam->SWZ_maxlvl    = 3; // vertices with smaller distance
+    amgparam->SWZ_type      = 1;
+    amgparam->SWZ_blksolver = SOLVER_DEFAULT;
 }
 
 /**
@@ -470,7 +490,7 @@ void fasp_param_amg_init (AMG_param *amgparam)
  * \author Chensong Zhang
  * \date   2010/03/23
  */
-void fasp_param_solver_init (ITS_param *itsparam)
+void fasp_param_solver_init(ITS_param* itsparam)
 {
     itsparam->print_level   = PRINT_NONE;
     itsparam->itsolver_type = SOLVER_CG;
@@ -480,6 +500,7 @@ void fasp_param_solver_init (ITS_param *itsparam)
     itsparam->maxit         = 500;
     itsparam->restart       = 25;
     itsparam->tol           = 1e-6;
+    itsparam->abstol        = 1e-18; // Added by zcs on 09/05/2022
 }
 
 /**
@@ -492,14 +513,14 @@ void fasp_param_solver_init (ITS_param *itsparam)
  * \author Chensong Zhang
  * \date   2010/04/06
  */
-void fasp_param_ilu_init (ILU_param *iluparam)
+void fasp_param_ilu_init(ILU_param* iluparam)
 {
-    iluparam->print_level  = PRINT_NONE;
-    iluparam->ILU_type     = ILUk;
-    iluparam->ILU_lfil     = 2;
-    iluparam->ILU_droptol  = 0.001;
-    iluparam->ILU_relax    = 0;
-    iluparam->ILU_permtol  = 0.01;
+    iluparam->print_level = PRINT_NONE;
+    iluparam->ILU_type    = ILUk;
+    iluparam->ILU_lfil    = 2;
+    iluparam->ILU_droptol = 0.001;
+    iluparam->ILU_relax   = 0;
+    iluparam->ILU_permtol = 0.01;
 }
 
 /**
@@ -514,7 +535,7 @@ void fasp_param_ilu_init (ILU_param *iluparam)
  *
  * Modified by Chensong Zhang on 10/10/2014: Add block solver type
  */
-void fasp_param_swz_init (SWZ_param *swzparam)
+void fasp_param_swz_init(SWZ_param* swzparam)
 {
     swzparam->print_level   = PRINT_NONE;
     swzparam->SWZ_type      = 3;
@@ -534,8 +555,7 @@ void fasp_param_swz_init (SWZ_param *swzparam)
  * \author Chensong Zhang
  * \date   2010/03/23
  */
-void fasp_param_amg_set (AMG_param          *param,
-                         const input_param  *iniparam)
+void fasp_param_amg_set(AMG_param* param, const input_param* iniparam)
 {
     param->AMG_type    = iniparam->AMG_type;
     param->print_level = iniparam->print_level;
@@ -543,30 +563,28 @@ void fasp_param_amg_set (AMG_param          *param,
     if (iniparam->solver_type == SOLVER_AMG) {
         param->maxit = iniparam->itsolver_maxit;
         param->tol   = iniparam->itsolver_tol;
-    }
-    else if (iniparam->solver_type == SOLVER_FMG) {
+    } else if (iniparam->solver_type == SOLVER_FMG) {
         param->maxit = iniparam->itsolver_maxit;
         param->tol   = iniparam->itsolver_tol;
-    }
-    else {
+    } else {
         param->maxit = iniparam->AMG_maxit;
         param->tol   = iniparam->AMG_tol;
     }
 
-    param->max_levels           = iniparam->AMG_levels;
-    param->cycle_type           = iniparam->AMG_cycle_type;
-    param->smoother             = iniparam->AMG_smoother;
-    param->smooth_order         = iniparam->AMG_smooth_order;
-    param->relaxation           = iniparam->AMG_relaxation;
-    param->coarse_solver        = iniparam->AMG_coarse_solver;
-    param->polynomial_degree    = iniparam->AMG_polynomial_degree;
-    param->presmooth_iter       = iniparam->AMG_presmooth_iter;
-    param->postsmooth_iter      = iniparam->AMG_postsmooth_iter;
-    param->coarse_dof           = iniparam->AMG_coarse_dof;
-    param->coarse_scaling       = iniparam->AMG_coarse_scaling;
-    param->amli_degree          = iniparam->AMG_amli_degree;
-    param->amli_coef            = NULL;
-    param->nl_amli_krylov_type  = iniparam->AMG_nl_amli_krylov_type;
+    param->max_levels          = iniparam->AMG_levels;
+    param->cycle_type          = iniparam->AMG_cycle_type;
+    param->smoother            = iniparam->AMG_smoother;
+    param->smooth_order        = iniparam->AMG_smooth_order;
+    param->relaxation          = iniparam->AMG_relaxation;
+    param->coarse_solver       = iniparam->AMG_coarse_solver;
+    param->polynomial_degree   = iniparam->AMG_polynomial_degree;
+    param->presmooth_iter      = iniparam->AMG_presmooth_iter;
+    param->postsmooth_iter     = iniparam->AMG_postsmooth_iter;
+    param->coarse_dof          = iniparam->AMG_coarse_dof;
+    param->coarse_scaling      = iniparam->AMG_coarse_scaling;
+    param->amli_degree         = iniparam->AMG_amli_degree;
+    param->amli_coef           = NULL;
+    param->nl_amli_krylov_type = iniparam->AMG_nl_amli_krylov_type;
 
     param->coarsening_type      = iniparam->AMG_coarsening_type;
     param->interpolation_type   = iniparam->AMG_interpolation_type;
@@ -576,26 +594,26 @@ void fasp_param_amg_set (AMG_param          *param,
     param->aggressive_level     = iniparam->AMG_aggressive_level;
     param->aggressive_path      = iniparam->AMG_aggressive_path;
 
-    param->aggregation_type     = iniparam->AMG_aggregation_type;
-    param->pair_number          = iniparam->AMG_pair_number;
-    param->quality_bound        = iniparam->AMG_quality_bound;
-    param->strong_coupled       = iniparam->AMG_strong_coupled;
-    param->max_aggregation      = iniparam->AMG_max_aggregation;
-    param->tentative_smooth     = iniparam->AMG_tentative_smooth;
-    param->smooth_filter        = iniparam->AMG_smooth_filter;
-    param->smooth_restriction   = iniparam->AMG_smooth_restriction;
+    param->aggregation_type   = iniparam->AMG_aggregation_type;
+    param->pair_number        = iniparam->AMG_pair_number;
+    param->quality_bound      = iniparam->AMG_quality_bound;
+    param->strong_coupled     = iniparam->AMG_strong_coupled;
+    param->max_aggregation    = iniparam->AMG_max_aggregation;
+    param->tentative_smooth   = iniparam->AMG_tentative_smooth;
+    param->smooth_filter      = iniparam->AMG_smooth_filter;
+    param->smooth_restriction = iniparam->AMG_smooth_restriction;
 
-    param->ILU_levels           = iniparam->AMG_ILU_levels;
-    param->ILU_type             = iniparam->ILU_type;
-    param->ILU_lfil             = iniparam->ILU_lfil;
-    param->ILU_droptol          = iniparam->ILU_droptol;
-    param->ILU_relax            = iniparam->ILU_relax;
-    param->ILU_permtol          = iniparam->ILU_permtol;
+    param->ILU_levels  = iniparam->AMG_ILU_levels;
+    param->ILU_type    = iniparam->ILU_type;
+    param->ILU_lfil    = iniparam->ILU_lfil;
+    param->ILU_droptol = iniparam->ILU_droptol;
+    param->ILU_relax   = iniparam->ILU_relax;
+    param->ILU_permtol = iniparam->ILU_permtol;
 
-    param->SWZ_levels           = iniparam->AMG_SWZ_levels;
-    param->SWZ_mmsize           = iniparam->SWZ_mmsize;
-    param->SWZ_maxlvl           = iniparam->SWZ_maxlvl;
-    param->SWZ_type             = iniparam->SWZ_type;
+    param->SWZ_levels = iniparam->AMG_SWZ_levels;
+    param->SWZ_mmsize = iniparam->SWZ_mmsize;
+    param->SWZ_maxlvl = iniparam->SWZ_maxlvl;
+    param->SWZ_type   = iniparam->SWZ_type;
 }
 
 /**
@@ -609,8 +627,7 @@ void fasp_param_amg_set (AMG_param          *param,
  * \author Chensong Zhang
  * \date   2010/04/03
  */
-void fasp_param_ilu_set (ILU_param          *iluparam,
-                         const input_param  *iniparam)
+void fasp_param_ilu_set(ILU_param* iluparam, const input_param* iniparam)
 {
     iluparam->print_level = iniparam->print_level;
     iluparam->ILU_type    = iniparam->ILU_type;
@@ -631,8 +648,7 @@ void fasp_param_ilu_set (ILU_param          *iluparam,
  * \author Xiaozhe Hu
  * \date   05/22/2012
  */
-void fasp_param_swz_set (SWZ_param          *swzparam,
-                         const input_param  *iniparam)
+void fasp_param_swz_set(SWZ_param* swzparam, const input_param* iniparam)
 {
     swzparam->print_level   = iniparam->print_level;
     swzparam->SWZ_type      = iniparam->SWZ_type;
@@ -653,23 +669,22 @@ void fasp_param_swz_set (SWZ_param          *swzparam,
  * \author Chensong Zhang
  * \date   2010/03/23
  */
-void fasp_param_solver_set (ITS_param          *itsparam,
-                            const input_param  *iniparam)
+void fasp_param_solver_set(ITS_param* itsparam, const input_param* iniparam)
 {
-    itsparam->print_level    = iniparam->print_level;
-    itsparam->itsolver_type  = iniparam->solver_type;
-    itsparam->decoup_type    = iniparam->decoup_type;
-    itsparam->precond_type   = iniparam->precond_type;
-    itsparam->stop_type      = iniparam->stop_type;
-    itsparam->restart        = iniparam->restart;
+    itsparam->print_level   = iniparam->print_level;
+    itsparam->itsolver_type = iniparam->solver_type;
+    itsparam->decoup_type   = iniparam->decoup_type;
+    itsparam->precond_type  = iniparam->precond_type;
+    itsparam->stop_type     = iniparam->stop_type;
+    itsparam->restart       = iniparam->restart;
 
-    if ( itsparam->itsolver_type == SOLVER_AMG ) {
+    if (itsparam->itsolver_type == SOLVER_AMG) {
         itsparam->tol   = iniparam->AMG_tol;
         itsparam->maxit = iniparam->AMG_maxit;
-    }
-    else {
-        itsparam->tol   = iniparam->itsolver_tol;
-        itsparam->maxit = iniparam->itsolver_maxit;
+    } else {
+        itsparam->tol    = iniparam->itsolver_tol;
+        itsparam->abstol = iniparam->itsolver_abstol;
+        itsparam->maxit  = iniparam->itsolver_maxit;
     }
 }
 
@@ -684,8 +699,7 @@ void fasp_param_solver_set (ITS_param          *itsparam,
  * \author Chensong Zhang
  * \date   2011/01/10
  */
-void fasp_param_amg_to_prec (precond_data     *pcdata,
-                             const AMG_param  *amgparam)
+void fasp_param_amg_to_prec(precond_data* pcdata, const AMG_param* amgparam)
 {
     pcdata->AMG_type            = amgparam->AMG_type;
     pcdata->print_level         = amgparam->print_level;
@@ -719,8 +733,7 @@ void fasp_param_amg_to_prec (precond_data     *pcdata,
  * \author Chensong Zhang
  * \date   2011/01/10
  */
-void fasp_param_prec_to_amg (AMG_param           *amgparam,
-                             const precond_data  *pcdata)
+void fasp_param_prec_to_amg(AMG_param* amgparam, const precond_data* pcdata)
 {
     amgparam->AMG_type            = pcdata->AMG_type;
     amgparam->print_level         = pcdata->print_level;
@@ -752,8 +765,7 @@ void fasp_param_prec_to_amg (AMG_param           *amgparam,
  * \author Xiaozhe Hu
  * \date   02/06/2012
  */
-void fasp_param_amg_to_precbsr (precond_data_bsr  *pcdata,
-                                const AMG_param   *amgparam)
+void fasp_param_amg_to_precbsr(precond_data_bsr* pcdata, const AMG_param* amgparam)
 {
     pcdata->AMG_type            = amgparam->AMG_type;
     pcdata->print_level         = amgparam->print_level;
@@ -787,8 +799,7 @@ void fasp_param_amg_to_precbsr (precond_data_bsr  *pcdata,
  * \author Xiaozhe Hu
  * \date   02/06/2012
  */
-void fasp_param_precbsr_to_amg (AMG_param               *amgparam,
-                                const precond_data_bsr  *pcdata)
+void fasp_param_precbsr_to_amg(AMG_param* amgparam, const precond_data_bsr* pcdata)
 {
     amgparam->AMG_type            = pcdata->AMG_type;
     amgparam->print_level         = pcdata->print_level;
@@ -817,10 +828,10 @@ void fasp_param_precbsr_to_amg (AMG_param               *amgparam,
  * \author Chensong Zhang
  * \date   2010/03/22
  */
-void fasp_param_amg_print (const AMG_param *param)
+void fasp_param_amg_print(const AMG_param* param)
 {
 
-    if ( param ) {
+    if (param) {
 
         printf("\n       Parameters in AMG_param\n");
         printf("-----------------------------------------------\n");
@@ -838,59 +849,52 @@ void fasp_param_amg_print (const AMG_param *param)
         printf("AMG num of presmoothing:           %d\n", param->presmooth_iter);
         printf("AMG num of postsmoothing:          %d\n", param->postsmooth_iter);
 
-        if ( param->smoother == SMOOTHER_SOR  ||
-            param->smoother == SMOOTHER_SSOR ||
-            param->smoother == SMOOTHER_GSOR ||
-            param->smoother == SMOOTHER_SGSOR ) {
-            printf("AMG relax factor:                  %.4f\n",
-                   param->relaxation);
+        if (param->smoother == SMOOTHER_SOR || param->smoother == SMOOTHER_SSOR ||
+            param->smoother == SMOOTHER_GSOR || param->smoother == SMOOTHER_SGSOR) {
+            printf("AMG relax factor:                  %.4f\n", param->relaxation);
         }
 
-        if ( param->smoother == SMOOTHER_POLY ) {
-            printf("AMG polynomial smoother degree:    %d\n",
-                   param->polynomial_degree);
+        if (param->smoother == SMOOTHER_POLY) {
+            printf("AMG polynomial smoother degree:    %d\n", param->polynomial_degree);
         }
 
-        if ( param->cycle_type == AMLI_CYCLE ) {
-            printf("AMG AMLI degree of polynomial:     %d\n",
-                   param->amli_degree);
+        if (param->cycle_type == AMLI_CYCLE) {
+            printf("AMG AMLI degree of polynomial:     %d\n", param->amli_degree);
         }
 
-        if ( param->cycle_type == NL_AMLI_CYCLE ) {
+        if (param->cycle_type == NL_AMLI_CYCLE) {
             printf("AMG Nonlinear AMLI Krylov type:    %d\n",
                    param->nl_amli_krylov_type);
         }
 
         switch (param->AMG_type) {
-                case CLASSIC_AMG:
+            case CLASSIC_AMG:
                 printf("AMG coarsening type:               %d\n",
                        param->coarsening_type);
                 printf("AMG interpolation type:            %d\n",
                        param->interpolation_type);
-                printf("AMG dof on coarsest grid:          %d\n",
-                       param->coarse_dof);
+                printf("AMG dof on coarsest grid:          %d\n", param->coarse_dof);
                 printf("AMG strong threshold:              %.4f\n",
                        param->strong_threshold);
                 printf("AMG truncation threshold:          %.4f\n",
                        param->truncation_threshold);
-                printf("AMG max row sum:                   %.4f\n",
-                       param->max_row_sum);
+                printf("AMG max row sum:                   %.4f\n", param->max_row_sum);
                 printf("AMG aggressive levels:             %d\n",
                        param->aggressive_level);
                 printf("AMG aggressive path:               %d\n",
                        param->aggressive_path);
                 break;
 
-                default: // SA_AMG or UA_AMG
+            default: // SA_AMG or UA_AMG
                 printf("Aggregation type:                  %d\n",
                        param->aggregation_type);
-                if ( param->aggregation_type == PAIRWISE ) {
+                if (param->aggregation_type == PAIRWISE) {
                     printf("Aggregation number of pairs:       %d\n",
                            param->pair_number);
                     printf("Aggregation quality bound:         %.2f\n",
                            param->quality_bound);
                 }
-                if ( param->aggregation_type == VMB ) {
+                if (param->aggregation_type == VMB) {
                     printf("Aggregation strong coupling:       %.4f\n",
                            param->strong_coupled);
                     printf("Aggregation max aggregation:       %d\n",
@@ -901,12 +905,11 @@ void fasp_param_amg_print (const AMG_param *param)
                            param->smooth_filter);
                     printf("Aggregation smooth restriction:    %d\n",
                            param->smooth_restriction);
-
                 }
                 break;
         }
 
-        if (param->ILU_levels>0) {
+        if (param->ILU_levels > 0) {
             printf("AMG ILU smoother level:            %d\n", param->ILU_levels);
             printf("AMG ILU type:                      %d\n", param->ILU_type);
             printf("AMG ILU level of fill-in:          %d\n", param->ILU_lfil);
@@ -914,7 +917,7 @@ void fasp_param_amg_print (const AMG_param *param)
             printf("AMG ILU relaxation:                %f\n", param->ILU_relax);
         }
 
-        if (param->SWZ_levels>0){
+        if (param->SWZ_levels > 0) {
             printf("AMG Schwarz smoother level:        %d\n", param->SWZ_levels);
             printf("AMG Schwarz type:                  %d\n", param->SWZ_type);
             printf("AMG Schwarz forming block level:   %d\n", param->SWZ_maxlvl);
@@ -923,11 +926,9 @@ void fasp_param_amg_print (const AMG_param *param)
 
         printf("-----------------------------------------------\n\n");
 
-    }
-    else {
+    } else {
         printf("### WARNING: AMG_param has not been set!\n");
     } // end if (param)
-
 }
 
 /**
@@ -940,22 +941,21 @@ void fasp_param_amg_print (const AMG_param *param)
  * \author Chensong Zhang
  * \date   2011/12/20
  */
-void fasp_param_ilu_print (const ILU_param *param)
+void fasp_param_ilu_print(const ILU_param* param)
 {
-    if ( param ) {
+    if (param) {
 
         printf("\n       Parameters in ILU_param\n");
         printf("-----------------------------------------------\n");
-        printf("ILU print level:                   %d\n",   param->print_level);
-        printf("ILU type:                          %d\n",   param->ILU_type);
-        printf("ILU level of fill-in:              %d\n",   param->ILU_lfil);
+        printf("ILU print level:                   %d\n", param->print_level);
+        printf("ILU type:                          %d\n", param->ILU_type);
+        printf("ILU level of fill-in:              %d\n", param->ILU_lfil);
         printf("ILU relaxation factor:             %.4f\n", param->ILU_relax);
         printf("ILU drop tolerance:                %.2e\n", param->ILU_droptol);
         printf("ILU permutation tolerance:         %.2e\n", param->ILU_permtol);
         printf("-----------------------------------------------\n\n");
 
-    }
-    else {
+    } else {
         printf("### WARNING: ILU_param has not been set!\n");
     }
 }
@@ -970,9 +970,9 @@ void fasp_param_ilu_print (const ILU_param *param)
  * \author Xiaozhe Hu
  * \date   05/22/2012
  */
-void fasp_param_swz_print (const SWZ_param *param)
+void fasp_param_swz_print(const SWZ_param* param)
 {
-    if ( param ) {
+    if (param) {
 
         printf("\n       Parameters in SWZ_param\n");
         printf("-----------------------------------------------\n");
@@ -983,8 +983,7 @@ void fasp_param_swz_print (const SWZ_param *param)
         printf("Schwarz block solver type:         %d\n", param->SWZ_blksolver);
         printf("-----------------------------------------------\n\n");
 
-    }
-    else {
+    } else {
         printf("### WARNING: SWZ_param has not been set!\n");
     }
 }
@@ -999,9 +998,9 @@ void fasp_param_swz_print (const SWZ_param *param)
  * \author Chensong Zhang
  * \date   2011/12/20
  */
-void fasp_param_solver_print (const ITS_param *param)
+void fasp_param_solver_print(const ITS_param* param)
 {
-    if ( param ) {
+    if (param) {
 
         printf("\n       Parameters in ITS_param\n");
         printf("-----------------------------------------------\n");
@@ -1010,18 +1009,18 @@ void fasp_param_solver_print (const ITS_param *param)
         printf("Solver type:                       %d\n", param->itsolver_type);
         printf("Solver precond type:               %d\n", param->precond_type);
         printf("Solver max num of iter:            %d\n", param->maxit);
-        printf("Solver tolerance:                  %.2e\n", param->tol);
+        printf("Solver tolerance:                  %.5e\n", param->tol);
+        printf("Solver absolute tolerance:         %.5e\n", param->abstol);
         printf("Solver stopping type:              %d\n", param->stop_type);
 
-        if (param->itsolver_type==SOLVER_GMRES ||
-            param->itsolver_type==SOLVER_VGMRES) {
+        if (param->itsolver_type == SOLVER_GMRES ||
+            param->itsolver_type == SOLVER_VGMRES) {
             printf("Solver restart number:             %d\n", param->restart);
         }
 
         printf("-----------------------------------------------\n\n");
 
-    }
-    else {
+    } else {
         printf("### WARNING: ITS_param has not been set!\n");
     }
 }
