@@ -1,9 +1,10 @@
 File Name: CHANGES
 
-09/05/2022 FASP 2.8.0:
+09/06/2022 FASP 2.8.0:
 - Major Change: Need to update all FASP projects;
 - Add abstol to KSM functions;
 - Prepare for Iterative Refinement;
+- Add LONGREAL (long double by default).
 
 09/03/2022 FASP 2.7.9:
 - Unify number of digits for output.

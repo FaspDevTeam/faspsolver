@@ -33,55 +33,50 @@
  * \param x    Pointer to the vector
  * \param val  Initial value for the REAL array
  *
- * \author Chensong Zhang 
- * \date   04/03/2010  
+ * \author Chensong Zhang
+ * \date   04/03/2010
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/23/2012
  */
-void fasp_darray_set (const INT   n,
-                      REAL       *x,
-                      const REAL  val)
+void fasp_darray_set(const INT n, REAL* x, const REAL val)
 {
     SHORT use_openmp = FALSE;
-    
-#ifdef _OPENMP 
+
+#ifdef _OPENMP
     INT nthreads = 1;
 
-    if ( n > OPENMP_HOLDS ) {
+    if (n > OPENMP_HOLDS) {
         use_openmp = TRUE;
-        nthreads = fasp_get_num_threads();
+        nthreads   = fasp_get_num_threads();
     }
 #endif
-    
+
     if (val == 0.0) {
         if (use_openmp) {
 #ifdef _OPENMP
-            INT mybegin,myend,myid;
-#pragma omp parallel for private(myid,mybegin,myend)
-            for (myid = 0; myid < nthreads; myid ++) {
+            INT mybegin, myend, myid;
+#pragma omp parallel for private(myid, mybegin, myend)
+            for (myid = 0; myid < nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-                memset(&x[mybegin], 0x0, sizeof(REAL)*(myend-mybegin));
+                memset(&x[mybegin], 0x0, sizeof(REAL) * (myend - mybegin));
             }
 #endif
-        }
-        else 
-            memset(x, 0x0, sizeof(REAL)*n);
-    }
-    else {
+        } else
+            memset(x, 0x0, sizeof(REAL) * n);
+    } else {
         INT i;
 
         if (use_openmp) {
 #ifdef _OPENMP
-            INT mybegin,myend,myid;
-#pragma omp parallel for private(myid,mybegin,myend,i)
-            for (myid = 0; myid < nthreads; myid ++) {
+            INT mybegin, myend, myid;
+#pragma omp parallel for private(myid, mybegin, myend, i)
+            for (myid = 0; myid < nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-                for (i=mybegin; i<myend; ++i) x[i]=val;
+                for (i = mybegin; i < myend; ++i) x[i] = val;
             }
 #endif
-        }
-        else {
-            for (i=0; i<n; ++i) x[i] = val;
+        } else {
+            for (i = 0; i < n; ++i) x[i] = val;
         }
     }
 }
@@ -95,56 +90,51 @@ void fasp_darray_set (const INT   n,
  * \param x    Pointer to the vector
  * \param val  Initial value for the REAL array
  *
- * \author Chensong Zhang 
- * \date   04/03/2010  
- * 
+ * \author Chensong Zhang
+ * \date   04/03/2010
+ *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/25/2012
  */
-void fasp_iarray_set (const INT   n,
-                      INT        *x,
-                      const INT   val)
+void fasp_iarray_set(const INT n, INT* x, const INT val)
 {
     SHORT use_openmp = FALSE;
-    
-#ifdef _OPENMP 
+
+#ifdef _OPENMP
     INT nthreads = 1;
 
-    if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = fasp_get_num_threads();
-	}
+    if (n > OPENMP_HOLDS) {
+        use_openmp = TRUE;
+        nthreads   = fasp_get_num_threads();
+    }
 #endif
-    
+
     if (val == 0) {
         if (use_openmp) {
 #ifdef _OPENMP
-            INT mybegin,myend,myid;
+            INT mybegin, myend, myid;
 #pragma omp parallel for private(myid, mybegin, myend)
-            for (myid = 0; myid < nthreads; myid ++) {
+            for (myid = 0; myid < nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-                memset(&x[mybegin], 0, sizeof(INT)*(myend-mybegin));
+                memset(&x[mybegin], 0, sizeof(INT) * (myend - mybegin));
             }
 #endif
+        } else {
+            memset(x, 0, sizeof(INT) * n);
         }
-        else {
-            memset(x, 0, sizeof(INT)*n);
-        }
-    }
-    else {
+    } else {
         INT i;
 
         if (use_openmp) {
 #ifdef _OPENMP
-            INT mybegin,myend,myid;
-#pragma omp parallel for private(myid, mybegin, myend,i)
-            for (myid = 0; myid < nthreads; myid ++) {
+            INT mybegin, myend, myid;
+#pragma omp parallel for private(myid, mybegin, myend, i)
+            for (myid = 0; myid < nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-                for (i=mybegin; i<myend; ++i) x[i]=val;
+                for (i = mybegin; i < myend; ++i) x[i] = val;
             }
 #endif
-        }
-        else {
-            for (i=0; i<n; ++i) x[i]=val;
+        } else {
+            for (i = 0; i < n; ++i) x[i] = val;
         }
     }
 }
@@ -158,55 +148,49 @@ void fasp_iarray_set (const INT   n,
  * \param x    Pointer to the vector
  * \param val  Initial value for the LONGREAL array
  *
- * \author Ting Lai 
- * \date   09/05/2022  
- * 
+ * \author Ting Lai
+ * \date   09/05/2022
  */
-void fasp_ldarray_set (const INT   n,
-                       LONGREAL        *x,
-                       const LONGREAL   val)
+void fasp_ldarray_set(const INT n, LONGREAL* x, const LONGREAL val)
 {
     SHORT use_openmp = FALSE;
-    
-#ifdef _OPENMP 
+
+#ifdef _OPENMP
     INT nthreads = 1;
 
-    if ( n > OPENMP_HOLDS ) {
-		use_openmp = TRUE;
-        nthreads = fasp_get_num_threads();
-	}
+    if (n > OPENMP_HOLDS) {
+        use_openmp = TRUE;
+        nthreads   = fasp_get_num_threads();
+    }
 #endif
-    
+
     if (val == 0) {
         if (use_openmp) {
 #ifdef _OPENMP
-            INT mybegin,myend,myid;
+            INT mybegin, myend, myid;
 #pragma omp parallel for private(myid, mybegin, myend)
-            for (myid = 0; myid < nthreads; myid ++) {
+            for (myid = 0; myid < nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-                memset(&x[mybegin], 0, sizeof(LONGREAL)*(myend-mybegin));
+                memset(&x[mybegin], 0, sizeof(LONGREAL) * (myend - mybegin));
             }
 #endif
+        } else {
+            memset(x, 0, sizeof(LONGREAL) * n);
         }
-        else {
-            memset(x, 0, sizeof(LONGREAL)*n);
-        }
-    }
-    else {
+    } else {
         INT i;
 
         if (use_openmp) {
 #ifdef _OPENMP
-            INT mybegin,myend,myid;
-#pragma omp parallel for private(myid, mybegin, myend,i)
-            for (myid = 0; myid < nthreads; myid ++) {
+            INT mybegin, myend, myid;
+#pragma omp parallel for private(myid, mybegin, myend, i)
+            for (myid = 0; myid < nthreads; myid++) {
                 fasp_get_start_end(myid, nthreads, n, &mybegin, &myend);
-                for (i=mybegin; i<myend; ++i) x[i]=val;
+                for (i = mybegin; i < myend; ++i) x[i] = val;
             }
 #endif
-        }
-        else {
-            for (i=0; i<n; ++i) x[i]=val;
+        } else {
+            for (i = 0; i < n; ++i) x[i] = val;
         }
     }
 }
@@ -221,15 +205,12 @@ void fasp_ldarray_set (const INT   n,
  * \param y    Pointer to the destination vector
  *
  * \author Chensong Zhang
- * \date   2010/04/03  
+ * \date   2010/04/03
  */
-void fasp_darray_cp (const INT    n,
-                     const REAL  *x,
-                     REAL        *y)
+void fasp_darray_cp(const INT n, const REAL* x, REAL* y)
 {
-    memcpy(y, x, n*sizeof(REAL));
+    memcpy(y, x, n * sizeof(REAL));
 }
-
 
 /**
  * \fn void fasp_iarray_cp (const INT n, const INT *x, INT *y)
@@ -241,13 +222,11 @@ void fasp_darray_cp (const INT    n,
  * \param y    Pointer to the destination vector
  *
  * \author Chunsheng Feng, Xiaoqiang Yue
- * \date   05/23/2012  
+ * \date   05/23/2012
  */
-void fasp_iarray_cp (const INT    n,
-                     const INT   *x,
-                     INT         *y)
+void fasp_iarray_cp(const INT n, const INT* x, INT* y)
 {
-    memcpy(y, x, n*sizeof(INT));
+    memcpy(y, x, n * sizeof(INT));
 }
 
 /*---------------------------------*/
