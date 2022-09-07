@@ -18,6 +18,7 @@
 #endif
 
 #include "fasp.h"
+#include "fasp_functs.h"
 
 /*---------------------------------*/
 /*--      Public Functions       --*/

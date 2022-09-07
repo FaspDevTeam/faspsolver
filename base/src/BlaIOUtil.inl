@@ -46,13 +46,13 @@ static inline void skip_comments (FILE * fp)
 }
 
 /**
- * \fn static inline INT endian_convert_int (const INT inum, const INT ilength,
+ * \fn static inline INT endian_convert_int (const INT inum, const INT length,
  *                                           const SHORT EndianFlag)
  *
  * \brief Swap order of an INT number
  *
  * \param inum        An INT value
- * \param ilength     Length of INT: 2 for short, 4 for int, 8 for long
+ * \param length     Length of INT: 2 for short, 4 for int, 8 for long
  * \param EndianFlag  If EndianFlag = 1, it returns inum itself
  *                    If EndianFlag = 2, it returns the swapped inum
  *
@@ -62,7 +62,7 @@ static inline void skip_comments (FILE * fp)
  * \date   2012-12-24
  */
 static inline INT endian_convert_int (const INT  inum,
-                                      const INT  ilength,
+                                      const INT  length,
                                       const INT  EndianFlag)
 {
     INT iretVal = 0, i;
@@ -71,21 +71,21 @@ static inline INT endian_convert_int (const INT  inum,
     
     if ( EndianFlag == 1 ) return inum;
     else {
-        for (i = 0; i < ilength; i++) {
-            returnInt[i] = intToConvert[ilength-i-1];
+        for (i = 0; i < length; i++) {
+            returnInt[i] = intToConvert[length-i-1];
         }
         return iretVal;
     }
 }
 
 /**
- * \fn static inline REAL endian_convert_real (const REAL rnum, const INT vlength,
+ * \fn static inline REAL endian_convert_real (const REAL rnum, const INT length,
  *                                             const SHORT EndianFlag)
  *
  * \brief Swap order of a REAL number
  *
  * \param rnum        An REAL value
- * \param vlength     Length of INT: 2 for short, 4 for int, 8 for long
+ * \param length      Length of INT: 2 for short, 4 for int, 8 for long
  * \param EndianFlag  If EndianFlag = 1, it returns rnum itself
  *                    If EndianFlag = 2, it returns the swapped rnum
  *
@@ -95,18 +95,18 @@ static inline INT endian_convert_int (const INT  inum,
  * \date   2012-12-24
  */
 static inline REAL endian_convert_real (const REAL  rnum,
-                                        const INT   vlength,
+                                        const INT   length,
                                         const INT   EndianFlag)
 {
-    REAL dretVal;
+    REAL dretVal = 0.0;
     char *realToConvert = (char *) & rnum;
     char *returnReal    = (char *) & dretVal;
     INT  i;
     
     if (EndianFlag==1) return rnum;
     else {
-        for (i = 0; i < vlength; i++) {
-            returnReal[i] = realToConvert[vlength-i-1];
+        for (i = 0; i < length; i++) {
+            returnReal[i] = realToConvert[length-i-1];
         }
         return dretVal;
     }
