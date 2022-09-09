@@ -77,6 +77,7 @@ INT fasp_solver_pardiso(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlv
 
     if (prtlvl > PRINT_MORE) {
         msglvl = 1;
+        iparm[26] = 1; /* Turn on matrix checker */
     } else {
         msglvl = 0; /* Do not print statistical information in file */
     }
