@@ -979,9 +979,7 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
                             else break;
                         }
 
-                        zz[ibstart] = zr[ibstart];
-                        zz[ibstart + 1] = zr[ibstart + 1];
-                        zz[ibstart + 2] = zr[ibstart + 2];
+                        for (j = 0; j < nb; j++) zz[ibstart + j] = zr[ibstart + j]; // Li Zhao, 09/19/2022
                     }
 
                     fasp_mem_free(mult); mult = NULL;
