@@ -769,6 +769,7 @@ void fasp_precond_dbsr_ilu_mc_omp (REAL *r,
  * \date   12/04/2016
  *
  * \note Only works for nb 1, 2, and 3 (Zheng)
+ * \note works forall nb = 1, 2, ..., added by Li Zhao, 09/19/2022
  */
 void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
                                    REAL *z,
@@ -958,12 +959,73 @@ void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
 
         default:
         {
+
+            for (k = 0; k < nlevL; ++k) {
+#pragma omp parallel private(i,ii,begin_row,end_row,ibstart,j,jj,ib,mult)
+                {
+                    mult = (REAL*)fasp_mem_calloc(nb, sizeof(REAL));
+#pragma omp for
+                    for (ii = ilevL[k]; ii < ilevL[k + 1]; ++ii) {
+                        i = jlevL[ii];
+                        begin_row = ijlu[i]; end_row = ijlu[i + 1] - 1;
+                        ibstart = i * nb;
+                        for (j = begin_row; j <= end_row; ++j) {
+                            jj = ijlu[j];
+                            if (jj < i)
+                            {
+                                fasp_blas_smat_mxv(&(lu[j * nb2]), &(zz[jj * nb]), mult, nb);
+                                for (ib = 0; ib < nb; ++ib) zr[ibstart + ib] -= mult[ib];
+                            }
+                            else break;
+                        }
+
+                        zz[ibstart] = zr[ibstart];
+                        zz[ibstart + 1] = zr[ibstart + 1];
+                        zz[ibstart + 2] = zr[ibstart + 2];
+                    }
+
+                    fasp_mem_free(mult); mult = NULL;
+                }
+            }
+
+            for (k = 0; k < nlevU; k++) {
+#pragma omp parallel private(i,ii,begin_row,end_row,ibstart,ibstart1,j,jj,ib,mult)  
+                {
+                    mult = (REAL*)fasp_mem_calloc(nb, sizeof(REAL));
+#pragma omp for
+                    for (ii = ilevU[k + 1] - 1; ii >= ilevU[k]; ii--) {
+                        i = jlevU[ii];
+                        begin_row = ijlu[i]; end_row = ijlu[i + 1] - 1;
+                        ibstart = i * nb2;
+                        ibstart1 = i * nb;
+                        for (j = end_row; j >= begin_row; j--) {
+                            jj = ijlu[j];
+                            if (jj > i) {
+                                fasp_blas_smat_mxv(&(lu[j * nb2]), &(z[jj * nb]), mult, nb);
+                                for (ib = 0; ib < nb; ++ib) zz[ibstart1 + ib] -= mult[ib];
+                            }
+
+                            else break;
+                        }
+
+                        fasp_blas_smat_mxv(&(lu[ibstart]), &(zz[ibstart1]), &(z[ibstart1]), nb);
+
+                    }
+
+                    fasp_mem_free(mult); mult = NULL;
+                }
+            }
+
+            break; 
+
+            /*
             if (nb > 3) {
                 printf("### ERROR: Multi-thread Parallel ILU for %d components \
                        has not yet been implemented!!!", nb);
                 fasp_chkerr(ERROR_UNKNOWN, __FUNCTION__);
             }
             break;
+            */
         }
     }
     

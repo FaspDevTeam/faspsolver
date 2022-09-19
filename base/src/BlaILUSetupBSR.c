@@ -1301,10 +1301,10 @@ static INT numfactor_mulcol (dBSRmat   *A,
  * \param icmap    Mapping
  *
  * \author Zheng Li, Li Zhao
- * \date   12/04/2016, 04/18/2021
+ * \date   12/04/2016, 09/19/2022
  *
  * \note Only works for 1, 2, 3 nb (Zheng)
- * \note Only works for 1, 2, 3, 4, 5 nb modified by Li Zhao
+ * \note works for forall nb = 1,2,... modified by Li Zhao
  */
 static INT numfactor_levsch (dBSRmat *A,
                              REAL *luval,
@@ -1574,13 +1574,56 @@ static INT numfactor_levsch (dBSRmat *A,
                 }
             }
             break;
-     
+
         default:
-        {
-            if (nb > 5) printf("Multi-thread ILU numerical decomposition for %d components has not been implemented!!!\n", nb);
-            exit(0);
+            for (i = 0; i < ncolors; ++i) {
+#pragma omp parallel private(k,indj,ibstart,ib,indja,ijaj,ibstart1,jluj,inds,jlus,mult,mult1,colptrs,ii)
+                {
+                    colptrs = (INT*)fasp_mem_calloc(n, sizeof(INT));
+                    memset(colptrs, 0, sizeof(INT) * n);
+                    mult = (REAL*)fasp_mem_calloc(nb2, sizeof(REAL));
+                    mult1 = (REAL*)fasp_mem_calloc(nb2, sizeof(REAL));
+#pragma omp for
+                    for (ii = ic[i]; ii < ic[i + 1]; ++ii) {
+                        k = icmap[ii];
+                        for (indj = jlu[k]; indj < jlu[k + 1]; ++indj) {
+                            colptrs[jlu[indj]] = indj;
+                            ibstart = indj * nb2;
+                            for (ib = 0; ib < nb2; ++ib) luval[ibstart + ib] = 0;
+                        }
+                        colptrs[k] = k;
+                        for (indja = A->IA[k]; indja < A->IA[k + 1]; ++indja) {
+                            ijaj = A->JA[indja];
+                            ibstart = colptrs[ijaj] * nb2;
+                            ibstart1 = indja * nb2;
+                            for (ib = 0; ib < nb2; ++ib) luval[ibstart + ib] = A->val[ibstart1 + ib];
+                        }
+                        for (indj = jlu[k]; indj < uptr[k]; ++indj) {
+                            jluj = jlu[indj];
+                            ibstart = indj * nb2;
+                            fasp_blas_smat_mul(&(luval[ibstart]), &(luval[jluj * nb2]), mult, nb);
+                            for (ib = 0; ib < nb2; ++ib) luval[ibstart + ib] = mult[ib];
+                            for (inds = uptr[jluj]; inds < jlu[jluj + 1]; ++inds) {
+                                jlus = jlu[inds];
+                                if (colptrs[jlus] != 0) {
+                                    fasp_blas_smat_mul(mult, &(luval[inds * nb2]), mult1, nb);
+                                    ibstart = colptrs[jlus] * nb2;
+                                    for (ib = 0; ib < nb2; ++ib) luval[ibstart + ib] -= mult1[ib];
+                                }
+                            }
+                        }
+                        for (indj = jlu[k]; indj < jlu[k + 1]; ++indj) colptrs[jlu[indj]] = 0;
+                        colptrs[k] = 0;
+                        fasp_smat_invp_nc(&(luval[k * nb2]), nb);
+                    }
+                    fasp_mem_free(colptrs); colptrs = NULL;
+                    fasp_mem_free(mult);    mult = NULL;
+                    fasp_mem_free(mult1);   mult1 = NULL;
+                }
+            }
+            //if (nb > 5) printf("Multi-thread ILU numerical decomposition for %d components has not been implemented!!!\n", nb);
+            //exit(0);
             break;
-        }
     }
     
 #endif
