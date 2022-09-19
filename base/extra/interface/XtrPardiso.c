@@ -66,7 +66,7 @@ INT fasp_solver_pardiso(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlv
 
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", ptrA->row, ptrA->col, ptrA->nnz);
 #endif
 
     PARDISOINIT(pt, &mtype, iparm); /* Initialize */
@@ -166,7 +166,7 @@ INT fasp_pardiso_factorize(dCSRmat* ptrA, Pardiso_data* pdata, const SHORT prtlv
 
 #if DEBUG_MODE
     printf("### DEBUG: %s ...... [Start]\n", __FUNCTION__);
-    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", m, n, nnz);
+    printf("### DEBUG: nr=%d, nc=%d, nnz=%d\n", ptrA->row, n, ptrA->nnz);
 #endif
 
     pdata->mtype = 11; /* Real unsymmetric matrix */
