@@ -41,10 +41,10 @@
 #define ITS_DIVZERO printf("### WARNING: Divided by zero! [%s:%d]\n", __FUNCTION__, __LINE__)
 
 //! Warning for actual relative residual
-#define ITS_REALRES(relres) printf("### WARNING: The actual relative residual = %e!\n", (relres))
+#define ITS_REALRES(relres) printf("### WARNING: The actual relative residual = %.10e!\n", (relres))
 
 //! Warning for computed relative residual
-#define ITS_COMPRES(relres) printf("### WARNING: The computed relative residual = %e!\n", (relres))
+#define ITS_COMPRES(relres) printf("### WARNING: The computed relative residual = %.10e!\n", (relres))
 
 //! Warning for too small sp 
 #define ITS_SMALLSP printf("### WARNING: sp is too small! [%s:%d]\n", __FUNCTION__, __LINE__)
@@ -53,10 +53,10 @@
 #define ITS_RESTORE(iter) printf("### WARNING: Discard current iteration. Restore iteration %d!\n", (iter));
 
 //! Output relative difference and residual
-#define ITS_DIFFRES(reldiff,relres) printf("||u-u'|| = %e and the comp. rel. res. = %e.\n",(reldiff), (relres));
+#define ITS_DIFFRES(reldiff,relres) printf("||u-u'|| = %.10e and the comp. rel. res. = %.10e.\n",(reldiff), (relres));
 
 //! Output L2 norm of some variable
-#define ITS_PUTNORM(name,value) printf("L2 norm of %s = %e.\n", (name), (value));
+#define ITS_PUTNORM(name,value) printf("L2 norm of %s = %.10e.\n", (name), (value));
 
 /**
  * \fn static inline void ITS_CHECK (const INT MaxIt, const REAL tol)
@@ -95,11 +95,11 @@ static inline void ITS_CHECK (const INT MaxIt, const REAL tol)
 static inline void ITS_FINAL (const INT iter, const INT MaxIt, const REAL relres)
 {
     if ( iter > MaxIt ) {
-        printf("### WARNING: MaxIt = %d reached with relative residual %e.\n",
+        printf("### WARNING: MaxIt = %d reached with relative residual %.10e.\n",
                MaxIt, relres);
     }
     else if ( iter >= 0 ) {
-        printf("Number of iterations = %d with relative residual %e.\n",
+        printf("Number of iterations = %d with relative residual %.10e.\n",
                iter, relres);
     }
 }
