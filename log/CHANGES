@@ -1,8 +1,13 @@
 File Name: CHANGES
 
+09/26/2022 FASP 2.8.2:
+- Chang default behavoir: Do not require Fortran compilers!!!
+- Do not compile Fortran by default;
+- Use -DWITHFC=ON in cmake to enable Fortran support.
+
 09/21/2022 FASP 2.8.1:
 - Add OpenMP DLL version for Windows;
-- Longer output format for residuals;
+- Longer output format for residuals.
 
 09/06/2022 FASP 2.8.0:
 - Major Change: Need to update all FASP projects;

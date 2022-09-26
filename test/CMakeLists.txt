@@ -9,11 +9,6 @@ if(UNIX OR LINUX)
 	set(ADD_MLIBS m)
 endif()
 
-## requires GNU Fortran library
-if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
-	set(ADD_FLIBS gfortran)
-endif()
-
 include_directories(${FASP_TINC_DIR}
 		    ${PROJECT_SOURCE_DIR}/base/include)
 
@@ -25,12 +20,16 @@ file(GLOB FASP_TLIB_SRC src/*.c src/*.f)
 
 add_library(fasptest STATIC ${FASP_TLIB_SRC}) 
 
-if(MSVC)
-    file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
-          main/*.c )
-else()
+if(WITHFC)
+    ## requires GNU Fortran library
+    if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
+	    set(ADD_FLIBS gfortran)
+    endif()
     file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
           main/*.c main/*.cpp main/*.f main/*.f90 )
+else()
+    file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
+          main/*.c )
 endif()
 
 foreach( srcfile ${FASP_TSRC} )

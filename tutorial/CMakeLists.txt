@@ -7,17 +7,16 @@ if(UNIX OR LINUX)
 	set(ADD_MLIBS m)
 endif()
 
-## requires GNU Fortran library
-if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
-	set(ADD_FLIBS gfortran)
-endif()
-
-if(MSVC)
-    file( GLOB FASP_TUTSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
-          main/*.c )
+if(WITHFC)
+    ## requires GNU Fortran library
+    if("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
+	    set(ADD_FLIBS gfortran)
+    endif()
+    file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
+          main/*.c main/*.cpp main/*.f main/*.f90 )
 else()
-    file( GLOB FASP_TUTSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
-          main/*.c main/*.f main/*.f90 )
+    file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
+          main/*.c )
 endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/base/include)

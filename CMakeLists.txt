@@ -9,6 +9,7 @@
 # Chensong Zhang    Mar/23/2021    Add headers and backup target
 # Chensong Zhang    May/10/2021    Test the new OpenMP code
 # Chensong Zhang    Feb/18/2022    Fix math.lib linkage problem
+# Chensong Zhang    Sep/26/2022    Do not compile Fortran by default
 #
 # Some sample usages (It is better to use a separate dir for building):
 #   mkdir Build; cd Build; cmake ..      // build in Release configuration
@@ -17,6 +18,7 @@
 #   cmake -DCMAKE_VERBOSE_MAKEFILE=ON .. // build with verbose on
 #   cmake -DUSE_UMFPACK=ON ..            // build with UMFPACK package support
 #   cmake -DUSE_OPENMP=ON ..             // build with OpenMP support
+#   cmake -DWITHFC=ON ..                 // build Fortran examples as well
 
 ###############################################################################
 ## General environment setting
@@ -48,7 +50,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/modules)
 
 # Default configuration types and flags
 set(CMAKE_CONFIGURATION_TYPES "Release;Debug" CACHE STRING "Configs" FORCE)
-if (MSVC)
+if(MSVC)
     # Compiler flags for Windows MSVC, skip Fortran
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /O3")
@@ -59,11 +61,14 @@ else()
     # Compiler flags for Linux or Mac OS X
     set(ADD_STDLIBS "${ADD_STDLIBS} m")
     string(STRIP ${ADD_STDLIBS} ADD_STDLIBS)
-    include(get_cxx_fc_compilers) # find matching Fortran compiler
     set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
+endif()
+
+if(WITHFC)
+    include(get_cxx_fc_compilers) # find matching Fortran compiler
 endif()
 
 # Set default build type to Release

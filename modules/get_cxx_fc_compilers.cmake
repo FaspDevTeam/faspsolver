@@ -18,8 +18,7 @@ elseif( ${REAL_C} MATCHES "Clang.*")
 		# CMAKEs, so we will issue a warning at the end if the 
 		# C compiler and fortran compilers are different. 
 		# As compiler gfortran works with clang in many
-		# cases, so we assume this standard behavior
-		# here as well
+		# cases, but it might fail on Apple M1 chips
     find_program(THE_FC NAMES $ENV{FC} gfortran g95 g77)
 else()       
 	message("WARNING: ${THE_C} did not match any of the preset C compilers" )
