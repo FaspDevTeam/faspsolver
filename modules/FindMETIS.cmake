@@ -1,4 +1,6 @@
 # - Try to find METIS
+# Now compatible with METIS-5.1.0
+# With build-in GKLib
 # 
 #  OUTPUT:
 #  METIS_FOUND        - system has METIS
@@ -16,19 +18,13 @@ find_path(METIS_INCLUDE_DIRS metis.h
   )
 mark_as_advanced(METIS_INCLUDE_DIRS)
 
-# Check for GKlib library, should be installed at the same location as METIS
-find_library(GKLIB_LIB GKlib
-  HINTS ${METIS_DIR} ${METIS_DIR}/METIS ${METIS_DIR}/lib ${METIS_DIR}/METIS/lib $ENV{METIS_DIR}/lib $ENV{METIS_DIR}/METIS/lib
-  DOC "The GKlib library"
-  )
-
 # Check for METIS library
 find_library(METIS_LIB metis
   HINTS ${METIS_DIR} ${METIS_DIR}/METIS ${METIS_DIR}/lib ${METIS_DIR}/METIS/lib $ENV{METIS_DIR}/lib $ENV{METIS_DIR}/METIS/lib
   DOC "The METIS library"
   )
 
-set(METIS_LIBRARIES "${GKLIB_LIB}" "${METIS_LIB}") 
+set(METIS_LIBRARIES "${METIS_LIB}") 
 mark_as_advanced(METIS_LIBRARIES)
 
 # Standard package handling

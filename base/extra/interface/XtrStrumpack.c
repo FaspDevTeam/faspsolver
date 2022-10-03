@@ -36,7 +36,7 @@
  * \param prtlvl       Output level
  *
  * \author Chensong Zhang
- * \date   10/02/2022
+ * \date   10/03/2022
  */
 INT fasp_solver_strumpack(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl)
 {
@@ -49,18 +49,8 @@ INT fasp_solver_strumpack(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prt
     double*   val     = ptrA->val;
     INT       status  = FASP_SUCCESS;
 
-    /* Set Strumpack */
-    STRUMPACK_SparseSolver S;
-
     int verbose = 0;
     if (prtlvl > PRINT_MORE) verbose = 1;
-
-    STRUMPACK_init_mt(&S, STRUMPACK_DOUBLE, STRUMPACK_MT, 0, NULL, verbose);
-    STRUMPACK_set_Krylov_solver(S, STRUMPACK_DIRECT);
-    STRUMPACK_set_matching(S, STRUMPACK_MATCHING_NONE);
-    STRUMPACK_set_reordering_method(S, STRUMPACK_NATURAL); // STRUMPACK_METIS
-    STRUMPACK_set_compression(S, STRUMPACK_NONE);
-    STRUMPACK_set_csr_matrix(S, &n, row_ptr, col_ind, val, 1);
 
 #if DEBUG_MODE
     const INT m   = ptrA->row;
@@ -71,6 +61,15 @@ INT fasp_solver_strumpack(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prt
 
     REAL start_time, end_time;
     fasp_gettime(&start_time);
+
+    /* Set Strumpack */
+    STRUMPACK_SparseSolver S;
+    STRUMPACK_init_mt(&S, STRUMPACK_DOUBLE, STRUMPACK_MT, 0, NULL, verbose);
+    STRUMPACK_set_Krylov_solver(S, STRUMPACK_DIRECT);
+    STRUMPACK_set_matching(S, STRUMPACK_MATCHING_NONE);
+    STRUMPACK_set_reordering_method(S, STRUMPACK_METIS);
+    STRUMPACK_set_compression(S, STRUMPACK_NONE);
+    STRUMPACK_set_csr_matrix(S, &n, row_ptr, col_ind, val, 0);
 
     /* Call STRUMPACK as a solver */
     status = STRUMPACK_reorder(S);

@@ -2,8 +2,9 @@ File Name: CHANGES
 
 10/03/2022 FASP 2.8.3:
 - Add STRUMPACK as a direct solver;
-- Wrong solution when used with STRUMPACK_METIS re-ordering;
-- Seems to work using STRUMPACK_NATURAL;
+- Wrong solution when used with STRUMPACK_METIS re-ordering for old METIS;
+- Updated to METIS-5.1.0; seems to work using STRUMPACK_METIS now;;
+- Update FindMETIS.cmake.
 
 09/26/2022 FASP 2.8.2:
 - Chang default behavoir: Do not require Fortran compilers!!!
