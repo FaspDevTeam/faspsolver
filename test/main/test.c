@@ -324,6 +324,13 @@ int main(int argc, const char* argv[])
     }
 #endif
 
+#if WITH_STRUMPACK // Call STRUMPACK if linked with -DUSE_STRUMPACK=ON
+    else if (solver_type == SOLVER_STRUMPACK) {
+        fasp_dcsr_sort(&A);
+        status = fasp_solver_strumpack(&A, &b, &x, print_level);
+    }
+#endif
+
     else {
         printf("### ERROR: Unknown solver %d!!!\n", solver_type);
         status = ERROR_SOLVER_TYPE;

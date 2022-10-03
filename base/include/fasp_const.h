@@ -124,6 +124,7 @@
 #define SOLVER_UMFPACK         32  /**< Direct Solver: UMFPack */
 #define SOLVER_MUMPS           33  /**< Direct Solver: MUMPS */
 #define SOLVER_PARDISO         34  /**< Direct Solver: PARDISO */
+#define SOLVER_STRUMPACK       35 /**< Direct Solver: STRUMPACK */
 
 /**
  * \brief Definition of iterative solver stopping criteria types

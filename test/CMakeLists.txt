@@ -43,6 +43,7 @@ foreach( srcfile ${FASP_TSRC} )
                           ${METIS_LIBRARIES} 
                           ${MUMPS_LIBRARIES}
                           ${MKL_LIBRARIES}
+                          ${STRUMPACK_LIBRARIES}
                           ${ADD_MLIBS}
                           ${ADD_FLIBS})
 #

@@ -27,25 +27,15 @@
 
 /*-------- In file: AuxArray.c --------*/
 
-FASP_API void fasp_darray_set (const INT   n,
-                               REAL       *x,
-                               const REAL  val);
+FASP_API void fasp_darray_set(const INT n, REAL* x, const REAL val);
 
-FASP_API void fasp_iarray_set (const INT   n,
-                               INT        *x,
-                               const INT   val);
-                  
-FASP_API void fasp_ldarray_set (const INT   n,
-                                LONGREAL        *x,
-                                const LONGREAL   val);
+FASP_API void fasp_iarray_set(const INT n, INT* x, const INT val);
 
-FASP_API void fasp_darray_cp (const INT    n,
-                              const REAL  *x,
-                              REAL        *y);
+FASP_API void fasp_ldarray_set(const INT n, LONGREAL* x, const LONGREAL val);
 
-FASP_API void fasp_iarray_cp (const INT    n,
-                              const INT   *x,
-                              INT         *y);
+FASP_API void fasp_darray_cp(const INT n, const REAL* x, REAL* y);
+
+FASP_API void fasp_iarray_cp(const INT n, const INT* x, INT* y);
 
 
 /*-------- In file: AuxConvert.c --------*/
@@ -275,80 +265,41 @@ FASP_API void fasp_dvec_symdiagscale (dvector        *b,
 
 /*-------- In file: BlaArray.c --------*/
 
-FASP_API void fasp_blas_darray_ax (const INT    n,
-                                   const REAL   a,
-                                   REAL        *x);
+FASP_API void fasp_blas_darray_ax(const INT n, const REAL a, REAL* x);
 
-FASP_API void fasp_blas_darray_axpy (const INT    n,
-                                     const REAL   a,
-                                     const REAL  *x,
-                                     REAL        *y);
+FASP_API void fasp_blas_darray_axpy(const INT n, const REAL a, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_ldarray_axpy (const INT    n,
-                                      const REAL   a,
-                                      const REAL  *x,
-                                      LONGREAL        *y);
+FASP_API void fasp_blas_ldarray_axpy(const INT n, const REAL a, const REAL* x, LONGREAL* y);
 
-FASP_API void fasp_blas_darray_axpy_nc2 (const REAL   a,
-                                         const REAL  *x,
-                                         REAL        *y);
+FASP_API void fasp_blas_darray_axpy_nc2(const REAL a, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_darray_axpy_nc3 (const REAL   a,
-                                         const REAL  *x,
-                                         REAL        *y);
+FASP_API void fasp_blas_darray_axpy_nc3(const REAL a, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_darray_axpy_nc5 (const REAL   a,
-                                         const REAL  *x,
-                                         REAL        *y);
+FASP_API void fasp_blas_darray_axpy_nc5(const REAL a, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_darray_axpy_nc7 (const REAL   a,
-                                         const REAL  *x,
-                                         REAL        *y);
+FASP_API void fasp_blas_darray_axpy_nc7(const REAL a, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_darray_axpyz (const INT    n,
-                                      const REAL   a,
-                                      const REAL  *x,
-                                      const REAL  *y,
-                                      REAL        *z);
+FASP_API void fasp_blas_darray_axpyz(const INT n, const REAL a, const REAL* x, const REAL* y,
+                                     REAL* z);
 
-FASP_API void fasp_blas_darray_axpyz_nc2 (const REAL   a,
-                                          const REAL  *x,
-                                          const REAL  *y,
-                                          REAL        *z);
+FASP_API void fasp_blas_darray_axpyz_nc2(const REAL a, const REAL* x, const REAL* y, REAL* z);
 
-FASP_API void fasp_blas_darray_axpyz_nc3 (const REAL   a,
-                                          const REAL  *x,
-                                          const REAL  *y,
-                                          REAL        *z);
+FASP_API void fasp_blas_darray_axpyz_nc3(const REAL a, const REAL* x, const REAL* y, REAL* z);
 
-FASP_API void fasp_blas_darray_axpyz_nc5 (const REAL   a,
-                                          const REAL  *x,
-                                          const REAL  *y,
-                                          REAL        *z);
+FASP_API void fasp_blas_darray_axpyz_nc5(const REAL a, const REAL* x, const REAL* y, REAL* z);
 
-FASP_API void fasp_blas_darray_axpyz_nc7 (const REAL   a,
-                                          const REAL  *x,
-                                          const REAL  *y,
-                                          REAL        *z);
+FASP_API void fasp_blas_darray_axpyz_nc7(const REAL a, const REAL* x, const REAL* y, REAL* z);
 
-FASP_API void fasp_blas_darray_axpby (const INT   n,
-                                      const REAL  a,
-                                      const REAL *x,
-                                      const REAL  b,
-                                      REAL       *y);
+FASP_API void fasp_blas_darray_axpby(const INT n, const REAL a, const REAL* x, const REAL b,
+                                     REAL* y);
 
-FASP_API REAL fasp_blas_darray_norm1 (const INT    n,
-                                      const REAL  *x);
+FASP_API REAL fasp_blas_darray_norm1(const INT n, const REAL* x);
 
-FASP_API REAL fasp_blas_darray_norm2 (const INT    n,
-                                      const REAL  *x);
+FASP_API REAL fasp_blas_darray_norm2(const INT n, const REAL* x);
 
-FASP_API REAL fasp_blas_darray_norminf (const INT    n,
-                                        const REAL  *x);
+FASP_API REAL fasp_blas_darray_norminf(const INT n, const REAL* x);
 
-FASP_API REAL fasp_blas_darray_dotprod (const INT    n,
-                                        const REAL  *x,
-                                        const REAL  *y);
+FASP_API REAL fasp_blas_darray_dotprod(const INT n, const REAL* x, const REAL* y);
 
 
 /*-------- In file: BlaEigen.c --------*/
@@ -2472,6 +2423,18 @@ FASP_API void dvector2SAMGInput (dvector *vec,
 FASP_API INT dCSRmat2SAMGInput (dCSRmat *A,
                                 char *filefrm,
                                 char *fileamg);
+
+
+/*-------- In file: XtrStrumpack.c --------*/
+
+FASP_API INT fasp_solver_strumpack(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl);
+
+FASP_API void* fasp_umfpack_factorize(dCSRmat* ptrA, const SHORT prtlvl);
+
+FASP_API INT fasp_umfpack_solve(dCSRmat* ptrA, dvector* b, dvector* u, void* Numeric,
+                                const SHORT prtlvl);
+
+FASP_API INT fasp_umfpack_free_numeric(void* Numeric);
 
 
 /*-------- In file: XtrSuperlu.c --------*/
