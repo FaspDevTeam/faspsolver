@@ -1,18 +1,32 @@
 {
     "configurations": [
         {
-            "name": "Mac",
+            "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${env:FASP_DIR}/include"
             ],
             "defines": [],
-            "macFrameworkPath": [],
-            "compilerPath": "gcc",
+            "compilerPath": "/usr/bin/gcc",
             "cStandard": "gnu17",
-            "cppStandard": "gnu++14",
-            "intelliSenseMode": "macos-gcc-x64",
-            "compileCommands": "${workspaceFolder}/Build/compile_commands.json",
+            "cppStandard": "gnu++17",
+            "intelliSenseMode": "linux-gcc-x64",
             "configurationProvider": "ms-vscode.cmake-tools"
+        },
+        {
+            "name": "Mac",
+            "intelliSenseMode": "clang-x64",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${env:FASP_DIR}/include"
+            ],
+            "macFrameworkPath": [
+                "/System/Library/Frameworks"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++17"
         }
     ],
     "version": 4
