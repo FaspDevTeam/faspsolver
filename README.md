@@ -41,8 +41,9 @@ Note: The default prefix is the FASP source directory.
 This package has been tested with on the following platforms: 
 
 - Linux: gcc/gfortran, icc/ifort
-- Mac OS X: gcc/gfortran, icc/ifort, clang
 - Windows XP, 7, 10: icc/ifort
+- Mac with Intel CPU: gcc/gfortran, icc/ifort, clang
+- Mac with Apple Silicon: gcc/gfortran, clang
 
 ## License
 This software is free software distributed under the Lesser General Public 
@@ -53,7 +54,3 @@ See the GNU Lesser General Public License for more details.
 
 You should have received a copy of the GNU Lesser General Public License 
 along with FASP. If not, see <http://www.gnu.org/licenses/>.
-
-## Contact
-More details about the FASP project can be found at <http://multigrid.org/fasp>.
-And, if you have any questions, feel free to contact us at faspdev@gmail.com.
