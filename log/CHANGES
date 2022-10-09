@@ -2,7 +2,8 @@ File Name: CHANGES
 
 10/09/2022 FASP 2.8.4:
 - Remove xcode support, move to VSCode+cmake completely;
-- Add .vscode settings;
+- Add and reset .vscode settings;
+- Update git ignores;
 - Simplify cmake files;
 - Test on arm64 computer.
 
