@@ -1,24 +1,14 @@
 # CMakeLists for faspsolver 
-# 
-# Author            Date           Action
-# -----------------------------------------------------------------------------
-# Ludmil Zikatanov  Aug/08/2015    Create CMakeLists
-# Chensong Zhang    Oct/20/2017    Update to new FASP code
-# Ludmil Zikatanov  Aug/08/2019    Fix installation problem for cmake 3.14+
-# Chensong Zhang    Mar/13/2021    Replace FASP_SOURCE_DIR with general dir
-# Chensong Zhang    Mar/23/2021    Add headers and backup target
-# Chensong Zhang    May/10/2021    Test the new OpenMP code
-# Chensong Zhang    Feb/18/2022    Fix math.lib linkage problem
-# Chensong Zhang    Sep/26/2022    Do not compile Fortran by default
 #
 # Some sample usages (It is better to use a separate dir for building):
-#   mkdir Build; cd Build; cmake ..      // build in Release configuration
-#   cmake -DCMAKE_BUILD_TYPE=Debug ..    // build in Debug configuration
-#   cmake CC=clang ..                    // build with specified compiler
-#   cmake -DCMAKE_VERBOSE_MAKEFILE=ON .. // build with verbose on
-#   cmake -DUSE_UMFPACK=ON ..            // build with UMFPACK package support
-#   cmake -DUSE_OPENMP=ON ..             // build with OpenMP support
-#   cmake -DWITHFC=ON ..                 // build Fortran examples as well
+#   mkdir Build; cd Build; cmake ..          // build in Release configuration
+#   cmake -DCMAKE_BUILD_TYPE=Debug ..        // build in Debug configuration
+#   cmake CC=clang ..                        // build with specified compiler
+#   cmake -DCMAKE_VERBOSE_MAKEFILE=ON ..     // build with verbose on
+#   cmake -DUSE_UMFPACK=ON ..                // build with UMFPACK package support
+#   cmake -DUSE_OPENMP=ON ..                 // build with OpenMP support
+#   cmake -DWITHFC=ON ..                     // build Fortran examples as well
+#   cmake -DCMAKE_OSX_ARCHITECTURES=arm64 .. // build on arm64 CPUs
 
 ###############################################################################
 ## General environment setting
@@ -38,10 +28,6 @@ set(USE_UMFPACK 0 CACHE BOOL "UMFPACK use")
 set(USE_SUPERLU 0 CACHE BOOL "SUPERLU use")
 set(USE_PARDISO 0 CACHE BOOL "PARDISO use")
 set(USE_DOXYGEN 0 CACHE BOOL "Doxygen use")
-
-# Search for C compilers in the specified order
-find_program(THE_C NAMES $ENV{CC} gcc icc clang)
-set(CMAKE_C_COMPILER ${THE_C} CACHE INTERNAL "the C compiler" FORCE)
 
 # Name the project at this moment and this will set the compiler id:
 project(faspsolver C)
@@ -71,15 +57,15 @@ if(WITHFC)
     include(get_cxx_fc_compilers) # find matching Fortran compiler
 endif()
 
+########### check the prefix for installation #########################
+include(install_prefix)
+
 # Set default build type to Release
 set(build_type "Release")
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "${build_type}" CACHE STRING "the build type" FORCE)
 endif()
 message(STATUS "Set build type to ${CMAKE_BUILD_TYPE} configuration")
-
-########### check the prefix for installation #########################
-include(install_prefix)
  
 #######################################################################
 # OpenMP : defined on command line in the top Makefile
@@ -157,6 +143,7 @@ include(external)
 ###############################################################################
 ## Installtion targets for lib and exe files
 ###############################################################################
+
 set(CMAKE_INSTALL_PREFIX "${PROJECT_SOURCE_DIR}" )
 set(FASPLIB_BASE_PATH "base" CACHE PATH "base path to FASPLIB")
 set(FASP_INSTALL TRUE)
@@ -186,5 +173,3 @@ add_subdirectory("tutorial")  # Requires Fortran compiler
 if(EXISTS "benchmark")
     add_subdirectory("benchmark") # Optional, only needed for benchmark tests
 endif()
-
-include(write_config)
