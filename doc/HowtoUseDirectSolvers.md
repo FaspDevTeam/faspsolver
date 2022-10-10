@@ -16,17 +16,17 @@ We currently support the following sparse direct solvers
 
 There are all free for personal uses and some of them are open-source packages. In practice, these general-purpose sparse direct solvers are robust and usually do not require user tunned parameters. It is not clear which one is more efficient for a particular problem. But we recommend to try them in the order provided above. 
 
-You can refer to their official website for downloading and installation guide lines:
+You can refer to the official websites of these packages for downloading and installation guide-lines:
 
-1. [SuiteSparse](https://github.com/DrTimothyAldenDavis/SuiteSparse)
-2. [SuperLU](https://github.com/xiaoyeli/superlu)
-3. [MUMPS](https://graal.ens-lyon.fr/MUMPS/index.php)
+1. [Pardiso](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#base-kit), Intel oneAPI base toolkit
+2. [MUMPS](https://graal.ens-lyon.fr/MUMPS/index.php)
+3. [SuiteSparse](https://github.com/DrTimothyAldenDavis/SuiteSparse)
 4. [Strumpack](https://github.com/pghysels/STRUMPACK)
-5. [Pardiso](https://www.intel.com/content/www/us/en/developer/tools/oneapi/toolkits.html#base-kit), Intel oneAPI base toolkit
+5. [SuperLU](https://github.com/xiaoyeli/superlu)
 
 ## Link with direct solvers
 
-By default, the direct solvers will be disabled during build except you enable them explicitly. 
+By default, the direct solvers will be disabled when building `faspsolver` except that you enable them explicitly. You can enable one or all of them during cmake. 
 
 ### (1) Pardiso in MKL
 
@@ -35,8 +35,7 @@ Pardiso has two versions. We now use the version in Intel oneMKL for simplicity 
 ```bash
     mkdir Build; cd Build; 
     cmake -DUSE_PARDISO=ON ..
-    make -j 8
-    make install
+    make -j 8 install
 ```
 
 ### (2) Strumpack
@@ -44,8 +43,7 @@ Pardiso has two versions. We now use the version in Intel oneMKL for simplicity 
 ```bash
     mkdir Build; cd Build; 
     cmake -DUSE_STRUMPACK=ON ..
-    make -j 8
-    make install
+    make -j 8 install
 ```
 
 ## Use direct solvers
