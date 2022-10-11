@@ -1297,73 +1297,32 @@ FASP_API void fasp_smoother_dbsr_ilu (dBSRmat *A,
 
 /*-------- In file: ItrSmootherCSR.c --------*/
 
-FASP_API void fasp_smoother_dcsr_jacobi (dvector    *u,
-                                         const INT   i_1,
-                                         const INT   i_n,
-                                         const INT   s,
-                                         dCSRmat    *A,
-                                         dvector    *b,
-                                         INT         L,
-                                         const REAL  w);
+FASP_API void fasp_smoother_dcsr_jacobi(dvector* u, const INT i_1, const INT i_n, const INT s,
+                                        dCSRmat* A, dvector* b, INT L, const REAL w);
 
-FASP_API void fasp_smoother_dcsr_gs (dvector    *u,
-                                     const INT   i_1,
-                                     const INT   i_n,
-                                     const INT   s,
-                                     dCSRmat    *A,
-                                     dvector    *b,
-                                     INT         L);
+FASP_API void fasp_smoother_dcsr_gs(dvector* u, const INT i_1, const INT i_n, const INT s,
+                                    dCSRmat* A, dvector* b, INT L);
 
-FASP_API void fasp_smoother_dcsr_gs_cf (dvector   *u,
-                                        dCSRmat   *A,
-                                        dvector   *b,
-                                        INT        L,
-                                        INT       *mark,
-                                        const INT  order);
+FASP_API void fasp_smoother_dcsr_gs_cf(dvector* u, dCSRmat* A, dvector* b, INT L, INT* mark,
+                                       const INT order);
 
-FASP_API void fasp_smoother_dcsr_sgs (dvector *u,
-                                      dCSRmat *A,
-                                      dvector *b,
-                                      INT      L);
+FASP_API void fasp_smoother_dcsr_gs_ff(dvector* u, dCSRmat* A, dvector* b, INT L, INT* mark);
 
-FASP_API void fasp_smoother_dcsr_sor (dvector    *u,
-                                      const INT   i_1,
-                                      const INT   i_n,
-                                      const INT   s,
-                                      dCSRmat    *A,
-                                      dvector    *b,
-                                      INT         L,
-                                      const REAL  w);
+FASP_API void fasp_smoother_dcsr_sgs(dvector* u, dCSRmat* A, dvector* b, INT L);
 
-FASP_API void fasp_smoother_dcsr_sor_cf (dvector    *u,
-                                         dCSRmat    *A,
-                                         dvector    *b,
-                                         INT         L,
-                                         const REAL  w,
-                                         INT        *mark,
-                                         const INT   order );
+FASP_API void fasp_smoother_dcsr_sor(dvector* u, const INT i_1, const INT i_n, const INT s,
+                                     dCSRmat* A, dvector* b, INT L, const REAL w);
 
-FASP_API void fasp_smoother_dcsr_ilu (dCSRmat *A,
-                                      dvector *b,
-                                      dvector *x,
-                                      void    *data);
+FASP_API void fasp_smoother_dcsr_sor_cf(dvector* u, dCSRmat* A, dvector* b, INT L, const REAL w,
+                                        INT* mark, const INT order);
 
-FASP_API void fasp_smoother_dcsr_kaczmarz (dvector    *u,
-                                           const INT   i_1,
-                                           const INT   i_n,
-                                           const INT   s,
-                                           dCSRmat    *A,
-                                           dvector    *b,
-                                           INT         L,
-                                           const REAL  w);
+FASP_API void fasp_smoother_dcsr_ilu(dCSRmat* A, dvector* b, dvector* x, void* data);
 
-FASP_API void fasp_smoother_dcsr_L1diag (dvector    *u,
-                                         const INT   i_1,
-                                         const INT   i_n,
-                                         const INT   s,
-                                         dCSRmat    *A,
-                                         dvector    *b,
-                                         INT         L);
+FASP_API void fasp_smoother_dcsr_kaczmarz(dvector* u, const INT i_1, const INT i_n, const INT s,
+                                          dCSRmat* A, dvector* b, INT L, const REAL w);
+
+FASP_API void fasp_smoother_dcsr_L1diag(dvector* u, const INT i_1, const INT i_n, const INT s,
+                                        dCSRmat* A, dvector* b, INT L);
 
 
 /*-------- In file: ItrSmootherCSRcr.c --------*/
@@ -2428,13 +2387,6 @@ FASP_API INT dCSRmat2SAMGInput (dCSRmat *A,
 /*-------- In file: XtrStrumpack.c --------*/
 
 FASP_API INT fasp_solver_strumpack(dCSRmat* ptrA, dvector* b, dvector* u, const SHORT prtlvl);
-
-FASP_API void* fasp_umfpack_factorize(dCSRmat* ptrA, const SHORT prtlvl);
-
-FASP_API INT fasp_umfpack_solve(dCSRmat* ptrA, dvector* b, dvector* u, void* Numeric,
-                                const SHORT prtlvl);
-
-FASP_API INT fasp_umfpack_free_numeric(void* Numeric);
 
 
 /*-------- In file: XtrSuperlu.c --------*/
