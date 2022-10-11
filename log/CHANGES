@@ -1,5 +1,9 @@
 File Name: CHANGES
 
+10/11/2022 FASP 2.8.5:
+- Use clang-format from OCP;
+- Add GSF smoother (GS for F-points);
+
 10/09/2022 FASP 2.8.4:
 - Remove xcode support, move to VSCode+cmake completely;
 - Add and reset .vscode settings;
