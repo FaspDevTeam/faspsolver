@@ -2324,27 +2324,68 @@ FASP_API INT fasp_solver_dstr_krylov_blockgs(dSTRmat* A, dvector* b, dvector* x,
 
 /*-------- In file: SolWrapper.c --------*/
 
-FASP_API void fasp_fwrapper_dcsr_pardiso_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, REAL* b,
-                                          REAL* u, INT* ptrlvl);
+FASP_API void fasp_fwrapper_dcsr_pardiso_(
+             INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, REAL* b, REAL* u, INT* ptrlvl);
 
-FASP_API void fasp_fwrapper_dcsr_amg_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, REAL* b,
-                                      REAL* u, REAL* tol, INT* maxit, INT* ptrlvl);
+FASP_API void fasp_fwrapper_dcsr_strumpack_(
+             INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, REAL* b, REAL* u, INT* ptrlvl);
 
-FASP_API void fasp_fwrapper_dcsr_krylov_ilu_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a,
-                                             REAL* b, REAL* u, REAL* tol, INT* maxit,
-                                             INT* ptrlvl);
+FASP_API void fasp_fwrapper_dcsr_amg_(INT*  n,
+                                      INT*  nnz,
+                                      INT*  ia,
+                                      INT*  ja,
+                                      REAL* a,
+                                      REAL* b,
+                                      REAL* u,
+                                      REAL* tol,
+                                      INT*  maxit,
+                                      INT*  ptrlvl);
 
-FASP_API void fasp_fwrapper_dcsr_krylov_amg_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a,
-                                             REAL* b, REAL* u, REAL* tol, INT* maxit,
-                                             INT* ptrlvl);
+FASP_API void fasp_fwrapper_dcsr_krylov_ilu_(INT*  n,
+                                             INT*  nnz,
+                                             INT*  ia,
+                                             INT*  ja,
+                                             REAL* a,
+                                             REAL* b,
+                                             REAL* u,
+                                             REAL* tol,
+                                             INT*  maxit,
+                                             INT*  ptrlvl);
 
-FASP_API void fasp_fwrapper_dbsr_krylov_ilu_(INT* n, INT* nnz, INT* nb, INT* ia, INT* ja,
-                                             REAL* a, REAL* b, REAL* u, REAL* tol, INT* maxit,
-                                             INT* ptrlvl);
+FASP_API void fasp_fwrapper_dcsr_krylov_amg_(INT*  n,
+                                             INT*  nnz,
+                                             INT*  ia,
+                                             INT*  ja,
+                                             REAL* a,
+                                             REAL* b,
+                                             REAL* u,
+                                             REAL* tol,
+                                             INT*  maxit,
+                                             INT*  ptrlvl);
 
-FASP_API void fasp_fwrapper_dbsr_krylov_amg_(INT* n, INT* nnz, INT* nb, INT* ia, INT* ja,
-                                             REAL* a, REAL* b, REAL* u, REAL* tol, INT* maxit,
-                                             INT* ptrlvl);
+FASP_API void fasp_fwrapper_dbsr_krylov_ilu_(INT*  n,
+                                             INT*  nnz,
+                                             INT*  nb,
+                                             INT*  ia,
+                                             INT*  ja,
+                                             REAL* a,
+                                             REAL* b,
+                                             REAL* u,
+                                             REAL* tol,
+                                             INT*  maxit,
+                                             INT*  ptrlvl);
+
+FASP_API void fasp_fwrapper_dbsr_krylov_amg_(INT*  n,
+                                             INT*  nnz,
+                                             INT*  nb,
+                                             INT*  ia,
+                                             INT*  ja,
+                                             REAL* a,
+                                             REAL* b,
+                                             REAL* u,
+                                             REAL* tol,
+                                             INT*  maxit,
+                                             INT*  ptrlvl);
 
 
 /*-------- In file: XtrMumps.c --------*/
