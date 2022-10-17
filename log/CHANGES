@@ -1,8 +1,9 @@
 File Name: CHANGES
 
-10/11/2022 FASP 2.8.5:
+10/16/2022 FASP 2.8.5:
 - Use clang-format from OCP;
 - Add GSF smoother (GS for F-points);
+- Add a Fortran wrapper for Strumpack;
 
 10/09/2022 FASP 2.8.4:
 - Remove xcode support, move to VSCode+cmake completely;
@@ -957,7 +958,8 @@ File Name: CHANGES
 - Update regression test results.
 
 12/09/2013 FASP 1.3.8:
-- Delete '' caused by '\n' in windows in the file graphic.c.
+- Delete '
+' caused by '\n' in windows in the file graphic.c.
 - Fix a relative path problem for MUMPS interface.
 - Fix an OpenMP setting problem in VS08 x64 Release configuration.
 
