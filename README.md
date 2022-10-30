@@ -20,19 +20,19 @@ higher <http://www.cmake.org/>.
 The command to configure is:
 
 ``` bash
-    $ mkdir Build; cd Build; cmake .. 
+    > mkdir Build; cd Build; cmake .. 
 ```
 
 After successfully configing the environment, just run:
 
 ``` bash
-    $ make    // to compile the FASP static library
+    > make    // to compile the FASP static library
 ```
 
 To install the FASP library and executables, run:
 
 ``` bash
-    $ make install
+    > make install
 ```
 
 Note: The default prefix is the FASP source directory.
