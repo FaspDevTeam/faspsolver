@@ -26,13 +26,13 @@ The command to configure is:
 After successfully configing the environment, just run:
 
 ``` bash
-    > make    // to compile the FASP static library
+    > make    # to compile the FASP lib only, do not install
 ```
 
 To install the FASP library and executables, run:
 
 ``` bash
-    > make install
+    > make install  # compile and install the FASP lib
 ```
 
 Note: The default prefix is the FASP source directory.
