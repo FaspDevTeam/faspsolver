@@ -3,7 +3,7 @@
 # Some sample usages (It is better to use a separate dir for building):
 #   mkdir Build; cd Build; cmake ..          // build in Release configuration
 #   cmake -DCMAKE_BUILD_TYPE=Debug ..        // build in Debug configuration
-#   cmake CC=clang ..                        // build with specified compiler
+#   cmake -DCMAKE_C_COMPILER=gcc ..          // build with specified compiler
 #   cmake -DCMAKE_VERBOSE_MAKEFILE=ON ..     // build with verbose on
 #   cmake -DUSE_UMFPACK=ON ..                // build with UMFPACK package support
 #   cmake -DUSE_OPENMP=ON ..                 // build with OpenMP support

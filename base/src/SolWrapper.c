@@ -42,8 +42,8 @@
  * \author Chensong Zhang
  * \date   01/09/2020
  */
-void fasp_fwrapper_dcsr_pardiso_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, REAL* b,
-                                 REAL* u, INT* ptrlvl)
+void fasp_fwrapper_dcsr_pardiso_(
+    INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, REAL* b, REAL* u, INT* ptrlvl)
 {
     dCSRmat mat;      // coefficient matrix
     dvector rhs, sol; // right-hand-side, solution
@@ -67,6 +67,48 @@ void fasp_fwrapper_dcsr_pardiso_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, RE
 }
 
 /**
+ * \fn void fasp_fwrapper_dcsr_strumpack_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a,
+ *                                         REAL *b, REAL *u, INT *ptrlvl)
+ *
+ * \brief Solve Ax=b by the STRUMPACK
+ *
+ * \param n       Number of cols of A
+ * \param nnz     Number of nonzeros of A
+ * \param ia      IA of A in CSR format
+ * \param ja      JA of A in CSR format
+ * \param a       VAL of A in CSR format
+ * \param b       RHS vector
+ * \param u       Solution vector
+ * \param ptrlvl  Print level for iterative solvers
+ *
+ * \author Yumiao Zhang
+ * \date   10/17/2022
+ */
+void fasp_fwrapper_dcsr_strumpack_(
+    INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, REAL* b, REAL* u, INT* ptrlvl)
+{
+    dCSRmat mat;      // coefficient matrix
+    dvector rhs, sol; // right-hand-side, solution
+
+    // set up coefficient matrix
+    mat.row = *n;
+    mat.col = *n;
+    mat.nnz = *nnz;
+    mat.IA  = ia;
+    mat.JA  = ja;
+    mat.val = a;
+
+    rhs.row = *n;
+    rhs.val = b;
+    sol.row = *n;
+    sol.val = u;
+
+    fasp_dcsr_sort(&mat);
+
+    fasp_solver_strumpack(&mat, &rhs, &sol, *ptrlvl);
+}
+
+/**
  * \fn void fasp_fwrapper_dcsr_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a,
  *                                   REAL *b, REAL *u, REAL *tol, INT *maxit,
  *                                   INT *ptrlvl)
@@ -87,8 +129,16 @@ void fasp_fwrapper_dcsr_pardiso_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, RE
  * \author Chensong Zhang
  * \date   09/16/2010
  */
-void fasp_fwrapper_dcsr_amg_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, REAL* b,
-                             REAL* u, REAL* tol, INT* maxit, INT* ptrlvl)
+void fasp_fwrapper_dcsr_amg_(INT*  n,
+                             INT*  nnz,
+                             INT*  ia,
+                             INT*  ja,
+                             REAL* a,
+                             REAL* b,
+                             REAL* u,
+                             REAL* tol,
+                             INT*  maxit,
+                             INT*  ptrlvl)
 {
     dCSRmat   mat;      // coefficient matrix
     dvector   rhs, sol; // right-hand-side, solution
@@ -138,9 +188,16 @@ void fasp_fwrapper_dcsr_amg_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, REAL* 
  * \author Chensong Zhang
  * \date   03/24/2018
  */
-void fasp_fwrapper_dcsr_krylov_ilu_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a,
-                                    REAL* b, REAL* u, REAL* tol, INT* maxit,
-                                    INT* ptrlvl)
+void fasp_fwrapper_dcsr_krylov_ilu_(INT*  n,
+                                    INT*  nnz,
+                                    INT*  ia,
+                                    INT*  ja,
+                                    REAL* a,
+                                    REAL* b,
+                                    REAL* u,
+                                    REAL* tol,
+                                    INT*  maxit,
+                                    INT*  ptrlvl)
 {
     dCSRmat   mat;      // coefficient matrix
     dvector   rhs, sol; // right-hand-side, solution
@@ -197,9 +254,16 @@ void fasp_fwrapper_dcsr_krylov_ilu_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a,
  * \author Chensong Zhang
  * \date   09/16/2010
  */
-void fasp_fwrapper_dcsr_krylov_amg_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a,
-                                    REAL* b, REAL* u, REAL* tol, INT* maxit,
-                                    INT* ptrlvl)
+void fasp_fwrapper_dcsr_krylov_amg_(INT*  n,
+                                    INT*  nnz,
+                                    INT*  ia,
+                                    INT*  ja,
+                                    REAL* a,
+                                    REAL* b,
+                                    REAL* u,
+                                    REAL* tol,
+                                    INT*  maxit,
+                                    INT*  ptrlvl)
 {
     dCSRmat     mat;      // coefficient matrix
     dvector     rhs, sol; // right-hand-side, solution
@@ -255,9 +319,17 @@ void fasp_fwrapper_dcsr_krylov_amg_(INT* n, INT* nnz, INT* ia, INT* ja, REAL* a,
  * \author Chensong Zhang
  * \date   03/25/2018
  */
-void fasp_fwrapper_dbsr_krylov_ilu_(INT* n, INT* nnz, INT* nb, INT* ia, INT* ja,
-                                    REAL* a, REAL* b, REAL* u, REAL* tol, INT* maxit,
-                                    INT* ptrlvl)
+void fasp_fwrapper_dbsr_krylov_ilu_(INT*  n,
+                                    INT*  nnz,
+                                    INT*  nb,
+                                    INT*  ia,
+                                    INT*  ja,
+                                    REAL* a,
+                                    REAL* b,
+                                    REAL* u,
+                                    REAL* tol,
+                                    INT*  maxit,
+                                    INT*  ptrlvl)
 {
     dBSRmat mat;      // coefficient matrix in BSR format
     dvector rhs, sol; // right-hand-side, solution
@@ -318,9 +390,17 @@ void fasp_fwrapper_dbsr_krylov_ilu_(INT* n, INT* nnz, INT* nb, INT* ia, INT* ja,
  * \author Chensong Zhang
  * \date   04/05/2018
  */
-void fasp_fwrapper_dbsr_krylov_amg_(INT* n, INT* nnz, INT* nb, INT* ia, INT* ja,
-                                    REAL* a, REAL* b, REAL* u, REAL* tol, INT* maxit,
-                                    INT* ptrlvl)
+void fasp_fwrapper_dbsr_krylov_amg_(INT*  n,
+                                    INT*  nnz,
+                                    INT*  nb,
+                                    INT*  ia,
+                                    INT*  ja,
+                                    REAL* a,
+                                    REAL* b,
+                                    REAL* u,
+                                    REAL* tol,
+                                    INT*  maxit,
+                                    INT*  ptrlvl)
 {
     dBSRmat mat;      // coefficient matrix in CSR format
     dvector rhs, sol; // right-hand-side, solution
