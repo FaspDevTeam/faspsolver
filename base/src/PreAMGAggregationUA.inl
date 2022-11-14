@@ -260,6 +260,9 @@ static void form_pairwise (const dCSRmat  *A,
             temp3 = MAX(ABS(aii-s[i]), SMALLREAL); // avoid temp3 to be zero
             temp4 = MAX(ABS(ajj-s[col]), SMALLREAL); // avoid temp4 to be zero
             temp4 = -aij+1./(1.0/temp3+1.0/temp4);
+            // avoid temp4 to be zero
+            if ( ABS(temp4) < SMALLREAL ) 
+                temp4 = (temp4>0)? SMALLREAL:-SMALLREAL;
 
             mu    = (-aij+1.0/temp2) / temp4;
 
