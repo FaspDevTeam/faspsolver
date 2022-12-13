@@ -33,6 +33,7 @@
 /*---------------------------------*/
 
 static void interp_DIR (dCSRmat *, ivector *, dCSRmat *, AMG_param *);
+static void interp_RDC (dCSRmat *, ivector *, dCSRmat *, AMG_param *);
 static void interp_STD (dCSRmat *, ivector *, dCSRmat *, iCSRmat *, AMG_param *);
 static void interp_EXT (dCSRmat *, ivector *, dCSRmat *, iCSRmat *, AMG_param *);
 static void amg_interp_trunc (dCSRmat *, AMG_param *);
@@ -89,6 +90,9 @@ void fasp_amg_interp (dCSRmat    *A,
             
         case INTERP_ENG: // Energy-min interpolation defined in PreAMGInterpEM.c
             fasp_amg_interp_em(A, vertices, P, param); break;
+
+        case INTERP_RDC: // Reduction-based amg interpolation
+            interp_RDC(A, vertices, P, param); break;
             
         default:
             fasp_chkerr(ERROR_AMG_INTERP_TYPE, __FUNCTION__);
@@ -228,6 +232,70 @@ static void amg_interp_trunc (dCSRmat    *P,
 }
 
 /**
+ * @brief Reduction-based amg interpolation
+ * 
+ * @author Yan Xie
+ * @date   2022/12/06
+ * 
+ * use all coarse points as interpolation points
+ * D_ii = (2 - 1/theta) * A_ii, |A_ii| > theta * sum(|A_ij|) for j as F-points
+ * P_F = - D_FF^-1 * A_FC
+ */
+static void interp_RDC (dCSRmat    *A,
+                        ivector    *vertices,
+                        dCSRmat    *P,
+                        AMG_param  *param )
+{
+    INT     row = A->row;
+    INT    *vec = vertices->val;
+
+    // local variables
+    INT     i, j, k, l, index = 0, idiag;
+
+    // map index of coarse points from fine-space to coarse-space
+    INT    *map = (INT *)fasp_mem_calloc(row, sizeof(INT));
+
+    // first pass: P->val
+    for ( i = 0; i < row; ++i ) {
+        if ( vec[i] == CGPT ) { // Indentity for coarse points
+            P->val[index++] = 1.0;
+        }
+        else { // interpolation for fine points
+            // find diagonal entry
+            for ( j = A->IA[i]; j < A->IA[i+1]; ++j ) {
+                if ( A->JA[j] == i ) {
+                    idiag = j;
+                    break;
+                }
+            }
+            REAL Dii = (2.0 - 1.0/param->theta) * A->val[idiag];
+            // printf("### DEBUG: D[%d,%d] = %e ", i, i, Dii);
+            // fill in entries for P
+            for ( j = A->IA[i]; j < A->IA[i+1]; ++j ) {
+                if ( vec[A->JA[j]] == CGPT ) {
+                    P->val[index++] = - A->val[j] / Dii;
+                }
+            }
+        }
+    }
+
+    // second pass: P->JA reorder column index for coarse space
+    index = 0;
+    for ( i = 0; i < row; ++i ) {
+        if ( vec[i] == CGPT ) map[i] = index++;
+    }
+    for ( i = 0; i < P->nnz; ++i ) {
+        P->JA[i] = map[P->JA[i]];
+    }
+
+        // clean up
+    fasp_mem_free(map); map = NULL;
+    
+    // Step 3. Truncate the prolongation operator to reduce cost
+    amg_interp_trunc(P, param);
+}
+
+/**
  * \fn static void interp_DIR (dCSRmat *A, ivector *vertices, dCSRmat *P,
  *                             AMG_param *param)
  *
@@ -323,6 +391,9 @@ num_threads(nthreads)
                         }
                     } // j
                     
+                    // avoid division by zero for amP and apP
+                    amP = ( amP < -SMALLREAL ) ? amP : -SMALLREAL;
+                    apP = ( apP > SMALLREAL ) ? apP : SMALLREAL;
                     alpha=amN/amP;
                     if (num_pcouple>0) {
                         beta=apN/apP;
@@ -396,6 +467,9 @@ num_threads(nthreads)
                 } // end for j
                 
                 // set weight factors
+                // avoid division by zero for amP and apP
+                amP = ( amP < -SMALLREAL ) ? amP : -SMALLREAL;
+                apP = ( apP > SMALLREAL ) ? apP : SMALLREAL;
                 alpha = amN / amP;
                 if ( num_pcouple > 0 ) {
                     beta = apN / apP;

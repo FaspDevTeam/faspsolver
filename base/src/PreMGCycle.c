@@ -49,12 +49,12 @@ void fasp_solver_mgcycle(AMG_data* mgl, AMG_param* param)
 {
     const SHORT prtlvl        = param->print_level;
     const SHORT amg_type      = param->AMG_type;
-    const SHORT smoother      = param->smoother;
+          SHORT smoother      = param->smoother;
     const SHORT smooth_order  = param->smooth_order;
     const SHORT cycle_type    = param->cycle_type;
     const SHORT coarse_solver = param->coarse_solver;
     const SHORT nl            = mgl[0].num_levels;
-    const REAL  relax         = param->relaxation;
+          REAL  relax         = param->relaxation;
     const REAL  tol           = param->tol * 1e-4;
     const SHORT ndeg          = param->polynomial_degree;
 
@@ -96,6 +96,21 @@ ForwardSweep:
     while (l < nl - 1) {
 
         num_lvl[l]++;
+
+        // pre-smoothing for reduction-based amg method
+        // printf("###DEBUG theta = %f\n", param->theta);
+        if (param->theta >= 0.0) {
+            // weighted Jacobi smoother only on F-points
+            REAL theta = param->theta;
+            REAL eps = (2 - 2*theta) / (2*theta - 1);
+            REAL sigma = 2/(2 + eps);
+            REAL weight = sigma * (2 - 1/theta);
+
+            // set ramg smoother parameters
+            relax = weight;
+            smoother = SMOOTHER_JACOBIF;
+            // printf("### DEBUG: l=%d, relax=%f, smoother=%d \n", l, relax, smoother);
+        }
 
         // pre-smoothing with ILU method
         if (l < mgl->ILU_levels) {

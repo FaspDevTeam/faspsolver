@@ -61,6 +61,10 @@ static void fasp_dcsr_presmoothing(const SHORT smoother,
 {
     switch (smoother) {
 
+        case SMOOTHER_JACOBIF:
+            fasp_smoother_dcsr_jacobi_ff(x, A, b, nsweeps, ordering, relax);
+            break;
+
         case SMOOTHER_GS:
             if (order == NO_ORDER || ordering == NULL)
                 fasp_smoother_dcsr_gs(x, istart, iend, istep, A, b, nsweeps);
@@ -163,6 +167,10 @@ static void fasp_dcsr_postsmoothing(const SHORT smoother,
 {
     switch (smoother) {
 
+        case SMOOTHER_JACOBIF:
+            fasp_smoother_dcsr_jacobi_ff(x, A, b, nsweeps, ordering, relax);
+            break;
+            
         case SMOOTHER_GS:
             if (order == NO_ORDER || ordering == NULL) {
                 fasp_smoother_dcsr_gs(x, iend, istart, istep, A, b, nsweeps);

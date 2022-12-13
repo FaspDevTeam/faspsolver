@@ -25,6 +25,42 @@
 /*--      Public Functions       --*/
 /*---------------------------------*/
 
+// fasp_smoother_dcsr_jacobi_ff(x, A, b, nsweeps, ordering, relax);
+/**
+ * @brief Weighted Jacobi method as a smoother only for the fine points
+ * @author Xie Yan
+ * @date 2022/12/12
+ */
+void fasp_smoother_dcsr_jacobi_ff(dvector* x,
+                                  dCSRmat* A,
+                                  dvector* b,
+                                  const INT nsweeps,
+                                  INT* ordering,
+                                  const REAL relax)
+{
+    INT *idx = ordering;
+    REAL *r = (REAL *)fasp_mem_calloc(A->col, sizeof(REAL));
+    INT i, j, k, diagptr=-1;
+    INT sweep_now;
+    for (sweep_now = 0; sweep_now < nsweeps; ++sweep_now)
+        for (i = 0; i < A->row; ++i) {
+            r[i] = b->val[i];
+            if (idx[i] == FGPT) {
+                INT row_start = A->IA[i];
+                INT row_end = A->IA[i+1];
+                for (j = row_start; j < row_end; ++j) {
+                    k = A->JA[j];
+                    // find diagonal entry and compute residual
+                    if (k == i) diagptr = j;
+                    r[i] -= A->val[j] * x->val[k];
+                }
+                // update solution
+                x->val[i] += relax * r[i] / A->val[diagptr];
+            }
+        }
+    fasp_mem_free(r);
+    // printf("###DEBUG: fasp_smoother_dcsr_jacobi_ff() -- Done!\n");
+}
 /**
  * \fn void fasp_smoother_dcsr_jacobi (dvector *u, const INT i_1, const INT i_n,
  *                                     const INT s, dCSRmat *A, dvector *b, INT L,

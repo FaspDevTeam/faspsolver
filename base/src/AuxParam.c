@@ -478,6 +478,9 @@ void fasp_param_amg_init(AMG_param* amgparam)
     amgparam->SWZ_maxlvl    = 3; // vertices with smaller distance
     amgparam->SWZ_type      = 1;
     amgparam->SWZ_blksolver = SOLVER_DEFAULT;
+
+    // reduction-based AMG parameters
+    amgparam->theta = -1.0; // set in amg setup(coarsening) phase, -1.0 means not set
 }
 
 /**

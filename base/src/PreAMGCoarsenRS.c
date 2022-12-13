@@ -42,6 +42,19 @@ static void form_P_pattern_dir (dCSRmat *, iCSRmat *, ivector *, INT, INT);
 static void form_P_pattern_std (dCSRmat *, iCSRmat *, ivector *, INT, INT);
 static void ordering1          (iCSRmat *, ivector *);
 
+static void form_P_pattern_rdc (dCSRmat *, dCSRmat *, double *, ivector *, INT, INT);
+double dipower (double x, int n)
+{
+    if (n < 0) return 1.0 / dipower(x, -n);
+    double y = 1.0;
+    while (n > 0) {
+        if (n & 1) y *= x;
+        x *= x;
+        n >>= 1;
+    }
+    return y;
+}
+
 /*---------------------------------*/
 /*--      Public Functions       --*/
 /*---------------------------------*/
@@ -149,6 +162,32 @@ SHORT fasp_amg_coarsening_rs (dCSRmat    *A,
         case INTERP_EXT: // Extended interpolation
             form_P_pattern_std(P, S, vertices, row, col); break;
             
+        case INTERP_RDC: // Reduction-based amg interpolation
+        {
+            // printf("### DEBUG: Reduction-based interpolation\n");
+            double *theta = (double *)fasp_mem_calloc(row, sizeof(double));
+            form_P_pattern_rdc(P, A, theta, vertices, row, col);
+            // theta will be used to 
+            // 1. compute entries of interpolation matrix
+            // 2. calculate relaxation parameter
+            // 3. approximate convergence factor
+            param->theta = 1.0;
+            for (INT i = 0; i < row; ++i) if (theta[i] < param->theta) param->theta = theta[i];
+            printf("### DEBUG: theta = %e\n", param->theta);
+            fasp_mem_free(theta); theta = NULL;
+            double eps = (2 - 2*param->theta) / (2*param->theta - 1);
+            // assume: nu = 1, two-grid
+            int nu = (param->presmooth_iter+param->postsmooth_iter)/2;
+            double conv_factor = (eps/(1+eps)) * ( 1 + dipower(eps,2*nu-1)/dipower(2+eps, 2*nu) );
+            printf("### DEBUG: theory upperbound conv_factor = %e\n", conv_factor);
+            if (param->theta <= 0.5) {
+                REAL reset_value=0.5+1e-5;
+                printf("### WARNING: theta = %e <= 0.5, use %e instead \n", param->theta, reset_value);
+                param->theta = reset_value;
+            }
+            break;
+        }
+
         default:
             fasp_chkerr(ERROR_AMG_INTERP_TYPE, __FUNCTION__);
             
@@ -1744,6 +1783,105 @@ static INT clean_ff_couplings (iCSRmat   *S,
     fasp_mem_free(cindex); cindex = NULL;
     
     return col;
+}
+
+REAL rabs(REAL x)
+{
+    return (x > 0) ? x : -x;
+}
+/**
+ * @brief Generate sparsity pattern of prolongation for reduction-based amg interpolation
+ * 
+ * @param theta D_ii = (2 - 1/theta) * A_ii, |A_ii| > theta * sum(|A_ij|) for j as F-points
+ * @note P generated here uses the same index for columns as A
+ * @author Yan Xie
+ * @date   2022/12/06
+ * 
+ * use all coarse points as interpolation points
+ */
+static void form_P_pattern_rdc (dCSRmat   *P,
+                                dCSRmat   *A,
+                                double    *theta,
+                                ivector   *vertices,
+                                INT        row,
+                                INT        col)
+{
+    // local variables
+    INT *vec = vertices->val;
+    INT i, j, k, index=0;
+
+    // Initialize P matrix
+    P->row = row;
+    P->col = col;
+    P->IA  = (INT *)fasp_mem_calloc(row+1, sizeof(INT));
+    P->IA[0] = 0;
+
+    // ratio of coarse points to fine points
+    INT num_coarse = 0;
+    for ( i = 0; i < row; ++i ) {
+        if ( vec[i] == CGPT ) num_coarse++;
+    }
+    // printf("### DEBUG: num_coarse = %d, num_fine = %d\n", num_coarse, row-num_coarse);
+
+    /* Generate sparsity pattern of P & calculate theta */
+    // firt pass: P->IA & theta
+    for ( i = 0; i < row; ++i ) {
+        if ( vec[i] == CGPT ) { // identity interpolation for C-points
+            P->IA[i+1] = P->IA[i] + 1;
+            theta[i] = 1000000.0;
+        }
+        else { // D_FF^-1 * A_FC for F-points
+            P->IA[i+1] = P->IA[i];
+            double sum = 0.0;
+            INT diagptr= -1;
+            for ( k = A->IA[i]; k < A->IA[i+1]; ++k ) {
+                j = A->JA[k];
+                if ( vec[j] == CGPT ) P->IA[i+1]++;
+                else {
+                    sum += rabs(A->val[k]);
+                }
+                if ( j == i ) diagptr = k;
+            }
+            if ( diagptr > -1 ) theta[i] = rabs(A->val[diagptr]) / sum;
+            else {
+                printf("### ERROR: Diagonal element is zero! [%s:%d]\n", __FUNCTION__, __LINE__);
+                theta[i] = 1000000.0;
+            }
+            if ( theta[i] < 0.5 ) {
+                printf("WARNING: theta[%d] = %f < 0.5! not diagonal dominant!\n", i, theta[i]);
+                // view the matrix row entries
+                // printf("### DEBUG: row %d: ", i);
+                int ii;
+                int jj;
+                double sum_row = 0.0;
+                for ( ii = A->IA[i]; ii < A->IA[i+1]; ++ii ) {
+                    jj = A->JA[ii];
+                    sum_row += A->val[ii];
+                    // printf("A[%d,%d] = %f, ", i, jj, A->val[ii]);
+                }
+                printf("(no abs op)sum_row = %f\n", sum_row);
+            }
+        }
+    }
+
+    // second pass: P->JA
+    // TODO: given nnz, we can combine the two passes
+    P->nnz = P->IA[row];
+    P->JA  = (INT *)fasp_mem_calloc(P->nnz, sizeof(INT));
+    for ( i = 0; i < row; ++i ) {
+        if ( vec[i] == CGPT ) { // identity interpolation for C-points
+            P->JA[index++] = i;
+        }
+        else { // D_FF^-1 * A_FC for F-points
+            for ( k = A->IA[i]; k < A->IA[i+1]; ++k ) {
+                j = A->JA[k];
+                if ( vec[j] == CGPT ) P->JA[index++] = j;
+            }
+        }
+    }
+
+    // val allocated here
+    P->val = (REAL *)fasp_mem_calloc(P->nnz, sizeof(REAL));
 }
 
 /**

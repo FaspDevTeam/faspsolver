@@ -185,6 +185,7 @@
 /**
  * \brief Definition of standard smoother types
  */
+#define SMOOTHER_JACOBIF 11/**< Jacobi smoother on F-points only */
 #define SMOOTHER_JACOBI 1  /**< Jacobi smoother */
 #define SMOOTHER_GS     2  /**< Gauss-Seidel smoother */
 #define SMOOTHER_GSF    12 /**< Gauss-Seidel smoother on F-points only */
@@ -219,6 +220,7 @@
 #define INTERP_STD 2 /**< Standard interpolation */
 #define INTERP_ENG 3 /**< Energy minimization interpolation */
 #define INTERP_EXT 6 /**< Extended interpolation */
+#define INTERP_RDC 4 /**< Reduction-based amg interpolation */
 
 /**
  * \brief Type of vertices (DOFs) for coarsening

@@ -580,6 +580,9 @@ typedef struct {
     //! type of Schwarz block solver
     INT SWZ_blksolver;
 
+    //! theta for reduction-based amg
+    REAL theta;
+
 } AMG_param; /**< Parameters for AMG methods */
 
 /*---------------------------*/
