@@ -21,21 +21,23 @@ cmake_minimum_required (VERSION 2.8.12)
 include(CheckFunctionExists)
 include(CheckIncludeFile)
 
-set(GDB         1 CACHE BOOL "debugging or not")
-set(USE_OPENMP  0 CACHE BOOL "Openmp use")
-set(USE_MUMPS   0 CACHE BOOL "MUMPS use")
-set(USE_UMFPACK 0 CACHE BOOL "UMFPACK use")
-set(USE_SUPERLU 0 CACHE BOOL "SUPERLU use")
-set(USE_PARDISO 0 CACHE BOOL "PARDISO use")
-set(USE_DOXYGEN 0 CACHE BOOL "Doxygen use")
+set(GDB           1 CACHE BOOL "debugging or not")
+set(USE_OPENMP    0 CACHE BOOL "Openmp use")
+set(USE_MUMPS     0 CACHE BOOL "MUMPS use")
+set(USE_UMFPACK   0 CACHE BOOL "UMFPACK use")
+set(USE_SUPERLU   0 CACHE BOOL "SUPERLU use")
+set(USE_PARDISO   0 CACHE BOOL "PARDISO use")
+set(USE_DOXYGEN   0 CACHE BOOL "Doxygen use")
+set(USE_STRUMPACK 0 CACHE BOOL "Strumpack use")
 
-# Name the project at this moment and this will set the compiler id:
+# Name the project at this moment and this will set the compiler id
 if(WITHFC)
-    project(faspsolver C Fortran)
+    project(faspsolver C Fortran) # compile Fortran examples
 else()
-    project(faspsolver C)
+    project(faspsolver C) # only compile C examples
 endif()
 
+# Location of cmake modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/modules)
 
 # Default configuration types and flags
@@ -107,11 +109,11 @@ if(ADD_FFLAGS)
         "${CMAKE_Fortran_FLAGS_${CMAKE_BUILD_TYPE}} ${ADD_FFLAGS}")	 
 endif(ADD_FFLAGS)
 
-# FOR MAC OS X to find shared libs in install location
+# For MACOS to find shared libs in install location
 set(CMAKE_INSTALL_NAME_DIR 
-    ${CMAKE_INSTALL_PREFIX}/lib CACHE PATH "path for Mac OS X")
+    ${CMAKE_INSTALL_PREFIX}/lib CACHE PATH "path for MacOS")
 
-# FOR LINUX to find shared libs in install location
+# For LINUX to find shared libs in install location
 set(CMAKE_INSTALL_RPATH
     ${CMAKE_INSTALL_NAME_DIR} CACHE PATH "path for Linux")
 
@@ -157,7 +159,7 @@ endif(SHARED)
 set(FASP_LIBRARY_NAME fasp)
 
 # Uninstall target
-if (NOT TARGET uninstall)
+if(NOT TARGET uninstall)
     configure_file("${CMAKE_CURRENT_SOURCE_DIR}/modules/cmake_uninstall.cmake.in"
                    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
                    IMMEDIATE @ONLY)
