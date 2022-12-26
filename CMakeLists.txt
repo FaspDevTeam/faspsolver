@@ -30,7 +30,11 @@ set(USE_PARDISO 0 CACHE BOOL "PARDISO use")
 set(USE_DOXYGEN 0 CACHE BOOL "Doxygen use")
 
 # Name the project at this moment and this will set the compiler id:
-project(faspsolver C)
+if(WITHFC)
+    project(faspsolver C Fortran)
+else()
+    project(faspsolver C)
+endif()
 
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/modules)
 
@@ -51,10 +55,6 @@ else()
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall")
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
     set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
-endif()
-
-if(WITHFC)
-    include(get_cxx_fc_compilers) # find matching Fortran compiler
 endif()
 
 ########### check the prefix for installation #########################

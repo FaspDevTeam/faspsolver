@@ -1297,6 +1297,13 @@ FASP_API void fasp_smoother_dbsr_ilu (dBSRmat *A,
 
 /*-------- In file: ItrSmootherCSR.c --------*/
 
+FASP_API void fasp_smoother_dcsr_jacobi_ff(dvector* x,
+                                           dCSRmat* A,
+                                           dvector* b,
+                                           const INT nsweeps,
+                                           INT* ordering,
+                                           const REAL relax);
+
 FASP_API void fasp_smoother_dcsr_jacobi(dvector* u, const INT i_1, const INT i_n, const INT s,
                                         dCSRmat* A, dvector* b, INT L, const REAL w);
 
@@ -1817,11 +1824,15 @@ FASP_API INT fasp_amg_coarsening_cr (const INT   i_0,
 
 /*-------- In file: PreAMGCoarsenRS.c --------*/
 
+FASP_API double dipower (double x, int n);
+
 FASP_API SHORT fasp_amg_coarsening_rs (dCSRmat    *A,
                                        ivector    *vertices,
                                        dCSRmat    *P,
                                        iCSRmat    *S,
                                        AMG_param  *param);
+
+FASP_API REAL rabs(REAL x);
 
 
 /*-------- In file: PreAMGInterp.c --------*/
