@@ -40,6 +40,16 @@ endif()
 # Location of cmake modules
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/modules)
 
+# Do not skip the full RPATH for the build tree
+set(CMAKE_SKIP_BUILD_RPATH FALSE)
+ 
+# When building, don't use the install RPATH already
+set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+ 
+# Add the automatically determined parts of the RPATH
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
 # Default configuration types and flags
 set(CMAKE_CONFIGURATION_TYPES "Release;Debug" CACHE STRING "Configs" FORCE)
 if(MSVC)
