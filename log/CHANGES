@@ -4,7 +4,8 @@ File Name: CHANGES
 - Add weighted Jacboi for F-points;
 - Add reduction-based AMG;
 - Remove cxx_fc_compilers;
-- Update cmake for WITHFC.
+- Update cmake for WITHFC;
+- Fix rpath problem in MacOS.
 
 10/16/2022 FASP 2.8.5:
 - Use clang-format from OCP;
