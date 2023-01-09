@@ -1,9 +1,16 @@
 File Name: CHANGES
 
+12/26/2022 FASP 2.8.6:
+- Add weighted Jacboi for F-points;
+- Add reduction-based AMG;
+- Remove cxx_fc_compilers;
+- Update cmake for WITHFC;
+- Fix rpath problem in MacOS.
+
 10/16/2022 FASP 2.8.5:
 - Use clang-format from OCP;
 - Add GSF smoother (GS for F-points);
-- Add a Fortran wrapper for Strumpack;
+- Add a Fortran wrapper for Strumpack.
 
 10/09/2022 FASP 2.8.4:
 - Remove xcode support, move to VSCode+cmake completely;

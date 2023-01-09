@@ -12,7 +12,7 @@ endif()
 include_directories(${FASP_TINC_DIR}
 		    ${PROJECT_SOURCE_DIR}/base/include)
 
-file(GLOB FASP_TLIB_SRC src/*.c src/*.f)
+file(GLOB FASP_TLIB_SRC src/*.c)
 
 # Build libfasptest as STATIC and do not install it. If we want
 # SHARED, then we need to figure out how apple works with multiple
@@ -26,7 +26,7 @@ if(WITHFC)
 	    set(ADD_FLIBS gfortran)
     endif()
     file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
-          main/*.c main/*.cpp main/*.f main/*.f90 )
+          main/*.c main/*.f90 )
 else()
     file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
           main/*.c )

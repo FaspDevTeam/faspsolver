@@ -13,7 +13,7 @@ if(WITHFC)
 	    set(ADD_FLIBS gfortran)
     endif()
     file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
-          main/*.c main/*.cpp main/*.f main/*.f90 )
+          main/*.c main/*.f90 )
 else()
     file( GLOB FASP_TSRC RELATIVE "${CMAKE_CURRENT_SOURCE_DIR}/main" 
           main/*.c )
