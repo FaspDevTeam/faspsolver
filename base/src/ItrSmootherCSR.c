@@ -38,27 +38,38 @@ void fasp_smoother_dcsr_jacobi_ff(dvector* x,
                                   INT* ordering,
                                   const REAL relax)
 {
-    INT *idx = ordering;
     REAL *r = (REAL *)fasp_mem_calloc(A->col, sizeof(REAL));
-    INT i, j, k, diagptr=-1;
+    REAL *xval = (REAL *)fasp_mem_calloc(A->col, sizeof(REAL));
+    for (INT i = 0; i < A->col; ++i) {
+        xval[i] = x->val[i];
+    }
+    INT i, j, k, diagptr;
     INT sweep_now;
-    for (sweep_now = 0; sweep_now < nsweeps; ++sweep_now)
+    for (sweep_now = 0; sweep_now < nsweeps; ++sweep_now) {
         for (i = 0; i < A->row; ++i) {
-            r[i] = b->val[i];
-            if (idx[i] == FGPT) {
+            if (ordering[i] == FGPT) {
+                diagptr = -1;
+                r[i] = b->val[i];
                 INT row_start = A->IA[i];
                 INT row_end = A->IA[i+1];
                 for (j = row_start; j < row_end; ++j) {
                     k = A->JA[j];
                     // find diagonal entry and compute residual
                     if (k == i) diagptr = j;
-                    r[i] -= A->val[j] * x->val[k];
+                    r[i] -= A->val[j] * x->val[k]; // use old x entry
                 }
                 // update solution
-                x->val[i] += relax * r[i] / A->val[diagptr];
+                xval[i] += relax * r[i] / A->val[diagptr]; // compute new x entry
             }
         }
+        for (i = 0; i < A->col; ++i) {
+            if (ordering[i] == FGPT) {
+                x->val[i] = xval[i];
+            }
+        }
+    }
     fasp_mem_free(r);
+    fasp_mem_free(xval);
     // printf("###DEBUG: fasp_smoother_dcsr_jacobi_ff() -- Done!\n");
 }
 /**

@@ -625,6 +625,8 @@ void fasp_param_input(const char* fname, input_param* inparam)
 
             if ((strcmp(buffer, "JACOBI") == 0) || (strcmp(buffer, "jacobi") == 0))
                 inparam->AMG_smoother = SMOOTHER_JACOBI;
+            else if ((strcmp(buffer, "JACOBIF") == 0) || (strcmp(buffer, "jacobif") == 0))
+                inparam->AMG_smoother = SMOOTHER_JACOBIF;
             else if ((strcmp(buffer, "GS") == 0) || (strcmp(buffer, "gs") == 0))
                 inparam->AMG_smoother = SMOOTHER_GS;
             else if ((strcmp(buffer, "GSF") == 0) || (strcmp(buffer, "gsf") == 0))

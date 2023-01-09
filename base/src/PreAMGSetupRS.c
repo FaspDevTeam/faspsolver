@@ -213,6 +213,39 @@ SHORT fasp_amg_setup_rs (AMG_data   *mgl,
 
         fasp_blas_dcsr_rap(&mgl[lvl].R, &mgl[lvl].A, &mgl[lvl].P, &mgl[lvl+1].A);
 
+        // ##DEBUG: check value of interpolation matrix with rdc-amg
+        // fasp_dcsr_print(&mgl[lvl+1].A);
+        // do Reduction-based interpolation (debug)
+        // dCSRmat Ptmp;
+        // INT interptmp = param->interpolation_type;
+        // param->interpolation_type = INTERP_RDC;
+        // fasp_amg_coarsening_rs(&mgl[lvl].A, &vertices, &Ptmp,
+		//                                 &Scouple, param);
+        // // param->theta = 1.0;
+        // printf("## DEBUG: theta = %f\n", param->theta);
+        // fasp_amg_interp(&mgl[lvl].A, &vertices, &Ptmp,
+        //                         &Scouple, param);
+        // // compare Ptmp and mgl[lvl].P
+        // printf("Ptmp: %d x %d, mgl[lvl].P: %d x %d\n",
+        //        Ptmp.row, Ptmp.col, mgl[lvl].P.row, mgl[lvl].P.col);
+        // printf("Ptmp: %d, mgl[lvl].P: %d\n", Ptmp.nnz, mgl[lvl].P.nnz);
+        // double sumDiff = 0.0;
+        // for (int i=0; i<Ptmp.row; ++i) {
+        //     for (int j=Ptmp.IA[i]; j<Ptmp.IA[i+1]; ++j) {
+        //         // check if Ptmp.val[i] == mgl[lvl].P.val[i]
+        //         if ( fabs(Ptmp.val[j] - mgl[lvl].P.val[j] ) > 1e-8 ) {
+        //             printf("Ptmp[%d,%d] = %f, mgl[%d,%d] = %f\n",
+        //                    i, Ptmp.JA[j], Ptmp.val[j], i, mgl[lvl].P.JA[j], mgl[lvl].P.val[j]);
+        //         }
+        //         else {
+        //             sumDiff += fabs(Ptmp.val[j] - mgl[lvl].P.val[j]);
+        //         }
+        //     }
+        // }
+        // printf("sumDiff = %f\n", sumDiff);
+        // fasp_dcsr_free(&Ptmp);
+        // param->interpolation_type = interptmp;
+
         /*-- Clean up Scouple generated in coarsening --*/
         fasp_mem_free(Scouple.IA); Scouple.IA = NULL;
         fasp_mem_free(Scouple.JA); Scouple.JA = NULL;

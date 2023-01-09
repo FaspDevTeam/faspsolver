@@ -279,7 +279,7 @@ static void interp_RDC (dCSRmat    *A,
         }
     }
 
-    // second pass: P->JA reorder column index for coarse space
+    // second pass: P->JA renumber column index for coarse space
     index = 0;
     for ( i = 0; i < row; ++i ) {
         if ( vec[i] == CGPT ) map[i] = index++;
@@ -288,11 +288,11 @@ static void interp_RDC (dCSRmat    *A,
         P->JA[i] = map[P->JA[i]];
     }
 
-        // clean up
+    // clean up
     fasp_mem_free(map); map = NULL;
     
     // Step 3. Truncate the prolongation operator to reduce cost
-    amg_interp_trunc(P, param);
+    // amg_interp_trunc(P, param);
 }
 
 /**

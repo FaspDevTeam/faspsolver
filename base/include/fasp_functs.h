@@ -1300,6 +1300,8 @@ FASP_API void fasp_smoother_dbsr_ilu (dBSRmat *A,
 FASP_API void fasp_smoother_dcsr_jacobi(dvector* u, const INT i_1, const INT i_n, const INT s,
                                         dCSRmat* A, dvector* b, INT L, const REAL w);
 
+FASP_API void fasp_smoother_dcsr_jacobi_ff(dvector* x, dCSRmat* A, dvector* b, const INT nsweeps, INT* ordering, const REAL relax);
+
 FASP_API void fasp_smoother_dcsr_gs(dvector* u, const INT i_1, const INT i_n, const INT s,
                                     dCSRmat* A, dvector* b, INT L);
 

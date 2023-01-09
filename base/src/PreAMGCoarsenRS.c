@@ -29,6 +29,7 @@
 /*---------------------------------*/
 
 #include "PreAMGUtil.inl"
+#include <math.h>
 
 static INT  cfsplitting_cls    (dCSRmat *, iCSRmat *, ivector *);
 static INT  cfsplitting_clsp   (dCSRmat *, iCSRmat *, ivector *);
@@ -43,17 +44,6 @@ static void form_P_pattern_std (dCSRmat *, iCSRmat *, ivector *, INT, INT);
 static void ordering1          (iCSRmat *, ivector *);
 
 static void form_P_pattern_rdc (dCSRmat *, dCSRmat *, double *, ivector *, INT, INT);
-double dipower (double x, int n)
-{
-    if (n < 0) return 1.0 / dipower(x, -n);
-    double y = 1.0;
-    while (n > 0) {
-        if (n & 1) y *= x;
-        x *= x;
-        n >>= 1;
-    }
-    return y;
-}
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -176,14 +166,30 @@ SHORT fasp_amg_coarsening_rs (dCSRmat    *A,
             printf("### DEBUG: theta = %e\n", param->theta);
             fasp_mem_free(theta); theta = NULL;
             double eps = (2 - 2*param->theta) / (2*param->theta - 1);
-            // assume: nu = 1, two-grid
-            int nu = (param->presmooth_iter+param->postsmooth_iter)/2;
-            double conv_factor = (eps/(1+eps)) * ( 1 + dipower(eps,2*nu-1)/dipower(2+eps, 2*nu) );
+            // assume: two-grid
+            double nu = (param->presmooth_iter+param->postsmooth_iter)/2.0;
+            double conv_factor = (eps/(1+eps)) * ( 1 + pow(eps,2*nu-1)/pow(2+eps, 2*nu) );
+            conv_factor = sqrt(conv_factor);
             printf("### DEBUG: theory upperbound conv_factor = %e\n", conv_factor);
             if (param->theta <= 0.5) {
                 REAL reset_value=0.5+1e-5;
                 printf("### WARNING: theta = %e <= 0.5, use %e instead \n", param->theta, reset_value);
                 param->theta = reset_value;
+            }
+            // printf("###DEBUG theta = %f\n", param->theta);
+            if (param->theta >= 0.0) {
+                // weighted Jacobi smoother only on F-points
+                // param->theta = 1.0;
+                REAL theta = param->theta;
+                REAL eps = (2 - 2*theta) / (2*theta - 1);
+                REAL sigma = 2/(2 + eps);
+                REAL weight = sigma / (2 - 1/theta);
+
+                // set ramg smoother parameters
+                if (param->smoother == SMOOTHER_JACOBIF) {
+                    param->relaxation = weight;
+                    printf("### DEBUG: set smoother weight = %e\n", weight);
+                }
             }
             break;
         }
@@ -1816,12 +1822,6 @@ static void form_P_pattern_rdc (dCSRmat   *P,
     P->IA  = (INT *)fasp_mem_calloc(row+1, sizeof(INT));
     P->IA[0] = 0;
 
-    // ratio of coarse points to fine points
-    INT num_coarse = 0;
-    for ( i = 0; i < row; ++i ) {
-        if ( vec[i] == CGPT ) num_coarse++;
-    }
-    // printf("### DEBUG: num_coarse = %d, num_fine = %d\n", num_coarse, row-num_coarse);
 
     /* Generate sparsity pattern of P & calculate theta */
     // firt pass: P->IA & theta
@@ -1870,7 +1870,7 @@ static void form_P_pattern_rdc (dCSRmat   *P,
     P->JA  = (INT *)fasp_mem_calloc(P->nnz, sizeof(INT));
     for ( i = 0; i < row; ++i ) {
         if ( vec[i] == CGPT ) { // identity interpolation for C-points
-            P->JA[index++] = i;
+            P->JA[index++] = i; // use index on fine grid (need to be replaced with coarse grid index later)
         }
         else { // D_FF^-1 * A_FC for F-points
             for ( k = A->IA[i]; k < A->IA[i+1]; ++k ) {
