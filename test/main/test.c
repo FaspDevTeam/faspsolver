@@ -221,6 +221,86 @@ int main(int argc, const char* argv[])
         fasp_dvec_free(&sol);
     }
 
+    else if (problem_num == 41) {
+        // Read A -- FE discretization for DLD
+        datafile1 = "femlevels/A1.coo"; // This file is NOT in ../data!
+        strcat(filename1, datafile1);
+        fasp_dcsr_read(filename1, &A);
+
+        // Generate a random solution
+        dvector sol = fasp_dvec_create(A.row);
+        fasp_dvec_rand(A.row, &sol);
+
+        // Form the right-hand-side b = A*sol
+        b = fasp_dvec_create(A.row);
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+        fasp_dvec_free(&sol);
+    }
+
+    else if (problem_num == 42) {
+        // Read A -- FE discretization for DLD
+        datafile1 = "femlevels/A2.coo"; // This file is NOT in ../data!
+        strcat(filename1, datafile1);
+        fasp_dcsr_read(filename1, &A);
+
+        // Generate a random solution
+        dvector sol = fasp_dvec_create(A.row);
+        fasp_dvec_rand(A.row, &sol);
+
+        // Form the right-hand-side b = A*sol
+        b = fasp_dvec_create(A.row);
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+        fasp_dvec_free(&sol);
+    }
+
+    else if (problem_num == 43) {
+        // Read A -- FE discretization for DLD
+        datafile1 = "femlevels/A3.coo"; // This file is NOT in ../data!
+        strcat(filename1, datafile1);
+        fasp_dcsr_read(filename1, &A);
+
+        // Generate a random solution
+        dvector sol = fasp_dvec_create(A.row);
+        fasp_dvec_rand(A.row, &sol);
+
+        // Form the right-hand-side b = A*sol
+        b = fasp_dvec_create(A.row);
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+        fasp_dvec_free(&sol);
+    }
+
+    else if (problem_num == 44) {
+        // Read A -- FE discretization for DLD
+        datafile1 = "femlevels/A4.coo"; // This file is NOT in ../data!
+        strcat(filename1, datafile1);
+        fasp_dcsr_read(filename1, &A);
+
+        // Generate a random solution
+        dvector sol = fasp_dvec_create(A.row);
+        fasp_dvec_rand(A.row, &sol);
+
+        // Form the right-hand-side b = A*sol
+        b = fasp_dvec_create(A.row);
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+        fasp_dvec_free(&sol);
+    }
+
+    else if (problem_num == 45) {
+        // Read A -- FE discretization for DLD
+        datafile1 = "femlevels/A5.coo"; // This file is NOT in ../data!
+        strcat(filename1, datafile1);
+        fasp_dcsr_read(filename1, &A);
+
+        // Generate a random solution
+        dvector sol = fasp_dvec_create(A.row);
+        fasp_dvec_rand(A.row, &sol);
+
+        // Form the right-hand-side b = A*sol
+        b = fasp_dvec_create(A.row);
+        fasp_blas_dcsr_mxv(&A, sol.val, b.val);
+        fasp_dvec_free(&sol);
+    }
+
     else {
         printf("### ERROR: Unrecognised problem number %d\n", problem_num);
         return ERROR_INPUT_PAR;

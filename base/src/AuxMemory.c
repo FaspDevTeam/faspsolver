@@ -24,9 +24,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    void * nedcalloc(size_t no, size_t size);
-    void * nedrealloc(void *mem, size_t size);
-    void   nedfree(void *mem);
+void* nedcalloc(size_t no, size_t size);
+void* nedrealloc(void* mem, size_t size);
+void  nedfree(void* mem);
 #ifdef __cplusplus
 }
 #endif
@@ -62,37 +62,36 @@ const int Million = 1048576; /**< 1M = 1024*1024 */
  *
  * Modified by Chensong Zhang on 07/30/2013: print warnings if failed
  */
-void * fasp_mem_calloc (const unsigned int  size,
-                        const unsigned int  type)
+void* fasp_mem_calloc(const unsigned int size, const unsigned int type)
 {
-    const LONGLONG tsize = size*type;
-    void * mem = NULL;
-    
+    const LONGLONG tsize = size * type;
+    void*          mem   = NULL;
+
 #if DEBUG_MODE > 1
-    printf("### DEBUG: Trying to allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
+    printf("### DEBUG: Trying to allocate %.3lfMB RAM!\n", (REAL)tsize / Million);
 #endif
 
-    if ( tsize > 0 ) {
-        
+    if (tsize > 0) {
+
 #if DLMALLOC
-        mem = dlcalloc(size,type);
+        mem = dlcalloc(size, type);
 #elif NEDMALLOC
-        mem = nedcalloc(size,type);
+        mem = nedcalloc(size, type);
 #else
-        mem = calloc(size,type);
+        mem = calloc(size, type);
 #endif
-        
+
 #if DEBUG_MODE > 1
         total_alloc_mem += tsize;
         total_alloc_count++;
 #endif
     }
 
-    if ( mem == NULL ) {
+    if (mem == NULL) {
         printf("### WARNING: Trying to allocate %lldB RAM...\n", tsize);
-        printf("### WARNING: Cannot allocate %.4fMB RAM!\n", (REAL)tsize/Million);
+        printf("### WARNING: Cannot allocate %.4fMB RAM!\n", (REAL)tsize / Million);
     }
-    
+
     return mem;
 }
 
@@ -111,32 +110,30 @@ void * fasp_mem_calloc (const unsigned int  size,
  *
  * Modified by Chensong Zhang on 07/30/2013: print error if failed
  */
-void * fasp_mem_realloc (void           *oldmem,
-                         const LONGLONG  tsize)
+void* fasp_mem_realloc(void* oldmem, const LONGLONG tsize)
 {
-    void * mem = NULL;
+    void* mem = NULL;
 
 #if DEBUG_MODE > 1
-    printf("### DEBUG: Trying to allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
+    printf("### DEBUG: Trying to allocate %.3lfMB RAM!\n", (REAL)tsize / Million);
 #endif
-    
-    if ( tsize > 0 ) {
-        
+
+    if (tsize > 0) {
+
 #if DLMALLOC
-        mem = dlrealloc(oldmem,tsize);
+        mem = dlrealloc(oldmem, tsize);
 #elif NEDMALLOC
-        mem = nedrealloc(oldmem,tsize);
+        mem = nedrealloc(oldmem, tsize);
 #else
-        mem = realloc(oldmem,tsize);
+        mem = realloc(oldmem, tsize);
 #endif
-        
     }
-    
-    if ( mem == NULL ) {
+
+    if (mem == NULL) {
         printf("### WARNING: Trying to allocate %lldB RAM!\n", tsize);
-        printf("### WARNING: Cannot allocate %.3lfMB RAM!\n", (REAL)tsize/Million);
+        printf("### WARNING: Cannot allocate %.3lfMB RAM!\n", (REAL)tsize / Million);
     }
-    
+
     return mem;
 }
 
@@ -152,9 +149,9 @@ void * fasp_mem_realloc (void           *oldmem,
  *
  * Modified on 2018/01/10 by Chensong: Add output when mem is NULL
  */
-void fasp_mem_free (void *mem)
+void fasp_mem_free(void* mem)
 {
-    if ( mem ) {
+    if (mem) {
 #if DLMALLOC
         dlfree(mem);
 #elif NEDMALLOC
@@ -163,11 +160,12 @@ void fasp_mem_free (void *mem)
         free(mem);
 #endif
 
+        mem = NULL;
+
 #if DEBUG_MODE > 1
         total_alloc_count--;
 #endif
-    }
-    else {
+    } else {
 #if DEBUG_MODE > 1
         printf("### WARNING: Trying to free an empty pointer!\n");
 #endif
@@ -182,11 +180,11 @@ void fasp_mem_free (void *mem)
  * \author Chensong Zhang
  * \date   2010/08/12
  */
-void fasp_mem_usage ( void )
+void fasp_mem_usage(void)
 {
 #if DEBUG_MODE > 1
     printf("### DEBUG: Number of alloc = %ld, allocated memory = %.3fMB.\n",
-           total_alloc_count, (REAL)total_alloc_mem/Million);
+           total_alloc_count, (REAL)total_alloc_mem / Million);
 #endif
 }
 
@@ -202,16 +200,15 @@ void fasp_mem_usage ( void )
  * \author Xiaozhe Hu, Chensong Zhang
  * \date   11/27/09
  */
-SHORT fasp_mem_iludata_check (const ILU_data *iludata)
+SHORT fasp_mem_iludata_check(const ILU_data* iludata)
 {
-    const INT memneed = 2*iludata->row; // estimated memory usage
-    
-    if ( iludata->nwork >= memneed ) {
+    const INT memneed = 2 * iludata->row; // estimated memory usage
+
+    if (iludata->nwork >= memneed) {
         return FASP_SUCCESS;
-    }
-    else {
-        printf("### ERROR: ILU needs %d RAM, only %d available!\n",
-               memneed, iludata->nwork);
+    } else {
+        printf("### ERROR: ILU needs %d RAM, only %d available!\n", memneed,
+               iludata->nwork);
         return ERROR_ALLOC_MEM;
     }
 }
