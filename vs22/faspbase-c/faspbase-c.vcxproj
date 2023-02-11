@@ -46,6 +46,7 @@
     <ClCompile Include="..\..\base\extra\hb_io\XtrHBIO.c" />
     <ClCompile Include="..\..\base\extra\interface\XtrMumps.c" />
     <ClCompile Include="..\..\base\extra\interface\XtrPardiso.c" />
+    <ClCompile Include="..\..\base\extra\interface\XtrStrumpack.c" />
     <ClCompile Include="..\..\base\extra\interface\XtrSuperlu.c" />
     <ClCompile Include="..\..\base\extra\interface\XtrUmfpack.c" />
     <ClCompile Include="..\..\base\src\AuxArray.c" />
