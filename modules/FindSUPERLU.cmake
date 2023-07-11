@@ -17,7 +17,7 @@ message(STATUS "Checking for package 'SuperLU'")
 
 # Check for header file
 find_path(SUPERLU_INCLUDE_DIRS slu_ddefs.h
- HINTS ${SUPERLU_DIR}/SRC ${SUPERLU_DIR}/SuperLU/SRC $ENV{SUPERLU_DIR}/SRC $ENV{SUPERLU_DIR}/SuperLU/SRC
+ HINTS ${SUPERLU_DIR}/include ${SUPERLU_DIR}/SRC ${SUPERLU_DIR}/SuperLU/SRC $ENV{SUPERLU_DIR}/SRC $ENV{SUPERLU_DIR}/SuperLU/SRC
  PATH_SUFFIXES  SuperLU
  DOC "Directory where the SuperLU header is located"
  )
