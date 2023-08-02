@@ -572,7 +572,7 @@ void fasp_param_amg_copy(AMG_param* amgparam_src, AMG_param* amgparam_dest)
 void fasp_param_solver_init(ITS_param* itsparam)
 {
     itsparam->print_level   = PRINT_NONE;
-    itsparam->itsolver_type = SOLVER_VFGMRES;
+    itsparam->itsolver_type = SOLVER_CG;
     itsparam->decoup_type   = 1;
     itsparam->precond_type  = PREC_AMG;
     itsparam->stop_type     = STOP_REL_RES;

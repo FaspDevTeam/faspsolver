@@ -1775,10 +1775,6 @@ FASP_API SHORT fasp_amg_coarsening_rs(
 FASP_API void fasp_amg_interp(
              dCSRmat* A, ivector* vertices, dCSRmat* P, iCSRmat* S, AMG_param* param);
 
-FASP_API void interp_STD(dCSRmat* A, ivector* vertices, dCSRmat* P, iCSRmat* S, AMG_param* param);
-
-FASP_API void interp_EXT(dCSRmat* A, ivector* vertices, dCSRmat* P, iCSRmat* S, AMG_param* param);
-
 
 /*-------- In file: PreAMGInterpEM.c --------*/
 
