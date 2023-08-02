@@ -1,6 +1,11 @@
 File Name: CHANGES
 
-02/11/2022 FASP 2.8.6:
+08/02/2023 FASP 2.8.7:
+- Update cmake version support;
+- Update faspsolver for thermal solvers in fasp4blkoil;
+- Fix some bugs introduced due to thermal solvers.
+
+02/11/2023 FASP 2.8.6:
 - Add weighted Jacboi for F-points;
 - Add reduction-based AMG;
 - Test reduction-based AMG;
