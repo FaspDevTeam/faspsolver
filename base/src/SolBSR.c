@@ -52,8 +52,8 @@
  *
  * Modified by Chunsheng Feng on 03/04/2016: add VBiCGstab solver
  */
-INT fasp_solver_dbsr_itsolver(dBSRmat* A, dvector* b, dvector* x, precond* pc,
-                              ITS_param* itparam)
+INT fasp_solver_dbsr_itsolver(
+    dBSRmat* A, dvector* b, dvector* x, precond* pc, ITS_param* itparam)
 {
     const SHORT prtlvl        = itparam->print_level;
     const SHORT itsolver_type = itparam->itsolver_type;
@@ -283,8 +283,8 @@ INT fasp_solver_dbsr_krylov_diag(dBSRmat* A, dvector* b, dvector* x, ITS_param* 
  * \author Shiquang Zhang, Xiaozhe Hu
  * \date   10/26/2010
  */
-INT fasp_solver_dbsr_krylov_ilu(dBSRmat* A, dvector* b, dvector* x, ITS_param* itparam,
-                                ILU_param* iluparam)
+INT fasp_solver_dbsr_krylov_ilu(
+    dBSRmat* A, dvector* b, dvector* x, ITS_param* itparam, ILU_param* iluparam)
 {
     const SHORT prtlvl = itparam->print_level;
     REAL        solve_start, solve_end;
@@ -346,8 +346,8 @@ FINISHED:
  * \author Xiaozhe Hu
  * \date   03/16/2012
  */
-INT fasp_solver_dbsr_krylov_amg(dBSRmat* A, dvector* b, dvector* x, ITS_param* itparam,
-                                AMG_param* amgparam)
+INT fasp_solver_dbsr_krylov_amg(
+    dBSRmat* A, dvector* b, dvector* x, ITS_param* itparam, AMG_param* amgparam)
 {
     //--------------------------------------------------------------
     // Part 1: prepare
@@ -438,7 +438,7 @@ INT fasp_solver_dbsr_krylov_amg(dBSRmat* A, dvector* b, dvector* x, ITS_param* i
     if (prtlvl >= PRINT_MIN) fasp_cputime("BSR Krylov method", solve_end - setup_start);
 
 FINISHED:
-    fasp_amg_data_bsr_free(mgl);
+    fasp_amg_data_bsr_free(mgl, amgparam);
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -473,9 +473,14 @@ MEMORY_ERROR:
  * \author Xiaozhe Hu
  * \date   05/26/2012
  */
-INT fasp_solver_dbsr_krylov_amg_nk(dBSRmat* A, dvector* b, dvector* x,
-                                   ITS_param* itparam, AMG_param* amgparam,
-                                   dCSRmat* A_nk, dCSRmat* P_nk, dCSRmat* R_nk)
+INT fasp_solver_dbsr_krylov_amg_nk(dBSRmat*   A,
+                                   dvector*   b,
+                                   dvector*   x,
+                                   ITS_param* itparam,
+                                   AMG_param* amgparam,
+                                   dCSRmat*   A_nk,
+                                   dCSRmat*   P_nk,
+                                   dCSRmat*   R_nk)
 {
     //--------------------------------------------------------------
     // Part 1: prepare
@@ -589,7 +594,7 @@ INT fasp_solver_dbsr_krylov_amg_nk(dBSRmat* A, dvector* b, dvector* x,
     }
 
 FINISHED:
-    fasp_amg_data_bsr_free(mgl);
+    fasp_amg_data_bsr_free(mgl, amgparam);
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);
@@ -626,9 +631,13 @@ MEMORY_ERROR:
  * \author Xiaozhe Hu
  * \date   05/27/2012
  */
-INT fasp_solver_dbsr_krylov_nk_amg(dBSRmat* A, dvector* b, dvector* x,
-                                   ITS_param* itparam, AMG_param* amgparam,
-                                   const INT nk_dim, dvector* nk)
+INT fasp_solver_dbsr_krylov_nk_amg(dBSRmat*   A,
+                                   dvector*   b,
+                                   dvector*   x,
+                                   ITS_param* itparam,
+                                   AMG_param* amgparam,
+                                   const INT  nk_dim,
+                                   dvector*   nk)
 {
     //--------------------------------------------------------------
     // Part 1: prepare
@@ -742,7 +751,7 @@ INT fasp_solver_dbsr_krylov_nk_amg(dBSRmat* A, dvector* b, dvector* x,
     }
 
 FINISHED:
-    fasp_amg_data_bsr_free(mgl);
+    fasp_amg_data_bsr_free(mgl, amgparam);
 
 #if DEBUG_MODE > 0
     printf("### DEBUG: [--End--] %s ...\n", __FUNCTION__);

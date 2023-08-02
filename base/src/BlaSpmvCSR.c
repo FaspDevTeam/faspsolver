@@ -57,8 +57,8 @@ extern unsigned long total_alloc_count; /**< Total number of allocatations */
  *
  * Modified by Chunsheng Feng, Zheng Li on 06/29/2012
  */
-SHORT fasp_blas_dcsr_add(const dCSRmat* A, const REAL alpha, const dCSRmat* B,
-                         const REAL beta, dCSRmat* C)
+SHORT fasp_blas_dcsr_add(
+    const dCSRmat* A, const REAL alpha, const dCSRmat* B, const REAL beta, dCSRmat* C)
 {
     INT i, j, k, l;
     INT count = 0, added, countrow;
@@ -106,12 +106,13 @@ SHORT fasp_blas_dcsr_add(const dCSRmat* A, const REAL alpha, const dCSRmat* B,
 #pragma omp parallel private(myid, mybegin, myend, i)
             {
                 myid = omp_get_thread_num();
-                fasp_get_start_end(myid, nthreads, A->nnz, &mybegin, &myend);
+                fasp_get_start_end(myid, nthreads, B->nnz, &mybegin, &myend);
                 for (i = mybegin; i < myend; ++i) C->val[i] = B->val[i] * beta;
             }
 #endif
         } else {
-            for (i = 0; i < A->nnz; ++i) C->val[i] = B->val[i] * beta;
+            for (i = 0; i < B->nnz; ++i)
+                C->val[i] = B->val[i] * beta; // revised bugs, Li Zhao 07/03/2023
         }
 
         status = FASP_SUCCESS;
@@ -261,7 +262,7 @@ void fasp_blas_dcsr_mxv(const dCSRmat* A, const REAL* x, REAL* y)
 
 #ifdef _OPENMP
 #pragma omp parallel for private(myid, mybegin, myend, i, temp, begin_row, end_row,    \
-                                 nnz_row, k)
+                                     nnz_row, k)
 #endif
         for (myid = 0; myid < nthreads; myid++) {
             fasp_get_start_end(myid, nthreads, m, &mybegin, &myend);
@@ -605,8 +606,10 @@ void fasp_blas_dcsr_aAxpy(const REAL alpha, const dCSRmat* A, const REAL* x, REA
  *
  * Modified by TingLai on 08/01/2022
  */
-void fasp_blas_ldcsr_aAxpy(const REAL alpha, const dCSRmat* A, const LONGREAL* x,
-                           REAL* y)
+void fasp_blas_ldcsr_aAxpy(const REAL      alpha,
+                           const dCSRmat*  A,
+                           const LONGREAL* x,
+                           REAL*           y)
 {
     const INT         m  = A->row;
     const INT *       ia = A->IA, *ja = A->JA;
@@ -721,8 +724,10 @@ void fasp_blas_ldcsr_aAxpy(const REAL alpha, const dCSRmat* A, const LONGREAL* x
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/29/2012
  */
-void fasp_blas_dcsr_aAxpy_agg(const REAL alpha, const dCSRmat* A, const REAL* x,
-                              REAL* y)
+void fasp_blas_dcsr_aAxpy_agg(const REAL     alpha,
+                              const dCSRmat* A,
+                              const REAL*    x,
+                              REAL*          y)
 {
     const INT  m  = A->row;
     const INT *ia = A->IA, *ja = A->JA;
@@ -991,8 +996,10 @@ void fasp_blas_dcsr_mxm(const dCSRmat* A, const dCSRmat* B, dCSRmat* C)
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dcsr_rap(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P,
-                        dCSRmat* RAP)
+void fasp_blas_dcsr_rap(const dCSRmat* R,
+                        const dCSRmat* A,
+                        const dCSRmat* P,
+                        dCSRmat*       RAP)
 {
     const INT   n_coarse = R->row;
     const INT*  R_i      = R->IA;
@@ -1054,8 +1061,8 @@ void fasp_blas_dcsr_rap(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P,
 
     if (n_coarse > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker,      \
-                                 jj_counter, ic, jj_row_begining, jj1, i1, jj2, i2,    \
-                                 jj3, i3)
+                                     jj_counter, ic, jj_row_begining, jj1, i1, jj2,    \
+                                     i2, jj3, i3)
         for (myid = 0; myid < nthreads; myid++) {
             fasp_get_start_end(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker   = Ps_marker + myid * n_coarse;
@@ -1145,8 +1152,8 @@ void fasp_blas_dcsr_rap(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P,
 #ifdef _OPENMP
     if (n_coarse > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, P_marker, A_marker, jj_counter, \
-                                 ic, jj_row_begining, jj1, r_entry, i1, jj2,           \
-                                 r_a_product, i2, jj3, r_a_p_product, i3)
+                                     ic, jj_row_begining, jj1, r_entry, i1, jj2,       \
+                                     r_a_product, i2, jj3, r_a_p_product, i3)
         for (myid = 0; myid < nthreads; myid++) {
             fasp_get_start_end(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker   = Ps_marker + myid * n_coarse;
@@ -1266,8 +1273,10 @@ void fasp_blas_dcsr_rap(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P,
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/26/2012
  */
-void fasp_blas_dcsr_rap_agg(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P,
-                            dCSRmat* RAP)
+void fasp_blas_dcsr_rap_agg(const dCSRmat* R,
+                            const dCSRmat* A,
+                            const dCSRmat* P,
+                            dCSRmat*       RAP)
 {
     const INT  n_coarse = R->row;
     const INT* R_i      = R->IA;
@@ -1326,8 +1335,8 @@ void fasp_blas_dcsr_rap_agg(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P
 
     if (n_coarse > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, Ctemp, P_marker, A_marker,      \
-                                 jj_counter, ic, jj_row_begining, jj1, i1, jj2, i2,    \
-                                 jj3, i3)
+                                     jj_counter, ic, jj_row_begining, jj1, i1, jj2,    \
+                                     i2, jj3, i3)
         for (myid = 0; myid < nthreads; myid++) {
             fasp_get_start_end(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker   = Ps_marker + myid * n_coarse;
@@ -1417,7 +1426,7 @@ void fasp_blas_dcsr_rap_agg(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P
 #ifdef _OPENMP
     if (n_coarse > OPENMP_HOLDS) {
 #pragma omp parallel for private(myid, mybegin, myend, P_marker, A_marker, jj_counter, \
-                                 ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
+                                     ic, jj_row_begining, jj1, i1, jj2, i2, jj3, i3)
         for (myid = 0; myid < nthreads; myid++) {
             fasp_get_start_end(myid, nthreads, n_coarse, &mybegin, &myend);
             P_marker   = Ps_marker + myid * n_coarse;
@@ -1527,8 +1536,10 @@ void fasp_blas_dcsr_rap_agg(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P
  * \note Ref. R.E. Bank and C.C. Douglas. SMMP: Sparse Matrix Multiplication Package.
  *       Advances in Computational Mathematics, 1 (1993), pp. 127-137.
  */
-void fasp_blas_dcsr_rap_agg1(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P,
-                             dCSRmat* B)
+void fasp_blas_dcsr_rap_agg1(const dCSRmat* R,
+                             const dCSRmat* A,
+                             const dCSRmat* P,
+                             dCSRmat*       B)
 {
     const INT   row = R->row, col = P->col;
     const INT * ir = R->IA, *ia = A->IA, *ip = P->IA;
@@ -1628,7 +1639,7 @@ void fasp_blas_dcsr_rap_agg1(const dCSRmat* R, const dCSRmat* A, const dCSRmat* 
             iindex[jac[j]] = -2;
         } // end j
 
-    } // end i: First loop
+    }     // end i: First loop
 
     jac = (INT*)fasp_mem_realloc(jac, (iac[row]) * sizeof(INT));
 
@@ -1731,8 +1742,10 @@ void fasp_blas_dcsr_rap_agg1(const dCSRmat* R, const dCSRmat* A, const dCSRmat* 
  *           ja_ltz[k] = ja_usual[k]+1,
  *            a_ltz[k] =  a_usual[k].
  */
-void fasp_blas_dcsr_ptap(const dCSRmat* Pt, const dCSRmat* A, const dCSRmat* P,
-                         dCSRmat* Ac)
+void fasp_blas_dcsr_ptap(const dCSRmat* Pt,
+                         const dCSRmat* A,
+                         const dCSRmat* P,
+                         dCSRmat*       Ac)
 {
     const INT nc = Pt->row, n = Pt->col, nnzP = P->nnz, nnzA = A->nnz;
     INT       i, maxrpout;
@@ -1839,9 +1852,20 @@ void fasp_blas_dcsr_ptap(const dCSRmat* Pt, const dCSRmat* A, const dCSRmat* P,
  * \note It uses dCSRmat only. The functions called from here are in sparse_util.c.
  *       Not used for the moment!
  */
-dCSRmat fasp_blas_dcsr_rap2(INT* ir, INT* jr, REAL* r, INT* ia, INT* ja, REAL* a,
-                            INT* ipt, INT* jpt, REAL* pt, INT n, INT nc, INT* maxrpout,
-                            INT* ipin, INT* jpin)
+dCSRmat fasp_blas_dcsr_rap2(INT*  ir,
+                            INT*  jr,
+                            REAL* r,
+                            INT*  ia,
+                            INT*  ja,
+                            REAL* a,
+                            INT*  ipt,
+                            INT*  jpt,
+                            REAL* pt,
+                            INT   n,
+                            INT   nc,
+                            INT*  maxrpout,
+                            INT*  ipin,
+                            INT*  jpin)
 {
     dCSRmat ac;
     INT     n1, nc1, nnzp, maxrp;
@@ -1985,9 +2009,9 @@ void fasp_blas_dcsr_rap4(dCSRmat* R, dCSRmat* A, dCSRmat* P, dCSRmat* B, INT* ic
 
 #ifdef _OPENMP
 #pragma omp parallel for private(myid, FiveMyid, mybegin, myend, min_A, min_P, index,  \
-                                 iindex, A_pos, P_pos, ic, FiveIc, jj_counter,         \
-                                 jj_row_begining, end_rowR, jj1, i1, end_rowA, jj2,    \
-                                 i2, end_row, jj3, i3)
+                                     iindex, A_pos, P_pos, ic, FiveIc, jj_counter,     \
+                                     jj_row_begining, end_rowR, jj1, i1, end_rowA,     \
+                                     jj2, i2, end_row, jj3, i3)
 #endif
         for (myid = 0; myid < nthreads; myid++) {
             FiveMyid = myid * 5;
@@ -2054,8 +2078,8 @@ void fasp_blas_dcsr_rap4(dCSRmat* R, dCSRmat* A, dCSRmat* P, dCSRmat* B, INT* ic
         fasp_iarray_set(minus_one_length, iindexs, -2);
 #ifdef _OPENMP
 #pragma omp parallel for private(myid, index, iindex, FiveMyid, mybegin, myend, i,     \
-                                 istart, length, i1, end_rowR, jj, j, end_rowA, k,     \
-                                 iistart, end_row)
+                                     istart, length, i1, end_rowR, jj, j, end_rowA, k, \
+                                     iistart, end_row)
 #endif
         for (myid = 0; myid < nthreads; myid++) {
             iindex   = iindex_array[myid];
@@ -2129,9 +2153,10 @@ void fasp_blas_dcsr_rap4(dCSRmat* R, dCSRmat* A, dCSRmat* P, dCSRmat* B, INT* ic
 #endif
 
 #ifdef _OPENMP
-#pragma omp parallel for private(                                                      \
-    myid, index, FiveMyid, mybegin, myend, min_A, min_P, A_pos, P_pos, ic, FiveIc,     \
-    BTindex, temp, i, i1, end_row, j, istart, length, end_rowR, jj, end_rowA, k)
+#pragma omp parallel for private(myid, index, FiveMyid, mybegin, myend, min_A, min_P,  \
+                                     A_pos, P_pos, ic, FiveIc, BTindex, temp, i, i1,   \
+                                     end_row, j, istart, length, end_rowR, jj,         \
+                                     end_rowA, k)
 #endif
         for (myid = 0; myid < nthreads; myid++) {
             index    = index_array[myid];

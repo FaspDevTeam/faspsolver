@@ -18,6 +18,7 @@
 
 #include "fasp.h"
 #include "fasp_functs.h"
+// #include "sys/time.h" //! call gettimeofday() for struct timeval on Linux system.
 
 /*---------------------------------*/
 /*--      Public Functions       --*/
@@ -33,13 +34,17 @@
  *
  * Modified by Chensong Zhang on 09/22/2014: Use CLOCKS_PER_SEC for cross-platform
  */
-void fasp_gettime (REAL *time)
+void fasp_gettime(REAL* time)
 {
-    if ( time != NULL ) {
+    if (time != NULL) {
 #ifdef _OPENMP
         *time = omp_get_wtime();
 #else
-        *time = (REAL) clock() / CLOCKS_PER_SEC;
+         *time = (REAL)clock() / CLOCKS_PER_SEC;
+
+        //struct timeval t;
+        //gettimeofday(&t, NULL); // Get system time
+        //*time = t.tv_sec + t.tv_usec / 1000000.0;
 #endif
     }
 }

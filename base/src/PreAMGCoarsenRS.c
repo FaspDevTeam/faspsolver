@@ -101,7 +101,8 @@ SHORT fasp_amg_coarsening_rs(
 #if DEBUG_MODE > 1
     printf("### DEBUG: Step 2. C/F splitting ......\n");
 #endif
-
+    //   printf("### DEBUG: Step 2. C/F splitting ......\n");
+    //    printf("coarse_type:%d \n", coarse_type);
     switch (coarse_type) {
 
         case COARSE_RSP: // Classical coarsening with positive connections
@@ -133,6 +134,7 @@ SHORT fasp_amg_coarsening_rs(
 #if DEBUG_MODE > 1
     printf("### DEBUG: col = %d\n", col);
 #endif
+    //    printf("### DEBUG: col = %d\n", col);
     if (col <= 0) return ERROR_UNKNOWN;
 
 #if DEBUG_MODE > 1
@@ -155,6 +157,7 @@ SHORT fasp_amg_coarsening_rs(
         case INTERP_RDC: // Reduction-based amg interpolation
             {
                 // printf("### DEBUG: Reduction-based interpolation\n");
+                INT     i;
                 double* theta = (double*)fasp_mem_calloc(row, sizeof(double));
                 form_P_pattern_rdc(P, A, theta, vertices, row, col);
                 // theta will be used to
@@ -162,7 +165,7 @@ SHORT fasp_amg_coarsening_rs(
                 // 2. calculate relaxation parameter
                 // 3. approximate convergence factor
                 param->theta = 1.0;
-                for (INT i = 0; i < row; ++i)
+                for (i = 0; i < row; ++i)
                     if (theta[i] < param->theta) param->theta = theta[i];
                 printf("### DEBUG: theta = %e\n", param->theta);
                 fasp_mem_free(theta);
@@ -339,7 +342,7 @@ static void strong_couplings(dCSRmat* A, iCSRmat* S, AMG_param* param)
 
             // Multiply by the strength threshold
             row_scl *= epsilon_str;
-
+            // printf("row_sum:%e, row_scl:%e \n", row_sum, row_scl);
             // Find diagonal entries of S and remove them later
             for (j = begin_row; j < end_row; j++) {
                 if (ja[j] == i) {
@@ -352,6 +355,8 @@ static void strong_couplings(dCSRmat* A, iCSRmat* S, AMG_param* param)
             // Originally: Not consider positive entries
             // if ( ABS(row_sum) > max_row_sum * ABS(diag.val[i]) ) {
             // Now changed to --Chensong 05/17/2013
+            /*  printf(" Mark entire row:%e, \n",  (2 - max_row_sum) *
+             * ABS(diag.val[i]));*/
             if (row_sum < (2 - max_row_sum) * ABS(diag.val[i])) {
 
                 for (j = begin_row; j < end_row; j++) S->JA[j] = -1;
@@ -369,6 +374,7 @@ static void strong_couplings(dCSRmat* A, iCSRmat* S, AMG_param* param)
                     default: // only consider n-couplings
                         for (j = begin_row; j < end_row; j++) {
                             if (-A->val[j] <= row_scl) S->JA[j] = -1;
+                            // printf("j : %d , val[j] : %e", j, A->val[j]);
                         }
                         break;
                 }
@@ -537,7 +543,9 @@ static INT cfsplitting_cls(dCSRmat* A, iCSRmat* S, ivector* vertices)
 #endif
 
     // 0. Compress S and form S_transpose
+
     col = compress_S(S);
+
     if (col < 0) goto FINISHED; // compression failed!!!
 
     iCSRmat ST;

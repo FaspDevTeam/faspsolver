@@ -39,14 +39,20 @@
  */
 #define FASP_VERSION 2.0 /**< faspsolver version */
 
+#ifdef _OPENMP
+#define MULTI_COLOR_ORDER                                                              \
+    ON /**< Multicolor parallel GS smoothing method based on strongly connected        \
+           matrix */
+#else
 #define MULTI_COLOR_ORDER                                                              \
     OFF /**< Multicolor parallel GS smoothing method based on strongly connected       \
            matrix */
+#endif
 
 /**
  * \brief For external software package support
  */
-#define DLMALLOC OFF  /**< use dlmalloc instead of standard malloc */
+#define DLMALLOC  OFF /**< use dlmalloc instead of standard malloc */
 #define NEDMALLOC OFF /**< use nedmalloc instead of standard malloc */
 
 /**
@@ -62,20 +68,20 @@
 /**
  * \brief FASP integer and floating point numbers
  */
-#define SHORT short          /**< short integer type */
-#define INT int              /**< signed integer types: signed, long enough */
-#define LONG long            /**< long integer type */
+#define SHORT    short       /**< short integer type */
+#define INT      int         /**< signed integer types: signed, long enough */
+#define LONG     long        /**< long integer type */
 #define LONGLONG long long   /**< long long integer type */
-#define REAL double          /**< float type */
+#define REAL     double      /**< float type */
 #define LONGREAL long double /**< long double type */
-#define STRLEN 256           /**< length of strings */
+#define STRLEN   256         /**< length of strings */
 
 /**
  * \brief Definition of max, min, abs
  */
-#define MAX(a, b) (((a) > (b)) ? (a) : (b)) /**< bigger one in a and b */
-#define MIN(a, b) (((a) < (b)) ? (a) : (b)) /**< smaller one in a and b */
-#define ABS(a) (((a) >= 0.0) ? (a) : -(a))  /**< absolute value of a */
+#define MAX(a, b) (((a) > (b)) ? (a) : (b))   /**< bigger one in a and b */
+#define MIN(a, b) (((a) < (b)) ? (a) : (b))   /**< smaller one in a and b */
+#define ABS(a)    (((a) >= 0.0) ? (a) : -(a)) /**< absolute value of a */
 
 /**
  * \brief Definition of >, >=, <, <=, and isnan
@@ -89,7 +95,7 @@
 /**
  * \brief Definition of print command in DEBUG mode
  */
-#define PUT_INT(A) printf("### DEBUG: %s = %d\n", #A, (A))  /**< print integer  */
+#define PUT_INT(A)  printf("### DEBUG: %s = %d\n", #A, (A)) /**< print integer  */
 #define PUT_REAL(A) printf("### DEBUG: %s = %e\n", #A, (A)) /**< print real num */
 
 /*---------------------------*/
@@ -389,7 +395,7 @@ typedef struct {
     REAL  tol;           /**< convergence tolerance for relative residual */
     REAL  abstol;        /**< convergence tolerance for absolute residual */
 
-} ITS_param; /**< Parameters for iterative solvers */
+} ITS_param;             /**< Parameters for iterative solvers */
 
 /**
  * \struct ILU_param
@@ -510,6 +516,9 @@ typedef struct {
 
     //! aggregation type
     SHORT aggregation_type;
+
+    //! aggregation norm type
+    SHORT aggregation_norm_type;
 
     //! interpolation type
     SHORT interpolation_type;
@@ -1185,8 +1194,9 @@ typedef struct {
     REAL  AMG_tentative_smooth;   /**< relax factor for smoothing tentative prolong. */
     SHORT AMG_smooth_filter;      /**< filter for smoothing the tentative prolong. */
     SHORT AMG_smooth_restriction; /**< smoothing the restriction or not */
+    SHORT AMG_aggregation_norm_type; /**< aggregation norm type for BSR */
 
-} input_param; /**< Input parameters */
+} input_param;                       /**< Input parameters */
 
 /*
  * OpenMP definitions and declarations
@@ -1200,9 +1210,9 @@ typedef struct {
 // extern INT omp_count;   /**< Counter for multiple calls: Remove later!!! --Chensong
 // */
 
-extern INT THDs_AMG_GS;  /**< AMG GS smoothing threads  */
-extern INT THDs_CPR_lGS; /**< Reservoir GS smoothing threads */
-extern INT THDs_CPR_gGS; /**< Global matrix GS smoothing threads  */
+extern INT THDs_AMG_GS;        /**< AMG GS smoothing threads  */
+extern INT THDs_CPR_lGS;       /**< Reservoir GS smoothing threads */
+extern INT THDs_CPR_gGS;       /**< Global matrix GS smoothing threads  */
 #ifdef DETAILTIME
 extern REAL total_linear_time; /**< Total used time of linear solvers */
 extern REAL total_start_time;  /**< Total used time */
@@ -1212,6 +1222,12 @@ extern INT  fasp_called_times; /**< Total FASP calls */
 #endif
 
 #endif /* end if for _OPENMP */
+
+extern double PreSmoother_time_zl;
+extern double PostSmoother_time_zl;
+extern double Krylov_time_zl;
+extern double Coarsen_time_zl;
+extern double AMLI_cycle_time_zl;
 
 #endif /* end if for __FASP_HEADER__ */
 

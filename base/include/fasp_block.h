@@ -14,8 +14,8 @@
 
 #include "fasp.h"
 
-#ifndef __FASPBLOCK_HEADER__       /*-- allow multiple inclusions --*/
-#define __FASPBLOCK_HEADER__       /**< indicate fasp_block.h has been included before */
+#ifndef __FASPBLOCK_HEADER__ /*-- allow multiple inclusions --*/
+#define __FASPBLOCK_HEADER__ /**< indicate fasp_block.h has been included before */
 
 /*---------------------------*/
 /*---   Data structures   ---*/
@@ -54,14 +54,14 @@ typedef struct dBSRmat {
     //! element. All elements of non-zero blocks are stored, even if some of
     //! them is equal to zero. Within each nonzero block elements are stored
     //! in row-major order and the size is (NNZ*nb*nb).
-    REAL *val;
+    REAL* val;
 
     //! integer array of row pointers, the size is ROW+1
-    INT *IA;
+    INT* IA;
 
     //! Element i of the integer array columns is the number of the column in the
     //! block matrix that contains the i-th non-zero block. The size is NNZ.
-    INT *JA;
+    INT* JA;
 
 } dBSRmat; /**< Matrix of REAL type in BSR format */
 
@@ -80,7 +80,7 @@ typedef struct dBLCmat {
     INT bcol;
 
     //! blocks of dCSRmat, point to blocks[brow][bcol]
-    dCSRmat **blocks;
+    dCSRmat** blocks;
 
 } dBLCmat; /**< Matrix of REAL type in Block CSR format */
 
@@ -99,7 +99,7 @@ typedef struct iBLCmat {
     INT bcol;
 
     //! blocks of iCSRmat, point to blocks[brow][bcol]
-    iCSRmat **blocks;
+    iCSRmat** blocks;
 
 } iBLCmat; /**< Matrix of INT type in Block CSR format */
 
@@ -113,7 +113,7 @@ typedef struct block_dvector {
     INT brow;
 
     //! blocks of dvector, point to blocks[brow]
-    dvector **blocks;
+    dvector** blocks;
 
 } block_dvector; /**< Vector of REAL type in Block format */
 
@@ -129,7 +129,7 @@ typedef struct block_ivector {
     INT brow;
 
     //! blocks of dvector, point to blocks[brow]
-    ivector **blocks;
+    ivector** blocks;
 
 } block_ivector; /**< Vector of INT type in Block format */
 
@@ -173,7 +173,7 @@ typedef struct {
     dCSRmat Ac;
 
     //! pointer to the numerical dactorization from UMFPACK
-    void *Numeric;
+    void* Numeric;
 
     //! data for Intel MKL PARDISO
     Pardiso_data pdata;
@@ -181,14 +181,28 @@ typedef struct {
     //! pointer to the pressure block (only for reservoir simulation)
     dCSRmat PP;
 
+    //! AMG data for PP, Li Zhao, 05/19/2023
+    AMG_data* mglP;
+
+    //! pointer to the temperature block (only for thermal reservoir simulation), Li
+    //! Zhao, 05/23/2023
+    dCSRmat TT;
+
+    //! AMG data for TT, Li Zhao, 05/23/2023
+    AMG_data* mglT;
+
+    //! pointer to the pressure-temperature block (only for thermal reservoir
+    //! simulation), Li Zhao, 05/19/2023
+    dBSRmat PT;
+
     //! pointer to the auxiliary vectors for pressure block
-    REAL *pw;
+    REAL* pw;
 
     //! pointer to the saturation block (only for reservoir simulation)
     dBSRmat SS;
 
     //! pointer to the auxiliary vectors for saturation block
-    REAL *sw;
+    REAL* sw;
 
     //! pointer to the diagonal inverse of the saturation block at level level_num
     dvector diaginv_SS;
@@ -209,19 +223,19 @@ typedef struct {
     INT near_kernel_dim;
 
     //! basis of near kernel space for SAMG
-    REAL **near_kernel_basis;
+    REAL** near_kernel_basis;
 
     //-----------------------------------------
     // extra near kernal space for extra solve
 
     //! Matrix data for near kernal
-    dCSRmat *A_nk;
+    dCSRmat* A_nk;
 
     //! Prolongation for near kernal
-    dCSRmat *P_nk;
+    dCSRmat* P_nk;
 
     //! Resriction for near kernal
-    dCSRmat *R_nk;
+    dCSRmat* R_nk;
     //-----------------------------------------
 
     //! temporary work space
@@ -302,7 +316,7 @@ typedef struct {
     SHORT amli_degree;
 
     //! coefficients of the polynomial used by AMLI cycle
-    REAL *amli_coef;
+    REAL* amli_coef;
 
     //! smooth factor for smoothing the tentative prolongation
     REAL tentative_smooth;
@@ -311,33 +325,33 @@ typedef struct {
     SHORT nl_amli_krylov_type;
 
     //! AMG preconditioner data
-    AMG_data_bsr *mgl_data;
+    AMG_data_bsr* mgl_data;
 
     //! AMG preconditioner data for pressure block
-    AMG_data *pres_mgl_data;
+    AMG_data* pres_mgl_data;
 
     //! ILU preconditioner data (needed for CPR type preconditioner)
-    ILU_data *LU;
+    ILU_data* LU;
 
     //! Matrix data
-    dBSRmat *A;
+    dBSRmat* A;
 
     // extra near kernal space
 
     //! Matrix data for near kernal
-    dCSRmat *A_nk;
+    dCSRmat* A_nk;
 
     //! Prolongation for near kernal
-    dCSRmat *P_nk;
+    dCSRmat* P_nk;
 
     //! Resriction for near kernal
-    dCSRmat *R_nk;
+    dCSRmat* R_nk;
 
     //! temporary dvector used to store and restore the residual
     dvector r;
 
     //! temporary work space for other usage
-    REAL *w;
+    REAL* w;
 
 } precond_data_bsr; /**< Data for preconditioners in dBSRmat format */
 
@@ -351,25 +365,25 @@ typedef struct {
     /*-------------------------------------*/
     /* Basic data for block preconditioner */
     /*-------------------------------------*/
-    dBLCmat *Ablc;        /**< problem data, the blocks */
+    dBLCmat* Ablc;   /**< problem data, the blocks */
 
-    dCSRmat *A_diag;      /**< data for each diagonal block*/
+    dCSRmat* A_diag; /**< data for each diagonal block*/
 
-    dvector r;            /**< temp work space */
+    dvector r;       /**< temp work space */
 
     /*------------------------------*/
     /* Data for the diagonal blocks */
     /*------------------------------*/
 
     /*--- solve by direct solver ---*/
-    void **LU_diag;       /**< LU decomposition for the diagonal blocks (for UMFpack) */
+    void** LU_diag; /**< LU decomposition for the diagonal blocks (for UMFpack) */
 
     /*--- solve by AMG ---*/
-    AMG_data **mgl;       /**< AMG data for the diagonal blocks */
+    AMG_data** mgl;      /**< AMG data for the diagonal blocks */
 
-    AMG_param *amgparam;  /**< parameters for AMG */
+    AMG_param* amgparam; /**< parameters for AMG */
 
-} precond_data_blc; /**< Precond data for block matrices */
+} precond_data_blc;      /**< Precond data for block matrices */
 
 /**
  * \struct precond_data_sweeping
@@ -383,23 +397,23 @@ typedef struct {
  */
 typedef struct {
 
-    INT NumLayers;      /**< number of layers */
+    INT NumLayers;        /**< number of layers */
 
-    dBLCmat *A;         /**< problem data, the sparse matrix */
-    dBLCmat *Ai;        /**< preconditioner data, the sparse matrix */
+    dBLCmat* A;           /**< problem data, the sparse matrix */
+    dBLCmat* Ai;          /**< preconditioner data, the sparse matrix */
 
-    dCSRmat *local_A;   /**< local stiffness matrix for each layer */
-    void **local_LU;    /**< lcoal LU decomposition (for UMFpack) */
+    dCSRmat* local_A;     /**< local stiffness matrix for each layer */
+    void**   local_LU;    /**< lcoal LU decomposition (for UMFpack) */
 
-    ivector *local_index;  /**< local index for each layer */
+    ivector* local_index; /**< local index for each layer */
 
     // temprary work spaces
     dvector r; /**< temporary dvector used to store and restore the residual */
-    REAL *w;   /**< temporary work space for other usage */
+    REAL*   w; /**< temporary work space for other usage */
 
 } precond_data_sweeping; /**< Data for sweeping preconditioner */
 
-#endif /* end if for __FASPBLOCK_HEADER__ */
+#endif                   /* end if for __FASPBLOCK_HEADER__ */
 
 /*---------------------------------*/
 /*--        End of File          --*/

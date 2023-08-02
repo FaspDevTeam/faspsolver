@@ -171,6 +171,7 @@
 #define VMB      2 /**< VMB aggregation */
 #define NPAIR    3 /**< non-symmetric pairwise aggregation */
 #define SPAIR    4 /**< symmetric pairwise aggregation */
+#define VMB_V    5 /**< Vector VMB aggregation */
 
 /**
  * \brief Definition of cycle types
@@ -185,24 +186,26 @@
 /**
  * \brief Definition of standard smoother types
  */
-#define SMOOTHER_JACOBIF 11/**< Jacobi smoother on F-points only */
-#define SMOOTHER_JACOBI 1  /**< Jacobi smoother */
-#define SMOOTHER_GS     2  /**< Gauss-Seidel smoother */
-#define SMOOTHER_GSF    12 /**< Gauss-Seidel smoother on F-points only */
-#define SMOOTHER_SGS    3  /**< Symmetric Gauss-Seidel smoother */
-#define SMOOTHER_CG     4  /**< CG as a smoother */
-#define SMOOTHER_SOR    5  /**< SOR smoother */
-#define SMOOTHER_SSOR   6  /**< SSOR smoother */
-#define SMOOTHER_GSOR   7  /**< GS + SOR smoother */
-#define SMOOTHER_SGSOR  8  /**< SGS + SSOR smoother */
-#define SMOOTHER_POLY   9  /**< Polynomial smoother */
-#define SMOOTHER_L1DIAG 10 /**< L1 norm diagonal scaling smoother */
+#define SMOOTHER_JACOBIF 11 /**< Jacobi smoother on F-points only */
+#define SMOOTHER_JACOBI  1  /**< Jacobi smoother */
+#define SMOOTHER_GS      2  /**< Gauss-Seidel smoother */
+#define SMOOTHER_GSF     12 /**< Gauss-Seidel smoother on F-points only */
+#define SMOOTHER_SGS     3  /**< Symmetric Gauss-Seidel smoother */
+#define SMOOTHER_CG      4  /**< CG as a smoother */
+#define SMOOTHER_SOR     5  /**< SOR smoother */
+#define SMOOTHER_SSOR    6  /**< SSOR smoother */
+#define SMOOTHER_GSOR    7  /**< GS + SOR smoother */
+#define SMOOTHER_SGSOR   8  /**< SGS + SSOR smoother */
+#define SMOOTHER_POLY    9  /**< Polynomial smoother */
+#define SMOOTHER_L1DIAG  10 /**< L1 norm diagonal scaling smoother */
 
 /**
  * \brief Definition of specialized smoother types
  */
-#define SMOOTHER_BLKOIL 11 /**< Used in monolithic AMG for black-oil */
-#define SMOOTHER_SPETEN 19 /**< Used in monolithic AMG for black-oil */
+#define SMOOTHER_BLKOIL 21 /**< Used in monolithic AMG for black-oil */
+#define SMOOTHER_SPETEN 22 /**< Used in monolithic AMG for black-oil */
+#define SMOOTHER_CPRGS  23 /**< Used in monolithic AMG for thermal reservior */
+#define SMOOTHER_CPTRGS 24 /**< Used in monolithic AMG for thermal reservior */
 
 /**
  * \brief Definition of coarsening types
@@ -265,7 +268,7 @@
           */
 #define OPENMP_HOLDS 2000 /**< Smallest size for OpenMP version */
 
-#endif /* end if for __FASP_CONST__ */
+#endif                    /* end if for __FASP_CONST__ */
 
 /*---------------------------------*/
 /*--        End of File          --*/

@@ -50,7 +50,7 @@ SHORT fasp_param_check(input_param* inparam)
         inparam->AMG_coarsening_type <= 0 || inparam->AMG_coarsening_type > 4 ||
         inparam->AMG_coarse_solver < 0 || inparam->AMG_interpolation_type < 0 ||
         inparam->AMG_interpolation_type > 5 || inparam->AMG_smoother < 0 ||
-        inparam->AMG_smoother > 20 || inparam->AMG_strong_threshold < 0.0 ||
+        inparam->AMG_smoother > 30 || inparam->AMG_strong_threshold < 0.0 ||
         inparam->AMG_strong_threshold > 0.9999 ||
         inparam->AMG_truncation_threshold < 0.0 ||
         inparam->AMG_truncation_threshold > 0.9999 || inparam->AMG_max_row_sum < 0.0 ||
@@ -622,10 +622,12 @@ void fasp_param_input(const char* fname, input_param* inparam)
                 status = ERROR_INPUT_PAR;
                 break;
             }
+            // printf("buffer: %s\n", buffer);
 
             if ((strcmp(buffer, "JACOBI") == 0) || (strcmp(buffer, "jacobi") == 0))
                 inparam->AMG_smoother = SMOOTHER_JACOBI;
-            else if ((strcmp(buffer, "JACOBIF") == 0) || (strcmp(buffer, "jacobif") == 0))
+            else if ((strcmp(buffer, "JACOBIF") == 0) ||
+                     (strcmp(buffer, "jacobif") == 0))
                 inparam->AMG_smoother = SMOOTHER_JACOBIF;
             else if ((strcmp(buffer, "GS") == 0) || (strcmp(buffer, "gs") == 0))
                 inparam->AMG_smoother = SMOOTHER_GS;
@@ -651,6 +653,10 @@ void fasp_param_input(const char* fname, input_param* inparam)
                 inparam->AMG_smoother = SMOOTHER_BLKOIL;
             else if ((strcmp(buffer, "SPETEN") == 0) || (strcmp(buffer, "speten") == 0))
                 inparam->AMG_smoother = SMOOTHER_SPETEN;
+            else if ((strcmp(buffer, "CPRGS") == 0) || (strcmp(buffer, "cprgs") == 0))
+                inparam->AMG_smoother = SMOOTHER_CPRGS;
+            else if ((strcmp(buffer, "CPTRGS") == 0) || (strcmp(buffer, "cptrgs") == 0))
+                inparam->AMG_smoother = SMOOTHER_CPTRGS;
             else {
                 status = ERROR_INPUT_PAR;
                 break;
@@ -727,6 +733,22 @@ void fasp_param_input(const char* fname, input_param* inparam)
                 break;
             }
             inparam->AMG_aggregation_type = ibuff;
+            if (fscanf(fp, "%*[^\n]")) { /* skip rest of line and do nothing */
+            };
+        }
+
+        else if (strcmp(buffer, "AMG_aggregation_norm_type") == 0) {
+            val = fscanf(fp, "%s", buffer);
+            if (val != 1 || strcmp(buffer, "=") != 0) {
+                status = ERROR_INPUT_PAR;
+                break;
+            }
+            val = fscanf(fp, "%d", &ibuff);
+            if (val != 1) {
+                status = ERROR_INPUT_PAR;
+                break;
+            }
+            inparam->AMG_aggregation_norm_type = ibuff;
             if (fscanf(fp, "%*[^\n]")) { /* skip rest of line and do nothing */
             };
         }

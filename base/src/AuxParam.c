@@ -303,8 +303,11 @@ void fasp_param_set(const int argc, const char* argv[], input_param* iniparam)
  *
  * Modified by Chensong Zhang (12/29/2013): rewritten
  */
-void fasp_param_init(const input_param* iniparam, ITS_param* itsparam,
-                     AMG_param* amgparam, ILU_param* iluparam, SWZ_param* swzparam)
+void fasp_param_init(const input_param* iniparam,
+                     ITS_param*         itsparam,
+                     AMG_param*         amgparam,
+                     ILU_param*         iluparam,
+                     SWZ_param*         swzparam)
 {
 #if DEBUG_MODE > 1
     total_alloc_mem   = 0; // initialize total memeory amount
@@ -404,14 +407,15 @@ void fasp_param_input_init(input_param* iniparam)
     iniparam->AMG_aggressive_path      = 1;
 
     // Aggregation AMG specific
-    iniparam->AMG_aggregation_type   = PAIRWISE;
-    iniparam->AMG_quality_bound      = 8.0;
-    iniparam->AMG_pair_number        = 2;
-    iniparam->AMG_strong_coupled     = 0.25;
-    iniparam->AMG_max_aggregation    = 9;
-    iniparam->AMG_tentative_smooth   = 0.67;
-    iniparam->AMG_smooth_filter      = ON;
-    iniparam->AMG_smooth_restriction = ON;
+    iniparam->AMG_aggregation_type      = PAIRWISE;
+    iniparam->AMG_quality_bound         = 8.0;
+    iniparam->AMG_pair_number           = 2;
+    iniparam->AMG_strong_coupled        = 0.25;
+    iniparam->AMG_max_aggregation       = 9;
+    iniparam->AMG_tentative_smooth      = 0.67;
+    iniparam->AMG_smooth_filter         = ON;
+    iniparam->AMG_smooth_restriction    = ON;
+    iniparam->AMG_aggregation_norm_type = -1;
 }
 
 /**
@@ -456,14 +460,15 @@ void fasp_param_amg_init(AMG_param* amgparam)
     amgparam->aggressive_path      = 1;
 
     // Aggregation AMG specific
-    amgparam->aggregation_type   = PAIRWISE;
-    amgparam->quality_bound      = 10.0;
-    amgparam->pair_number        = 2;
-    amgparam->strong_coupled     = 0.08;
-    amgparam->max_aggregation    = 20;
-    amgparam->tentative_smooth   = 0.67;
-    amgparam->smooth_filter      = ON;
-    amgparam->smooth_restriction = ON;
+    amgparam->aggregation_type      = PAIRWISE;
+    amgparam->quality_bound         = 10.0;
+    amgparam->pair_number           = 2;
+    amgparam->strong_coupled        = 0.08;
+    amgparam->max_aggregation       = 20;
+    amgparam->tentative_smooth      = 0.67;
+    amgparam->smooth_filter         = ON;
+    amgparam->smooth_restriction    = ON;
+    amgparam->aggregation_norm_type = -1;
 
     // ILU smoother parameters
     amgparam->ILU_type    = ILUk;
@@ -484,6 +489,77 @@ void fasp_param_amg_init(AMG_param* amgparam)
 }
 
 /**
+ * \fn void fasp_param_amg_copy (AMG_param *amgparam_src, AMG_param *amgparam_dest)
+ *
+ * \brief Copy AMG parameters from amgparam_src to amgparam_dest
+ *
+ * \param amgparam_src     Sources parameters for AMG
+ * \param amgparam_dest    Destination parameters for AMG
+ *
+ * \author Li Zhao
+ * \date   2023/04/30
+ */
+void fasp_param_amg_copy(AMG_param* amgparam_src, AMG_param* amgparam_dest)
+{
+    // General AMG parameters
+    amgparam_dest->AMG_type            = amgparam_src->AMG_type;
+    amgparam_dest->print_level         = amgparam_src->print_level;
+    amgparam_dest->maxit               = amgparam_src->maxit;
+    amgparam_dest->tol                 = amgparam_src->tol;
+    amgparam_dest->max_levels          = amgparam_src->max_levels;
+    amgparam_dest->coarse_dof          = amgparam_src->coarse_dof;
+    amgparam_dest->cycle_type          = amgparam_src->cycle_type;
+    amgparam_dest->smoother            = amgparam_src->smoother;
+    amgparam_dest->smooth_order        = amgparam_src->smooth_order;
+    amgparam_dest->presmooth_iter      = amgparam_src->presmooth_iter;
+    amgparam_dest->postsmooth_iter     = amgparam_src->postsmooth_iter;
+    amgparam_dest->coarse_solver       = amgparam_src->coarse_solver;
+    amgparam_dest->relaxation          = amgparam_src->relaxation;
+    amgparam_dest->polynomial_degree   = amgparam_src->polynomial_degree;
+    amgparam_dest->coarse_scaling      = amgparam_src->coarse_scaling;
+    amgparam_dest->amli_degree         = amgparam_src->amli_degree;
+    amgparam_dest->amli_coef           = amgparam_src->amli_coef;
+    amgparam_dest->nl_amli_krylov_type = amgparam_src->nl_amli_krylov_type;
+
+    // Classical AMG specific
+    amgparam_dest->coarsening_type      = amgparam_src->coarsening_type;
+    amgparam_dest->interpolation_type   = amgparam_src->interpolation_type;
+    amgparam_dest->max_row_sum          = amgparam_src->max_row_sum;
+    amgparam_dest->strong_threshold     = amgparam_src->strong_threshold;
+    amgparam_dest->truncation_threshold = amgparam_src->truncation_threshold;
+    amgparam_dest->aggressive_level     = amgparam_src->aggressive_level;
+    amgparam_dest->aggressive_path      = amgparam_src->aggressive_path;
+
+    // Aggregation AMG specific
+    amgparam_dest->aggregation_type      = amgparam_src->aggregation_type;
+    amgparam_dest->quality_bound         = amgparam_src->quality_bound;
+    amgparam_dest->pair_number           = amgparam_src->pair_number;
+    amgparam_dest->strong_coupled        = amgparam_src->strong_coupled;
+    amgparam_dest->max_aggregation       = amgparam_src->max_aggregation;
+    amgparam_dest->tentative_smooth      = amgparam_src->tentative_smooth;
+    amgparam_dest->smooth_filter         = amgparam_src->smooth_filter;
+    amgparam_dest->smooth_restriction    = amgparam_src->smooth_restriction;
+    amgparam_dest->aggregation_norm_type = amgparam_src->aggregation_norm_type;
+
+    // ILU smoother parameters
+    amgparam_dest->ILU_type    = amgparam_src->ILU_type;
+    amgparam_dest->ILU_levels  = amgparam_src->ILU_levels;
+    amgparam_dest->ILU_lfil    = amgparam_src->ILU_lfil;
+    amgparam_dest->ILU_droptol = amgparam_src->ILU_droptol;
+    amgparam_dest->ILU_relax   = amgparam_src->ILU_relax;
+
+    // Schwarz smoother parameters
+    amgparam_dest->SWZ_levels    = amgparam_src->SWZ_levels;
+    amgparam_dest->SWZ_mmsize    = amgparam_src->SWZ_mmsize;
+    amgparam_dest->SWZ_maxlvl    = amgparam_src->SWZ_maxlvl;
+    amgparam_dest->SWZ_type      = amgparam_src->SWZ_type;
+    amgparam_dest->SWZ_blksolver = amgparam_src->SWZ_blksolver;
+
+    // reduction-based AMG parameters
+    amgparam_dest->theta = amgparam_src->theta;
+}
+
+/**
  * \fn void fasp_param_solver_init (ITS_param *itsparam)
  *
  * \brief Initialize ITS_param
@@ -496,7 +572,7 @@ void fasp_param_amg_init(AMG_param* amgparam)
 void fasp_param_solver_init(ITS_param* itsparam)
 {
     itsparam->print_level   = PRINT_NONE;
-    itsparam->itsolver_type = SOLVER_CG;
+    itsparam->itsolver_type = SOLVER_VFGMRES;
     itsparam->decoup_type   = 1;
     itsparam->precond_type  = PREC_AMG;
     itsparam->stop_type     = STOP_REL_RES;
@@ -597,14 +673,15 @@ void fasp_param_amg_set(AMG_param* param, const input_param* iniparam)
     param->aggressive_level     = iniparam->AMG_aggressive_level;
     param->aggressive_path      = iniparam->AMG_aggressive_path;
 
-    param->aggregation_type   = iniparam->AMG_aggregation_type;
-    param->pair_number        = iniparam->AMG_pair_number;
-    param->quality_bound      = iniparam->AMG_quality_bound;
-    param->strong_coupled     = iniparam->AMG_strong_coupled;
-    param->max_aggregation    = iniparam->AMG_max_aggregation;
-    param->tentative_smooth   = iniparam->AMG_tentative_smooth;
-    param->smooth_filter      = iniparam->AMG_smooth_filter;
-    param->smooth_restriction = iniparam->AMG_smooth_restriction;
+    param->aggregation_type      = iniparam->AMG_aggregation_type;
+    param->pair_number           = iniparam->AMG_pair_number;
+    param->quality_bound         = iniparam->AMG_quality_bound;
+    param->strong_coupled        = iniparam->AMG_strong_coupled;
+    param->max_aggregation       = iniparam->AMG_max_aggregation;
+    param->tentative_smooth      = iniparam->AMG_tentative_smooth;
+    param->smooth_filter         = iniparam->AMG_smooth_filter;
+    param->smooth_restriction    = iniparam->AMG_smooth_restriction;
+    param->aggregation_norm_type = iniparam->AMG_aggregation_norm_type;
 
     param->ILU_levels  = iniparam->AMG_ILU_levels;
     param->ILU_type    = iniparam->ILU_type;

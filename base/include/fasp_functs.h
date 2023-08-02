@@ -84,17 +84,15 @@ FASP_API void fasp_param_input(const char* fname, input_param* inparam);
 
 /*-------- In file: AuxMemory.c --------*/
 
-FASP_API void * fasp_mem_calloc (const unsigned int  size,
-                                 const unsigned int  type);
+FASP_API void* fasp_mem_calloc(const unsigned int size, const unsigned int type);
 
-FASP_API void * fasp_mem_realloc (void           *oldmem,
-                                  const LONGLONG  tsize);
+FASP_API void* fasp_mem_realloc(void* oldmem, const LONGLONG tsize);
 
-FASP_API void fasp_mem_free (void *mem);
+FASP_API void fasp_mem_free(void* mem);
 
-FASP_API void fasp_mem_usage ( void );
+FASP_API void fasp_mem_usage(void);
 
-FASP_API SHORT fasp_mem_iludata_check (const ILU_data *iludata);
+FASP_API SHORT fasp_mem_iludata_check(const ILU_data* iludata);
 
 
 /*-------- In file: AuxMessage.c --------*/
@@ -126,12 +124,17 @@ FASP_API void fasp_chkerr (const SHORT  status,
 
 FASP_API void fasp_param_set(const int argc, const char* argv[], input_param* iniparam);
 
-FASP_API void fasp_param_init(const input_param* iniparam, ITS_param* itsparam,
-                              AMG_param* amgparam, ILU_param* iluparam, SWZ_param* swzparam);
+FASP_API void fasp_param_init(const input_param* iniparam,
+                              ITS_param*         itsparam,
+                              AMG_param*         amgparam,
+                              ILU_param*         iluparam,
+                              SWZ_param*         swzparam);
 
 FASP_API void fasp_param_input_init(input_param* iniparam);
 
 FASP_API void fasp_param_amg_init(AMG_param* amgparam);
+
+FASP_API void fasp_param_amg_copy(AMG_param* amgparam_src, AMG_param* amgparam_dest);
 
 FASP_API void fasp_param_solver_init(ITS_param* itsparam);
 
@@ -221,7 +224,7 @@ FASP_API void fasp_set_gs_threads (const INT mythreads,
 
 /*-------- In file: AuxTiming.c --------*/
 
-FASP_API void fasp_gettime (REAL *time);
+FASP_API void fasp_gettime(REAL* time);
 
 
 /*-------- In file: AuxVector.c --------*/
@@ -543,123 +546,71 @@ FASP_API void fasp_dcsr_swz_backward(SWZ_data* swzdata, SWZ_param* swzparam, dve
 
 /*-------- In file: BlaSmallMat.c --------*/
 
-FASP_API void fasp_blas_smat_axm (REAL       *a,
-                                  const INT   n,
-                                  const REAL  alpha);
+FASP_API void fasp_blas_smat_axm(REAL* a, const INT n, const REAL alpha);
 
-FASP_API void fasp_blas_smat_add (const REAL  *a,
-                                  const REAL  *b,
-                                  const INT    n,
-                                  const REAL   alpha,
-                                  const REAL   beta,
-                                  REAL        *c);
+FASP_API void fasp_blas_smat_axm1(REAL* a, const INT n, const REAL alpha, REAL* b);
 
-FASP_API void fasp_blas_smat_mxv_nc2 (const REAL  *a,
-                                      const REAL  *b,
-                                      REAL        *c);
+FASP_API void fasp_blas_smat_add(const REAL* a,
+                                 const REAL* b,
+                                 const INT   n,
+                                 const REAL  alpha,
+                                 const REAL  beta,
+                                 REAL*       c);
 
-FASP_API void fasp_blas_smat_mxv_nc3 (const REAL  *a,
-                                      const REAL  *b,
-                                      REAL        *c);
+FASP_API void fasp_blas_smat_mxv_nc2(const REAL* a, const REAL* b, REAL* c);
 
-FASP_API void fasp_blas_smat_mxv_nc4 (const REAL  *a,
-                                      const REAL  *b,
-                                      REAL        *c);
+FASP_API void fasp_blas_smat_mxv_nc3(const REAL* a, const REAL* b, REAL* c);
 
-FASP_API void fasp_blas_smat_mxv_nc5 (const REAL  *a,
-                                      const REAL  *b,
-                                      REAL        *c);
+FASP_API void fasp_blas_smat_mxv_nc4(const REAL* a, const REAL* b, REAL* c);
 
-FASP_API void fasp_blas_smat_mxv_nc7 (const REAL  *a,
-                                      const REAL  *b,
-                                      REAL        *c);
+FASP_API void fasp_blas_smat_mxv_nc5(const REAL* a, const REAL* b, REAL* c);
 
-FASP_API void fasp_blas_smat_mxv (const REAL  *a,
-                                  const REAL  *b,
-                                  REAL        *c,
-                                  const INT    n);
+FASP_API void fasp_blas_smat_mxv_nc7(const REAL* a, const REAL* b, REAL* c);
 
-FASP_API void fasp_blas_smat_mul_nc2 (const REAL  *a,
-                                      const REAL  *b,
-                                      REAL        *c);
+FASP_API void fasp_blas_smat_mxv(const REAL* a, const REAL* b, REAL* c, const INT n);
 
-FASP_API void fasp_blas_smat_mul_nc3 (const REAL  *a,
-                                      const REAL  *b,
-                                      REAL        *c);
+FASP_API void fasp_blas_smat_mul_nc2(const REAL* a, const REAL* b, REAL* c);
 
-FASP_API void fasp_blas_smat_mul_nc4 (const REAL  *a,
-                                      const REAL  *b,
-                                      REAL        *c);
+FASP_API void fasp_blas_smat_mul_nc3(const REAL* a, const REAL* b, REAL* c);
 
-FASP_API void fasp_blas_smat_mul_nc5 (const REAL  *a,
-                                      const REAL  *b,
-                                      REAL        *c);
+FASP_API void fasp_blas_smat_mul_nc4(const REAL* a, const REAL* b, REAL* c);
 
-FASP_API void fasp_blas_smat_mul_nc7 (const REAL  *a,
-                                      const REAL  *b,
-                                      REAL        *c);
+FASP_API void fasp_blas_smat_mul_nc5(const REAL* a, const REAL* b, REAL* c);
 
-FASP_API void fasp_blas_smat_mul (const REAL  *a,
-                                  const REAL  *b,
-                                  REAL        *c,
-                                  const INT    n);
+FASP_API void fasp_blas_smat_mul_nc7(const REAL* a, const REAL* b, REAL* c);
 
-FASP_API void fasp_blas_smat_ypAx_nc2 (const REAL  *A,
-                                       const REAL  *x,
-                                       REAL        *y);
+FASP_API void fasp_blas_smat_mul(const REAL* a, const REAL* b, REAL* c, const INT n);
 
-FASP_API void fasp_blas_smat_ypAx_nc3 (const REAL  *A,
-                                       const REAL  *x,
-                                       REAL        *y);
+FASP_API void fasp_blas_smat_ypAx_nc2(const REAL* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_smat_ypAx_nc4 (const REAL  *A,
-                                       const REAL  *x,
-                                       REAL        *y);
+FASP_API void fasp_blas_smat_ypAx_nc3(const REAL* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_smat_ypAx_nc5 (const REAL  *A,
-                                       const REAL  *x,
-                                       REAL        *y);
+FASP_API void fasp_blas_smat_ypAx_nc4(const REAL* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_smat_ypAx_nc7 (const REAL  *A,
-                                       const REAL  *x,
-                                       REAL        *y);
+FASP_API void fasp_blas_smat_ypAx_nc5(const REAL* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_smat_ypAx (const REAL  *A,
-                                   const REAL  *x,
-                                   REAL        *y,
-                                   const INT    n);
+FASP_API void fasp_blas_smat_ypAx_nc7(const REAL* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_smat_ymAx_nc2 (const REAL  *A,
-                                       const REAL  *x,
-                                       REAL        *y);
+FASP_API void fasp_blas_smat_ypAx(const REAL* A, const REAL* x, REAL* y, const INT n);
 
-FASP_API void fasp_blas_smat_ymAx_nc3 (const REAL  *A,
-                                       const REAL  *x,
-                                       REAL        *y);
+FASP_API void fasp_blas_smat_ymAx_nc2(const REAL* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_smat_ymAx_nc4 (const REAL  *A,
-                                       const REAL  *x,
-                                       REAL        *y);
+FASP_API void fasp_blas_smat_ymAx_nc3(const REAL* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_smat_ymAx_nc5 (const REAL  *A,
-                                       const REAL  *x,
-                                       REAL        *y);
+FASP_API void fasp_blas_smat_ymAx_nc4(const REAL* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_smat_ymAx_nc7 (const REAL  *A,
-                                       const REAL  *x,
-                                       REAL        *y);
+FASP_API void fasp_blas_smat_ymAx_nc5(const REAL* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_smat_ymAx (const REAL  *A,
-                                   const REAL  *x,
-                                   REAL        *y,
-                                   const INT    n);
+FASP_API void fasp_blas_smat_ymAx_nc7(const REAL* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_smat_aAxpby (const REAL   alpha,
-                                     const REAL  *A,
-                                     const REAL  *x,
-                                     const REAL   beta,
-                                     REAL        *y,
-                                     const INT    n);
+FASP_API void fasp_blas_smat_ymAx(const REAL* A, const REAL* x, REAL* y, const INT n);
+
+FASP_API void fasp_blas_smat_aAxpby(const REAL  alpha,
+                                    const REAL* A,
+                                    const REAL* x,
+                                    const REAL  beta,
+                                    REAL*       y,
+                                    const INT   n);
 
 
 /*-------- In file: BlaSmallMatInv.c --------*/
@@ -719,65 +670,72 @@ FASP_API void fasp_dblc_free (dBLCmat *A);
 
 /*-------- In file: BlaSparseBSR.c --------*/
 
-FASP_API dBSRmat fasp_dbsr_create (const INT  ROW,
-                                   const INT  COL,
-                                   const INT  NNZ,
-                                   const INT  nb,
-                                   const INT  storage_manner);
+FASP_API dBSRmat fasp_dbsr_create(
+             const INT ROW, const INT COL, const INT NNZ, const INT nb, const INT storage_manner);
 
-FASP_API void fasp_dbsr_alloc (const INT  ROW,
-                               const INT  COL,
-                               const INT  NNZ,
-                               const INT  nb,
-                               const INT  storage_manner,
-                               dBSRmat   *A);
+FASP_API void fasp_dbsr_alloc(const INT ROW,
+                              const INT COL,
+                              const INT NNZ,
+                              const INT nb,
+                              const INT storage_manner,
+                              dBSRmat*  A);
 
-FASP_API void fasp_dbsr_free (dBSRmat *A);
+FASP_API void fasp_dbsr_free(dBSRmat* A);
 
-FASP_API void fasp_dbsr_cp (const dBSRmat *A,
-                            dBSRmat       *B);
+FASP_API void fasp_dbsr_cp(const dBSRmat* A, dBSRmat* B);
 
-FASP_API INT fasp_dbsr_trans (const dBSRmat *A,
-                              dBSRmat       *AT);
+FASP_API SHORT fasp_dbsr_compress_inplace(dBSRmat* A, const REAL dtol);
 
-FASP_API SHORT fasp_dbsr_getblk (const dBSRmat  *A,
-                                 const INT      *Is,
-                                 const INT      *Js,
-                                 const INT       m,
-                                 const INT       n,
-                                 dBSRmat        *B);
+FASP_API INT fasp_dbsr_trans(const dBSRmat* A, dBSRmat* AT);
 
-FASP_API SHORT fasp_dbsr_diagpref (dBSRmat *A);
+FASP_API SHORT fasp_dbsr_getblk(const dBSRmat* A,
+                                const INT*     Is,
+                                const INT*     Js,
+                                const INT      m,
+                                const INT      n,
+                                dBSRmat*       B);
 
-FASP_API dvector fasp_dbsr_getdiaginv (const dBSRmat *A);
+FASP_API SHORT fasp_dbsr_diagpref(dBSRmat* A);
 
-FASP_API dBSRmat fasp_dbsr_diaginv (const dBSRmat *A);
+FASP_API dvector fasp_dbsr_getdiaginv(const dBSRmat* A);
 
-FASP_API dBSRmat fasp_dbsr_diaginv2 (const dBSRmat *A,
-                                     REAL          *diaginv);
+FASP_API dBSRmat fasp_dbsr_diaginv(const dBSRmat* A);
 
-FASP_API dBSRmat fasp_dbsr_diaginv3 (const dBSRmat *A,
-                                     REAL          *diaginv);
+FASP_API dBSRmat fasp_dbsr_diaginv2(const dBSRmat* A, REAL* diaginv);
 
-FASP_API dBSRmat fasp_dbsr_diaginv4 (const dBSRmat *A,
-                                     REAL          *diaginv);
+FASP_API dBSRmat fasp_dbsr_diaginv3(const dBSRmat* A, REAL* diaginv);
 
-FASP_API void fasp_dbsr_getdiag (INT            n,
-                                 const dBSRmat *A,
-                                 REAL          *diag );
+FASP_API dBSRmat fasp_dbsr_diaginv4(const dBSRmat* A, REAL* diaginv);
 
-FASP_API dBSRmat fasp_dbsr_diagLU (const dBSRmat *A,
-                                   REAL          *DL,
-                                   REAL          *DU);
+FASP_API void fasp_dbsr_getdiag(INT n, const dBSRmat* A, REAL* diag);
 
-FASP_API dBSRmat fasp_dbsr_diagLU2 (dBSRmat *A,
-                                    REAL    *DL,
-                                    REAL    *DU);
+FASP_API dBSRmat fasp_dbsr_diagLU(const dBSRmat* A, REAL* DL, REAL* DU);
 
-FASP_API dBSRmat fasp_dbsr_perm (const dBSRmat *A,
-                                 const INT     *P);
+FASP_API dBSRmat fasp_dbsr_diagLU2(dBSRmat* A, REAL* DL, REAL* DU);
 
-FASP_API INT fasp_dbsr_merge_col (dBSRmat *A);
+FASP_API dBSRmat fasp_dbsr_perm(const dBSRmat* A, const INT* P);
+
+FASP_API INT fasp_dbsr_merge_col(dBSRmat* A);
+
+FASP_API void dBSRmat_Multicoloring_Theta(
+             dBSRmat* A, REAL theta, INT* rowmax, INT* groups, INT** ic_out, INT** icmap_out);
+
+
+/*-------- In file: BlaSparseCheck.c --------*/
+
+FASP_API INT fasp_check_diagpos (const dCSRmat *A);
+
+FASP_API SHORT fasp_check_diagzero (const dCSRmat *A);
+
+FASP_API INT fasp_check_diagdom (const dCSRmat *A);
+
+FASP_API INT fasp_check_symm (const dCSRmat *A);
+
+FASP_API void fasp_check_dCSRmat (const dCSRmat *A);
+
+FASP_API SHORT fasp_check_iCSRmat (const iCSRmat *A);
+
+FASP_API void fasp_check_ordering (dCSRmat *A);
 
 
 /*-------- In file: BlaSparseCOO.c --------*/
@@ -872,23 +830,6 @@ FASP_API dCSRLmat * fasp_dcsrl_create (const INT num_rows,
                                        const INT num_nonzeros);
 
 FASP_API void fasp_dcsrl_free (dCSRLmat *A);
-
-
-/*-------- In file: BlaSparseCheck.c --------*/
-
-FASP_API INT fasp_check_diagpos (const dCSRmat *A);
-
-FASP_API SHORT fasp_check_diagzero (const dCSRmat *A);
-
-FASP_API INT fasp_check_diagdom (const dCSRmat *A);
-
-FASP_API INT fasp_check_symm (const dCSRmat *A);
-
-FASP_API void fasp_check_dCSRmat (const dCSRmat *A);
-
-FASP_API SHORT fasp_check_iCSRmat (const iCSRmat *A);
-
-FASP_API void fasp_check_ordering (dCSRmat *A);
 
 
 /*-------- In file: BlaSparseSTR.c --------*/
@@ -1063,57 +1004,54 @@ FASP_API void fasp_blas_ldblc_aAxpy (const REAL      alpha,
 
 /*-------- In file: BlaSpmvBSR.c --------*/
 
-FASP_API void fasp_blas_dbsr_axm (dBSRmat     *A,
-                                  const REAL   alpha);
+FASP_API SHORT fasp_blas_dbsr_add(
+             const dBSRmat* A, const REAL alpha, const dBSRmat* B, const REAL beta, dBSRmat* C);
 
-FASP_API void fasp_blas_dbsr_aAxpby (const REAL   alpha,
-                                     dBSRmat     *A,
-                                     REAL        *x,
-                                     const REAL   beta,
-                                     REAL        *y );
+FASP_API void fasp_blas_dbsr_axm(dBSRmat* A, const REAL alpha);
 
-FASP_API void fasp_blas_dbsr_aAxpy (const REAL      alpha,
-                                    const dBSRmat  *A,
-                                    const REAL     *x,
-                                    REAL           *y);
+FASP_API void fasp_blas_dbsr_aAxpby(
+             const REAL alpha, dBSRmat* A, REAL* x, const REAL beta, REAL* y);
 
-FASP_API void fasp_blas_dbsr_aAxpy_agg (const REAL      alpha,
-                                        const dBSRmat  *A,
-                                        const REAL     *x,
-                                        REAL           *y);
+FASP_API void fasp_blas_dbsr_aAxpy(const REAL alpha, const dBSRmat* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_dbsr_mxv (const dBSRmat  *A,
-                                  const REAL     *x,
-                                  REAL           *y);
+FASP_API void fasp_blas_dbsr_aAxpy_agg(const REAL     alpha,
+                                       const dBSRmat* A,
+                                       const REAL*    x,
+                                       REAL*          y);
 
-FASP_API void fasp_blas_dbsr_mxv_agg (const dBSRmat  *A,
-                                      const REAL     *x,
-                                      REAL           *y);
+FASP_API void fasp_blas_dbsr_mxv(const dBSRmat* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_dbsr_mxm (const dBSRmat  *A,
-                                  const dBSRmat  *B,
-                                  dBSRmat        *C);
+FASP_API void fasp_blas_dbsr_mxv_agg(const dBSRmat* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_dbsr_rap1 (const dBSRmat  *R,
-                                   const dBSRmat  *A,
-                                   const dBSRmat  *P,
-                                   dBSRmat        *B);
+FASP_API void fasp_blas_dbsr_mxm2(const dBSRmat* A, const dBSRmat* B, dBSRmat* C);
 
-FASP_API void fasp_blas_dbsr_rap (const dBSRmat  *R,
-                                  const dBSRmat  *A,
-                                  const dBSRmat  *P,
-                                  dBSRmat        *B);
+FASP_API void fasp_blas_dbsr_mxm(const dBSRmat* A, const dBSRmat* B, dBSRmat* C);
 
-FASP_API void fasp_blas_dbsr_rap_agg (const dBSRmat  *R,
-                                      const dBSRmat  *A,
-                                      const dBSRmat  *P,
-                                      dBSRmat        *B);
+FASP_API void fasp_blas_dbsr_mxm_adb(const dBSRmat* A, dvector* D, const dBSRmat* B, dBSRmat* C);
+
+FASP_API void fasp_blas_dbsr_schur(
+             dvector* D2, const dBSRmat* A, dvector* D1, const dBSRmat* B, dBSRmat* C);
+
+FASP_API void fasp_blas_dbsr_rap1(const dBSRmat* R,
+                                  const dBSRmat* A,
+                                  const dBSRmat* P,
+                                  dBSRmat*       B);
+
+FASP_API void fasp_blas_dbsr_rap(const dBSRmat* R,
+                                 const dBSRmat* A,
+                                 const dBSRmat* P,
+                                 dBSRmat*       B);
+
+FASP_API void fasp_blas_dbsr_rap_agg(const dBSRmat* R,
+                                     const dBSRmat* A,
+                                     const dBSRmat* P,
+                                     dBSRmat*       B);
 
 
 /*-------- In file: BlaSpmvCSR.c --------*/
 
-FASP_API SHORT fasp_blas_dcsr_add(const dCSRmat* A, const REAL alpha, const dCSRmat* B,
-                                  const REAL beta, dCSRmat* C);
+FASP_API SHORT fasp_blas_dcsr_add(
+             const dCSRmat* A, const REAL alpha, const dCSRmat* B, const REAL beta, dCSRmat* C);
 
 FASP_API void fasp_blas_dcsr_axm(dCSRmat* A, const REAL alpha);
 
@@ -1123,31 +1061,54 @@ FASP_API void fasp_blas_dcsr_mxv_agg(const dCSRmat* A, const REAL* x, REAL* y);
 
 FASP_API void fasp_blas_dcsr_aAxpy(const REAL alpha, const dCSRmat* A, const REAL* x, REAL* y);
 
-FASP_API void fasp_blas_ldcsr_aAxpy(const REAL alpha, const dCSRmat* A, const LONGREAL* x,
-                                    REAL* y);
+FASP_API void fasp_blas_ldcsr_aAxpy(const REAL      alpha,
+                                    const dCSRmat*  A,
+                                    const LONGREAL* x,
+                                    REAL*           y);
 
-FASP_API void fasp_blas_dcsr_aAxpy_agg(const REAL alpha, const dCSRmat* A, const REAL* x,
-                                       REAL* y);
+FASP_API void fasp_blas_dcsr_aAxpy_agg(const REAL     alpha,
+                                       const dCSRmat* A,
+                                       const REAL*    x,
+                                       REAL*          y);
 
 FASP_API REAL fasp_blas_dcsr_vmv(const dCSRmat* A, const REAL* x, const REAL* y);
 
 FASP_API void fasp_blas_dcsr_mxm(const dCSRmat* A, const dCSRmat* B, dCSRmat* C);
 
-FASP_API void fasp_blas_dcsr_rap(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P,
-                                 dCSRmat* RAP);
+FASP_API void fasp_blas_dcsr_rap(const dCSRmat* R,
+                                 const dCSRmat* A,
+                                 const dCSRmat* P,
+                                 dCSRmat*       RAP);
 
-FASP_API void fasp_blas_dcsr_rap_agg(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P,
-                                     dCSRmat* RAP);
+FASP_API void fasp_blas_dcsr_rap_agg(const dCSRmat* R,
+                                     const dCSRmat* A,
+                                     const dCSRmat* P,
+                                     dCSRmat*       RAP);
 
-FASP_API void fasp_blas_dcsr_rap_agg1(const dCSRmat* R, const dCSRmat* A, const dCSRmat* P,
-                                      dCSRmat* B);
+FASP_API void fasp_blas_dcsr_rap_agg1(const dCSRmat* R,
+                                      const dCSRmat* A,
+                                      const dCSRmat* P,
+                                      dCSRmat*       B);
 
-FASP_API void fasp_blas_dcsr_ptap(const dCSRmat* Pt, const dCSRmat* A, const dCSRmat* P,
-                                  dCSRmat* Ac);
+FASP_API void fasp_blas_dcsr_ptap(const dCSRmat* Pt,
+                                  const dCSRmat* A,
+                                  const dCSRmat* P,
+                                  dCSRmat*       Ac);
 
-FASP_API dCSRmat fasp_blas_dcsr_rap2(INT* ir, INT* jr, REAL* r, INT* ia, INT* ja, REAL* a,
-                                     INT* ipt, INT* jpt, REAL* pt, INT n, INT nc, INT* maxrpout,
-                                     INT* ipin, INT* jpin);
+FASP_API dCSRmat fasp_blas_dcsr_rap2(INT*  ir,
+                                     INT*  jr,
+                                     REAL* r,
+                                     INT*  ia,
+                                     INT*  ja,
+                                     REAL* a,
+                                     INT*  ipt,
+                                     INT*  jpt,
+                                     REAL* pt,
+                                     INT   n,
+                                     INT   nc,
+                                     INT*  maxrpout,
+                                     INT*  ipin,
+                                     INT*  jpin);
 
 FASP_API void fasp_blas_dcsr_rap4(dCSRmat* R, dCSRmat* A, dCSRmat* P, dCSRmat* B, INT* icor_ysk);
 
@@ -1200,138 +1161,117 @@ FASP_API REAL fasp_blas_dvec_relerr (const dvector *x,
 
 /*-------- In file: ItrSmootherBSR.c --------*/
 
-FASP_API void fasp_smoother_dbsr_jacobi (dBSRmat *A,
-                                         dvector *b,
-                                         dvector *u);
+FASP_API void fasp_smoother_dbsr_jacobi(dBSRmat* A, dvector* b, dvector* u);
 
-FASP_API void fasp_smoother_dbsr_jacobi_setup (dBSRmat *A,
-                                               REAL    *diaginv);
+FASP_API void fasp_smoother_dbsr_jacobi_setup(dBSRmat* A, REAL* diaginv);
 
-FASP_API void fasp_smoother_dbsr_jacobi1 (dBSRmat *A,
-                                          dvector *b,
-                                          dvector *u,
-                                          REAL    *diaginv);
+FASP_API void fasp_smoother_dbsr_jacobi1(dBSRmat* A, dvector* b, dvector* u, REAL* diaginv);
 
-FASP_API void fasp_smoother_dbsr_gs (dBSRmat *A,
-                                     dvector *b,
-                                     dvector *u,
-                                     INT      order,
-                                     INT     *mark );
+FASP_API void fasp_smoother_dbsr_gs(dBSRmat* A, dvector* b, dvector* u, INT order, INT* mark);
 
-FASP_API void fasp_smoother_dbsr_gs1 (dBSRmat *A,
-                                      dvector *b,
-                                      dvector *u,
+FASP_API void fasp_smoother_dbsr_gs1(
+             dBSRmat* A, dvector* b, dvector* u, INT order, INT* mark, REAL* diaginv);
+
+FASP_API void fasp_smoother_dbsr_gs_ascend(dBSRmat* A, dvector* b, dvector* u, REAL* diaginv);
+
+FASP_API void fasp_smoother_dbsr_gs_ascend1(dBSRmat* A, dvector* b, dvector* u);
+
+FASP_API void fasp_smoother_dbsr_gs_descend(dBSRmat* A, dvector* b, dvector* u, REAL* diaginv);
+
+FASP_API void fasp_smoother_dbsr_gs_descend1(dBSRmat* A, dvector* b, dvector* u);
+
+FASP_API void fasp_smoother_dbsr_gs_order1(
+             dBSRmat* A, dvector* b, dvector* u, REAL* diaginv, INT* mark);
+
+FASP_API void fasp_smoother_dbsr_gs_order2(
+             dBSRmat* A, dvector* b, dvector* u, INT* mark, REAL* work);
+
+FASP_API void fasp_smoother_dbsr_sor(
+             dBSRmat* A, dvector* b, dvector* u, INT order, INT* mark, REAL weight);
+
+FASP_API void fasp_smoother_dbsr_sor1(dBSRmat* A,
+                                      dvector* b,
+                                      dvector* u,
                                       INT      order,
-                                      INT     *mark,
-                                      REAL    *diaginv);
-
-FASP_API void fasp_smoother_dbsr_gs_ascend (dBSRmat *A,
-                                            dvector *b,
-                                            dvector *u,
-                                            REAL    *diaginv);
-
-FASP_API void fasp_smoother_dbsr_gs_ascend1 (dBSRmat *A,
-                                             dvector *b,
-                                             dvector *u);
-
-FASP_API void fasp_smoother_dbsr_gs_descend (dBSRmat *A,
-                                             dvector *b,
-                                             dvector *u,
-                                             REAL    *diaginv );
-
-FASP_API void fasp_smoother_dbsr_gs_descend1 (dBSRmat *A,
-                                              dvector *b,
-                                              dvector *u);
-
-FASP_API void fasp_smoother_dbsr_gs_order1 (dBSRmat *A,
-                                            dvector *b,
-                                            dvector *u,
-                                            REAL    *diaginv,
-                                            INT     *mark);
-
-FASP_API void fasp_smoother_dbsr_gs_order2 (dBSRmat *A,
-                                            dvector *b,
-                                            dvector *u,
-                                            INT     *mark,
-                                            REAL    *work);
-
-FASP_API void fasp_smoother_dbsr_sor (dBSRmat *A,
-                                      dvector *b,
-                                      dvector *u,
-                                      INT      order,
-                                      INT     *mark,
+                                      INT*     mark,
+                                      REAL*    diaginv,
                                       REAL     weight);
 
-FASP_API void fasp_smoother_dbsr_sor1 (dBSRmat *A,
-                                       dvector *b,
-                                       dvector *u,
-                                       INT      order,
-                                       INT     *mark,
-                                       REAL    *diaginv,
-                                       REAL     weight);
+FASP_API void fasp_smoother_dbsr_sor_ascend(
+             dBSRmat* A, dvector* b, dvector* u, REAL* diaginv, REAL weight);
 
-FASP_API void fasp_smoother_dbsr_sor_ascend (dBSRmat *A,
-                                             dvector *b,
-                                             dvector *u,
-                                             REAL    *diaginv,
-                                             REAL     weight);
+FASP_API void fasp_smoother_dbsr_sor_descend(
+             dBSRmat* A, dvector* b, dvector* u, REAL* diaginv, REAL weight);
 
-FASP_API void fasp_smoother_dbsr_sor_descend (dBSRmat *A,
-                                              dvector *b,
-                                              dvector *u,
-                                              REAL    *diaginv,
-                                              REAL     weight);
+FASP_API void fasp_smoother_dbsr_sor_order(
+             dBSRmat* A, dvector* b, dvector* u, REAL* diaginv, INT* mark, REAL weight);
 
-FASP_API void fasp_smoother_dbsr_sor_order (dBSRmat *A,
-                                            dvector *b,
-                                            dvector *u,
-                                            REAL    *diaginv,
-                                            INT     *mark,
-                                            REAL     weight);
-
-FASP_API void fasp_smoother_dbsr_ilu (dBSRmat *A,
-                                      dvector *b,
-                                      dvector *x,
-                                      void    *data);
+FASP_API void fasp_smoother_dbsr_ilu(dBSRmat* A, dvector* b, dvector* x, void* data);
 
 
 /*-------- In file: ItrSmootherCSR.c --------*/
 
-FASP_API void fasp_smoother_dcsr_jacobi_ff(dvector* x,
-                                           dCSRmat* A,
-                                           dvector* b,
-                                           const INT nsweeps,
-                                           INT* ordering,
+FASP_API void fasp_smoother_dcsr_jacobi_ff(dvector*   x,
+                                           dCSRmat*   A,
+                                           dvector*   b,
+                                           const INT  nsweeps,
+                                           INT*       ordering,
                                            const REAL relax);
 
-FASP_API void fasp_smoother_dcsr_jacobi(dvector* u, const INT i_1, const INT i_n, const INT s,
-                                        dCSRmat* A, dvector* b, INT L, const REAL w);
+FASP_API void fasp_smoother_dcsr_jacobi(dvector*   u,
+                                        const INT  i_1,
+                                        const INT  i_n,
+                                        const INT  s,
+                                        dCSRmat*   A,
+                                        dvector*   b,
+                                        INT        L,
+                                        const REAL w);
 
-FASP_API void fasp_smoother_dcsr_jacobi_ff(dvector* x, dCSRmat* A, dvector* b, const INT nsweeps, INT* ordering, const REAL relax);
+FASP_API void fasp_smoother_dcsr_gs(dvector*  u,
+                                    const INT i_1,
+                                    const INT i_n,
+                                    const INT s,
+                                    dCSRmat*  A,
+                                    dvector*  b,
+                                    INT       L);
 
-FASP_API void fasp_smoother_dcsr_gs(dvector* u, const INT i_1, const INT i_n, const INT s,
-                                    dCSRmat* A, dvector* b, INT L);
-
-FASP_API void fasp_smoother_dcsr_gs_cf(dvector* u, dCSRmat* A, dvector* b, INT L, INT* mark,
-                                       const INT order);
+FASP_API void fasp_smoother_dcsr_gs_cf(
+             dvector* u, dCSRmat* A, dvector* b, INT L, INT* mark, const INT order);
 
 FASP_API void fasp_smoother_dcsr_gs_ff(dvector* u, dCSRmat* A, dvector* b, INT L, INT* mark);
 
 FASP_API void fasp_smoother_dcsr_sgs(dvector* u, dCSRmat* A, dvector* b, INT L);
 
-FASP_API void fasp_smoother_dcsr_sor(dvector* u, const INT i_1, const INT i_n, const INT s,
-                                     dCSRmat* A, dvector* b, INT L, const REAL w);
+FASP_API void fasp_smoother_dcsr_sor(dvector*   u,
+                                     const INT  i_1,
+                                     const INT  i_n,
+                                     const INT  s,
+                                     dCSRmat*   A,
+                                     dvector*   b,
+                                     INT        L,
+                                     const REAL w);
 
-FASP_API void fasp_smoother_dcsr_sor_cf(dvector* u, dCSRmat* A, dvector* b, INT L, const REAL w,
-                                        INT* mark, const INT order);
+FASP_API void fasp_smoother_dcsr_sor_cf(
+             dvector* u, dCSRmat* A, dvector* b, INT L, const REAL w, INT* mark, const INT order);
 
 FASP_API void fasp_smoother_dcsr_ilu(dCSRmat* A, dvector* b, dvector* x, void* data);
 
-FASP_API void fasp_smoother_dcsr_kaczmarz(dvector* u, const INT i_1, const INT i_n, const INT s,
-                                          dCSRmat* A, dvector* b, INT L, const REAL w);
+FASP_API void fasp_smoother_dcsr_kaczmarz(dvector*   u,
+                                          const INT  i_1,
+                                          const INT  i_n,
+                                          const INT  s,
+                                          dCSRmat*   A,
+                                          dvector*   b,
+                                          INT        L,
+                                          const REAL w);
 
-FASP_API void fasp_smoother_dcsr_L1diag(dvector* u, const INT i_1, const INT i_n, const INT s,
-                                        dCSRmat* A, dvector* b, INT L);
+FASP_API void fasp_smoother_dcsr_L1diag(dvector*  u,
+                                        const INT i_1,
+                                        const INT i_n,
+                                        const INT s,
+                                        dCSRmat*  A,
+                                        dvector*  b,
+                                        INT       L);
 
 
 /*-------- In file: ItrSmootherCSRcr.c --------*/
@@ -1826,24 +1766,18 @@ FASP_API INT fasp_amg_coarsening_cr (const INT   i_0,
 
 /*-------- In file: PreAMGCoarsenRS.c --------*/
 
-FASP_API double dipower (double x, int n);
-
-FASP_API SHORT fasp_amg_coarsening_rs (dCSRmat    *A,
-                                       ivector    *vertices,
-                                       dCSRmat    *P,
-                                       iCSRmat    *S,
-                                       AMG_param  *param);
-
-FASP_API REAL rabs(REAL x);
+FASP_API SHORT fasp_amg_coarsening_rs(
+             dCSRmat* A, ivector* vertices, dCSRmat* P, iCSRmat* S, AMG_param* param);
 
 
 /*-------- In file: PreAMGInterp.c --------*/
 
-FASP_API void fasp_amg_interp (dCSRmat    *A,
-                               ivector    *vertices,
-                               dCSRmat    *P,
-                               iCSRmat    *S,
-                               AMG_param  *param);
+FASP_API void fasp_amg_interp(
+             dCSRmat* A, ivector* vertices, dCSRmat* P, iCSRmat* S, AMG_param* param);
+
+FASP_API void interp_STD(dCSRmat* A, ivector* vertices, dCSRmat* P, iCSRmat* S, AMG_param* param);
+
+FASP_API void interp_EXT(dCSRmat* A, ivector* vertices, dCSRmat* P, iCSRmat* S, AMG_param* param);
 
 
 /*-------- In file: PreAMGInterpEM.c --------*/
@@ -1866,28 +1800,26 @@ FASP_API SHORT fasp_amg_setup_rs (AMG_data   *mgl,
                                   AMG_param  *param);
 
 
-/*-------- In file: PreAMGSetupSA.c --------*/
-
-FASP_API SHORT fasp_amg_setup_sa (AMG_data   *mgl,
-                                  AMG_param  *param);
-
-
 /*-------- In file: PreAMGSetupSABSR.c --------*/
 
 FASP_API SHORT fasp_amg_setup_sa_bsr (AMG_data_bsr  *mgl,
                                       AMG_param     *param);
 
 
-/*-------- In file: PreAMGSetupUA.c --------*/
+/*-------- In file: PreAMGSetupSA.c --------*/
 
-FASP_API SHORT fasp_amg_setup_ua (AMG_data *mgl,
-                                  AMG_param *param);
+FASP_API SHORT fasp_amg_setup_sa (AMG_data   *mgl,
+                                  AMG_param  *param);
 
 
 /*-------- In file: PreAMGSetupUABSR.c --------*/
 
-FASP_API SHORT fasp_amg_setup_ua_bsr (AMG_data_bsr  *mgl,
-                                      AMG_param     *param);
+FASP_API SHORT fasp_amg_setup_ua_bsr(AMG_data_bsr* mgl, AMG_param* param);
+
+
+/*-------- In file: PreAMGSetupUA.c --------*/
+
+FASP_API SHORT fasp_amg_setup_ua(AMG_data* mgl, AMG_param* param);
 
 
 /*-------- In file: PreBLC.c --------*/
@@ -1939,49 +1871,29 @@ FASP_API void fasp_precond_dblc_sweeping (REAL *r,
 
 /*-------- In file: PreBSR.c --------*/
 
-FASP_API void fasp_precond_dbsr_diag (REAL *r,
-                                      REAL *z,
-                                      void *data);
+FASP_API void fasp_precond_dbsr_diag(REAL* r, REAL* z, void* data);
 
-FASP_API void fasp_precond_dbsr_diag_nc2 (REAL *r,
-                                          REAL *z,
-                                          void *data);
+FASP_API void fasp_precond_dbsr_diag_nc2(REAL* r, REAL* z, void* data);
 
-FASP_API void fasp_precond_dbsr_diag_nc3 (REAL *r,
-                                          REAL *z,
-                                          void *data);
+FASP_API void fasp_precond_dbsr_diag_nc3(REAL* r, REAL* z, void* data);
 
-FASP_API void fasp_precond_dbsr_diag_nc5 (REAL *r,
-                                          REAL *z,
-                                          void *data);
+FASP_API void fasp_precond_dbsr_diag_nc4(REAL* r, REAL* z, void* data);
 
-FASP_API void fasp_precond_dbsr_diag_nc7 (REAL *r, 
-                                          REAL *z,
-                                          void *data);
+FASP_API void fasp_precond_dbsr_diag_nc5(REAL* r, REAL* z, void* data);
 
-FASP_API void fasp_precond_dbsr_ilu (REAL *r, 
-                                     REAL *z,
-                                     void *data);
+FASP_API void fasp_precond_dbsr_diag_nc7(REAL* r, REAL* z, void* data);
 
-FASP_API void fasp_precond_dbsr_ilu_mc_omp (REAL *r, 
-                                            REAL *z,
-                                            void *data);
+FASP_API void fasp_precond_dbsr_ilu(REAL* r, REAL* z, void* data);
 
-FASP_API void fasp_precond_dbsr_ilu_ls_omp (REAL *r,
-                                            REAL *z,
-                                            void *data);
+FASP_API void fasp_precond_dbsr_ilu_mc_omp(REAL* r, REAL* z, void* data);
 
-FASP_API void fasp_precond_dbsr_amg (REAL *r, 
-                                     REAL *z,
-                                     void *data);
+FASP_API void fasp_precond_dbsr_ilu_ls_omp(REAL* r, REAL* z, void* data);
 
-FASP_API void fasp_precond_dbsr_amg_nk (REAL *r,
-                                        REAL *z,
-                                        void *data);
+FASP_API void fasp_precond_dbsr_amg(REAL* r, REAL* z, void* data);
 
-FASP_API void fasp_precond_dbsr_namli (REAL *r,
-                                       REAL *z,
-                                       void *data);
+FASP_API void fasp_precond_dbsr_amg_nk(REAL* r, REAL* z, void* data);
+
+FASP_API void fasp_precond_dbsr_namli(REAL* r, REAL* z, void* data);
 
 
 /*-------- In file: PreCSR.c --------*/
@@ -2034,24 +1946,23 @@ FASP_API void fasp_precond_amg_nk (REAL *r,
 
 /*-------- In file: PreDataInit.c --------*/
 
-FASP_API void fasp_precond_data_init (precond_data *pcdata);
+FASP_API void fasp_precond_data_init(precond_data* pcdata);
 
-FASP_API AMG_data * fasp_amg_data_create (SHORT max_levels);
+FASP_API AMG_data* fasp_amg_data_create(SHORT max_levels);
 
-FASP_API void fasp_amg_data_free (AMG_data   *mgl,
-                                  AMG_param  *param);
+FASP_API void fasp_amg_data_free(AMG_data* mgl, AMG_param* param);
 
-FASP_API AMG_data_bsr * fasp_amg_data_bsr_create (SHORT max_levels);
+FASP_API void fasp_amg_data_free1(AMG_data* mgl, AMG_param* param);
 
-FASP_API void fasp_amg_data_bsr_free (AMG_data_bsr *mgl);
+FASP_API AMG_data_bsr* fasp_amg_data_bsr_create(SHORT max_levels);
 
-FASP_API void fasp_ilu_data_create (const INT   iwk,
-                                    const INT   nwork,
-                                    ILU_data   *iludata);
+FASP_API void fasp_amg_data_bsr_free(AMG_data_bsr* mgl, AMG_param* param);
 
-FASP_API void fasp_ilu_data_free (ILU_data *iludata);
+FASP_API void fasp_ilu_data_create(const INT iwk, const INT nwork, ILU_data* iludata);
 
-FASP_API void fasp_swz_data_free (SWZ_data *swzdata);
+FASP_API void fasp_ilu_data_free(ILU_data* iludata);
+
+FASP_API void fasp_swz_data_free(SWZ_data* swzdata);
 
 
 /*-------- In file: PreMGCycle.c --------*/
@@ -2067,33 +1978,25 @@ FASP_API void fasp_solver_fmgcycle (AMG_data   *mgl,
                                     AMG_param  *param);
 
 
+/*-------- In file: PreMGRecurAMLI.c --------*/
+
+FASP_API void fasp_solver_amli(AMG_data* mgl, AMG_param* param, INT l);
+
+FASP_API void fasp_solver_namli(AMG_data* mgl, AMG_param* param, INT l, INT num_levels);
+
+FASP_API void fasp_solver_namli_bsr(AMG_data_bsr* mgl, AMG_param* param, INT l, INT num_levels);
+
+FASP_API void fasp_amg_amli_coef(const REAL lambda_max,
+                                 const REAL lambda_min,
+                                 const INT  degree,
+                                 REAL*      coef);
+
+
 /*-------- In file: PreMGRecur.c --------*/
 
 FASP_API void fasp_solver_mgrecur (AMG_data   *mgl,
                                    AMG_param  *param,
                                    INT         level);
-
-
-/*-------- In file: PreMGRecurAMLI.c --------*/
-
-FASP_API void fasp_solver_amli (AMG_data   *mgl,
-                                AMG_param  *param,
-                                INT         l);
-
-FASP_API void fasp_solver_namli (AMG_data   *mgl,
-                                 AMG_param  *param,
-                                 INT         l,
-                                 INT         num_levels);
-
-FASP_API void fasp_solver_namli_bsr (AMG_data_bsr  *mgl,
-                                     AMG_param     *param,
-                                     INT            l,
-                                     INT            num_levels);
-
-FASP_API void fasp_amg_amli_coef (const REAL  lambda_max,
-                                  const REAL  lambda_min,
-                                  const INT   degree,
-                                  REAL       *coef);
 
 
 /*-------- In file: PreMGSolve.c --------*/
@@ -2173,26 +2076,35 @@ FASP_API INT fasp_solver_dblc_krylov_sweeping(dBLCmat* A, dvector* b, dvector* x
 
 /*-------- In file: SolBSR.c --------*/
 
-FASP_API INT fasp_solver_dbsr_itsolver(dBSRmat* A, dvector* b, dvector* x, precond* pc,
-                                       ITS_param* itparam);
+FASP_API INT fasp_solver_dbsr_itsolver(
+             dBSRmat* A, dvector* b, dvector* x, precond* pc, ITS_param* itparam);
 
 FASP_API INT fasp_solver_dbsr_krylov(dBSRmat* A, dvector* b, dvector* x, ITS_param* itparam);
 
 FASP_API INT fasp_solver_dbsr_krylov_diag(dBSRmat* A, dvector* b, dvector* x, ITS_param* itparam);
 
-FASP_API INT fasp_solver_dbsr_krylov_ilu(dBSRmat* A, dvector* b, dvector* x, ITS_param* itparam,
-                                         ILU_param* iluparam);
+FASP_API INT fasp_solver_dbsr_krylov_ilu(
+             dBSRmat* A, dvector* b, dvector* x, ITS_param* itparam, ILU_param* iluparam);
 
-FASP_API INT fasp_solver_dbsr_krylov_amg(dBSRmat* A, dvector* b, dvector* x, ITS_param* itparam,
-                                         AMG_param* amgparam);
+FASP_API INT fasp_solver_dbsr_krylov_amg(
+             dBSRmat* A, dvector* b, dvector* x, ITS_param* itparam, AMG_param* amgparam);
 
-FASP_API INT fasp_solver_dbsr_krylov_amg_nk(dBSRmat* A, dvector* b, dvector* x,
-                                            ITS_param* itparam, AMG_param* amgparam,
-                                            dCSRmat* A_nk, dCSRmat* P_nk, dCSRmat* R_nk);
+FASP_API INT fasp_solver_dbsr_krylov_amg_nk(dBSRmat*   A,
+                                            dvector*   b,
+                                            dvector*   x,
+                                            ITS_param* itparam,
+                                            AMG_param* amgparam,
+                                            dCSRmat*   A_nk,
+                                            dCSRmat*   P_nk,
+                                            dCSRmat*   R_nk);
 
-FASP_API INT fasp_solver_dbsr_krylov_nk_amg(dBSRmat* A, dvector* b, dvector* x,
-                                            ITS_param* itparam, AMG_param* amgparam,
-                                            const INT nk_dim, dvector* nk);
+FASP_API INT fasp_solver_dbsr_krylov_nk_amg(dBSRmat*   A,
+                                            dvector*   b,
+                                            dvector*   x,
+                                            ITS_param* itparam,
+                                            AMG_param* amgparam,
+                                            const INT  nk_dim,
+                                            dvector*   nk);
 
 
 /*-------- In file: SolCSR.c --------*/
@@ -2422,8 +2334,8 @@ FASP_API INT fasp_solver_pardiso(dCSRmat* ptrA, dvector* b, dvector* u, const SH
 
 FASP_API INT fasp_pardiso_factorize(dCSRmat* ptrA, Pardiso_data* pdata, const SHORT prtlvl);
 
-FASP_API INT fasp_pardiso_solve(dCSRmat* ptrA, dvector* b, dvector* u, Pardiso_data* pdata,
-                                const SHORT prtlvl);
+FASP_API INT fasp_pardiso_solve(
+             dCSRmat* ptrA, dvector* b, dvector* u, Pardiso_data* pdata, const SHORT prtlvl);
 
 FASP_API INT fasp_pardiso_free_internal_mem(Pardiso_data* pdata);
 

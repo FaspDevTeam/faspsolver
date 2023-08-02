@@ -31,27 +31,27 @@
  * @author Xie Yan
  * @date 2022/12/12
  */
-void fasp_smoother_dcsr_jacobi_ff(dvector* x,
-                                  dCSRmat* A,
-                                  dvector* b,
-                                  const INT nsweeps,
-                                  INT* ordering,
+void fasp_smoother_dcsr_jacobi_ff(dvector*   x,
+                                  dCSRmat*   A,
+                                  dvector*   b,
+                                  const INT  nsweeps,
+                                  INT*       ordering,
                                   const REAL relax)
 {
-    REAL *r = (REAL *)fasp_mem_calloc(A->col, sizeof(REAL));
-    REAL *xval = (REAL *)fasp_mem_calloc(A->col, sizeof(REAL));
-    for (INT i = 0; i < A->col; ++i) {
+    REAL* r    = (REAL*)fasp_mem_calloc(A->col, sizeof(REAL));
+    REAL* xval = (REAL*)fasp_mem_calloc(A->col, sizeof(REAL));
+    INT   i, j, k, diagptr;
+    for (i = 0; i < A->col; ++i) {
         xval[i] = x->val[i];
     }
-    INT i, j, k, diagptr;
     INT sweep_now;
     for (sweep_now = 0; sweep_now < nsweeps; ++sweep_now) {
         for (i = 0; i < A->row; ++i) {
             if (ordering[i] == FGPT) {
-                diagptr = -1;
-                r[i] = b->val[i];
+                diagptr       = -1;
+                r[i]          = b->val[i];
                 INT row_start = A->IA[i];
-                INT row_end = A->IA[i+1];
+                INT row_end   = A->IA[i + 1];
                 for (j = row_start; j < row_end; ++j) {
                     k = A->JA[j];
                     // find diagonal entry and compute residual
@@ -94,8 +94,14 @@ void fasp_smoother_dcsr_jacobi_ff(dvector* x,
  * Modified by Chunsheng Feng, Zheng Li on 08/29/2012
  * Modified by Chensong Zhang on 08/24/2017: Pass weight w as a parameter
  */
-void fasp_smoother_dcsr_jacobi(dvector* u, const INT i_1, const INT i_n, const INT s,
-                               dCSRmat* A, dvector* b, INT L, const REAL w)
+void fasp_smoother_dcsr_jacobi(dvector*   u,
+                               const INT  i_1,
+                               const INT  i_n,
+                               const INT  s,
+                               dCSRmat*   A,
+                               dvector*   b,
+                               INT        L,
+                               const REAL w)
 {
     const INT   N  = ABS(i_n - i_1) + 1;
     const INT * ia = A->IA, *ja = A->JA;
@@ -241,8 +247,13 @@ void fasp_smoother_dcsr_jacobi(dvector* u, const INT i_1, const INT i_n, const I
  *
  * Modified by Chunsheng Feng, Zheng Li on 09/01/2012
  */
-void fasp_smoother_dcsr_gs(dvector* u, const INT i_1, const INT i_n, const INT s,
-                           dCSRmat* A, dvector* b, INT L)
+void fasp_smoother_dcsr_gs(dvector*  u,
+                           const INT i_1,
+                           const INT i_n,
+                           const INT s,
+                           dCSRmat*  A,
+                           dvector*  b,
+                           INT       L)
 {
     const INT * ia = A->IA, *ja = A->JA;
     const REAL *aval = A->val, *bval = b->val;
@@ -417,8 +428,8 @@ void fasp_smoother_dcsr_gs(dvector* u, const INT i_1, const INT i_n, const INT s
  *
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 05/24/2012
  */
-void fasp_smoother_dcsr_gs_cf(dvector* u, dCSRmat* A, dvector* b, INT L, INT* mark,
-                              const INT order)
+void fasp_smoother_dcsr_gs_cf(
+    dvector* u, dCSRmat* A, dvector* b, INT L, INT* mark, const INT order)
 {
     const INT   nrow = b->row; // number of rows
     const INT * ia = A->IA, *ja = A->JA;
@@ -917,8 +928,14 @@ void fasp_smoother_dcsr_sgs(dvector* u, dCSRmat* A, dvector* b, INT L)
  *
  * Modified by Chunsheng Feng, Zheng Li on 09/01/2012
  */
-void fasp_smoother_dcsr_sor(dvector* u, const INT i_1, const INT i_n, const INT s,
-                            dCSRmat* A, dvector* b, INT L, const REAL w)
+void fasp_smoother_dcsr_sor(dvector*   u,
+                            const INT  i_1,
+                            const INT  i_n,
+                            const INT  s,
+                            dCSRmat*   A,
+                            dvector*   b,
+                            INT        L,
+                            const REAL w)
 {
     const INT * ia = A->IA, *ja = A->JA;
     const REAL *aval = A->val, *bval = b->val;
@@ -1041,8 +1058,8 @@ void fasp_smoother_dcsr_sor(dvector* u, const INT i_1, const INT i_n, const INT 
  *
  * Modified by Chunsheng Feng, Zheng Li on 08/29/2012
  */
-void fasp_smoother_dcsr_sor_cf(dvector* u, dCSRmat* A, dvector* b, INT L, const REAL w,
-                               INT* mark, const INT order)
+void fasp_smoother_dcsr_sor_cf(
+    dvector* u, dCSRmat* A, dvector* b, INT L, const REAL w, INT* mark, const INT order)
 {
     const INT   nrow = b->row; // number of rows
     const INT * ia = A->IA, *ja = A->JA;
@@ -1342,8 +1359,14 @@ MEMERR:
  *
  * Modified by Chunsheng Feng, Zheng Li on 2012/09/01
  */
-void fasp_smoother_dcsr_kaczmarz(dvector* u, const INT i_1, const INT i_n, const INT s,
-                                 dCSRmat* A, dvector* b, INT L, const REAL w)
+void fasp_smoother_dcsr_kaczmarz(dvector*   u,
+                                 const INT  i_1,
+                                 const INT  i_n,
+                                 const INT  s,
+                                 dCSRmat*   A,
+                                 dvector*   b,
+                                 INT        L,
+                                 const REAL w)
 {
     const INT * ia = A->IA, *ja = A->JA;
     const REAL *aval = A->val, *bval = b->val;
@@ -1482,8 +1505,13 @@ void fasp_smoother_dcsr_kaczmarz(dvector* u, const INT i_1, const INT i_n, const
  *
  * Modified by Chunsheng Feng, Zheng Li on 09/01/2012
  */
-void fasp_smoother_dcsr_L1diag(dvector* u, const INT i_1, const INT i_n, const INT s,
-                               dCSRmat* A, dvector* b, INT L)
+void fasp_smoother_dcsr_L1diag(dvector*  u,
+                               const INT i_1,
+                               const INT i_n,
+                               const INT s,
+                               dCSRmat*  A,
+                               dvector*  b,
+                               INT       L)
 {
     const INT   N  = ABS(i_n - i_1) + 1;
     const INT * ia = A->IA, *ja = A->JA;

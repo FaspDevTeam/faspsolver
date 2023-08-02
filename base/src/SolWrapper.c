@@ -42,6 +42,7 @@
  * \author Chensong Zhang
  * \date   01/09/2020
  */
+#if WITH_PARDISO
 void fasp_fwrapper_dcsr_pardiso_(
     INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, REAL* b, REAL* u, INT* ptrlvl)
 {
@@ -65,6 +66,7 @@ void fasp_fwrapper_dcsr_pardiso_(
 
     fasp_solver_pardiso(&mat, &rhs, &sol, *ptrlvl);
 }
+#endif
 
 /**
  * \fn void fasp_fwrapper_dcsr_strumpack_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a,
@@ -84,6 +86,7 @@ void fasp_fwrapper_dcsr_pardiso_(
  * \author Yumiao Zhang
  * \date   10/17/2022
  */
+#if WITH_UMFPACK
 void fasp_fwrapper_dcsr_strumpack_(
     INT* n, INT* nnz, INT* ia, INT* ja, REAL* a, REAL* b, REAL* u, INT* ptrlvl)
 {
@@ -107,6 +110,7 @@ void fasp_fwrapper_dcsr_strumpack_(
 
     fasp_solver_strumpack(&mat, &rhs, &sol, *ptrlvl);
 }
+#endif
 
 /**
  * \fn void fasp_fwrapper_dcsr_amg_ (INT *n, INT *nnz, INT *ia, INT *ja, REAL *a,
@@ -331,8 +335,8 @@ void fasp_fwrapper_dbsr_krylov_ilu_(INT*  n,
                                     INT*  maxit,
                                     INT*  ptrlvl)
 {
-    dBSRmat mat;      // coefficient matrix in BSR format
-    dvector rhs, sol; // right-hand-side, solution
+    dBSRmat mat;        // coefficient matrix in BSR format
+    dvector rhs, sol;   // right-hand-side, solution
 
     ILU_param iluparam; // parameters for ILU
     ITS_param itsparam; // parameters for itsolver
@@ -402,8 +406,8 @@ void fasp_fwrapper_dbsr_krylov_amg_(INT*  n,
                                     INT*  maxit,
                                     INT*  ptrlvl)
 {
-    dBSRmat mat;      // coefficient matrix in CSR format
-    dvector rhs, sol; // right-hand-side, solution
+    dBSRmat mat;        // coefficient matrix in CSR format
+    dvector rhs, sol;   // right-hand-side, solution
 
     AMG_param amgparam; // parameters for AMG
     ITS_param itsparam; // parameters for itsolver

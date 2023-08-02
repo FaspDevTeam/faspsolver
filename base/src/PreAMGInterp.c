@@ -544,8 +544,8 @@ static void interp_DIR(dCSRmat* A, ivector* vertices, dCSRmat* P, AMG_param* par
  * Modified by Chensong Zhang on 05/15/2013: reconstruct the code
  * Modified by Chunsheng Feng, Xiaoqiang Yue on 12/25/2013: check C1 Criterion
  */
-static void
-interp_STD(dCSRmat* A, ivector* vertices, dCSRmat* P, iCSRmat* S, AMG_param* param)
+// static
+void interp_STD(dCSRmat* A, ivector* vertices, dCSRmat* P, iCSRmat* S, AMG_param* param)
 {
     const INT row = A->row;
     INT*      vec = vertices->val;
@@ -758,8 +758,8 @@ interp_STD(dCSRmat* A, ivector* vertices, dCSRmat* P, iCSRmat* S, AMG_param* par
  *
  * \todo  Need to be fixed!  --zcs
  */
-static void
-interp_EXT(dCSRmat* A, ivector* vertices, dCSRmat* P, iCSRmat* S, AMG_param* param)
+// static
+void interp_EXT(dCSRmat* A, ivector* vertices, dCSRmat* P, iCSRmat* S, AMG_param* param)
 {
     const INT row = A->row;
     INT*      vec = vertices->val;
