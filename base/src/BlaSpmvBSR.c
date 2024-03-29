@@ -53,7 +53,7 @@ SHORT fasp_blas_dbsr_add(
 
 #ifdef _OPENMP
     INT mybegin, myend, myid, nthreads;
-    if (A->nnz > OPENMP_HOLDS) {
+    if (A->NNZ > OPENMP_HOLDS) {
         use_openmp = TRUE;
         nthreads   = fasp_get_num_threads();
     }
