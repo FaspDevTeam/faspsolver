@@ -15,4 +15,4 @@ fi
 # cp ../../download/.ht* htdocs/download
 cp ../../download/*.zip htdocs/download
 cp ../../download/*.pdf htdocs/download
-rsync -avz $1 ${OPT} ./htdocs/* ${USERID}@${SERVER}:/www/wwwroot/11/fasp
+rsync -avz -e 'ssh -p 8522' $1 ${OPT} ./htdocs/* ${USERID}@${SERVER}:/www/wwwroot/11/fasp
