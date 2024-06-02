@@ -72,6 +72,7 @@ void fasp_smoother_dcsr_jacobi_ff(dvector*   x,
     fasp_mem_free(xval);
     // printf("###DEBUG: fasp_smoother_dcsr_jacobi_ff() -- Done!\n");
 }
+
 /**
  * \fn void fasp_smoother_dcsr_jacobi (dvector *u, const INT i_1, const INT i_n,
  *                                     const INT s, dCSRmat *A, dvector *b, INT L,
@@ -86,7 +87,7 @@ void fasp_smoother_dcsr_jacobi_ff(dvector*   x,
  * \param A      Pointer to dBSRmat: the coefficient matrix
  * \param b      Pointer to dvector: the right hand side
  * \param L      Number of iterations
- * \param w      Over-relaxation weight
+ * \param w      Relaxation weight
  *
  * \author Xuehai Huang, Chensong Zhang
  * \date   09/26/2009
@@ -151,7 +152,7 @@ void fasp_smoother_dcsr_jacobi(dvector*   u,
                     for (k = begin_row; k < end_row; ++k) {
                         j = ja[k];
                         if (i != j)
-                            t[i] -= aval[k] * uval[j];
+                            t[i] -= aval[k] * uval[j]; // diagonal entry is not included
                         else
                             d[i] = aval[k];
                     }
